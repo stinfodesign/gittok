@@ -1,0 +1,1875 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="IMap,com.google.maps.interfaces.IMap,MERCATOR_PROJECTION,overlayRaising,addControl,addMapType,addOverlay,clearControls,clearOverlays,closeInfoWindow,continuousZoomEnabled,controlByKeyboardEnabled,crosshairsEnabled,disableContinuousZoom,disableControlByKeyboard,disableCrosshairs,disableDragging,disableScrollWheelZoom,draggingEnabled,enableContinuousZoom,enableControlByKeyboard,enableCrosshairs,enableDragging,enableScrollWheelZoom,fromLatLngToPoint,fromLatLngToViewport,fromPointToLatLng,fromViewportToLatLng,getBoundsZoomLevel,getCenter,getCurrentMapType,getDisplayObject,getDoubleClickMode,getImplementationVersion,getLatLngBounds,getMapTypes,getMaxZoomLevel,getMinZoomLevel,getOptions,getPaneManager,getPrintableBitmap,getProjection,getSize,getZoom,isLoaded,openInfoWindow,panBy,panTo,removeControl,removeMapType,removeOverlay,returnToSavedPosition,savePosition,scrollWheelZoomEnabled,setCenter,setDoubleClickMode,setMapType,setSize,setZoom,unload,zoomIn,zoomOut" name="keywords">
+<title>com.google.maps.interfaces.IMap</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'IMap - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/interfaces/IMap.html&amp;com/google/maps/interfaces/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Interface&nbsp;IMap</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Interface IMap"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.interfaces</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Interface</td><td class="classSignature">public interface IMap extends <a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a>, <a href="none">flash.events.IEventDispatcher</a>, <a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Subinterfaces</td><td><a href="../interfaces/IMap3D.html">IMap3D</a>, <a href="../interfaces/IStyledMapType.html">IStyledMapType</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implementors</td><td><a href="../../maps/Map.html">Map</a>, <a href="../../maps/Map3D.html">Map3D</a>, <a href="../../maps/MapType.html">MapType</a></td>
+</tr>
+</table>
+<p></p>
+ IMap is the interface implemented by Map.
+ Create an instance of class Map to create a map.
+ This is the central class in the API.
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<div class="showHideLinks">
+<div class="hideInheritedProperty" id="hideInheritedProperty">
+<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
+</div>
+<div class="showInheritedProperty" id="showInheritedProperty">
+<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
+</div>
+</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#interfaceChain">interfaceChain</a> : Array<div class="summaryTableDescription">
+   List of interfaces for wrapping this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MERCATOR_PROJECTION">MERCATOR_PROJECTION</a> : <a href="../interfaces/IProjection.html">IProjection</a>
+<div class="summaryTableDescription">[read-only]
+   Retrieves Mercator projection.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#overlayRaising">overlayRaising</a> : Boolean<div class="summaryTableDescription">
+   Set to <code>true</code> to enable raising of overlays upon mouse-over.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#wrapper">wrapper</a> : Object<div class="summaryTableDescription">
+   Instance of the cross-domain wrapper for this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<div class="showHideLinks">
+<div class="hideInheritedMethod" id="hideInheritedMethod">
+<a onclick="javascript:setInheritedVisible(false,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Methods</a>
+</div>
+<div class="showInheritedMethod" id="showInheritedMethod">
+<a onclick="javascript:setInheritedVisible(true,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Methods</a>
+</div>
+</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#addControl()">addControl</a>(control:<a href="IControl.html">IControl</a>):void</div>
+<div class="summaryTableDescription">
+   Registers a new control.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#addMapType()">addMapType</a>(newMapType:<a href="IMapType.html">IMapType</a>):void</div>
+<div class="summaryTableDescription">
+   Registers a new map type.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#addOverlay()">addOverlay</a>(overlay:<a href="IOverlay.html">IOverlay</a>):void</div>
+<div class="summaryTableDescription">
+   Adds an overlay to the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clearControls()">clearControls</a>():void</div>
+<div class="summaryTableDescription">
+   Removes all controls from the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clearOverlays()">clearOverlays</a>():void</div>
+<div class="summaryTableDescription">
+   Removes all overlays from the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#closeInfoWindow()">closeInfoWindow</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Closes the information window.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#continuousZoomEnabled()">continuousZoomEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether continuous zoom is enabled.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#controlByKeyboardEnabled()">controlByKeyboardEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether control by keyboard is enabled.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#crosshairsEnabled()">crosshairsEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether center crosshairs are enabled.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#disableContinuousZoom()">disableContinuousZoom</a>():void</div>
+<div class="summaryTableDescription">
+   Disables continuous smooth zooming.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#disableControlByKeyboard()">disableControlByKeyboard</a>():void</div>
+<div class="summaryTableDescription">
+   Disables control by keyboard.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#disableCrosshairs()">disableCrosshairs</a>():void</div>
+<div class="summaryTableDescription">
+   Disables the center crosshairs.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#disableDragging()">disableDragging</a>():void</div>
+<div class="summaryTableDescription">
+   Disables dragging of the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#disableScrollWheelZoom()">disableScrollWheelZoom</a>():void</div>
+<div class="summaryTableDescription">
+   Disables zooming using a mouse's scroll wheel.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#draggingEnabled()">draggingEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether dragging of the map is enabled.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#enableContinuousZoom()">enableContinuousZoom</a>():void</div>
+<div class="summaryTableDescription">
+   Enables continuous smooth zooming.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#enableControlByKeyboard()">enableControlByKeyboard</a>():void</div>
+<div class="summaryTableDescription">
+   Enables control by keyboard.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#enableCrosshairs()">enableCrosshairs</a>():void</div>
+<div class="summaryTableDescription">
+   Enables the center crosshairs.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#enableDragging()">enableDragging</a>():void</div>
+<div class="summaryTableDescription">
+   Enables dragging of the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#enableScrollWheelZoom()">enableScrollWheelZoom</a>():void</div>
+<div class="summaryTableDescription">
+   Enables zooming using a mouse's scroll wheel.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#fromLatLngToPoint()">fromLatLngToPoint</a>(latLng:<a href="../LatLng.html">LatLng</a>, opt_zoom:Number):Point</div>
+<div class="summaryTableDescription">
+   Returns x,y coordinates of specified lat, lng and zoom relative to the
+   origin of the map's projection
+   (the origin is the top left corner of the top left tile of the map for
+   the specified map zoom level).</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#fromLatLngToViewport()">fromLatLngToViewport</a>(latLng:<a href="../LatLng.html">LatLng</a>, opt_disablewrap:Boolean = false):Point</div>
+<div class="summaryTableDescription">
+   Returns the pixel coordinates for the specified latLng location
+   in the coordinate system of the map's view port ([0,0] being the top
+   left corner of the map object).</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#fromPointToLatLng()">fromPointToLatLng</a>(pos:Point, opt_zoom:Number, opt_nowrap:Boolean = false):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns lat,lng coordinates of specified x, y and zoom.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#fromViewportToLatLng()">fromViewportToLatLng</a>(pos:Point, opt_nowrap:Boolean = false):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the lat-lng of the point at the given coordinates in the map's
+   view port (the top left corner of the map object).</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IWrappableEventDispatcher.html#getBaseEventDispatcher()">getBaseEventDispatcher</a>():Object</div>
+<div class="summaryTableDescription">
+   Retrieves the base event dispatcher object that allows access to event
+   dispatching capability for cross-domain objects.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getBoundsZoomLevel()">getBoundsZoomLevel</a>(bounds:<a href="../LatLngBounds.html">LatLngBounds</a>):Number</div>
+<div class="summaryTableDescription">
+   Returns the highest resolution zoom level at which the given rectangular
+   region fits in the map view.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getCenter()">getCenter</a>():<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves coordinates of the center in the map view control.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getCurrentMapType()">getCurrentMapType</a>():<a href="../interfaces/IMapType.html">IMapType</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the current map type.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getDisplayObject()">getDisplayObject</a>():DisplayObject</div>
+<div class="summaryTableDescription">
+   Retrieves the display object that represents the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getDoubleClickMode()">getDoubleClickMode</a>():Number</div>
+<div class="summaryTableDescription">
+   Get the mouse double click mode.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getImplementationVersion()">getImplementationVersion</a>():String</div>
+<div class="summaryTableDescription">
+   Gets the version of the implementation library SWF.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getLatLngBounds()">getLatLngBounds</a>():<a href="../../maps/LatLngBounds.html">LatLngBounds</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the the visible rectangular region of the map view in
+   geographical coordinates.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getMapTypes()">getMapTypes</a>():Array</div>
+<div class="summaryTableDescription">
+   Retrieves the list of the map types available for the location.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getMaxZoomLevel()">getMaxZoomLevel</a>(opt_mapType:<a href="IMapType.html">IMapType</a> = null, opt_point:<a href="../LatLng.html">LatLng</a> = null):Number</div>
+<div class="summaryTableDescription">
+   Retrieves the maximum zoom level.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getMinZoomLevel()">getMinZoomLevel</a>(opt_mapType:<a href="IMapType.html">IMapType</a> = null, opt_point:<a href="../LatLng.html">LatLng</a> = null):Number</div>
+<div class="summaryTableDescription">
+   Retrieves the minimum zoom level.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getOptions()">getOptions</a>():<a href="../../maps/MapOptions.html">MapOptions</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the full set of options used by the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getPaneManager()">getPaneManager</a>():<a href="../interfaces/IPaneManager.html">IPaneManager</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the pane manager for the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getPrintableBitmap()">getPrintableBitmap</a>():Bitmap</div>
+<div class="summaryTableDescription">
+   Returns a Bitmap instance containing a snapshot image of the map for
+   printing.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getProjection()">getProjection</a>():<a href="../interfaces/IProjection.html">IProjection</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the projection being applied to the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getSize()">getSize</a>():Point</div>
+<div class="summaryTableDescription">
+   Retrieves the map view size.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getZoom()">getZoom</a>():Number</div>
+<div class="summaryTableDescription">
+   Retrieves the map zoom level.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#isLoaded()">isLoaded</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether the map has been initialized.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#openInfoWindow()">openInfoWindow</a>(latlng:<a href="../LatLng.html">LatLng</a>, options:<a href="../InfoWindowOptions.html">InfoWindowOptions</a> = null):<a href="../interfaces/IInfoWindow.html">IInfoWindow</a>
+</div>
+<div class="summaryTableDescription">
+   Opens a simple information window at the given point.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#panBy()">panBy</a>(distance:Point, animate:Boolean = true):void</div>
+<div class="summaryTableDescription">
+   Starts a pan animation by the given distance in pixels.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#panTo()">panTo</a>(latLng:<a href="../LatLng.html">LatLng</a>):void</div>
+<div class="summaryTableDescription">
+   Changes the center location of the map to the given location.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#removeControl()">removeControl</a>(control:<a href="IControl.html">IControl</a>):void</div>
+<div class="summaryTableDescription">
+   Removes a control from the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#removeMapType()">removeMapType</a>(oldMapType:<a href="IMapType.html">IMapType</a>):void</div>
+<div class="summaryTableDescription">
+   Removes a registered map type.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#removeOverlay()">removeOverlay</a>(overlay:<a href="IOverlay.html">IOverlay</a>):void</div>
+<div class="summaryTableDescription">
+   Removes an overlay from the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#returnToSavedPosition()">returnToSavedPosition</a>():void</div>
+<div class="summaryTableDescription">
+   Returns map to the saved position.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#savePosition()">savePosition</a>():void</div>
+<div class="summaryTableDescription">
+   Stores the current map position and zoom level for later recall
+   by returnToSavedPosition.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#scrollWheelZoomEnabled()">scrollWheelZoomEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether scroll wheel zooming is enabled.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setCenter()">setCenter</a>(latLng:<a href="../LatLng.html">LatLng</a>, opt_zoom:Number, opt_mapType:<a href="IMapType.html">IMapType</a> = null):void</div>
+<div class="summaryTableDescription">
+   Changes the center location of the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setDoubleClickMode()">setDoubleClickMode</a>(val:Number):void</div>
+<div class="summaryTableDescription">
+   Set the mouse double click mode.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setMapType()">setMapType</a>(mapType:<a href="IMapType.html">IMapType</a>):void</div>
+<div class="summaryTableDescription">
+   Changes the map type for the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setSize()">setSize</a>(newSize:Point):void</div>
+<div class="summaryTableDescription">
+   Sets the size of the map view.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setZoom()">setZoom</a>(level:Number, opt_doContinuousZoom:Boolean = false):void</div>
+<div class="summaryTableDescription">
+   Changes the zoom level for the map view control.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#unload()">unload</a>():void</div>
+<div class="summaryTableDescription">
+   Removes the map from its parent and attempts to unload it to free up
+   memory associated with the map.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#zoomIn()">zoomIn</a>(opt_latlng:<a href="../LatLng.html">LatLng</a> = null, opt_doCenter:Boolean = false, opt_doContinuousZoom:Boolean = false):void</div>
+<div class="summaryTableDescription">
+   Zooms in the map by one zoom level if possible.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#zoomOut()">zoomOut</a>(opt_latlng:<a href="../LatLng.html">LatLng</a> = null, opt_doContinuousZoom:Boolean = false):void</div>
+<div class="summaryTableDescription">
+   Zooms out the map by one zoom level if possible.</div>
+</td><td class="summaryTableOwnerCol">IMap</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="MERCATOR_PROJECTION"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MERCATOR_PROJECTION</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>MERCATOR_PROJECTION:<a href="../interfaces/IProjection.html">IProjection</a></code>&nbsp;&nbsp;[read-only]<p>
+   Retrieves Mercator projection.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get MERCATOR_PROJECTION():<a href="../interfaces/IProjection.html">IProjection</a></code>
+<br>
+</div>
+<a name="overlayRaising"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">overlayRaising</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>overlayRaising:Boolean</code>&nbsp;&nbsp;[read-write]<p>
+   Set to <code>true</code> to enable raising of overlays upon mouse-over.
+   If enabled then a mouse-over event over an overlay that supports it (only
+   markers do at present) will bring that overlay to the top.
+   By default overlay raising is enabled.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get overlayRaising():Boolean</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set overlayRaising(value:Boolean):void</code>
+<br>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="addControl()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">addControl</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function addControl(control:<a href="IControl.html">IControl</a>):void</code><p>
+   Registers a new control. This can be called before the
+   <code>MAP_READY</code> event has been received.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">control</span>:<a href="IControl.html">IControl</a></code> &mdash;  New control to register.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   public class MyMap extends Map {
+     public function MyMap() {
+       super();
+       addEventListener(MapEvent.MAP_READY, onMapReady);
+       addControl(new MapTypeControl());
+     }
+   }</pre></div>
+   <p></p>
+</div>
+<a name="addMapType()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">addMapType</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function addMapType(newMapType:<a href="IMapType.html">IMapType</a>):void</code><p>
+   Registers a new map type.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">newMapType</span>:<a href="IMapType.html">IMapType</a></code> &mdash;  New map type to register.
+   </td>
+</tr>
+</table>
+</div>
+<a name="addOverlay()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">addOverlay</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function addOverlay(overlay:<a href="IOverlay.html">IOverlay</a>):void</code><p>
+   Adds an overlay to the map.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">overlay</span>:<a href="IOverlay.html">IOverlay</a></code> &mdash;  The overlay to be added to the map.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   var marker:Marker = new Marker(
+       new LatLng(48.858842, 2.346997),
+       new MarkerOptions({ fillRGB: 0x004000,
+                           name: "Paris, France",
+                           description: "City on the Seine" }));
+   map.addOverlay(marker);</pre></div>
+   <p></p>
+</div>
+<a name="clearControls()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clearControls</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function clearControls():void</code><p>
+   Removes all controls from the map.
+   </p></div>
+<a name="clearOverlays()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clearOverlays</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function clearOverlays():void</code><p>
+   Removes all overlays from the map.
+      </p></div>
+<a name="closeInfoWindow()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">closeInfoWindow</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function closeInfoWindow():Boolean</code><p>
+   Closes the information window.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash; true iff there was an info window to close.
+   </td>
+</tr>
+</table>
+</div>
+<a name="continuousZoomEnabled()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">continuousZoomEnabled</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function continuousZoomEnabled():Boolean</code><p>
+   Checks whether continuous zoom is enabled.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if continuous zoom is enabled.
+   </td>
+</tr>
+</table>
+</div>
+<a name="controlByKeyboardEnabled()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">controlByKeyboardEnabled</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function controlByKeyboardEnabled():Boolean</code><p>
+   Checks whether control by keyboard is enabled.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if control by keyboard is enabled.
+   </td>
+</tr>
+</table>
+</div>
+<a name="crosshairsEnabled()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">crosshairsEnabled</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function crosshairsEnabled():Boolean</code><p>
+   Checks whether center crosshairs are enabled.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if center crosshairs are enabled.
+   </td>
+</tr>
+</table>
+</div>
+<a name="disableContinuousZoom()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">disableContinuousZoom</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function disableContinuousZoom():void</code><p>
+   Disables continuous smooth zooming.
+   </p></div>
+<a name="disableControlByKeyboard()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">disableControlByKeyboard</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function disableControlByKeyboard():void</code><p>
+   Disables control by keyboard.
+   </p></div>
+<a name="disableCrosshairs()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">disableCrosshairs</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function disableCrosshairs():void</code><p>
+   Disables the center crosshairs.
+   </p></div>
+<a name="disableDragging()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">disableDragging</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function disableDragging():void</code><p>
+   Disables dragging of the map.
+   </p></div>
+<a name="disableScrollWheelZoom()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">disableScrollWheelZoom</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function disableScrollWheelZoom():void</code><p>
+   Disables zooming using a mouse's scroll wheel.
+   </p></div>
+<a name="draggingEnabled()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">draggingEnabled</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function draggingEnabled():Boolean</code><p>
+   Checks whether dragging of the map is enabled.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if dragging of the map is enabled.
+   </td>
+</tr>
+</table>
+</div>
+<a name="enableContinuousZoom()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableContinuousZoom</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function enableContinuousZoom():void</code><p>
+   Enables continuous smooth zooming.
+   </p></div>
+<a name="enableControlByKeyboard()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableControlByKeyboard</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function enableControlByKeyboard():void</code><p>
+   Enables control by keyboard.
+   </p></div>
+<a name="enableCrosshairs()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableCrosshairs</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function enableCrosshairs():void</code><p>
+   Enables the center crosshairs.
+   </p></div>
+<a name="enableDragging()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableDragging</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function enableDragging():void</code><p>
+   Enables dragging of the map.
+   </p></div>
+<a name="enableScrollWheelZoom()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">enableScrollWheelZoom</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function enableScrollWheelZoom():void</code><p>
+   Enables zooming using a mouse's scroll wheel.
+   </p></div>
+<a name="fromLatLngToPoint()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">fromLatLngToPoint</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function fromLatLngToPoint(latLng:<a href="../LatLng.html">LatLng</a>, opt_zoom:Number):Point</code><p>
+   Returns x,y coordinates of specified lat, lng and zoom relative to the
+   origin of the map's projection
+   (the origin is the top left corner of the top left tile of the map for
+   the specified map zoom level).
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  latLng location on the map
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_zoom</span>:Number</code> &mdash;  target zoom level (defaults to current zoom level)
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Point</code> &mdash;  Point object with x and y properties
+   </td>
+</tr>
+</table>
+</div>
+<a name="fromLatLngToViewport()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">fromLatLngToViewport</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function fromLatLngToViewport(latLng:<a href="../LatLng.html">LatLng</a>, opt_disablewrap:Boolean = false):Point</code><p>
+   Returns the pixel coordinates for the specified latLng location
+   in the coordinate system of the map's view port ([0,0] being the top
+   left corner of the map object).
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  LatLng coordinate of the point on the map.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_disablewrap</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash;  Whether wrapping of the map around +180/-180 degree
+       longtitude is disabled.
+       <p>Depending on the value of this parameter, the call may return
+       the same or two different pixel coordinates depending on whether or not
+       the shortest path between the current center of the map and the target
+       location crosses the +180/-180 degree longtitude wrap-around.</p>
+       <p>For example, the map is currently centered at Sydney, Australia
+       [LatLng(-33.857, 151.215)] and the location passed into this call is
+       San Francisco, USA [LatLng(37.779, -122.420)]
+       This call will return two different pixel coordinates for the two
+       values of the opt_disablewrap parameter.</p>
+       <p>By default (opt_disablewrap set to false), the map will wrap the
+       around the +180/-180 degree longtitude to return the pixel coordinate
+       that will lie to the right of the current center of the map
+       (picking the shorter path from Sydney to San Francisco that goes across
+       the Pacific Ocean).</p>
+       <p>If the wrapping of the map is disabled (opt_disablewrap set
+       to true), the pixel coordinate returned by the call will be to the
+       left of the current center (the longer path from Sydney to
+       San Francisco going across the Indian and Atlantic Oceans).</p>
+       <p>The value returned by the call will be the same for either value of
+       opt_disablewrap parameter if the shorter path from the current center
+       of the map to the target point does not cross the +180/-180 degree
+       longtitude (such as in case where the current center of the map is
+       Sydney, Australia while the target location is Tokyo, Japan).</p>
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Point</code></td>
+</tr>
+</table>
+</div>
+<a name="fromPointToLatLng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">fromPointToLatLng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function fromPointToLatLng(pos:Point, opt_zoom:Number, opt_nowrap:Boolean = false):<a href="../../maps/LatLng.html">LatLng</a></code><p>
+   Returns lat,lng coordinates of specified x, y and zoom.
+   The coordinates are relative to the origin of the map's projection (the
+   top left corner of the top left tile of the map for the specified zoom
+   level).
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">pos</span>:Point</code> &mdash;  x, y of a point
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_zoom</span>:Number</code> &mdash;  target zoom level (defaults to the current zoom level)
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_nowrap</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Do not wrap longitudes outside of [-180, 180)
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         LatLng object with lat and lng
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="fromViewportToLatLng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">fromViewportToLatLng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function fromViewportToLatLng(pos:Point, opt_nowrap:Boolean = false):<a href="../../maps/LatLng.html">LatLng</a></code><p>
+   Returns the lat-lng of the point at the given coordinates in the map's
+   view port (the top left corner of the map object).
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">pos</span>:Point</code> &mdash; Coordinates in the map's view port.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_nowrap</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Do not wrap longitudes outside of [-180, 180)
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                        LatLng of the specified view port coordinates.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getBoundsZoomLevel()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getBoundsZoomLevel</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getBoundsZoomLevel(bounds:<a href="../LatLngBounds.html">LatLngBounds</a>):Number</code><p>
+   Returns the highest resolution zoom level at which the given rectangular
+   region fits in the map view. The zoom level is computed for the currently
+   selected map type.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">bounds</span>:<a href="../LatLngBounds.html">LatLngBounds</a></code> &mdash;  Bounds to show.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Required zoom level to show these bounds.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getCenter()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getCenter</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getCenter():<a href="../../maps/LatLng.html">LatLng</a></code><p>
+   Retrieves coordinates of the center in the map view control.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         LatLng for the center of the map view control.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getCurrentMapType()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getCurrentMapType</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getCurrentMapType():<a href="../interfaces/IMapType.html">IMapType</a></code><p>
+   Retrieves the current map type.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IMapType.html">IMapType</a></code> &mdash; 
+                         Current map type.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getDisplayObject()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getDisplayObject</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getDisplayObject():DisplayObject</code><p>
+   Retrieves the display object that represents the map.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>DisplayObject</code> &mdash;  Map display object
+   </td>
+</tr>
+</table>
+</div>
+<a name="getDoubleClickMode()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getDoubleClickMode</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getDoubleClickMode():Number</code><p>
+   Get the mouse double click mode.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash; mouse double click mode (one of the MapAction constants).
+   </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../../maps/MapAction.html" target="">com.google.maps.MapAction</a>
+</div>
+</div>
+<a name="getImplementationVersion()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getImplementationVersion</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getImplementationVersion():String</code><p>
+   Gets the version of the implementation library SWF.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash; Version of the implementation library SWF.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getLatLngBounds()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getLatLngBounds</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getLatLngBounds():<a href="../../maps/LatLngBounds.html">LatLngBounds</a></code><p>
+   Returns the the visible rectangular region of the map view in
+   geographical coordinates.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLngBounds.html">LatLngBounds</a></code> &mdash; 
+                         Lat-Lng for the visible map rectangle.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getMapTypes()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getMapTypes</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getMapTypes():Array</code><p>
+   Retrieves the list of the map types available for the location.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Array</code> &mdash;  Array of available map types
+   </td>
+</tr>
+</table>
+</div>
+<a name="getMaxZoomLevel()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getMaxZoomLevel</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getMaxZoomLevel(opt_mapType:<a href="IMapType.html">IMapType</a> = null, opt_point:<a href="../LatLng.html">LatLng</a> = null):Number</code><p>
+   Retrieves the maximum zoom level.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_mapType</span>:<a href="IMapType.html">IMapType</a></code> (default = <code>null</code>)<code></code> &mdash; Map type used to determine maximum resolution.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_point</span>:<a href="../LatLng.html">LatLng</a></code> (default = <code>null</code>)<code></code> &mdash; Point for which to get the maximum zoom.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  The maximum zoom level.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getMinZoomLevel()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getMinZoomLevel</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getMinZoomLevel(opt_mapType:<a href="IMapType.html">IMapType</a> = null, opt_point:<a href="../LatLng.html">LatLng</a> = null):Number</code><p>
+   Retrieves the minimum zoom level.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_mapType</span>:<a href="IMapType.html">IMapType</a></code> (default = <code>null</code>)<code></code> &mdash; MapType to determine minimum resolution.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_point</span>:<a href="../LatLng.html">LatLng</a></code> (default = <code>null</code>)<code></code> &mdash; Point to get minimum zoom level for.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  The minimum zoom level.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getOptions()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getOptions</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getOptions():<a href="../../maps/MapOptions.html">MapOptions</a></code><p>
+   Retrieves the full set of options used by the map.
+   Note that since <code>MapOptions</code> is used only during map
+   initialization, this method only allows those original settings to be
+   retrieved and does not support re-configuration of the map.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/MapOptions.html">MapOptions</a></code> &mdash; 
+                         Options used by the map.
+   
+                        
+                     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">Map.setInitOptions()</div>
+</div>
+<a name="getPaneManager()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getPaneManager</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getPaneManager():<a href="../interfaces/IPaneManager.html">IPaneManager</a></code><p>
+   Retrieves the pane manager for the map.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IPaneManager.html">IPaneManager</a></code> &mdash; 
+                         The instance of pane manager.
+   
+                        
+                     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../interfaces/IPaneManager.html" target="">com.google.maps.interfaces.IPaneManager</a>
+</div>
+</div>
+<a name="getPrintableBitmap()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getPrintableBitmap</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getPrintableBitmap():Bitmap</code><p>
+   Returns a Bitmap instance containing a snapshot image of the map for
+   printing.
+      </p><p>The map itself may contain content loaded from multiple domains.
+   This method requires that the domain <code>maps.googleapis.com</code> is
+   granted access to any content that appears on the map via a
+   <code>crossdomain.xml</code> file. For example, if your map uses a
+   custom tile layer containing tiles loaded from URLs with the form
+   <code>http://www.thirdpartymap.com/path/tile_x_y_z.png</code>, place
+   a <code>crossdomain.xml</code> file at
+   <code>http://www.thirdpartymap.com/path/crossdomain.xml</code>.
+   Load this file using <code>Security.loadPolicyFile()</code> and when
+   loading the tile images ensure that you use a <code>LoaderContext</code>
+   instance whose <code>checkPolicyFile</code> property is
+   <code>true</code>.</p>
+      <p>Note that by using <code>path/</code> in the above URLs you can grant
+   <code>maps.googleapis.com</code> privileged access only to content below
+   <code>http://www.thirdpartymap.com/path/</code>, rather than to all content
+   on <code>www.thirdpartymap.com</code>.</p>
+      <p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Bitmap</code> &mdash; Snapshot map image for printing.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getProjection()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getProjection</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getProjection():<a href="../interfaces/IProjection.html">IProjection</a></code><p>
+   Returns the projection being applied to the map.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IProjection.html">IProjection</a></code> &mdash; 
+                        Projection being applied to the map.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getSize()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getSize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getSize():Point</code><p>
+   Retrieves the map view size.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Point</code> &mdash;  Map view size.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getZoom()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getZoom</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getZoom():Number</code><p>
+   Retrieves the map zoom level.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Zoom level for the map.
+   </td>
+</tr>
+</table>
+</div>
+<a name="isLoaded()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isLoaded</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function isLoaded():Boolean</code><p>
+   Checks whether the map has been initialized.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash; Returns true iff the map was initialized by
+           a call to setCenter() since it was created.
+   </td>
+</tr>
+</table>
+</div>
+<a name="openInfoWindow()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">openInfoWindow</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function openInfoWindow(latlng:<a href="../LatLng.html">LatLng</a>, options:<a href="../InfoWindowOptions.html">InfoWindowOptions</a> = null):<a href="../interfaces/IInfoWindow.html">IInfoWindow</a></code><p>
+   Opens a simple information window at the given point.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latlng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash; Point at which the info window is opened.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">options</span>:<a href="../InfoWindowOptions.html">InfoWindowOptions</a></code> (default = <code>null</code>)<code></code> &mdash; Info window options.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IInfoWindow.html">IInfoWindow</a></code> &mdash; 
+                        Reference to newly created info window.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="panBy()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">panBy</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function panBy(distance:Point, animate:Boolean = true):void</code><p>
+   Starts a pan animation by the given distance in pixels.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">distance</span>:Point</code> &mdash;  Distance in pixels
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">animate</span>:Boolean</code> (default = <code>true</code>)<code></code> &mdash;  Whether the change may be animated.
+   </td>
+</tr>
+</table>
+</div>
+<a name="panTo()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">panTo</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function panTo(latLng:<a href="../LatLng.html">LatLng</a>):void</code><p>
+   Changes the center location of the map to the given location.
+   If the location is already visible in the current map view, changes the
+   center in a smooth animation.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  Coordinates for the new center.
+   </td>
+</tr>
+</table>
+</div>
+<a name="removeControl()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">removeControl</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function removeControl(control:<a href="IControl.html">IControl</a>):void</code><p>
+   Removes a control from the map. If the control was not added to the map,
+   this does nothing.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">control</span>:<a href="IControl.html">IControl</a></code> &mdash;  The control to remove.
+   </td>
+</tr>
+</table>
+</div>
+<a name="removeMapType()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">removeMapType</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function removeMapType(oldMapType:<a href="IMapType.html">IMapType</a>):void</code><p>
+   Removes a registered map type.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">oldMapType</span>:<a href="IMapType.html">IMapType</a></code> &mdash;  Map type to unregister.
+   </td>
+</tr>
+</table>
+</div>
+<a name="removeOverlay()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">removeOverlay</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function removeOverlay(overlay:<a href="IOverlay.html">IOverlay</a>):void</code><p>
+   Removes an overlay from the map.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">overlay</span>:<a href="IOverlay.html">IOverlay</a></code> &mdash;  Overlay to be removed from the map.
+   </td>
+</tr>
+</table>
+</div>
+<a name="returnToSavedPosition()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">returnToSavedPosition</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function returnToSavedPosition():void</code><p>
+   Returns map to the saved position.
+   </p></div>
+<a name="savePosition()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">savePosition</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function savePosition():void</code><p>
+   Stores the current map position and zoom level for later recall
+   by returnToSavedPosition.
+   </p></div>
+<a name="scrollWheelZoomEnabled()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">scrollWheelZoomEnabled</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function scrollWheelZoomEnabled():Boolean</code><p>
+   Checks whether scroll wheel zooming is enabled.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if scroll wheel zooming is enabled.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setCenter()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setCenter</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setCenter(latLng:<a href="../LatLng.html">LatLng</a>, opt_zoom:Number, opt_mapType:<a href="IMapType.html">IMapType</a> = null):void</code><p>
+   Changes the center location of the map.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  Coordinates for the new center.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_zoom</span>:Number</code> &mdash;  New zoom level.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_mapType</span>:<a href="IMapType.html">IMapType</a></code> (default = <code>null</code>)<code></code> &mdash;  New map type.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setDoubleClickMode()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setDoubleClickMode</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setDoubleClickMode(val:Number):void</code><p>
+   Set the mouse double click mode.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">val</span>:Number</code> &mdash; mouse double click mode (one of the MapAction constants).
+   </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../../maps/MapAction.html" target="">com.google.maps.MapAction</a>
+</div>
+</div>
+<a name="setMapType()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setMapType</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setMapType(mapType:<a href="IMapType.html">IMapType</a>):void</code><p>
+   Changes the map type for the map.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">mapType</span>:<a href="IMapType.html">IMapType</a></code> &mdash;  Map type.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setSize()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setSize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setSize(newSize:Point):void</code><p>
+   Sets the size of the map view.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">newSize</span>:Point</code> &mdash;  New view size for the map.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setZoom()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setZoom</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setZoom(level:Number, opt_doContinuousZoom:Boolean = false):void</code><p>
+   Changes the zoom level for the map view control.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">level</span>:Number</code> &mdash;  New zoom level.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_doContinuousZoom</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Whether the zoom operation should be continuous
+       (provided that continuous zoom is enabled for the map).
+   </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso"></div>
+</div>
+<a name="unload()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">unload</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function unload():void</code><p>
+   Removes the map from its parent and attempts to unload it to free up
+   memory associated with the map.
+   The map object will no longer be usable after the call to this method.
+   </p></div>
+<a name="zoomIn()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">zoomIn</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function zoomIn(opt_latlng:<a href="../LatLng.html">LatLng</a> = null, opt_doCenter:Boolean = false, opt_doContinuousZoom:Boolean = false):void</code><p>
+   Zooms in the map by one zoom level if possible.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_latlng</span>:<a href="../LatLng.html">LatLng</a></code> (default = <code>null</code>)<code></code> &mdash; If set, this is the point around which we zoom.
+       Otherwise we will zoom in around the center of the map.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_doCenter</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; If true, we also want to center at opt_latlng.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_doContinuousZoom</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Whether the zoom operation should be continuous
+       (provided that continuous zoom is enabled for the map).
+   </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso"></div>
+</div>
+<a name="zoomOut()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">zoomOut</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function zoomOut(opt_latlng:<a href="../LatLng.html">LatLng</a> = null, opt_doContinuousZoom:Boolean = false):void</code><p>
+   Zooms out the map by one zoom level if possible.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_latlng</span>:<a href="../LatLng.html">LatLng</a></code> (default = <code>null</code>)<code></code> &mdash; If set, this is the point around which we zoom.
+     Otherwise we will zoom out around the center of the map.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_doContinuousZoom</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Whether the zoom operation should be continuous
+       (provided that continuous zoom is enabled for the map).
+   </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso"></div>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

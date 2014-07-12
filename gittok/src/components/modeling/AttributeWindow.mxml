@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" 
+		  title="Attribute Type Designer" 
+		  width="482" height="472"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+
+	<fx:Script>
+		<![CDATA[
+			import gfm.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.core.mx_internal;
+			import mx.events.ListEvent;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			protected var attType:AttributeType = new AttributeType();
+			
+			[Bindable]
+			public var attributeList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			public var featureTypeList:ArrayList;
+					
+			protected function initializeApp():void {
+				this.move(400, 50);
+				
+				//Initialize screen
+				attName.text = "";
+				selectedTypeLabel.text = "";
+				isMultiple.selected = false;
+
+			}
+
+						
+			protected function dataTypeTree_changeHandler(event:ListEvent):void
+			{
+				var selectedNode:XML = Tree(event.target).selectedItem as XML;
+				
+				if (selectedNode.children().length() == 0) {
+					selectedTypeLabel.text = selectedNode.@label;
+					attType.dataType = selectedTypeLabel.text;
+					var selectedType:String = selectedTypeLabel.text;
+				}
+				else
+					selectedTypeLabel.text = "";
+			}
+			
+			protected function addAttButton_clickHandler(event:MouseEvent):void
+			{
+				// Set parameters
+				attType = new AttributeType();
+				attType.derived = (isDerived.selected) ? "/" : "";
+				attType.name = attName.text;
+				attType.dataType = selectedTypeLabel.text;
+				attType.multiplicity = isMultiple.selected;
+				attType.unit = unitInput.text;
+								
+				//Add attribute
+				attributeList.addItem(attType);
+				
+				//Initialize atribute				
+				attType = new AttributeType();
+				
+				//Initialize screen
+				attName.text = "";
+				selectedTypeLabel.text = "";
+				isDerived.selected = false;
+				isMultiple.selected = false;
+				unitInput.text = "";
+			}
+						
+			protected function deleteAttButton_clickHandler(event:MouseEvent):void
+			{
+				//Delete attribute
+				if (attTypeList.selectedIndex > -1) 
+					attributeList.removeItemAt(attTypeList.selectedIndex);
+				else {
+					Alert.show('Select attribute!', 'Alert', Alert.OK, this);
+				}
+				
+				//Initialize attribute
+				attType = new AttributeType();
+				
+				//Initialize screen
+				attName.text = "";
+				selectedTypeLabel.text = "";
+				isDerived.selected = false;
+				isMultiple.selected = false;
+				unitInput.text = "";
+			}
+			
+			protected function editButton_clickHandler(event:MouseEvent):void
+			{
+				//Select attribute
+				if (attTypeList.selectedIndex > -1) {
+					attType = attributeList.getItemAt(attTypeList.selectedIndex) as AttributeType;
+				}
+				else {
+					Alert.show('Select attribute!','Alert', Alert.OK, this);
+					return;
+				}
+				
+				//View parameters on screen
+				attName.text = attType.name;
+				isDerived.selected = (attType.derived == "/") ? true : false;
+				selectedTypeLabel.text = attType.dataType;
+				isMultiple.selected = attType.multiplicity;
+				unitInput.text = attType.unit;
+			}
+
+			protected function clearButton_clickHandler(event:MouseEvent):void
+			{
+				//Initialize screen
+				attName.text = "";
+				isMultiple.selected = false;
+				selectedTypeLabel.text = "";
+				unitInput.text = "";
+				
+				//Initialize attribute
+				attType = new AttributeType();
+			}
+
+			protected function isMultiple_clickHandler(event:MouseEvent):void
+			{
+				attType.multiplicity = isMultiple.selected;
+			}
+
+
+			protected function updateButton_clickHandler(event:MouseEvent):void
+			{
+				//Set parameters
+				attType.name = attName.text;
+				attType.dataType = selectedTypeLabel.text;
+				attType.unit = unitInput.text;
+				attType.multiplicity = isMultiple.selected;
+				
+				//Update attribute
+				var index:int = attributeList.getItemIndex(attType)
+				attributeList.setItemAt(attType, index);
+				
+				//Initialize attribute
+				attType = new AttributeType();
+				
+				//Initialize screen
+				isDerived.selected = false;
+				attName.text = "";
+				isMultiple.selected = false;
+				selectedTypeLabel.text = "";
+				unitInput.text = "";
+			}
+
+
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("/documents/jp/attributeTypeDesigner_jp.html");
+				navigateToURL(request);
+			}
+
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("/documents/jp/attributeTypeDesigner_en.html");
+				navigateToURL(request);
+			}
+			
+			protected function isDerived_clickHandler(event:MouseEvent):void
+			{
+				attType.derived = (isDerived.selected) ? "/" : "";
+			}
+			
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	<s:Label x="75" y="16" text="Attribute Type" fontSize="16"/>
+	
+	<s:Label x="381" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="422" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	
+	<mx:Image x="10" y="10" source="@Embed('images/pictModeling1.png')" width="60" height="60"/>
+	<mx:Tree x="234" y="122" id="dataTypeTree" width="225" height="122" labelField="@label"
+			 change="dataTypeTree_changeHandler(event)" showRoot="false" contentBackgroundColor="#E0E0E0" borderColor="#E0E0E0"/>
+	<s:Label x="48" y="164" fontSize="12" backgroundColor="#E0E0E0" width="143" id="selectedTypeLabel" height="20" verticalAlign="middle"/>
+	<s:TextInput id="attName" x="48" y="121" width="143" height="20"/>
+	<s:Label x="48" y="107" text="name"/>
+	<s:Label x="48" y="148" text="data type"/>
+	<s:Label x="235" y="108" text="data types"/>
+	<s:Button x="389" y="257" label="add" id="addAttButton" click="addAttButton_clickHandler(event)"/>
+	<s:Button x="388" y="339" label="delete" id="deleteAttButton" click="deleteAttButton_clickHandler(event)"/>
+	<s:CheckBox x="48" y="216" label="multiplicity" id="isMultiple" click="isMultiple_clickHandler(event)"/>
+	<mx:DataGrid x="234" y="257" id="attTypeList" dataProvider="{attributeList}" width="146" height="155">
+		<mx:columns>
+			<mx:DataGridColumn headerText="attribute types" dataField="name"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<s:Button x="389" y="285" label="edit" id="editButton" click="editButton_clickHandler(event)" />
+	<s:Button x="121" y="92" label="clear" id="clearButton" click="clearButton_clickHandler(event)" />
+	<s:Button x="388" y="312" label="update" id="updateButton" click="updateButton_clickHandler(event)" />
+	<mx:DataGrid x="44" y="257" id="inheritedAttGrid" width="176" height="155" editable="false" borderColor="#E0E0E0" color="#010101">
+		<mx:columns>
+			<mx:DataGridColumn headerText="inherited attribute types" dataField="name" resizable="false" backgroundColor="#E0E0E0"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<s:TextInput id="unitInput" x="121" y="190" width="70" height="20"/>
+	<s:Label x="93" y="195" text="unit"/>
+	<s:CheckBox id="isDerived" x="48" y="78" label="derived" click="isDerived_clickHandler(event)"/>
+
+</s:Window>

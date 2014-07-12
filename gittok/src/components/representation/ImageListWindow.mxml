@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="504" height="492"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import dataTypes.place.ImageURL;
+			
+			import mx.collections.ArrayList;
+			
+			import spark.events.IndexChangeEvent;
+			
+			public var kitURL:String = null;
+			
+			[Bindable]
+			public var imageArray:ArrayList;
+						
+			protected function initializeApp():void {
+				this.move(300, 400);
+
+			}
+
+			protected function imagePanel_mouseDownHandler(event:MouseEvent):void
+			{
+				if (dragButton.label == "on") {
+					imageView.startDrag(false);					
+				}
+			}
+			
+			protected function imagePanel_mouseUpHandler(event:MouseEvent):void
+			{
+				if (dragButton.label == "on") {
+					imageView.stopDrag();									
+				}
+			}	
+			
+			protected function resetButton_clickHandler(event:MouseEvent):void
+			{
+				resetView();
+			}
+			
+			protected function resetView():void {
+				var w0:Number = imagePanel.width;
+				var h0:Number = imagePanel.height - 33;		// 33 is the size of title column
+				var w1:Number = imageView.width;
+				var h1:Number = imageView.height;
+				
+				var hw0:Number = h0 / w0;
+				var hw1:Number = h1 / w1;
+				
+				var s:Number;
+				
+				// if horizontal ratio is larger than vertical of the panel,
+				if (hw0 < hw1) 
+					s = h0 / h1;
+				else
+					s = w0 / w1;
+				
+				imageView.scaleX = imageView.scaleY = s;
+				
+				imageView.x = (w0 - s * w1) / 2.0;
+				imageView.y = (h0 - s * h1) / 2.0;				
+				
+			}
+			
+			
+			
+			protected function largerButton_clickHandler(event:MouseEvent):void
+			{				
+				scallingAtCenter(1.25, 225, 150);				
+			}
+			
+			
+			protected function smallerButton_clickHandler(event:MouseEvent):void
+			{				
+				scallingAtCenter(0.8, 225, 150);				
+			}
+			
+			
+			protected function scallingAtCenter(s:Number, cx:Number, cy:Number):void 
+			{				
+				imageView.scaleX = s * imageView.scaleX;
+				imageView.scaleY = s * imageView.scaleY;
+				
+				var lx:Number = cx - imageView.x;
+				var ly:Number = cy - imageView.y;
+				
+				imageView.x = imageView.x - (s * lx - lx);
+				imageView.y = imageView.y - (s * ly - ly);					
+			}
+			
+			
+			protected function dragButton_clickHandler(event:MouseEvent):void
+			{
+				if (dragButton.label == "on") { 
+					dragButton.label = "off";
+					Mouse.cursor = "arrow";
+				}
+				else {
+					dragButton.label = "on";
+					Mouse.cursor = "hand";
+				}
+			}
+			
+			protected function imageList_changeHandler(event:IndexChangeEvent):void
+			{
+				var imageIndex:int = imageList.selectedIndex;
+				if (imageIndex == -1) return;
+				
+				var imageFilePath:Object = imageArray.getItemAt(imageIndex) as Object;
+				var imageURL:String = kitURL + imageFilePath.value;
+				var wiFile:File = new File(imageURL);
+				imageView.load(imageURL);
+				imageView.addEventListener(Event.RESIZE, onResize);	
+			}
+			
+			private function onResize(event:Event):void {
+				// This means that image loading was completed and the image was resized, then				
+				//put imageView inside center of the panel
+				resetView();
+			}
+
+			
+		]]>
+	</fx:Script>
+	
+	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="77" y="15" text="Images" fontSize="16"/>
+	<s:Panel id="imagePanel" title="Image Panel" width="450" height="360" x="27" y="76" 
+			 mouseDown="imagePanel_mouseDownHandler(event)" 
+			 mouseUp="imagePanel_mouseUpHandler(event)" 
+			 dropShadowVisible="false">
+		<s:Group clipAndEnableScrolling="true" width="100%" height="100%" visible="true" id="imageBox">
+			<mx:Image id="imageView"/>
+		</s:Group>
+		<s:Button x="408" y="-26" label="-" color="#000000" cornerRadius="0" width="35"
+				  id="resetButton" click="resetButton_clickHandler(event)"/>
+		<s:Button x="369" y="-26" label="&lt;" width="35" color="#000000" cornerRadius="2" 
+			  id="largerButton" click="largerButton_clickHandler(event)"/>
+		<s:Button x="330" y="-26" label="&gt;" id="smallerButton" color="#000000" 
+			  cornerRadius="2" width="35" click="smallerButton_clickHandler(event)"/>
+		<s:Button x="291" y="-26" label="off" id="dragButton" color="#000000" width="35" 
+			  cornerRadius="2" click="dragButton_clickHandler(event)"/>
+	</s:Panel>
+	<s:DropDownList id="imageList" x="222" y="44" width="254" height="20" dataProvider="{imageArray}"
+					 labelField="value" change="imageList_changeHandler(event)"></s:DropDownList>
+</s:Window>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="370" height="222"
+		  title="Information">
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			public var button:String = "";
+			
+			public function initInfo(title:String, message:String, decision:Boolean):void {
+				this.open();
+				this.move(400, 200);
+				
+				titleLabel.text = title;
+				messageLabel.text = message;
+				if (decision) {
+					okButton.visible = false;
+				}
+				else {
+					yesButton.visible = false;
+					noButton.visible = false;
+				}
+			}
+			
+			protected function yesButton_clickHandler(event:MouseEvent):void
+			{
+				button = yesButton.label;		// YES
+			}
+			
+			protected function noButton_clickHandler(event:MouseEvent):void
+			{
+				button = noButton.label;		// NO
+			}
+			
+			protected function okButton_clickHandler(event:MouseEvent):void
+			{
+				this.close();					// OK				
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Label id="messageLabel" x="47" y="63" width="274" height="58" fontSize="14"/>
+	<s:Label id="titleLabel" x="47" y="36" fontWeight="bold" text="Warning"/>
+	<s:Button id="yesButton" x="103" y="148" width="50" height="20" label="YES"
+			  click="yesButton_clickHandler(event)"/>
+	<s:Button id="noButton" x="216" y="148" width="50" height="20" label="NO"
+			  click="noButton_clickHandler(event)"/>
+	<s:Image x="309" y="8" source="images/infoMark.png"/>
+	<s:Button id="okButton" x="159" y="148" width="50" height="20" label="OK"
+			  click="okButton_clickHandler(event)"/>
+</s:Window>

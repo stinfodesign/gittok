@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="368" height="232"
+		  title="Color Selector">
+
+	<fx:Script>
+		<![CDATA[
+			import spark.events.TextOperationEvent;
+			
+			public var color:uint = 0xffffff;
+			public var cAlpha:Number = 1.0;
+			protected var r:Number = 255;
+			protected var g:Number = 255;
+			protected var b:Number = 255;
+			
+			public function initializeWindow(_color:uint, _cAlpha:Number):void {
+				color  = _color;
+				cAlpha = _cAlpha;
+				
+				r = int(color / 256 / 256);
+				g = int((color - (r * 256 * 256)) / 256);
+				b = color - ((r * 256) + g) * 256;
+				
+				redSlider.value   = r;
+				greenSlider.value = g;
+				blueSlider.value  = b;
+				alphaSlider.value = cAlpha;
+				
+				redValue.text   = "" + r;
+				greenValue.text = "" + g;
+				blueValue.text  = "" + b;
+				alphaValue.text = "" + cAlpha;
+				
+				drawColorBox();
+			}
+			
+			protected function redSlider_changeHandler(event:Event):void
+			{
+				redValue.text = "" + redSlider.value;
+				r = redSlider.value;
+				drawColorBox();
+			}
+			
+			protected function greenSlider_changeHandler(event:Event):void
+			{
+				greenValue.text = "" + greenSlider.value;
+				g = greenSlider.value;
+				drawColorBox();
+				
+			}
+			
+			protected function blueSlider_changeHandler(event:Event):void
+			{
+				blueValue.text = "" + blueSlider.value;
+				b = blueSlider.value;
+				drawColorBox();				
+				
+			}
+			
+			protected function alphaSlider_changeHandler(event:Event):void
+			{
+				alphaValue.text = "" + alphaSlider.value;
+				cAlpha = alphaSlider.value;
+				drawColorBox();
+				
+			}
+			
+			protected function drawColorBox():void {
+				color = uint(((r * 256) + g) * 256 + b);
+				colorGroup.graphics.clear();
+				colorGroup.graphics.beginFill(color, cAlpha);
+				colorGroup.graphics.drawRect(0, 0, 90, 100);
+				colorGroup.graphics.endFill();
+			}
+			
+			protected function redValue_changeHandler(event:TextOperationEvent):void
+			{
+				r = parseInt(redValue.text);
+				redSlider.value = r;
+				drawColorBox();
+			}
+			
+			protected function greenValue_changeHandler(event:TextOperationEvent):void
+			{
+				g = parseInt(greenValue.text);
+				greenSlider.value = g;
+				drawColorBox();
+			}
+			
+			protected function blueValue_changeHandler(event:TextOperationEvent):void
+			{
+				b = parseInt(blueValue.text);
+				blueSlider.value = b;
+				drawColorBox();
+			}
+			
+			protected function alphaValue_changeHandler(event:TextOperationEvent):void
+			{
+				cAlpha = Number(alphaValue.text);
+				alphaSlider.value = cAlpha;
+				drawColorBox();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="77" y="15" text="Color Selector" fontSize="16"/>
+	<s:Label x="80" y="60" text="Red"/>
+	<s:Label x="80" y="96" text="Green"/>
+	<s:Label x="80" y="130" text="Blue"/>
+	<s:HSlider id="redSlider" x="125" y="59" width="125" change="redSlider_changeHandler(event)"
+			   maximum="255" value="255"/>
+	<s:HSlider id="greenSlider" x="125" y="95" width="125" change="greenSlider_changeHandler(event)"
+			   maximum="255" value="255"/>
+	<s:HSlider id="blueSlider" x="126" y="130" width="125" change="blueSlider_changeHandler(event)"
+			   maximum="255" value="255"/>
+	<s:Group id="colorGroup" x="260" y="55" width="90" height="120">
+	</s:Group>
+	<s:TextInput id="redValue" x="170" y="72" width="30" height="15"
+				 change="redValue_changeHandler(event)" fontSize="11" text="255"/>
+	<s:TextInput id="greenValue" x="170" y="107" width="30" height="15"
+				 change="greenValue_changeHandler(event)" fontSize="11" text="255"/>
+	<s:TextInput id="blueValue" x="170" y="142" width="30" height="15"
+				 change="blueValue_changeHandler(event)" fontSize="11" text="255"/>
+	<s:Label x="80" y="164" text="Alpha"/>
+	<s:HSlider id="alphaSlider" x="126" y="164" width="124" change="alphaSlider_changeHandler(event)"
+			   maximum="1" stepSize="0.01" value="1"/>
+	<s:TextInput id="alphaValue" x="170" y="176" width="30" height="15"
+				 change="alphaValue_changeHandler(event)" fontSize="11" text="1"/>
+</s:Window>

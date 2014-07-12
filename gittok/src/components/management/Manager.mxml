@@ -1,0 +1,983 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" 
+		  width="610" height="730"
+		  backgroundColor="#faeed1"
+		  xmlns:os="http://openscales.org"
+		  creationComplete="initializeApp()">
+	
+	<fx:Script>
+		<![CDATA[
+			import components.acquisition.Editor;
+			import components.analysis.Analyst;
+			import components.exchange.Exchanger;
+			import components.representation.MapEditor;
+			
+			import coordinateReference.*;
+			
+			import dataTypes.place.*;
+			import dataTypes.simpleDataTypes.*;
+			import dataTypes.spatialGeometry.*;
+			
+			import flash.filesystem.*;
+			
+			import gfm.*;
+			
+			import instanceModel.*;
+			import instanceModel.Kit;
+			
+			import math.*;
+			
+			import metadata.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.DragEvent;
+			
+			import org.openscales.core.Map;
+			import org.openscales.core.basetypes.Resolution;
+			import org.openscales.core.control.*;
+			import org.openscales.core.events.MapEvent;
+			import org.openscales.core.feature.PolygonFeature;
+			import org.openscales.core.layer.DrawingsLayer;
+			import org.openscales.core.layer.GSIMaps;
+			import org.openscales.core.layer.osm.Mapnik;
+			import org.openscales.core.style.*;
+			import org.openscales.geometry.Geometry;
+			import org.openscales.geometry.LinearRing;
+			import org.openscales.geometry.Point;
+			import org.openscales.geometry.Polygon;
+			import org.openscales.geometry.basetypes.Bounds;
+			import org.openscales.geometry.basetypes.Location;
+			import org.openscales.geometry.basetypes.Pixel;
+			import org.openscales.proj4as.Proj4as;
+			import org.openscales.proj4as.ProjPoint;
+			import org.openscales.proj4as.ProjProjection;
+			
+			import spark.components.VSlider;
+			
+			protected var kit:Kit;
+			protected var kitFile:File;
+			protected var kitURL:String;
+			protected var crsFile:File;
+			protected var crs:CRS;
+			protected var geographicExtent:SG_Rectangle;
+			protected var gk:GaussKruger;
+			protected var zoomDelta:Number;
+			
+			protected var mtd:Metadata;
+			protected var metadataFile:File;
+			
+			private var geoLibrary:File;
+			private var mtdFiles:Array;
+			private var mtdList:ArrayList;
+			
+			private var llLat:Number;
+			private var llLng:Number;
+			private var urLat:Number;
+			private var urLng:Number;
+			
+			private var myDelimiter:String = " ";
+			
+			
+			[Bindable]
+			private var keywordArray:ArrayList = new ArrayList();
+			
+			private var downFlag:Boolean = false;			
+			
+			[Bindable]
+			private var fileNameList:ArrayList = new ArrayList();
+			
+			private var extents:ArrayList = new ArrayList();
+			
+			public var editor:Editor  = new Editor();
+			public var analyst:Analyst = new Analyst();
+			public var exchanger:Exchanger = new Exchanger();
+			public var mapEditor:MapEditor = new MapEditor();
+			
+			protected var gsiMap:GSIMaps = new GSIMaps("地理院地図");
+			protected var osmMap:Mapnik = new Mapnik("OpenStreetMap");
+			protected var dLayer:DrawingsLayer = new DrawingsLayer("drawingLayer");
+			protected var plygnFeature:PolygonFeature;
+						
+			
+			public function initializeApp(): void {
+				this.move(300,150);			
+				
+				// Basic Types
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
+				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
+				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
+				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				
+				// Location
+				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
+				registerClassAlias("dataTypes.place.URL", URL);
+				registerClassAlias("dataTypes.place.VideoURL", VideoURL);
+				registerClassAlias("dataTypes.place.SoundURL", SoundURL);
+				registerClassAlias("dataTypes.place.Address", Address);
+				
+				// General Feature Model
+				registerClassAlias("gfm.AttributeType", AttributeType);
+				registerClassAlias("gfm.OperationType", OperationType);
+				registerClassAlias("gfm.FeatureType", FeatureType);
+				registerClassAlias("gfm.AssociationType", AssociationType);
+				registerClassAlias("gfm.ApplicationSchema", ApplicationSchema);	
+				registerClassAlias("gfm.ArgAttPair", ArgAttPair);				
+				
+				// Instance Model
+				registerClassAlias("instanceModel.Kit", Kit);
+				registerClassAlias("instanceModel.FeatureSet", FeatureSet);
+				registerClassAlias("instanceModel.Feature", Feature);
+				registerClassAlias("instanceModel.Association", Association);
+				registerClassAlias("instanceModel.AssociationSet", AssociationSet);
+				
+				//Coordinate ReferenceSystem
+				registerClassAlias("coordinateReference.CRS", CRS);
+				registerClassAlias("coordinateReference.Axis", Axis);
+				registerClassAlias("coordinateReference.CoordinateSystem", CoordinateSystem);
+				registerClassAlias("coordinateReference.Ellipsoid", Ellipsoid);
+				registerClassAlias("coordinateReference.GeodeticDatum", GeodeticDatum);
+				registerClassAlias("coordinateReference.PrimeMeridian", PrimeMeridian);
+				registerClassAlias("coordinateReference.ProjectionSystem", ProjectionSystem);
+				registerClassAlias("coordinateReference.PSOrigin", IdentifiedCoordinate);
+				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);								
+				
+				// File
+				registerClassAlias("flash.filesystem.File", File);
+				
+				// Geometry
+				registerClassAlias("dataTypes.spatialGeometry.SG_Point", SG_Point);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Surface", SG_Surface);
+				registerClassAlias("dataTypes.spatialGeometry.SG_OrientableCurve", SG_OrientableCurve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Primitive", SG_Primitive);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Rectangle", SG_Rectangle);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Ring", SG_Ring);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
+				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
+				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
+				
+				// Metadata
+				registerClassAlias("metadata.Metadata", Metadata);
+				registerClassAlias("metadata.TemporalExtent", TemporalExtent);
+				
+				// Affine
+				registerClassAlias("math.AffineParam", AffineParam);
+				
+				// Guide Map zoom parameters
+				zoomSlider.value = 0;
+				zoomSlider.stepSize = 0.25;
+				zoomDelta = 0.5;
+			}
+			
+			/*
+			Desktop control
+			*/
+			
+			protected function openKitButton_clickHandler(event:MouseEvent):void
+			{
+				// Open the kit
+				try {
+					kitFile = new File();
+					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
+					kitFile.addEventListener(Event.SELECT, openKit);
+					//kitFile.addEventListener(Event.CANCEL, openKitClose);
+					kitFile.browseForOpen("Open kit file", [filter]);
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				}
+			}
+			
+			private function openKitClose(event:Event):void {
+				
+			}
+			
+			private function openKit(event:Event):void 
+			{				
+				var kitStream:FileStream = new FileStream();
+				kitStream.open(kitFile, FileMode.READ);				
+				kit = kitStream.readObject();
+				kitStream.close();
+				
+				var pathURL:String = kitFile.url;
+				var pathArray:Array = pathURL.split("/");
+				kitURL = "";
+				for (var i:int = 0; i < pathArray.length - 1; i++) {
+					kitURL += pathArray[i] + "/";
+				}
+				
+				// If crs is not defined, you cannot watch the geographic extent on the map.
+				if (kit.crsURL == "") {
+					Alert.show("Attach CRS file to see the geographic extent.", "Error", 4, this);
+					return;
+				}
+				
+				//Set kit name on kitLabel
+				kitLabel.text = kitFile.name;	
+				
+				//Open CRS
+				var crsStream:FileStream = new FileStream();
+				var crsFile:File = new File();
+				crsFile.url = kitURL + kit.crsURL;
+				crsStream.open(crsFile, FileMode.READ);
+				crs = crsStream.readObject() as CRS;
+				crsStream.close();
+				
+				//Get geographic extent and zoom to its extent
+				kit.screenToGeodetic(crs);	
+				geographicExtent = kit.getGeographicExtent();
+				
+				// Draw geographic extent
+				this.drawGeographicExtent();
+			}
+			
+			private function drawGeographicExtent():void {
+				var ll:Location = new Location(geographicExtent.lowerLeft.y, geographicExtent.lowerLeft.x, "EPSG:4326");
+				var ur:Location = new Location(geographicExtent.upperRight.y, geographicExtent.upperRight.x, "EPSG:4326");
+				ll = ll.reprojectTo("EPSG:900913");
+				ur = ur.reprojectTo("EPSG:900913");
+				
+				var bounds:Bounds = new Bounds(ll.lon, ll.lat, ur.lon, ur.lat, "EPSG:900913");
+				fxMap.map.zoomToExtent(bounds);
+				
+				var reso:Number = Math.log(fxMap.map.resolution.value) / Math.LN2;
+				
+				var ireso:int = int(reso + 0.5);
+				if (ireso >18) ireso = 18;
+				if (ireso < 0) ireso =  0;
+				reso = dLayer.resolutions[17 - ireso];
+				
+				fxMap.map.resolution = new Resolution(reso, fxMap.map.projection);
+				zoomSlider.value =18.0 - ireso + 1;
+				
+				
+				plygnFeature = this.getPolygonFeature(ll, ur);
+				
+				dLayer.clear();
+				dLayer.addFeature(plygnFeature);
+				fxMap.map.addLayer(dLayer);
+				dLayer.generateResolutions(18);				
+			}
+
+			protected function getPolygonFeature(lowerLeft:Location, upperRight:Location):PolygonFeature {				
+				//Draw extent on the map
+				var points:Vector.<Number> = new <Number>[];
+				points[0] = lowerLeft.lon;
+				points[1] = lowerLeft.lat;
+				points[2] = upperRight.lon;
+				points[3] = lowerLeft.lat;
+				points[4] = upperRight.lon;
+				points[5] = upperRight.lat;
+				points[6] = lowerLeft.lon;
+				points[7] = upperRight.lat;
+				var rng:LinearRing = new LinearRing(points, fxMap.map.projection);
+				var rngs:Vector.<Geometry> = new <Geometry> [rng];
+				var plygn:Polygon = new Polygon(rngs, fxMap.map.projection);
+				
+				return new PolygonFeature(plygn, null, Style.getDefaultPolygonStyle());
+			}
+			
+			private function tabBarClickHandler(event:Event):void {
+				if (tabBar.selectedIndex == 0) {
+					if (mtd != null) {
+						this.setMetadataTable();
+					}
+					else {
+						this.initMetadataTable();					
+					}
+				}
+				
+				if (tabBar.selectedIndex == 1) {
+					if (mtdList != null) {
+						this.showGuideMaps();	
+					}
+					else {
+						//this.myMap.setCenter(new LatLng(35.701398, 139.73986807), 4);
+					}
+				}	
+			}
+			
+			protected function openMetadataButton_clickHandler(event:MouseEvent):void
+			{
+
+				try {
+					metadataFile = new File();
+					var filter:FileFilter = new FileFilter("Metadata File", "*.mtd");
+					metadataFile.addEventListener(Event.SELECT, openMetadata);
+					metadataFile.browseForOpen("Open metadata file", [filter]);
+					
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				}
+			}
+			
+			private function openMetadata(event:Event):void 
+			{
+				var mtdStream:FileStream = new FileStream();
+				mtdStream.open(metadataFile, FileMode.READ);				
+				mtd = mtdStream.readObject();
+				mtdStream.close();
+				
+				mtdFileLabel.text = metadataFile.name;
+				
+				this.setMetadataTable();	
+				
+			}
+			
+			private function setMetadataTable():void {
+								
+				titleInput.text = mtd.title;
+				overviewInput.text  = mtd.overview;
+				repPartyInput.text = mtd.responsibleParty;
+				keywordArray = mtd.keywords;
+				keywordInput.text = "";
+				pubDate.selectedDate = mtd.publicationDate;
+				
+				kitFile = new File();
+				kitFile.url = mtd.kitURL;
+				kitLabel.text = kitFile.name;	
+				
+				dLayer.removeFeatures(dLayer.features);
+				
+				geographicExtent = mtd.geographicExtent;
+				this.drawGeographicExtent();
+			}
+			
+			private function initMetadataTable():void {
+				titleInput.text = "";
+				overviewInput.text  = "";
+				repPartyInput.text = "";
+				keywordArray = new ArrayList();
+				keywordInput.text = "";
+				pubDate.selectedDate = new Date();
+				
+				kitLabel.text = "";	
+				
+				dLayer.removeFeatures(dLayer.features);
+			}
+			
+			protected function saveMetadataButton_clickHandler(event:MouseEvent):void
+			{
+				if (titleInput.text == "") {
+					Alert.show("Set parameters before save.","Error", 4, this);
+					return;
+				}
+				
+				mtd = new Metadata();
+				
+				mtd.title = titleInput.text;
+				mtd.overview = overviewInput.text;
+				mtd.responsibleParty = repPartyInput.text;
+				mtd.keywords = keywordArray;
+				
+				mtd.geographicExtent.lowerLeft.x  = geographicExtent.lowerLeft.x; //x:lat
+				mtd.geographicExtent.lowerLeft.y  = geographicExtent.lowerLeft.y; //y:lon
+				mtd.geographicExtent.upperRight.x = geographicExtent.upperRight.x;
+				mtd.geographicExtent.upperRight.y = geographicExtent.upperRight.y;
+				
+				mtd.publicationDate 		= pubDate.selectedDate;
+				
+				mtd.kitURL = kitFile.url;
+				
+				try {
+					metadataFile = new File();
+					var filter:FileFilter = new FileFilter("Metadata File", "*.mtd");
+					metadataFile.addEventListener(Event.SELECT, saveMetadata);
+					metadataFile.browseForSave("Save metadata file");	
+					
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				} 
+			}
+			
+			private function saveMetadata(event:Event):void {
+				var mtdStream:FileStream = new FileStream();
+				mtdStream.open(metadataFile, FileMode.WRITE);
+				mtdStream.writeObject(mtd);
+				mtdStream.close();
+				mtdFileLabel.text = metadataFile.name;
+			}
+
+			protected function addKeywordButton_clickHandler(event:MouseEvent):void
+			{
+				if (keywordInput.text == "") {
+					Alert.show("Enter keyword before addition.", "Error", 4, this);
+					return;
+				}
+				
+				keywordArray.addItem(keywordInput.text); 
+				keywordInput.text = "";
+			}
+			
+			
+			protected function deleteKeywordButton_clickHandler(event:MouseEvent):void
+			{
+				if (keywordList.selectedIndex == -1) {
+					Alert.show("No keyword is selected.", "Error", 4, this);
+					return;
+				}
+				keywordArray.removeItem(keywordList.selectedItem);
+			}
+			
+			protected function selectLibraryButton_clickHandler(event:MouseEvent):void
+			{
+				try {
+					geoLibrary = new File();
+					geoLibrary.browseForDirectory("Select metadatas");
+					geoLibrary.addEventListener(Event.SELECT, openLibrary);	
+					
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				}
+			}
+			
+			private function openLibrary(event:Event):void {
+				if (geoLibrary == null) {
+					Alert.show("No Library is selected.", "Error", 4, this);
+					return;
+				}
+				libraryLabel.text = geoLibrary.name;
+				mtdFiles = geoLibrary.getDirectoryListing();
+				
+				var n:int = mtdFiles.length;
+				if (n == 0) {
+					Alert.show("There is no metadata file in the Library.", "Alert", 4, this);
+				}
+				
+				var mtdStream:FileStream = new FileStream();				// list the metadata files
+				var mtd:Metadata;
+				mtdList = new ArrayList();
+				fileNameList = new ArrayList();
+				for (var i:int = 0; i < mtdFiles.length; i++) 
+				{
+					var mtdFile:File = mtdFiles[i] as File;
+					if (mtdFile.name.indexOf(".mtd") != -1) {
+						fileNameList.addItem(mtdFile.name);
+						mtdStream.open(mtdFile, FileMode.READ);				
+						mtd = mtdStream.readObject();
+						mtdList.addItem(mtd);
+						mtdStream.close();
+					}
+				}
+				
+				this.showGuideMaps();
+			}
+			
+			private function showGuideMaps():void {
+				
+				// show geographic extents
+				var minLat:Number = Number.MAX_VALUE;
+				var minLon:Number = Number.MAX_VALUE;
+				var maxLat:Number = Number.MIN_VALUE;
+				var maxLon:Number = Number.MIN_VALUE;
+				
+				for (var i:int = 0; i < mtdList.length; i++) {
+					mtd = mtdList.getItemAt(i) as Metadata;
+					var geoEx:SG_Rectangle = mtd.geographicExtent;
+					
+					if (minLat > geoEx.lowerLeft.x)  minLat = geoEx.lowerLeft.x;
+					if (minLon > geoEx.lowerLeft.y ) minLon = geoEx.lowerLeft.y;
+					if (maxLat < geoEx.upperRight.x) maxLat = geoEx.upperRight.x;
+					if (maxLon < geoEx.upperRight.y) maxLon = geoEx.upperRight.y;
+				}
+				
+				var ll:Location = new Location(minLon, minLat, "EPSG:4326");
+				var ur:Location = new Location(maxLon, maxLat, "EPSG:4326");
+				ll = ll.reprojectTo("EPSG:900913");
+				ur = ur.reprojectTo("EPSG:900913");
+				var bounds:Bounds = new Bounds(ll.lon, ll.lat, ur.lon, ur.lat, "EPSG:900913");
+				fxMap.map.zoomToExtent(bounds);
+				
+				if (fxMap.map.getLayerByIdentifier(dLayer.identifier) != null)
+					fxMap.map.removeLayer(dLayer);
+				else {
+					dLayer.generateResolutions(18);
+				}
+				
+				dLayer.removeFeatures(dLayer.features);
+
+				for (i = 0; i < mtdList.length; i++) {
+					mtd = mtdList.getItemAt(i) as Metadata;
+					geoEx = mtd.geographicExtent;
+					
+					ll = new Location(geoEx.lowerLeft.y,  geoEx.lowerLeft.x,  "EPSG:4326");
+					ur = new Location(geoEx.upperRight.y, geoEx.upperRight.x, "EPSG:4326");
+					ll = ll.reprojectTo("EPSG:900913");
+					ur = ur.reprojectTo("EPSG:900913");
+					
+					var polygonFeature:PolygonFeature = this.getPolygonFeature(ll, ur);
+					polygonFeature.alpha = 0.65;
+					dLayer.addFeature(polygonFeature);	
+				}
+				
+				fxMap.map.addLayer(dLayer);
+				
+				var reso:Number = Math.log(fxMap.map.resolution.value) / Math.LN2;
+				if (reso >18) reso = 18;
+				if (reso <  0) reso =  0;
+				zoomSlider.value = 18.0 - reso;
+			}
+			
+			protected function metadataButton_clickHandler(event:MouseEvent):void
+			{
+				if (metadataList.selectedIndex == -1) {
+					Alert.show("Select metadata before.", "Warning", 4, this);
+					return;
+				}
+				
+				mtd = mtdList.getItemAt(metadataList.selectedIndex) as Metadata;
+				mtdFileLabel.text = metadataList.selectedItem as String;
+				
+				tabBar.selectedIndex = 0;
+				
+				this.setMetadataTable();
+				
+			}
+			
+			
+			protected function maintenanceButton_clickHandler(event:MouseEvent):void
+			{
+				if (metadataList.selectedIndex < 0) {
+					Alert.show("Select metadata before.", "Error", 4, this);
+					return;
+				}
+				mtd = mtdList.getItemAt(metadataList.selectedIndex) as Metadata
+				editor = new Editor();
+				editor.open();
+				editor.setKit(mtd.kitURL);
+				editor.addEventListener(Event.CLOSE, editorClose);
+			}
+			
+			protected function editorClose(event:Event):void {
+				if (editor.geometryWindow 	!= null)	editor.geometryWindow.close();
+				if (editor.imageWindow 		!= null)	editor.imageWindow.close();
+				if (editor.videoWindow 		!= null)	editor.videoWindow.close();
+				if (editor.soundWindow 		!= null)	editor.soundWindow.close();
+				if (editor.urlWindow 		!= null)	editor.urlWindow.close();
+				if (editor.addressWindow 	!= null)	editor.addressWindow.close();
+				
+				editor.close();
+			}
+			
+			protected function analysisButton_clickHandler(event:MouseEvent):void　{
+				if (metadataList.selectedIndex < 0) {
+					Alert.show("Select metadata before.", "Error", 4, this);
+					return;
+				}
+				
+				mtd = mtdList.getItemAt(metadataList.selectedIndex) as Metadata;
+				analyst = new Analyst();
+				analyst.open();
+				analyst.setKit(mtd.kitURL);
+				analyst.addEventListener(Event.CLOSE, analystClose);
+			}
+			
+			protected function analystClose(event:Event):void {
+				analyst.close();
+			}
+			
+			protected function refineButton_clickHandler(event:MouseEvent):void
+			{
+				if (selectRadio.selection == null) {
+					Alert.show("No condition is selected", "Alert", 4, this);
+					return;
+				}
+				
+				switch (selectRadio.selection.label) {
+					case "Title":
+						var titleKey:String = titleInput2.text;
+						var mtd:Metadata;
+						for (var i:int = 0; i < mtdList.length; i++) {
+							mtd = mtdList.getItemAt(i) as Metadata;
+							if (mtd.title.search(titleKey) == -1) {
+								mtdList.removeItemAt(i);
+								fileNameList.removeItemAt(i);
+								i--;
+							} 
+						}
+						break;
+					
+					case "Keyword":
+						var keywordKey:String = keywordInput2.text;
+						for (i = 0; i < mtdList.length; i++) {
+							mtd = mtdList.getItemAt(i) as Metadata;
+							var kwds:ArrayList = mtd.keywords;
+							var flag:Boolean = false;
+							for (var j:int = 0; j < kwds.length; j++) {
+								var  kwd:String = kwds.getItemAt(j) as String;
+								if (kwd.search(keywordKey) > -1) {
+									flag = true;	
+								}
+							}
+							if (!flag) {
+								mtdList.removeItemAt(i);
+								fileNameList.removeItemAt(i);
+								i--;								
+							}
+						}
+						break;
+					
+					case "Extent restriction":
+						//var n:int = this.myMap.shapes.length;
+						
+						for (i = 0; i < mtdList.length; i++) {
+							mtd = mtdList.getItemAt(i) as Metadata;
+							var geoEx:SG_Rectangle = mtd.geographicExtent;
+							
+							if (!(llLng < geoEx.lowerLeft.x && geoEx.upperRight.x < urLng &&
+								llLat < geoEx.lowerLeft.y && geoEx.upperRight.y < urLat)) {
+								mtdList.removeItemAt(i);
+								fileNameList.removeItemAt(i);
+								i--;								
+							}
+						}
+											
+						break;
+					
+					case "Publication extent":
+						for (i = 0; i < mtdList.length; i++) {
+							mtd = mtdList.getItemAt(i) as Metadata;
+							var pubTime:Number = mtd.publicationDate.getTime();
+							var beginTime:Number = pubBegin.selectedDate.getTime();
+							var endTime:Number = pubEnd.selectedDate.getTime();
+							if (beginTime < pubTime) trace("b yes:" + beginTime + ", " + pubTime);
+							if (pubTime < endTime) trace("e yes:" + pubTime + ", " + endTime);
+							if (!(beginTime < pubTime && pubTime < endTime)) {
+								trace("pub:" + pubTime);
+								mtdList.removeItemAt(i);
+								fileNameList.removeItemAt(i);
+								i--;	
+							}
+						}
+						break;						
+				}
+			}
+			
+			protected function resetButton_clickHandler(event:MouseEvent):void
+			{
+				this.openLibrary(null);
+				selectRadio.selection = null;
+				titleInput2.text = "";
+				keywordInput2.text = "";
+				pubBegin.selectedDate = null;
+				pubEnd.selectedDate = null;
+			}
+			
+			protected function exchangeButton_clickHandler(event:MouseEvent):void
+			{
+				if (metadataList.selectedIndex < 0) {
+					Alert.show("Select metadata before.", "Error", 4, this);
+					return;
+				}
+				
+				mtd = mtdList.getItemAt(metadataList.selectedIndex) as Metadata;
+				exchanger = new Exchanger();
+				exchanger.open();
+				exchanger.addEventListener(Event.CLOSE, exchangerClose);
+				exchanger.setKit(mtd.kitURL);
+			}
+			
+			protected function exchangerClose(event:Event):void {
+				exchanger.close();
+			}
+			
+			protected function mappingButton_clickHandler(event:MouseEvent):void
+			{
+				if (metadataList.selectedIndex < 0) {
+					Alert.show("Select metadata before.", "Error", 4, this);
+					return;
+				}
+				
+				mtd = mtdList.getItemAt(metadataList.selectedIndex) as Metadata;
+				mapEditor = new MapEditor();
+				mapEditor.open();
+				mapEditor.title = "Manager >";
+				mapEditor.addEventListener(Event.CLOSE, mappingClose);
+				mapEditor.setKit(mtd.kitURL);			
+			}
+			
+			protected function mappingClose(event:Event):void {
+				mapEditor.close();
+			}
+
+			/*
+			map control
+			*/
+			protected function onMapAddedToStage(e:Event):void {
+				fxMap.map.addLayer(gsiMap); // 地理院地図  ズームレベル18未整備のため現時点(2013年12月)ではこちら  (numZoomLevels=18)
+				
+				//fxMap.map.addLayer(new GSIMaps("地理院地図"));　// 地理院地図 ズームレベル18整備後はこちら  デフォルト値のため第２引数19省略 (numZoomLevels=19)
+				//fxMap.map.addLayer(new GSIMaps("地理院地図2012", 19, 'http://cyberjapandata.gsi.go.jp/xyz/std2012/')); // 2012年度版地理院地図 (numZoomLevels=19)
+				//fxMap.map.resolution = new Resolution(1.195, "EPSG:900913");
+				
+				dLayer.projection = new ProjProjection("EPSG:900913");
+				dLayer.style = Style.getDefaultPolygonStyle();				
+				dLayer.generateResolutions(18);
+			}
+			
+			protected function mapButton_clickHandler(event:MouseEvent):void
+			{
+				if (mapButton.label == "OSM") {
+					fxMap.map.removeLayer(gsiMap);
+					fxMap.map.addLayer(osmMap);	
+					gsiTerms.visible = false;
+					osmTerms.visible = true;
+					mapButton.label = "GSI";
+				}
+				else {
+					fxMap.map.removeLayer(osmMap);
+					fxMap.map.addLayer(gsiMap);
+					gsiTerms.visible = true;
+					osmTerms.visible = false;
+					mapButton.label = "OSM";
+				}
+				
+				//redraw geographic extent of the kit
+				fxMap.map.removeLayer(dLayer);
+				dLayer.clear();
+				if (plygnFeature != null)
+					dLayer.addFeature(plygnFeature);
+				fxMap.map.addLayer(dLayer);
+
+			}
+						
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/manager_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/manager_en.html");
+				navigateToURL(request);
+			}
+			
+			protected function fxMap_mouseMoveHandler(event:MouseEvent):void
+			{
+				var str:String = " Lon:" + mousePos.longitude;
+				var lonLat:Location = new Location(Number(mousePos.longitude), Number(mousePos.latitude), "EPSG:900913");
+				lonLat = lonLat.reprojectTo("EPSG:4326");
+				
+				numberFormatter.fractionalDigits = 5;
+				var lonstr:String = numberFormatter.format(lonLat.lon);
+				var latstr:String = numberFormatter.format(lonLat.lat);
+				coordinateLabel.text = " Lon:" + lonstr + " Lat:" + latstr;
+				
+				var coor:Coordinate2 = new Coordinate2();
+				coor.x = lonLat.lat;
+				coor.y = lonLat.lon;
+				
+				if (planeCheckBox.selected && crs != null) {				
+					coor.x = math.Angle.decimalToRad(coor.x);
+					coor.y = math.Angle.decimalToRad(coor.y);
+					var pc:PlaneRectangularCoordinate = gk.BLtoXY(coor);
+					numberFormatter.fractionalDigits = 2;
+					var xstr:String = numberFormatter.format(pc.x);
+					var ystr:String = numberFormatter.format(pc.y);
+					var pcStr:String = " x:" + xstr + " y:" + ystr;
+					coordinateLabel.text = pcStr;
+				}
+			}
+			
+			protected function planeCheckBox_clickHandler(event:MouseEvent):void
+			{
+				if (planeCheckBox.selected) {
+					Alert.show("The screen extent shall be included in the validation area of Plane Coordinate System. Are you sure?", 
+						"Warning", Alert.YES | Alert.NO, this, selectCRS);
+				}
+			}
+			
+			protected function selectCRS(event:CloseEvent):void {				
+				if (event.detail == Alert.YES) {
+					// Open CRS File
+					try {
+						crsFile = new File();
+						var filter:FileFilter = new FileFilter("Kit File", "*.crs");
+						crsFile.addEventListener(Event.SELECT, openCRS);
+						crsFile.browseForOpen("Open kit file", [filter]);	
+					} catch (error:IOError) {
+						Alert.show(error.message);
+					}
+				}
+				else {
+					planeCheckBox.selected = false;
+				}
+			}
+			
+			protected function openCRS(event:Event):void {
+				var crsStream:FileStream = new FileStream();
+				crsStream.open(crsFile, FileMode.READ);				
+				crs = crsStream.readObject();
+				crsStream.close();
+				gk = new GaussKruger();
+				gk.setParameters(crs);					
+			}
+			
+		
+			protected function zoomSlider_changeHandler(event:Event):void
+			{
+				this.setResolution();
+			}
+			
+			protected function zoomOutButton_clickHandler(event:MouseEvent):void
+			{
+				zoomSlider.changeValueByStep(false);
+				this.setResolution();
+			}
+			
+			protected function zoomInButton_clickHandler(event:MouseEvent):void
+			{
+				zoomSlider.changeValueByStep(true);
+				this.setResolution();
+			}
+			
+			protected function setResolution():void {
+				var power:Number = 18. - zoomSlider.value;
+				var reso:Number = Math.pow(2., power);
+				//if (reso < 1.195) reso = 1.195;  // 1.195 is the minimum resoluton for GSI Map
+				fxMap.map.resolution = new Resolution(reso, fxMap.map.projection);	
+			}
+			
+			protected function fxMap_mouseDownHandler(event:MouseEvent):void
+			{
+				// search metadata by the mouse position included in the geographic extent.
+				var lonLat:Location = new Location(Number(mousePos.longitude), Number(mousePos.latitude), "EPSG:900913");
+				var pfs:Vector.<org.openscales.core.feature.Feature> = dLayer.features;
+				
+				for (var i:int = 0; i < pfs.length; i++) {
+					var plyFtr:PolygonFeature = pfs[i] as PolygonFeature;
+					plyFtr.alpha = 0.65;
+					var ply:Polygon = plyFtr.polygon;
+					if (ply.isPointInPolygon(new org.openscales.geometry.Point(lonLat.x, lonLat.y, lonLat.projection))) {						
+						if (tabBar.selectedIndex == 1) {
+							// highlight the selected metadata on the list
+							metadataList.selectedIndex = i;
+							plyFtr.alpha = 1.0;
+						}
+					}
+					pfs[i] = plyFtr;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:NumberFormatter id="numberFormatter"/>
+		<s:RadioButtonGroup id="selectRadio"/>
+	</fx:Declarations>
+	
+	<mx:Image x="10" y="4" source="images/pictManagement1.png"/>
+	<s:Label x="75" y="15" text="Manager" fontSize="16"/>
+	
+	<s:Panel id="mapPanel" left="25" top="335" right="25" bottom="25" title="Geographic Extent" dropShadowVisible="false">
+		<os:Map id="fxMap" width="100%" height="100%"  maxExtent="-180,-90,180,90" center="139.73945, 35.701394" 
+				projection="EPSG:900913" addedToStage="onMapAddedToStage(event)"
+			    mouseMove="fxMap_mouseMoveHandler(event)"
+			    mouseDown="fxMap_mouseDownHandler(event)">
+			<os:MousePosition id="mousePos" availableProjSrsList="EPSG:900913"
+					displayProjection="EPSG:900913" visible="false"/>
+			<os:TermsOfService right="10" bottom="10" label="OpenScales" url="http://openscales.org/index.html" />
+			<os:TermsOfService id="gsiTerms" right="90" bottom="10" label="© 国土地理院 (GSI Japan)" 
+					url="http://portal.cyberjapan.jp/help/termsofuse.html" visible="true" />
+			<os:TermsOfService id="osmTerms" right="90" bottom="10" label="© OpenStreetMap Contributers" 
+					url="http://www.openstreetmap.org/copyright/en" visible="false"/>
+			<os:WheelHandler />
+			<os:DragHandler />
+			<os:ClickHandler />
+		</os:Map>
+		<s:Button id="mapButton" right="10" top="160" width="55" height="20" label="OSM"
+					  click="mapButton_clickHandler(event)"/>
+		<s:Label id="coordinateLabel" left="10" bottom="10" width="170" height="16"
+				 backgroundColor="0xffffff" fontSize="11" verticalAlign="middle"/>
+		<s:VGroup top="10" right="20" horizontalAlign="center">
+			<s:Button id="zoomInButton" width="30" height="15" label="+" click="zoomInButton_clickHandler(event)"/>
+			<s:VSlider id="zoomSlider"
+					   change="zoomSlider_changeHandler(event)" minimum="0" maximum="18"/>
+			<s:Button id="zoomOutButton" width="30" height="15" label="-" click="zoomOutButton_clickHandler(event)"/>		
+		</s:VGroup>
+	</s:Panel>
+	
+	<s:TabBar id="tabBar" dataProvider="{myViewStack}" x="24" y="62" height="20" click="tabBarClickHandler(event)"/> 
+	
+	<mx:ViewStack id="myViewStack" 
+				  borderStyle="solid" width="560" height="247" x="25" y="82" backgroundColor="#fefee5"> 
+		
+		<s:NavigatorContent id="metadataTab" label="Metadata"> 
+			<s:Group width="100%" height="246" id="metadataDef" x="-1" y="0">
+				<s:Label x="176" y="18" text="Kit" textAlign="left"/>
+				<s:Label x="28" y="72" text="Metadata title" textAlign="left"/>
+				<s:Label x="50" y="100" text="Overview" textAlign="left"/>
+				<s:Label x="4" y="169" text="Responsible party" textAlign="left"/>
+				<s:Label x="15" y="198" text="Publication date" textAlign="left"/>
+				<s:TextInput x="108" y="67" width="206" id="titleInput"/>
+				<s:TextInput x="108" y="163" width="206" id="repPartyInput"/>
+				<s:TextArea x="109" y="96" width="205" height="59" id="overviewInput"/>
+				<s:Label x="108" y="39" width="206" height="21" verticalAlign="middle" id="kitLabel" backgroundColor="#DADADA"/>
+				<mx:DateField x="108" y="193" width="100" id="pubDate" yearNavigationEnabled="true"/>
+				<s:Button x="110" y="13" label="open" width="58" id="openKitButton" click="openKitButton_clickHandler(event)"/>
+				<s:Button x="399" y="13" label="save" width="55" id="saveMetadataButton" click="saveMetadataButton_clickHandler(event)"/>
+				<s:Button x="340" y="13" label="open" width="55" id="openMetadataButton" click="openMetadataButton_clickHandler(event)"/>
+				<s:Label x="339" y="39" width="198" height="21" backgroundColor="#DADADA" id="mtdFileLabel" verticalAlign="middle"/>
+				<s:Label x="466" y="19" text="Metadata file"/>
+				<s:Label x="466.75" y="81" text="Keyword"/>
+				<s:TextInput x="340" y="104" width="199" id="keywordInput"/>
+				<s:List id="keywordList" x="340" y="149" width="199" height="85"
+						borderColor="#DADADA" contentBackgroundColor="#DADADA"
+						dataProvider="{keywordArray}"></s:List>
+				<s:Button x="339" y="76" id="addKeywordButton" label="add" width="55" click="addKeywordButton_clickHandler(event)"/>
+				<s:Button x="399" y="76" label="delete" id="deleteKeywordButton" width="55" click="deleteKeywordButton_clickHandler(event)"/>		
+				<s:Label x="340" y="132" text="Keyword list"/>
+			</s:Group>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent id="libraryTab" label="Geo-library" > 
+			<s:Group width="100%" height="100%" id="metadataSearch" x="0" y="0">
+				<s:Rect x="432" y="82" width="118" height="156" >
+					<s:fill>
+						<s:SolidColor color="0x888888"/>
+					</s:fill>
+				</s:Rect>
+				<s:TextInput x="92" y="83" id="titleInput2" width="138"/>
+				<s:TextInput x="91" y="126" id="keywordInput2" width="139"/>
+				<mx:DateField x="142" y="173" yearNavigationEnabled="true" id="pubBegin"/>
+				<mx:DateField x="248" y="173" yearNavigationEnabled="true" id="pubEnd"/>
+				<s:Button x="95" y="13" label="select" width="55" id="selectLibraryButton" click="selectLibraryButton_clickHandler(event)"/>
+				<s:Label x="155" y="20" text="library"/>
+				<s:Label x="91" y="40" width="141" height="21" id="libraryLabel" chromeColor="#CCCCCC" backgroundColor="#DADADA" verticalAlign="middle"/>
+				<s:List x="245" y="40" width="178" height="108" contentBackgroundColor="#DADADA" id="metadataList" dataProvider="{fileNameList}"></s:List>
+				<s:Label x="370" y="20" text="Metadata list"/>
+				<s:Button x="437" y="93" label="metadata edit »" id="metadataButton" click="metadataButton_clickHandler(event)" width="110"/>
+				<s:Button x="437" y="122" label=" maintenance »" id="geodataButton" click="maintenanceButton_clickHandler(event)" width="110"/>
+				<s:Button id="refineButton" x="246" y="13" width="55" label="refine"
+						  click="refineButton_clickHandler(event)"/>
+				<s:RadioButton x="18" y="85" label="Title" groupName="selectRadio"/>
+				<s:RadioButton x="18" y="129" label="Keyword" groupName="selectRadio"/>
+				<s:RadioButton x="18" y="175" label="Publication extent" groupName="selectRadio"/>
+				<s:Button x="437" y="151" label="analysis »" width="110" id="analysisButton" click="analysisButton_clickHandler(event)"/>
+				<s:Button id="resetButton" x="308" y="13" width="55" label="reset"
+						  click="resetButton_clickHandler(event)"/>
+				<s:Button id="exchangeButton" x="437" y="180" width="110" label="exchange »"
+						  click="exchangeButton_clickHandler(event)"/>
+				<s:Button id="mappingButton" x="437" y="208" width="110" label="mapping »"
+						  click="mappingButton_clickHandler(event)"/>
+
+			</s:Group>
+		</s:NavigatorContent>
+		
+	</mx:ViewStack>
+	<s:Label x="512" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="553" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:CheckBox id="planeCheckBox" left="35" bottom="5" label="Plane Coordinate"
+				click="planeCheckBox_clickHandler(event)" fontSize="11"/>
+
+</s:Window>

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="469" height="270" 
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import components.modeling.*;
+			
+			import flash.filesystem.*;
+			import flash.utils.Dictionary;
+			
+			import gfm.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			
+			private var file:File;
+			private var stream:FileStream = new FileStream();
+			
+			public var featureWindow:FeatureWindow;
+			public var associationWindow:AssociationWindow;
+			
+			public var featureTypes:Dictionary 		= new Dictionary();
+			public var associationTypes:Dictionary 	= new Dictionary();
+			
+			protected function initializeApp(): void {
+				this.move(300,50);
+				
+				registerClassAlias("gfm.AttributeType", AttributeType);
+				registerClassAlias("gfm.OperationType", OperationType);
+				registerClassAlias("gfm.FeatureType", FeatureType);
+				registerClassAlias("gfm.AssociationType", AssociationType);	
+				registerClassAlias("gfm.ApplicationSchema", ApplicationSchema);
+				registerClassAlias("gfm.ArgAttPair", ArgAttPair);
+				
+			}
+			
+			protected function openFileButton_clickHandler(event:MouseEvent):void
+			{
+				var length:int = 0;
+				for each (var str:String in featureTypes) {
+					length++;
+				}
+				if (length > 0) {
+					Alert.show("Do you open another schema?\n[はい:YES  いいえ:NO]", "Warning", 
+						Alert.YES|Alert.NO, this, openClickHandler);
+					return;
+				}				
+				openFile();							
+			}
+			
+			protected function openClickHandler(event:CloseEvent):void {				
+				if(event.detail == Alert.YES) {
+					//Open another schema
+					openFile();				
+				}
+			}
+			
+			protected function openFile():void {
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("ApplicationSchema File", "*.aps");
+					file.addEventListener(Event.SELECT, openAps);
+					//file.addEventListener(Event.CANCEL, openClose);
+					file.browseForOpen("Open file    [キャンセル:CANCEL  選択:SELECT]", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}												
+			}
+			
+			private function openClose(event:Event):void {
+				
+			}
+			
+			private function openAps(event:Event):void {
+				var apps:ApplicationSchema = new ApplicationSchema();
+				
+				stream.open(file, FileMode.READ);
+				apps = stream.readObject();
+				featureTypes = apps.featureTypes;
+				associationTypes = apps.associationTypes; 
+				stream.close();
+				appSchemaName.text = file.name;
+
+			}
+
+			protected function saveFileButton_clickHandler(event:MouseEvent):void
+			{
+				var length:int = 0;
+				for each (var str:String in featureTypes) {
+					length++;
+				}
+				if(length == 0) {
+					Alert.show("You cannot save file, because no feature types are defined.", "Error", 
+						Alert.OK, this);
+					return;					
+				}
+				saveFile();
+			}
+			
+			protected function saveFile():void {
+				try {
+					file = new File();
+					file.addEventListener(Event.SELECT, saveAps);
+					file.browseForSave("Save file    [キャンセル:CANCEL  保存:SAVE]");
+				} catch (error:IOError) {
+					trace(error.message);
+				} 				
+			}
+			
+			private function closeClose(event:Event):void {
+			}
+			
+			private function saveAps(event:Event):void {
+				var apps:ApplicationSchema = new ApplicationSchema();
+				
+				apps.featureTypes = featureTypes;
+				apps.associationTypes = associationTypes;
+				
+				var startIndex:int = file.nativePath.length - 4;
+				var suffix:String = file.nativePath.slice(startIndex);
+				if (suffix != ".aps") file.nativePath += ".aps";
+				
+				stream.open(file, FileMode.WRITE);
+				stream.writeObject(apps);
+				stream.close();
+				appSchemaName.text = file.name;
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/modeller_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/modeller_en.html");
+				navigateToURL(request);
+			}
+			
+			protected function featureLabel_clickHandler(event:MouseEvent):void
+			{
+				featureWindow = new FeatureWindow();
+				featureWindow.open();
+				featureWindow.title = "Modeller >";
+				featureWindow.featureTypes = featureTypes;
+				featureWindow.addEventListener(Event.CLOSING, featureWindowClosing);
+			}
+			
+			protected function featureLabel_mouseOver(event:MouseEvent):void {
+				frColor.color = 0xcacaca;
+			}
+			
+			protected function featureLabel_mouseOut(event:MouseEvent):void {
+				frColor.color = 0xffffff;
+			}
+			
+			protected function featureWindowClosing(event:Event):void 
+			{
+				featureTypes = new Dictionary();
+				var m:int = featureWindow.fTypeArray.length;
+				for (var i:int = 0; i< m;i ++) {
+					var fType:FeatureType = featureWindow.fTypeArray.getItemAt(i) as FeatureType;
+					featureTypes[fType.name] = fType;
+				}
+				
+				if (featureWindow.attWindow != null) featureWindow.attWindow.close();
+				if (featureWindow.operationWindow != null) featureWindow.operationWindow.close();
+				
+			}
+			
+			protected function associationLabel_clickHandler(event:MouseEvent):void
+			{
+				associationWindow = new AssociationWindow();
+				associationWindow.open();
+				associationWindow.title = "Modeller >";
+				associationWindow.addEventListener(Event.CLOSING, associationWindowClosing);
+				associationWindow.featureTypes = featureTypes;
+				associationWindow.associationTypes = associationTypes;
+			}
+
+			protected function associationLabel_mouseOver(event:MouseEvent):void {
+				arColor.color = 0xcacaca;
+			}
+			
+			protected function associationLabel_mouseOut(event:MouseEvent):void {
+				arColor.color = 0xffffff;
+			}
+			
+			protected function associationWindowClosing(event:Event):void 
+			{
+				associationTypes = new Dictionary();
+				var m:int = associationWindow.aTypeArray.length;
+				for (var i:int = 0; i< m;i ++) {
+					var aType:AssociationType = associationWindow.aTypeArray.getItemAt(i) as AssociationType;
+					associationTypes[aType.name] = aType;
+				}
+				
+				if (associationWindow.attWindow != null) associationWindow.attWindow.close();
+				if (associationWindow.operationWindow != null) associationWindow.operationWindow.close();
+			}
+			
+
+			
+		]]>
+	</fx:Script>
+		
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	
+	<s:Label x="362" y="16" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="403" y="18" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>	
+	
+	<mx:Image x="10" y="10" source="@Embed('images/pictModeling1.png')" width="60" height="60"/>	
+	<mx:Image x="39" y="110" source="images/GFM.png"/>
+	
+	<s:Rect id="featureRect" x="86" y="148" width="102" height="53">
+		<s:stroke>
+			<s:SolidColorStroke color="0x000000"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor id="frColor" color="0xffffff"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Rect id="associationRect" x="278" y="148" width="126" height="53">
+		<s:stroke>
+			<s:SolidColorStroke color="0x000000"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor id="arColor" color="0xffffff"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Label id="featureLabel" x="86" y="148" text="     FeatureType" 
+			 width="102" height="53"
+			 verticalAlign="middle" fontSize="12"
+			 click="featureLabel_clickHandler(event)" 
+			 mouseOver="featureLabel_mouseOver(event)"
+			 mouseOut="featureLabel_mouseOut(event)" />
+	
+	<s:Label id="associationLabel" x="278" y="148" text="      AssociationType" 
+			 width="126" height="53"
+			 verticalAlign="middle" fontSize="12"
+			 click="associationLabel_clickHandler(event)" 
+			 mouseOver="associationLabel_mouseOver(event)"
+			 mouseOut="associationLabel_mouseOut(event)" />
+
+	<!--
+	<s:Button x="86" y="148" label="FeatureType" width="102" height="53" id="featureButton" 
+			  click="featureButton_clickHandler(event)" cornerRadius="0"/>
+	<s:Button x="278" y="148" label="AssociationType" width="126" height="53" id="associationButton" 
+			  click="associationButton_clickHandler(event)" cornerRadius="0"/>
+	-->
+	<s:Button x="329" y="72" label="open" id="openFileButton" click="openFileButton_clickHandler(event)" 
+			  width="55"/>
+	<s:Button x="390" y="72" label="save" id="saveFileButton" click="saveFileButton_clickHandler(event)" 
+			  width="55"/>
+	
+	<s:Label x="326" y="100" id="appSchemaName" backgroundColor="#D7D7D7" width="119" height="16" verticalAlign="middle"/>
+	<s:Label x="332" y="55" text="application schema"/>
+	<s:Label x="75" y="16" fontFamily="Arial" fontSize="16" fontWeight="normal"
+			 text="Modeller"/>
+
+	
+
+</s:Window>

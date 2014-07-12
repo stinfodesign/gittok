@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="740" height="502"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import dataTypes.place.*;
+			import dataTypes.simpleDataTypes.*;
+			
+			import flash.display.*;
+			import flash.filesystem.*;
+			import flash.net.URLRequest;
+			
+			import gfm.*;
+			
+			import instanceModel.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.events.ItemClickEvent;
+			import mx.events.ListEvent;
+			
+			public var imageFolder:File;
+			public var imageFiles:ArrayList = new ArrayList();
+			public var imageFile:File;
+			
+			protected var thumbnailFlag:Boolean = false;
+			
+			[Bindable]
+			protected var thumbnailSign:String = "»";
+			
+			[Bindable]
+			protected var imageList:ArrayList;
+						
+			[Bindable]
+			protected var imageFilePath:String;
+			
+			protected var dragFlag:Boolean = false;
+			protected var clickFlag:Boolean = true;
+			
+			private var color1:uint = 0x13233a;
+			private var color2:uint = 0xd9d9dc;
+			
+			[Bindable]
+			private var chrColor:uint = color1;
+			
+			[Bindable]
+			private var chromeColor:uint = color2;			
+			
+			
+			protected function initializeApp():void {
+				this.move(690, 150);
+				this.width = 500;
+			}
+									
+			protected function openButton_clickHandler(event:MouseEvent):void
+			{
+				// Open instance set
+				try {
+					imageFolder = new File();
+					imageFolder.browseForDirectory("Select images");
+					imageFolder.addEventListener(Event.SELECT, openFolder);
+				} catch (e:IOError) {
+					Alert.show(e.message);
+				}
+			}
+			
+			protected function openFolder(event:Event):void {
+				if (imageFolder == null) {
+					Alert.show("No Folder is selected.", "Error", 4, this);
+					return;
+				}
+				
+				folderNameLabel.text = imageFolder.name;
+				var imageFileArray:Array = imageFolder.getDirectoryListing();
+				
+				for (var i:int = 0; i < imageFileArray.length; i++) {
+					imageFile = imageFileArray[i] as File;
+					if (imageFile.url.search(".DS_Store") == -1) {
+						imageFiles.addItem(imageFile);
+					}
+				}
+				
+				if (imageFiles.length == 0) {
+					Alert.show("There is no image file in the folder.", "Alert", 4, this);
+				}
+				
+				imageList = new ArrayList();
+				
+				for (i = 0; i < imageFiles.length; i++) {
+					var img:mx.controls.Image = new mx.controls.Image();
+					imageFile = imageFiles.getItemAt(i) as File;
+					img.load(imageFile.url);
+					imageList.addItem(img);
+				}
+			}			
+			private function onResize(event:Event):void {
+				// This means that image loading was completed and the image was resized, then				
+				//put imageView inside center of the panel
+				resetView();
+			}
+			
+			public function displayAttributeValue(_imageURL:ImageURL): void {
+				var wiFile:File = new File(_imageURL.value);
+				folderNameLabel.text = wiFile.name;
+				imageView.load(_imageURL.value);
+				imageView.addEventListener(Event.RESIZE, onResize);	
+			}
+			
+			protected function resetButton_clickHandler(event:MouseEvent):void
+			{
+				resetView();
+			}
+			
+			protected function resetView():void {
+				var w0:Number = imagePanel.width;
+				var h0:Number = imagePanel.height - 33;		// 33 is the size of title column
+				var w1:Number = imageView.width;
+				var h1:Number = imageView.height;
+				
+				var hw0:Number = h0 / w0;
+				var hw1:Number = h1 / w1;
+				
+				var s:Number;
+				
+				// if horizontal ratio is larger than vertical of the panel,
+				if (hw0 < hw1) 
+					s = h0 / h1;
+				else
+					s = w0 / w1;
+				
+				imageView.scaleX = imageView.scaleY = s;
+				
+				imageView.x = (w0 - s * w1) / 2.0;
+				imageView.y = (h0 - s * h1) / 2.0;				
+				
+			}
+
+
+
+			protected function largerButton_clickHandler(event:MouseEvent):void
+			{				
+				scallingAtCenter(1.25, 225, 150);				
+			}
+
+
+			protected function smallerButton_clickHandler(event:MouseEvent):void
+			{				
+				scallingAtCenter(0.8, 225, 150);				
+			}
+			
+			
+			protected function scallingAtCenter(s:Number, cx:Number, cy:Number):void 
+			{				
+				imageView.scaleX = s * imageView.scaleX;
+				imageView.scaleY = s * imageView.scaleY;
+				
+				var lx:Number = cx - imageView.x;
+				var ly:Number = cy - imageView.y;
+				
+				imageView.x = imageView.x - (s * lx - lx);
+				imageView.y = imageView.y - (s * ly - ly);					
+			}
+
+
+			protected function dragButton_clickHandler(event:MouseEvent):void
+			{
+				if (dragButton.label == "on") { 
+					dragButton.label = "off";
+					Mouse.cursor = "arrow";
+				}
+				else {
+					dragButton.label = "on";
+					Mouse.cursor = "hand";
+				}
+			}
+
+			protected function imagePanel_mouseDownHandler(event:MouseEvent):void
+			{
+				if (dragButton.label == "on") {
+					imageView.startDrag(false);					
+				}
+			}
+			
+			protected function imagePanel_mouseUpHandler(event:MouseEvent):void
+			{
+				if (dragButton.label == "on") {
+					imageView.stopDrag();									
+				}
+			}
+						
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/imageWindow_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/imageWindow_en.html");
+				navigateToURL(request);
+			}
+			
+			protected function openThumbnail_clickHandler(event:Event):void {
+				if (thumbnailFlag) {
+					this.width = 500;
+					thumbnailFlag = false;
+					thumbnailSign = "»";
+				}
+				else {
+					this.width = 740;
+					thumbnailFlag = true;
+					thumbnailSign = "«";
+				}
+			}
+
+			protected function openThumbnail_mouseOverHandler(event:MouseEvent):void
+			{
+				Mouse.cursor = "button";	
+			}
+			
+			protected function openThumbnail_mouseOutHandler(event:MouseEvent):void
+			{
+				Mouse.cursor = "arrow";
+				
+			}
+			
+			protected function imageTile_mouseDownHandler(event:MouseEvent):void
+			{
+				imageFile = imageFiles.getItemAt(imageTile.selectedIndex) as File;
+				imageFilePath = imageFile.url;
+			}
+			
+
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<mx:Image x="10" y="16" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
+	<s:Label x="76" y="15" text="Image" fontSize="16"/>
+	<s:Panel id="imagePanel" title="Image Panel" width="450" height="360" x="26" y="88" 
+			 mouseDown="imagePanel_mouseDownHandler(event)" 
+			 mouseUp="imagePanel_mouseUpHandler(event)" 
+			 dropShadowVisible="false">
+		<s:Group clipAndEnableScrolling="true" width="100%" height="100%" visible="true" id="imageBox">
+			<mx:Image id="imageView" source="{imageFilePath}"/>
+		</s:Group>
+		<s:Button x="408" y="-26" label="-" color="#000000" chromeColor="{chromeColor}" cornerRadius="0" width="35"
+				  id="resetButton" click="resetButton_clickHandler(event)"/>
+		<s:Button x="369" y="-26" label="&lt;" width="35" chromeColor="{chromeColor}" color="#000000" cornerRadius="2" 
+			  id="largerButton" click="largerButton_clickHandler(event)"/>
+		<s:Button x="330" y="-26" label="&gt;" id="smallerButton" chromeColor="{chromeColor}" color="#000000" 
+			  cornerRadius="2" width="35" click="smallerButton_clickHandler(event)"/>
+		<s:Button x="291" y="-26" label="off" id="dragButton" color="#000000" chromeColor="{chromeColor}" width="35" 
+			  cornerRadius="2" click="dragButton_clickHandler(event)"/>
+	</s:Panel>
+	
+	<s:Label id="openThumbnail" x="470" y="39" color="#595858" fontFamily="Arial" fontSize="32"
+			 fontWeight="bold" text="{thumbnailSign}" click="openThumbnail_clickHandler(event)" 
+			 mouseOver="openThumbnail_mouseOverHandler(event)"
+			 mouseOut="openThumbnail_mouseOutHandler(event)"/>
+	<s:Label x="436" y="50" text="Push"/>
+	
+	<s:Rect x="500" y="0" width="240" height="100%">
+		<s:fill>
+			<s:SolidColor color="0x666666"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Button x="511" y="32" label="open" width="52" id="openButton" click="openButton_clickHandler(event)"/>
+	<s:Label x="569" y="39" text="image folder" color="0xffffff"/>
+	<s:Label x="510" y="58" id="folderNameLabel" backgroundColor="#DADADA" width="126" height="21" verticalAlign="middle"/>
+	
+	<mx:TileList id="imageTile" x="510" y="87" width="220" height="362"
+				 columnWidth="100" rowHeight="100" dataProvider="{imageList}"
+				 mouseDown="imageTile_mouseDownHandler(event)">
+		<mx:itemRenderer>
+			<fx:Component>
+				<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off"
+						 verticalAlign="middle" horizontalAlign="center">
+					<mx:Image source="{data.source}" width="100%"/>
+				</mx:VBox>
+			</fx:Component>
+		</mx:itemRenderer>
+	</mx:TileList>
+	
+	<s:Label x="407" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="448" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+</s:Window>

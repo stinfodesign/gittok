@@ -1,0 +1,1110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="700"
+		  title="Cartographic Disigner" backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<fx:Declarations>
+		<s:RadioButtonGroup id="attSelectGroup"/>
+		<s:RadioButtonGroup id="boolRadioGroup"/>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import dataTypes.place.*;
+			import dataTypes.simpleDataTypes.*;
+			import dataTypes.spatialGeometry.*;
+			
+			import flash.filesystem.*;
+			import flash.utils.Dictionary;
+			
+			import gfm.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.controls.Image;
+			import mx.events.FlexEvent;
+			
+			import portrayal.labelStyle.*;
+			import portrayal.portrayalStyle.*;
+			import portrayal.symbol.*;
+			import portrayal.symbolStyle.*;
+			
+			import spark.events.GridSelectionEvent;
+			import spark.events.IndexChangeEvent;
+			
+			private var file:File;
+			private var stream:FileStream = new FileStream();
+			private var applicationSchemaFile:File;
+			private var symbolStyleSchemaFile:File;
+			private var labelStyleSchemaFile:File;
+			
+			public var featureTypes:Dictionary 		= new Dictionary();
+			public var associationTypes:Dictionary 	= new Dictionary();
+			
+			private var atts:ArrayList;
+			
+			private var pointSyms:Dictionary;
+			private var lineSyms:Dictionary;
+			private var areaSyms:Dictionary;
+			
+			private var syms:SymbolStyleDictionary;			
+			private var elements:ArrayList;
+			private var styles:ArrayList;			
+			private var labels:LabelStyleDictionary;
+			private var portrayalSch:PortrayalSchema;
+			private var fpPairs:Dictionary = new Dictionary();
+			private var ftPtlPair:FeaturePortrayalPair;
+			
+			private var thematicModifier:ThematicCondition;
+			
+			[Bindable]
+			public var featureTypeArray:ArrayList = new ArrayList();
+			
+			[Bindable]
+			public var attributeTypeArray:ArrayList = new ArrayList();
+			
+			[Bindable]
+			public var thematicModifierTypeArray:ArrayList = new ArrayList();
+			
+			[Bindable]
+			public var attributeNameArray:ArrayList = new ArrayList();
+			
+			[Bindable]
+			public var symStyleArray:ArrayList;
+			
+			[Bindable]
+			public var labelStyleArray:ArrayList;
+			
+			[Bindable]
+			public var portrayalStyleArray:ArrayList;
+			
+			[Bindable]
+			public var booleanModifierArray:ArrayList;
+			
+			[Bindable]
+			public var qualitativeModifierArray:ArrayList;
+			
+			[Bindable]
+			public var quantitativeModifierArray:ArrayList;
+			
+			[Bindable]
+			public var generalModifierArray:ArrayList;
+			
+			[Bindable]
+			public var symLabArray:ArrayList;
+			
+			[Bindable]
+			public var balloonAttList:ArrayList;
+			
+			protected function initializeApp(): void {
+				this.move(320,70);
+				
+				// General Feature Model
+				registerClassAlias("gfm.AttributeType", AttributeType);
+				registerClassAlias("gfm.OperationType", OperationType);
+				registerClassAlias("gfm.FeatureType", FeatureType);
+				registerClassAlias("gfm.AssociationType", AssociationType);	
+				registerClassAlias("gfm.ApplicationSchema", ApplicationSchema);
+				registerClassAlias("gfm.ArgAttPair", ArgAttPair);
+				
+				// Symbol Styles
+				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
+				
+				// Label Styles
+				registerClassAlias("portrayal.labelStyle.LabelStyle", LabelStyle);
+				registerClassAlias("portrayal.labelStyle.LabelStyleDictionary", LabelStyleDictionary);
+				
+				// Portrayal Dictionary
+				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);	
+				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);								
+				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalPair", FeaturePortrayalPair);				
+				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
+				registerClassAlias("portrayal.portrayalStyle.ThematicCondition", ThematicCondition);
+				registerClassAlias("portrayal.portrayalStyle.Modifier", Modifier);
+				registerClassAlias("portrayal.portrayalStyle.BooleanModifier", BooleanModifier);
+				registerClassAlias("portrayal.portrayalStyle.QualitativeModifier", QualitativeModifier);
+				registerClassAlias("portrayal.portrayalStyle.QuantitativeModifier", QuantitativeModifier);
+				
+				// Basic Types
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
+				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
+				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
+				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+
+				
+				// Location
+				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
+				registerClassAlias("dataTypes.place.URL", URL);
+				registerClassAlias("dataTypes.place.VideoURL", VideoURL);
+				registerClassAlias("dataTypes.place.SoundURL", SoundURL);
+				registerClassAlias("dataTypes.place.Address", Address);
+				
+				// Geometry
+				registerClassAlias("dataTypes.spatialGeometry.SG_Primitive", SG_Primitive);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Rectangle", SG_Rectangle);
+				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
+				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);	
+				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
+				
+			}
+			
+			protected function openAPSButton_clickHandler(event:MouseEvent):void
+			{
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("ApplicationSchema File", "*.aps");
+					file.addEventListener(Event.SELECT, openAps);
+					file.browseForOpen("Open ApplicationSchema  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}												
+			}
+			
+			private function openAps(event:Event):void {
+				var apps:ApplicationSchema = new ApplicationSchema();
+				
+				stream.open(file, FileMode.READ);
+				apps = stream.readObject();
+				featureTypes = apps.featureTypes;
+				associationTypes = apps.associationTypes; 
+				stream.close();
+				apsNameLabel.text = file.name;
+				
+				for each(var fType:FeatureType in featureTypes) {
+					if (!fType.isAbstract) featureTypeArray.addItem(fType);
+				}
+				
+				applicationSchemaFile = file;
+			}
+			
+			// Symbol operations
+			protected function openSymButton_clickHandler(event:MouseEvent):void
+			{
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("SymbolStyleSchema File", "*.sym");
+					file.addEventListener(Event.SELECT, openSym);
+					file.browseForOpen("Open SymbolStyleSchema  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}												
+			}
+			
+			private function openSym(event:Event):void {
+				
+				stream.open(file, FileMode.READ);
+				syms = stream.readObject();
+				
+				var areaSyms:Dictionary = syms.areaSymStyles;
+				var lineSyms:Dictionary = syms.lineSymStyles;
+				var pointSyms:Dictionary = syms.pointSymStyles;
+				
+				var symObj:Object;
+				symStyleArray = new ArrayList();
+				for each(var areaSymStyle:AreaSymbolStyle in areaSyms) {
+					symObj = new Object();
+					symObj["name"] = areaSymStyle.name;
+					symObj["type"] = "Area";
+					symStyleArray.addItem(symObj);
+				}
+				for each(var lineSymStyle:LineSymbolStyle in lineSyms) {
+					symObj = new Object();
+					symObj["name"] = lineSymStyle.name;
+					symObj["type"] = "Line";					
+					symStyleArray.addItem(symObj);
+				}
+				for each(var pointSymStyle:PointSymbolStyle in pointSyms) {
+					symObj = new Object();
+					symObj["name"] = pointSymStyle.name;
+					symObj["type"] = "Point";					
+					symStyleArray.addItem(symObj);
+				}
+				
+				stream.close();
+				symLabel.text = file.name;
+				
+				symbolStyleSchemaFile = file;
+				
+			}
+			
+			// Label operations			
+			protected function openLabelButton_clickHandler(event:MouseEvent):void
+			{
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("LabelStyleSchema File", "*.lab");
+					file.addEventListener(Event.SELECT, openLabelStyle);
+					file.browseForOpen("Open LabelStyleSchema  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}																
+			}
+			
+			private function openLabelStyle(event:Event):void {
+				stream.open(file, FileMode.READ);
+				labels = stream.readObject();
+				
+				var labelObj:Object;
+				labelStyleArray = new ArrayList();
+				for each(var lblStyle:LabelStyle in labels.labelStyles) {
+					labelObj = new Object();
+					labelObj["name"] = lblStyle.name;
+					labelStyleArray.addItem(labelObj);
+				}
+				
+				stream.close();
+				labelLabel.text = file.name;
+				
+				labelStyleSchemaFile = file;
+			}
+
+			protected function symGrid_selectionChangeHandler(event:GridSelectionEvent):void
+			{
+				var symObj:Object = symStyleArray.getItemAt(symGrid.selectedIndex) as Object;
+				labelGrid.selectedIndex = -1;
+				
+				// Initialize symbol image
+				var m:int = symbolImage.numChildren;
+				for (var i:int = 0; i < m; i++) {
+					symbolImage.removeChildAt(0);
+				}
+				symbolImage.graphics.clear();
+				
+				// Line symbol
+				if (symObj["type"] == "Line") {
+					var lss:LineSymbol = symbolImage.getChildByName("sampleLine") as LineSymbol;
+					if (lss != null) symbolImage.removeChild(lss);
+					
+					var lineSymType:LineSymbolStyle = syms.lineSymStyles[symObj["name"]];
+					
+					var xarray:Array = [10, 70, 130];
+					var yarray:Array = [10, 60, 10];
+					
+					var crv:SG_Curve = new SG_Curve;
+					for (i = 0; i < 3; i++) {
+						var crd:Coordinate2 =new Coordinate2();
+						crd.x = xarray[i]; crd.y = yarray[i];
+						crv.shape.addItem(crd);
+					}				
+					
+					var lSym:LineSymbol = new LineSymbol();
+					var cObj:Object = new Object();
+					cObj.curve = crv;
+					cObj.style = lineSymType;
+					lSym.decode(cObj);
+					lSym.name = "sampleLine";
+					symbolImage.addChild(lSym);			
+				}
+				
+				// Area symbol
+				if (symObj["type"] == "Area") {
+					var ars:AreaSymbol = symbolImage.getChildByName("sampleArea") as AreaSymbol;
+					if (ars != null) symbolImage.removeChild(ars);
+					
+					var areaSymType:AreaSymbolStyle = syms.areaSymStyles[symObj["name"]];
+					
+					xarray = [10, 10, 80, 150, 150, 80, 10];
+					yarray = [10, 50, 65, 50,  10,  5,  10];
+										
+					symbolImage.graphics.beginFill(areaSymType.color, areaSymType.alpha);
+					symbolImage.graphics.moveTo(10, 10);
+					for (i = 1; i < 7; i++) {
+						symbolImage.graphics.lineTo(xarray[i], yarray[i]);
+					}
+					symbolImage.graphics.endFill();
+					
+					//show the border
+					var borderStyle:LineSymbolStyle = areaSymType.borderStyle;
+					
+					crv = new SG_Curve;
+					for (i = 0; i < 7; i++) {
+						crd =new Coordinate2();
+						crd.x = xarray[i]; crd.y = yarray[i];
+						crv.shape.addItem(crd);
+					}				
+					
+					var border:LineSymbol = new LineSymbol();
+					cObj = new Object();
+					cObj.curve = crv;
+					cObj.style = borderStyle;
+					border.decode(cObj);					
+					border.name = "sampleLine";
+					symbolImage.addChild(border);					
+				}
+				
+				// Point symbol
+				if (symObj["type"] == "Point") {
+					var pts:PointSymbol = symbolImage.getChildByName("samplePoint") as PointSymbol;
+					if (pts != null) symbolImage.removeChild(pts);
+					
+					var pointSymType:PointSymbolStyle = syms.pointSymStyles[symObj["name"]];
+					
+					elements = pointSymType.elements;
+					styles   = pointSymType.styles;
+					
+					symbolImage.graphics.clear();
+					drawElements();
+					　　	
+				}
+			}
+			
+			protected function drawElements():void {
+				var n:int = elements.length;
+				for (var i:int = 0; i < n; i++) {
+					drawElement(i, 1.0);
+				}				
+			}
+			
+			protected function drawElement(i:int, thicknessRate:Number):void {
+				var crv:SG_Curve = new SG_Curve();
+				var style:* = styles.getItemAt(i);
+				if (getQualifiedClassName(style) == "portrayalSchema.symbolStyle::LineSymbolStyle") {
+					var lStyle:LineSymbolStyle = styles.getItemAt(i) as LineSymbolStyle; 
+					var cString:CoordinateArray = elements.getItemAt(i) as CoordinateArray;
+					crv.shape = cString;
+					lStyle.thickness *= thicknessRate;
+					var lSym:LineSymbol = new LineSymbol();
+					var lObj:Object = new Object();
+					lObj.curve = crv;
+					lObj.style = lStyle;
+					lSym.decode(lObj);
+					lSym.name = "sampleLine";
+					symbolImage.addChild(lSym);					
+					lStyle.thickness /= thicknessRate;
+				}
+				else {
+					if (getQualifiedClassName(style) == "portrayalSchema.symbolStyle::AreaSymbolStyle") {
+						var aStyle:AreaSymbolStyle = styles.getItemAt(i) as AreaSymbolStyle;
+												
+						var element:* = elements.getItemAt(i);
+						if (getQualifiedClassName(element) == "dataTypes.spatialGeometry::SG_Circle") {
+							var cle:SG_Circle = element as SG_Circle;
+							var bStyle:LineSymbolStyle = aStyle.borderStyle;
+							symbolImage.graphics.lineStyle(bStyle.thickness * thicknessRate, 
+								bStyle.color, bStyle.alpha, false, "normal", 
+								bStyle.caps, bStyle.joints, 3);
+							symbolImage.graphics.beginFill(aStyle.color, aStyle.alpha);
+							symbolImage.graphics.drawCircle(cle.center.x, cle.center.y, cle.radius);
+							symbolImage.graphics.endFill();
+						}
+						else {
+							cString = elements.getItemAt(i) as CoordinateArray;
+							var crd:Coordinate2 = cString.getItemAt(0) as Coordinate2;
+							symbolImage.graphics.beginFill(aStyle.color, aStyle.alpha);
+							symbolImage.graphics.moveTo(crd.x, crd.y);
+							for (var i:int = 0; i < cString.length; i++) {
+								crd = cString.getItemAt(i) as Coordinate2;
+								symbolImage.graphics.lineTo(crd.x, crd.y);
+							}
+							symbolImage.graphics.endFill();
+							
+							crv.shape = cString;
+							
+							aStyle.borderStyle.thickness *= thicknessRate;
+							var border:LineSymbol = new LineSymbol();
+							lObj = new Object();
+							lObj.curve = crv;
+							lObj.style = aStyle.borderStyle;
+							aStyle.borderStyle.thickness /= thicknessRate;
+							border.name = "sampleLine";
+							border.decode(lObj);
+							symbolImage.addChild(border);
+						}
+					}
+				}
+			}
+			
+			protected function labelGrid_selectionChangeHandler(event:GridSelectionEvent):void
+			{
+				var labelObj:Object = labelStyleArray.getItemAt(labelGrid.selectedIndex) as Object;
+				var labelName:String = labelObj["name"];
+				var lblStyle:LabelStyle = labels.labelStyles[labelName] as LabelStyle;
+				
+				symGrid.selectedIndex = -1;
+				
+				// Initialize symbol image
+				var m:int = symbolImage.numChildren;
+				for (var i:int = 0; i < m; i++) {
+					symbolImage.removeChildAt(0);
+				}
+				symbolImage.graphics.clear();
+				
+				// Label
+				var textFormat:TextFormat = new TextFormat();
+				with (textFormat) {
+					size = lblStyle.fontSize;
+					font = lblStyle.font;
+					color = lblStyle.color;
+					if (lblStyle.bold == "normal") 
+						bold = false;
+					else
+						bold = true;
+				}
+				
+				var textField:TextField = new TextField();
+				with (textField) {
+					text = "Test String";
+					autoSize = TextFieldAutoSize.LEFT;
+					x =  10;
+					y = 120;
+				}
+				textField.setTextFormat(textFormat);
+				
+				symbolImage.addChild(textField);
+			}
+			
+			protected function featureTypeDropDown_changeHandler(event:IndexChangeEvent):void
+			{
+				var fType:FeatureType = featureTypeDropDown.selectedItem as FeatureType;
+				
+				var m:int = fType.attributeTypes.length;
+				
+				attributeNameArray = new ArrayList();
+				
+				for (var i:int = 0; i < m; i++) {
+					var attType:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+					attributeNameArray.addItem(attType);
+				}
+				if (fType.parent != null) inheritAttributes(fType.parent);				
+								
+				if (attributeTypeLabel != null)
+					attributeTypeLabel.text = "";
+				
+				ftPtlPair = fpPairs[fType.name] as FeaturePortrayalPair;
+				balloonAttList = new ArrayList();
+				if (ftPtlPair != null) {
+					for each(attType in ftPtlPair.balloonsOnMap) {
+						balloonAttList.addItem(attType);	
+					}
+				}
+			}
+			
+			private function inheritAttributes(fType:FeatureType):void {
+				var m:int = fType.attributeTypes.length;
+				for (var i:int = 0; i < m; i++) {
+					var atType:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+					attributeNameArray.addItem(atType);
+				}
+				
+				if (fType.parent != null) {
+					inheritAttributes(fType.parent);
+				}
+			}
+			
+			protected function attributeNameDropDown_changeHandler(event:IndexChangeEvent):void
+			{
+				var attType:AttributeType = attributeNameDropDown.selectedItem as AttributeType;
+				
+				var fType:FeatureType    = featureTypeDropDown.selectedItem as FeatureType;
+				
+				attributeTypeLabel.text = attType.dataType;
+				
+				if (fpPairs[fType.name] == null) {
+					ftPtlPair = new FeaturePortrayalPair();
+					ftPtlPair.featureTypeID = fType.name;
+					fpPairs[fType.name] = ftPtlPair;
+				}
+				else {
+					ftPtlPair = fpPairs[fType.name];
+				}
+				
+				if (balloonCheckBox.selected) {
+					this.setAttributeTypeAsBalloon(attType);
+					return;
+				}
+				
+				var m:int = attributeNameArray.length;
+				thematicModifierTypeArray = new ArrayList();
+				for (var i:int = 0; i < m; i++) {
+					var aType:AttributeType = attributeNameArray.getItemAt(i) as AttributeType;
+					thematicModifierTypeArray.addItem(aType);
+				}
+				thematicModifierDropDownList.prompt = "Select att";
+
+				var asPair:AttributeStylePair = ftPtlPair.generalModifiers[attType.name] as AttributeStylePair;
+					
+				symLabArray = new ArrayList();
+				symLabArray.addItem(asPair);				
+			}
+			
+			protected function setAttributeTypeAsBalloon(attType:AttributeType):void {
+				if (balloonAttList == null) {
+					balloonAttList = new ArrayList();
+				}
+				balloonAttList.addItem(attType);
+				ftPtlPair.balloonsOnMap[attType.name] = attType;
+			}
+			
+			protected function cancelBalloonButton_clickHandler(event:MouseEvent):void
+			{
+				var i:int = balloonList.selectedIndex;
+				if (i != -1) {
+					var attType:AttributeType = balloonAttList.removeItemAt(i) as AttributeType;
+					delete ftPtlPair.balloonsOnMap[attType.name];
+				}
+				if (balloonAttList.length == 0) balloonAttList = null;
+			}
+			
+			protected function thematicModifierDropDownList_changeHandler(event:IndexChangeEvent):void
+			{
+				var i:int = thematicModifierDropDownList.selectedIndex;
+				if (i == -1) return;
+				
+				var atType:AttributeType = thematicModifierTypeArray.getItemAt(i) as AttributeType;
+				
+				var fType:FeatureType = featureTypeArray.getItemAt(featureTypeDropDown.selectedIndex) as FeatureType;
+				
+				ftPtlPair = fpPairs[fType.name] as FeaturePortrayalPair;
+				if (ftPtlPair != null) {
+					thematicModifier = ftPtlPair.thematicModifier;
+					thematicModifierTypeLabel.text = atType.dataType;
+					
+					if (atType.dataType == "Bool") {
+						thematicViewStack.selectedIndex = 0;
+						
+						if (thematicModifier.modifierType == "Bool") {
+							if (thematicModifier.elements.length > 0) {
+								thematicViewStack.selectedIndex = 0;
+								booleanModifierArray = thematicModifier.elements;
+								return;
+							}
+						}
+					}
+					else if (atType.dataType == "CharacterString") {
+						thematicViewStack.selectedIndex = 1;
+						
+						if (thematicModifier.modifierType == "CharacterString") {
+							if (thematicModifier.elements.length > 0) {
+								qualitativeModifierArray = thematicModifier.elements;
+								return;
+							}
+						}
+					}
+					else if (atType.dataType == "Integer" || atType.dataType == "Real") {
+						thematicViewStack.selectedIndex = 2;
+						
+						if (thematicModifier.modifierType == "Integer" ||
+							thematicModifier.modifierType == "Real") {
+							if (thematicModifier.elements.length > 0) {
+								quantitativeModifierArray = thematicModifier.elements;
+								return;
+							}
+						}
+					}
+				}
+				
+				thematicModifier = new ThematicCondition();
+				thematicModifier.modifierName = atType.name;
+				thematicModifier.modifierType = atType.dataType;
+				
+				if (atType.dataType == "Bool") {
+					thematicViewStack.selectedIndex = 0;
+					booleanModifierArray = new ArrayList();
+					for (var j:int = 0; j < 3; j++) {
+						var booleanModifier:BooleanModifier = new BooleanModifier();
+						if (j == 0) { 
+							booleanModifier.hasValue = true;
+							booleanModifier.boolValue = true;
+						}
+						else if (j == 1) {
+							booleanModifier.hasValue = true;
+							booleanModifier.boolValue = false;
+						}
+						else
+							booleanModifier.hasValue = false;
+						
+						booleanModifierArray.addItem(booleanModifier);
+					}
+					thematicModifier.elements = booleanModifierArray;
+				}
+				
+				else if (atType.dataType == "CharacterString") {
+					thematicViewStack.selectedIndex = 1;
+					qualitativeModifierArray = new ArrayList();
+					for (j = 0; j < 50; j++) {
+						var qualitativeModifier:QualitativeModifier = new QualitativeModifier();
+						qualitativeModifierArray.addItem(qualitativeModifier);
+					}
+					thematicModifier.elements = qualitativeModifierArray;
+				}	
+				
+				else if (atType.dataType == "Integer" || atType.dataType == "Real") {
+					thematicViewStack.selectedIndex = 2;
+					quantitativeModifierArray = new ArrayList();
+					for (j = 0; j < 30; j++) {
+						var quantitativeModifier:QuantitativeModifier = new QuantitativeModifier;
+						quantitativeModifierArray.addItem(quantitativeModifier);
+					}
+					thematicModifier.elements = quantitativeModifierArray;
+				}
+				else
+					thematicModifierDropDownList.selectedIndex = -1;
+				
+			}
+			
+			protected function assignThematicButton_clickHandler(event:MouseEvent):void
+			{
+				ftPtlPair.thematicModifier = thematicModifier;
+				
+				var i:int = symGrid.selectedIndex;
+				if (i == -1) {
+					Alert.show("Select symbol before assign.", "Warning", 4, this);
+					return;
+				}
+				
+				var symObj:Object = symStyleArray.getItemAt(i) as Object;
+				
+				var stackIndex:int = thematicViewStack.selectedIndex;
+				if (stackIndex == 0) {
+					//Bool
+					var j:int = booleanModifierGrid.selectedIndex;
+					if (j == -1) {
+						Alert.show("Select column before assign.", "Warning", 4, this);
+						return;
+					}
+					
+					var booleanModifier:BooleanModifier = booleanModifierArray.getItemAt(j) as BooleanModifier;
+					booleanModifier.symName = symObj["name"];
+					booleanModifier.symType = symObj["type"];
+					booleanModifierArray.setItemAt(booleanModifier, j);										
+				}
+				else if (stackIndex == 1) {
+					//CharacterString
+					j = qualitativeModifierGrid.selectedIndex;
+					if (j == -1) {
+						Alert.show("Select column before assign.", "Warning", 4, this);
+						return;
+					}
+					
+					var qualitativeModifier:QualitativeModifier = qualitativeModifierArray.getItemAt(j) as QualitativeModifier;
+					qualitativeModifier.symName = symObj["name"];
+					qualitativeModifier.symType = symObj["type"];
+					qualitativeModifierArray.setItemAt(qualitativeModifier, j);
+				}
+				else if (stackIndex == 2) {
+					//Integer or Real
+					j = quantitativeModifierGrid.selectedIndex;
+					if (j == -1) {
+						Alert.show("Select column before assign.", "Warning", 4, this);
+						return;
+					}
+					
+					var quantitativeModifier:QuantitativeModifier 
+									= quantitativeModifierArray.getItemAt(j) as QuantitativeModifier;
+					quantitativeModifier.symName = symObj["name"];
+					quantitativeModifier.symType = symObj["type"];
+					quantitativeModifierArray.setItemAt(quantitativeModifier, j);
+				}
+				
+			}
+			
+			protected function clearThematicButton_clickHandler(event:MouseEvent):void
+			{			
+				var stackIndex:int = thematicViewStack.selectedIndex;
+				
+				if (stackIndex == 0) {
+					//Bool
+					var j:int = booleanModifierGrid.selectedIndex;
+					if (j == -1 || j > 2) {
+						Alert.show("Select column before assign.", "Warning", 4, this);
+						return;
+					}
+					
+					var booleanModifier:BooleanModifier = booleanModifierArray.getItemAt(j) as BooleanModifier;
+					if (j == 0) 
+						booleanModifier.boolValue = true;
+					else if (j == 1) 
+						booleanModifier.boolValue = false;
+					else
+						booleanModifier = null;
+					booleanModifier.symName = "";
+					booleanModifier.symType = "";
+					booleanModifierArray.setItemAt(booleanModifier, j);										
+				
+				}
+				else if (stackIndex == 1) {
+					//CharacterString
+					j = qualitativeModifierGrid.selectedIndex;
+					if (j == -1 || j > 30) {
+						Alert.show("Select column before assign.", "Warning", 4, this);
+						return;
+					}
+					
+					qualitativeModifierArray.removeItemAt(j);
+					
+					var qualitativeModifier:QualitativeModifier = new QualitativeModifier();
+					qualitativeModifierArray.addItem(qualitativeModifier);				
+					
+				}
+				else if (stackIndex == 2) {
+					//Integer or Real	
+					j = quantitativeModifierGrid.selectedIndex;
+					if (j == -1 || j > 30) {
+						Alert.show("Select column before assign.", "Warning", 4, this);
+						return;
+					}
+					
+					quantitativeModifierArray.removeItemAt(j);
+					
+					var quantitativeModifier:QuantitativeModifier = new QuantitativeModifier();
+					quantitativeModifierArray.addItem(quantitativeModifier);				
+
+				}
+			}
+			
+			protected function saveButton_clickHandler(event:MouseEvent):void
+			{
+				// Save portrayal schema
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Portrayal Schema", "*.psc");
+					file.addEventListener(Event.SELECT, saveFile);
+					file.browseForSave("Save file");
+					
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				} 
+			}
+			
+			private function saveFile(event:Event):void {
+				var startIndex:int = file.nativePath.length - 4;
+				var suffix:String = file.nativePath.slice(startIndex);
+				if (suffix != ".psc") file.nativePath += ".psc";
+
+				dictionaryLabel.text = file.name;
+				var stream:FileStream = new FileStream();
+				
+				stream.open(file, FileMode.WRITE);
+				portrayalSch = new PortrayalSchema();
+				portrayalSch.applicationSchema = applicationSchemaFile.name;
+				portrayalSch.symbolStyleSchema = symbolStyleSchemaFile.name;
+				portrayalSch.labelStyleSchema  = labelStyleSchemaFile.name;
+				portrayalSch.fpPairs		   = fpPairs;
+				stream.writeObject(portrayalSch);
+				stream.close();
+			}
+			
+			protected function openButton_clickHandler(event:MouseEvent):void
+			{
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Portrayal Dictionary", "*.psc");
+					file.addEventListener(Event.SELECT, openFile);
+					file.browseForOpen("Open file  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+			}
+			
+			private function openFile(event:Event):void {
+				dictionaryLabel.text = file.name;
+				var url:String = file.url;
+				var pathArray:Array = url.split("/");
+				var path:String = "/";
+				for (var i:int = 3; i < pathArray.length - 1; i++) {
+					path += pathArray[i] + "/";
+				}
+				var stream:FileStream = new FileStream();
+				
+				applicationSchemaFile    = new File();
+				symbolStyleSchemaFile = new File();
+				labelStyleSchemaFile  = new File();
+				
+				try {
+					stream.open(file,FileMode.READ);
+					portrayalSch = stream.readObject();
+					
+					applicationSchemaFile.nativePath    = path + portrayalSch.applicationSchema;
+					symbolStyleSchemaFile.nativePath = path + portrayalSch.symbolStyleSchema;
+					labelStyleSchemaFile.nativePath  = path + portrayalSch.labelStyleSchema;
+					
+					fpPairs = portrayalSch.fpPairs;
+					
+					//portrayals.setXML(portrayals.getXML());					stream.close();
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+				
+				apsNameLabel.text = applicationSchemaFile.name;
+				symLabel.text = symbolStyleSchemaFile.name;
+				labelLabel.text = labelStyleSchemaFile.name;
+				
+				file = applicationSchemaFile;
+				this.openAps(null);
+				
+				file = symbolStyleSchemaFile;
+				this.openSym(null);
+				
+				file = labelStyleSchemaFile;
+				this.openLabelStyle(null);
+			}
+			
+			protected function sortQuantitativeModifierButton_clickHandler(event:MouseEvent):void
+			{
+				var w:QuantitativeModifier = quantitativeModifierArray.getItemAt(0) as QuantitativeModifier;
+				for (var len:int = 1; w.symName != null; len++) {
+					w = quantitativeModifierArray.getItemAt(len) as QuantitativeModifier;
+				}
+				len--;
+				
+				var mj:int;
+				for (var i:int = 0; i < len - 1; i++) {
+					mj = i;
+					var minimum:Number = Number.MAX_VALUE;
+					for (var j:int = i; j < len; j++) {
+						var modi:QuantitativeModifier = quantitativeModifierArray.getItemAt(j) as QuantitativeModifier;
+						if (minimum > modi["lowerValue"]) {
+							minimum = modi["lowerValue"];
+							mj = j;
+						}
+					}
+					w = quantitativeModifierArray.getItemAt(mj) as QuantitativeModifier;
+					quantitativeModifierArray.setItemAt(quantitativeModifierArray.getItemAt(i), mj);
+					quantitativeModifierArray.setItemAt(w, i);
+				}
+			}
+			
+			protected function assignGeneralButton_clickHandler(event:MouseEvent):void
+			{
+				if (featureTypeDropDown.selectedIndex == -1) {
+					Alert.show("Select styles before.", "Error", 4, this);
+					return;
+				}
+				
+				var fid:int = featureTypeDropDown.selectedIndex
+				var fType:FeatureType = featureTypeArray.getItemAt(fid) as FeatureType;
+				
+				ftPtlPair = fpPairs[fType.name] as FeaturePortrayalPair;
+				if (ftPtlPair == null) {
+					ftPtlPair = new FeaturePortrayalPair();
+					ftPtlPair.featureTypeID = fType.name;
+				}
+				
+				var aid:int = attributeNameDropDown.selectedIndex;
+				
+				var attType:AttributeType = attributeNameArray.getItemAt(aid) as AttributeType;
+				var asPair:AttributeStylePair = new AttributeStylePair();
+				asPair.attName = attType.name;
+				asPair.attType = attType.dataType;
+					
+				if (symGrid.selectedIndex > -1) {
+					var symObj:Object = symStyleArray.getItemAt(symGrid.selectedIndex) as Object;
+					asPair.symLabName = symObj["name"];
+					asPair.symLabType = symObj["type"];
+				}
+					
+				if (labelGrid.selectedIndex > -1) {
+					var labelObj:Object = labelStyleArray.getItemAt(labelGrid.selectedIndex) as Object;
+					asPair.symLabName = labelObj["name"];
+					asPair.symLabType = "Label"; 
+				}
+				
+				ftPtlPair.generalModifiers[attType.name] = asPair;						
+				fpPairs[ftPtlPair.featureTypeID] = ftPtlPair;
+				
+				symLabArray = new ArrayList();
+				symLabArray.addItem(asPair);				
+			}
+			
+
+			protected function clearGeneralButton_clickHandler(event:MouseEvent):void
+			{
+				symLabArray.removeItemAt(0);
+				
+				var aid:int = attributeNameDropDown.selectedIndex;
+				var attType:AttributeType = attributeNameArray.getItemAt(aid) as AttributeType;
+				ftPtlPair.generalModifiers[attType.name] = null;
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/portrayalDesigner_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/portrayalDesigner_en.html");
+				navigateToURL(request);
+			}
+						
+		]]>
+	</fx:Script>
+	
+	<s:Image x="10" y="8" source="@Embed(source='images/pictRepresentation1.png')"/>
+	<s:Label  x="75" y="15" text="Portrayal Designer" fontSize="16"/>
+	<s:Label id="apsNameLabel" x="31" y="99" width="120" height="20" backgroundColor="#DADADA"
+			 fontSize="11" verticalAlign="middle"/>
+	<s:Button id="openAPSButton" x="33" y="72" width="55" label="open"
+			  click="openAPSButton_clickHandler(event)"/>
+	<s:Label x="93" y="71" width="56" height="24" fontSize="10" text="Application Schema"/>
+	<s:Button id="openSymButton" x="161" y="72" width="55" label="open"
+			  click="openSymButton_clickHandler(event)"/>
+	<s:Label x="220" y="72" width="62" height="21" fontSize="10" text="Symbol Style Schema"/>
+	<s:Label id="symLabel" x="159" y="99" width="120" height="20" backgroundColor="#DADADA"
+			 fontSize="11" verticalAlign="middle"/>
+	<s:DataGrid id="symGrid" x="30" y="472" width="210" height="165" fontSize="11" dataProvider="{symStyleArray}"
+				requestedRowCount="4" selectionChange="symGrid_selectionChangeHandler(event)">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="name" headerText="Symbol Name"></s:GridColumn>
+				<s:GridColumn dataField="type" headerText="Type"></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
+	<s:Label x="29" y="457" text="Symbol Style"/>
+	<s:Button id="openLabelButton" x="290" y="72" width="55" label="open"
+			  click="openLabelButton_clickHandler(event)"/>
+	<s:Label id="labelLabel" x="288" y="99" width="120" height="20" backgroundColor="#DADADA"
+			 fontSize="11" verticalAlign="middle"/>
+	<s:Label x="351" y="72" width="56" height="21" fontSize="10" text="Label Style Schema"/>
+	<s:DataGrid id="labelGrid" x="261" y="472" width="107" height="165" fontSize="11"
+			 	dataProvider="{labelStyleArray}"
+				requestedRowCount="4" selectionChange="labelGrid_selectionChangeHandler(event)">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="name" headerText="Label Name"></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
+	<s:Label x="261" y="458" text="Label Style"/>
+	<mx:Image id="symbolImage" x="389" y="472" width="177" height="181"/>
+	<s:Label x="392" y="457" text="Sample"/>
+	<s:DropDownList id="featureTypeDropDown" x="31" y="149" width="143"
+					change="featureTypeDropDown_changeHandler(event)"
+					dataProvider="{featureTypeArray}" fontSize="11" labelField="name"
+					prompt="Select Type"></s:DropDownList>
+	<s:Label x="30" y="136" fontSize="10" text="Feature Types"/>
+	
+	<s:TabBar id="tabBar" x="30" y="216" height="20" dataProvider="{myViewStack}"/>	
+	
+	<mx:ViewStack id="myViewStack" 
+				  borderStyle="solid" width="536" height="197" x="30" y="235" backgroundColor="#fefee5"> 
+		
+		<s:NavigatorContent id="thematicTab" label="thematic"> 
+			<!--
+			<s:TabBar id="thematicTabBar" x="11" y="43" height="20" dataProvider="{thematicViewStack}"/>
+			-->
+			<mx:ViewStack id="thematicViewStack" 
+						  borderStyle="solid" x="11" y="53" width="514" height="132" backgroundColor="#ffffff">
+				<s:NavigatorContent id="boolStack" width="100%" height="100%" label="bool">
+					<s:DataGrid id="booleanModifierGrid" x="74" y="19" width="255" height="95" fontSize="11"
+								dataProvider="{booleanModifierArray}" requestedRowCount="4">
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn dataField="symName" headerText="Symbol Name"
+											  sortable="false"></s:GridColumn>
+								<s:GridColumn dataField="symType" headerText="Symbol Type"
+											  sortable="false"></s:GridColumn>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+					<s:Label x="40" y="51" fontWeight="normal" text="True"/>
+					<s:Label x="40" y="73" fontWeight="normal" text="False"/>
+					<s:Label x="40" y="96" text="Null"/>
+				</s:NavigatorContent>
+				<s:NavigatorContent id="stringStack" width="100%" height="100%" label="characterString">
+					<s:DataGrid id="qualitativeModifierGrid" x="18" y="19" width="325" height="95"
+								dataProvider="{qualitativeModifierArray}" editable="true"
+								requestedRowCount="4" fontSize="11">
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn width="100" dataField="stringValue" headerText="value" editable="true"
+											  resizable="false" sortable="false"></s:GridColumn>
+								<s:GridColumn width="100" dataField="symName" editable="false"
+											  headerText="sym name" resizable="false"
+											  sortable="false"></s:GridColumn>
+								<s:GridColumn width="100" dataField="symType" editable="false"
+											  headerText="sym type" resizable="false"
+											  sortable="false"></s:GridColumn>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+				</s:NavigatorContent>
+				<s:NavigatorContent id="numberStack" width="100%" height="100%" label="integer/real">
+					<s:DataGrid id="quantitativeModifierGrid" x="10" y="9" width="434" height="115" fontSize="11"
+								dataProvider="{quantitativeModifierArray}" requestedRowCount="4" editable="true">
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn dataField="lowerValue" editable="true" headerText="lower"></s:GridColumn>
+								<s:GridColumn dataField="upperValue" editable="true" headerText="upper"></s:GridColumn>
+								<s:GridColumn dataField="symName" editable="false" headerText="sym name"></s:GridColumn>
+								<s:GridColumn dataField="symType" editable="false" headerText="sym type"></s:GridColumn>
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+					<s:Button id="sortquantitativeModifierButton" x="452" y="9" width="50" height="20"
+							  label="sort" click="sortQuantitativeModifierButton_clickHandler(event)"/>
+				</s:NavigatorContent>
+			</mx:ViewStack>
+			<s:Label x="13" y="22" text="Modifier"/>
+			<s:DropDownList id="thematicModifierDropDownList" x="64" y="16" change="thematicModifierDropDownList_changeHandler(event)"
+							dataProvider="{thematicModifierTypeArray}" labelField="name"></s:DropDownList>
+			<s:Button id="assignThematicButton" x="397" y="17" width="60" height="20" label="assign"
+					  click="assignThematicButton_clickHandler(event)"/>
+			<s:Button id="clearThematicButton" x="463" y="17" width="60" height="20" label="clear"
+					  click="clearThematicButton_clickHandler(event)"/>
+			<s:Label id="thematicModifierTypeLabel" x="219" y="17" width="110" height="20"
+					 backgroundColor="#DADADA" verticalAlign="middle"/>
+			<s:Label x="187" y="21" text="Type"/>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent id="generalTab" label="general">
+			<s:Button id="assignGeneralButton" x="381" y="30" width="60" height="20"
+				  label="assign" click="assignGeneralButton_clickHandler(event)"/>
+			<s:Button id="clearGeneralButton" x="448" y="30" width="60" height="20" label="clear"
+					  click="clearGeneralButton_clickHandler(event)"/>
+			
+			<s:DataGrid id="symLabGrid" x="140" y="80" width="240" height="45" fontSize="11"
+						dataProvider="{symLabArray}"
+						requestedRowCount="1">
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn dataField="symLabName" headerText="sym/lab Name"></s:GridColumn>
+						<s:GridColumn dataField="symLabType" headerText="sym/lab Type"></s:GridColumn>
+
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>
+		</s:NavigatorContent>
+		
+	</mx:ViewStack>
+	<s:Label id="attributeTypeLabel" x="230" y="194" width="120" height="20"
+			 backgroundColor="#DADADA" fontSize="11" verticalAlign="middle"/>
+	<s:DropDownList id="attributeNameDropDown" x="201" y="168" width="149"
+					prompt="Select Attribute"
+					change="attributeNameDropDown_changeHandler(event)"
+					dataProvider="{attributeNameArray}" fontSize="11" labelField="name"></s:DropDownList>
+	<s:Label x="201" y="137" fontSize="10" text="Attribute Name"/>
+	<s:Label x="201" y="198" fontSize="10" text="Type"/>
+	<s:Button id="saveButton" x="425" y="97" width="55" height="20" label="save"
+			  click="saveButton_clickHandler(event)"/>
+	<s:Label id="dictionaryLabel" x="484" y="98" width="97" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
+	<s:Button id="openButton" x="425" y="72" width="55" height="20" label="open"
+			  click="openButton_clickHandler(event)"/>
+	<s:Label x="485" y="72" width="51" height="29" fontSize="10" text="Portrayal Schema"/>
+	
+	<s:Label x="507" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="548" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:List id="balloonList" x="380" y="148" width="120" height="79" 
+			fontSize="10" dataProvider="{balloonAttList}" labelField="name">
+	</s:List>
+	<s:Label x="380" y="134" fontSize="10" text="Selected att. for balloons"/>
+	<s:CheckBox id="balloonCheckBox" x="202" y="149" label="for balloons" fontSize="10"/>
+	<s:Button id="cancelBalloonButton" x="505" y="207" width="60" height="20" label="cancel"
+			  click="cancelBalloonButton_clickHandler(event)"/>
+
+
+</s:Window>

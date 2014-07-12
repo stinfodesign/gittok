@@ -1,0 +1,1452 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="700" height="608"
+		  creationComplete="initializeApp()"
+		  backgroundColor="#faeed1"
+		  title="Analyst">
+	
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[			
+			import dataTypes.place.*;
+			import dataTypes.simpleDataTypes.*;
+			import dataTypes.spatialGeometry.*;
+			
+			import flash.filesystem.*;
+			import flash.net.*;
+			import flash.utils.getDefinitionByName;
+			
+			import geoOperations.*;
+			
+			import gfm.*;
+			
+			import instanceModel.*;
+			
+			import math.*;
+			
+			import message.InfoWindow;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.messaging.management.Attribute;
+			
+			import portrayal.symbol.*;
+			import portrayal.symbolStyle.*;
+			
+			import spark.events.IndexChangeEvent;
+			
+			
+			protected var file:File;
+			protected var stream:FileStream;
+			protected var kitURL:String;
+			protected var kit:Kit;
+			protected var applicationSchema:ApplicationSchema;
+			
+			private var featureSetArray:Dictionary;
+			private var associationSetArray:Dictionary;
+			private var concreteType:FeatureType;
+			
+			protected var pointList:Dictionary;
+			protected var curveList:Dictionary;
+			protected var surfaceList:Dictionary;
+			protected var point:SG_Point;
+			protected var curve:SG_Curve;
+			protected var surface:SG_Surface;
+			protected var complex:SG_Complex;
+			
+			private   var pointSymbolStyle:PointSymbolStyle;
+			private   var lineSymbolStyle:LineSymbolStyle;
+			private   var areaSymbolStyle:AreaSymbolStyle;
+			
+			protected var pSym:PointSymbol;
+			protected var lSym:LineSymbol;
+			protected var aSym:AreaSymbol;
+			
+			private var dragFlag:Boolean  = false;
+			
+			private var feature:Feature;
+			private var association:Association;			
+			private var associationType:AssociationType = new AssociationType();
+			
+			protected var info:message.InfoWindow;
+			
+			[Bindable]
+			private var concreteTypes:ArrayList = new ArrayList();
+			
+			[Bindable]
+			private var concreteAssociationTypes:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var imageFileURL:String;
+			
+			[Bindable]
+			protected var instanceArray:ArrayList;
+			
+			[Bindable]
+			protected var attValueList:ArrayList;
+			
+			[Bindable]
+			protected var fromInstanceArray:ArrayList;
+			
+			[Bindable]
+			protected var toInstanceArray:ArrayList;
+			
+			[Bindable]
+			protected var assoInstanceList:ArrayList;
+			
+			public function initializeApp(): void {
+				this.move(300, 200);
+				
+				// Basic Types
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
+				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
+				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
+				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				
+				// Place
+				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
+				registerClassAlias("dataTypes.place.VideoURL", VideoURL);
+				registerClassAlias("dataTypes.place.SoundURL", SoundURL);
+				registerClassAlias("dataTypes.place.URL", URL);
+				registerClassAlias("dataTypes.place.Address", Address);
+
+				
+				// General Feature Model
+				registerClassAlias("gfm.AttributeType", AttributeType);
+				registerClassAlias("gfm.OperationType", OperationType);
+				registerClassAlias("gfm.FeatureType", FeatureType);
+				registerClassAlias("gfm.AssociationType", AssociationType);
+				registerClassAlias("gfm.ApplicationSchema", ApplicationSchema);
+				registerClassAlias("gfm.ArgAttPair", ArgAttPair);
+				
+				// Instance Model
+				registerClassAlias("instanceModel.Kit", Kit);
+				registerClassAlias("instanceModel.FeatureSet", FeatureSet);
+				registerClassAlias("instanceModel.Feature", Feature);
+				registerClassAlias("instanceModel.AssociationSet", AssociationSet);
+				registerClassAlias("instanceModel.Association", Association);
+				
+				// Geometry
+				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
+				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
+				registerClassAlias("dataTypes.spatialGeometry.GeodeticCoordinate", GeodeticCoordinate);
+				registerClassAlias("dataTypes.spatialGeometry.PlaneRectangularCoordinate", PlaneRectangularCoordinate);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
+				registerClassAlias("dataTypes.spatialGeometry.SG_CompositeCurve", SG_CompositeCurve);				
+				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);				
+				registerClassAlias("dataTypes.spatialGeometry.SG_Object", SG_Object);				
+				registerClassAlias("dataTypes.spatialGeometry.SG_OrientableCurve", SG_OrientableCurve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Point", SG_Point);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Primitive", SG_Primitive);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Rectangle", SG_Rectangle);	
+				registerClassAlias("dataTypes.spatialGeometry.SG_Ring", SG_Ring);				
+				registerClassAlias("dataTypes.spatialGeometry.SG_Surface", SG_Surface);
+							
+				// Symbol styles
+				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
+				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
+				
+				// Symbol
+				registerClassAlias("portrayal.symbol.AreaSymbol", AreaSymbol);
+				registerClassAlias("portrayal.symbol.LineSymbol", LineSymbol);
+				registerClassAlias("portrayal.symbol.PointSymbol", PointSymbol);
+				registerClassAlias("portrayal.symbol.Circle", Circle);
+				registerClassAlias("portrayal.symbol.Triangle", Triangle);
+				registerClassAlias("portrayal.symbol.Cross", Cross);
+				
+				// Affine
+				registerClassAlias("math.AffineParam", AffineParam);
+				
+				// geoOperations
+				// These definitions are required to ensure import of them
+				Buffer;
+				Center;
+				ConvexHull;
+				DistanceBetween;
+				Length;
+				SurfaceArea;
+				Ratio;
+
+			}
+			
+			protected function openKitButton_clickHandler(event:MouseEvent):void
+			{
+				// Open the kit
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
+					file.addEventListener(Event.SELECT, kitRequest);
+					file.browseForOpen("Open kit file [キャンセル: CANCEL, 選択: SELECT]", [filter]);
+
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				}
+			}
+			
+			private function kitRequest(event:Event):void {
+				this.setKit(file.url);
+			}
+			
+			public function setKit(kitFileURL:String):void {
+				this.openKit(kitFileURL);	
+				
+				//Set parameters
+				kitNameLabel.text = file.name;
+				
+				var pathURL:String = file.url;
+				var pathArray:Array = pathURL.split("/");
+				kitURL = "";
+				for (var i:int = 0; i < pathArray.length - 1; i++) {
+					kitURL += pathArray[i] + "/";
+				}
+				
+				this.openApplicationSchema();
+				
+				//Set concrete types
+				concreteTypes = applicationSchema.constructConcreteTypes();
+				
+				
+				//Set association type list
+				for each(var caType:AssociationType in applicationSchema.associationTypes) {
+					concreteAssociationTypes.addItem(caType);
+				}
+				
+				//Set feature instance
+				featureSetArray = kit.featureSetArray;
+				
+				//Set association instance
+				associationSetArray = kit.associationSetArray;
+				
+				pointList = kit.pointList;
+				curveList = kit.curveList;
+				surfaceList = kit.surfaceList;
+												
+				alphaSlider.value = 1.0;		
+				
+				this.openSymbolStyles();	
+				
+				if (kit.baseMapImageURL != "") {
+					imageFileURL = kitURL + kit.baseMapImageURL;
+					baseMapImage.load(imageFileURL);
+					baseMapImage.addEventListener(Event.RESIZE, onBaseMapComplete);
+				}
+			}
+			
+			protected function openKit(_kitFileURL:String):void {
+				stream = new FileStream();
+				file = new File(_kitFileURL);
+				try {
+					stream.open(file, FileMode.READ);
+					kit = stream.readObject() as Kit;
+					stream.close();
+				} catch(e:IOError) {
+					trace("kit open error:" + e);
+				}	
+			}
+			
+			protected function openApplicationSchema():void {
+				var apsURL:String = kitURL + kit.applicationSchemaURL;
+				stream = new FileStream();
+				file = new File(apsURL);
+				try {
+					stream.open(file, FileMode.READ);
+					applicationSchema = stream.readObject() as ApplicationSchema;
+					stream.close();
+				} catch (e:IOError) {
+					trace("app schema open error:" + e);
+				}	
+
+			}
+			
+			protected function openSymbolStyles():void {
+				stream = new FileStream();
+				var symbolURL:String = kitURL + "defaultSymbols.sym";
+				file = new File(symbolURL);
+				
+				try {
+					stream.open(file, FileMode.READ);
+					var symbolStyles:SymbolStyleDictionary = stream.readObject() as SymbolStyleDictionary;   
+					stream.close();
+				} catch(e:IOError) {
+					trace("default symbol style open error:" + e);
+				}
+				
+				pointSymbolStyle = symbolStyles.pointSymStyles["defPoint"] 	as PointSymbolStyle;				
+				lineSymbolStyle  = symbolStyles.lineSymStyles["defLine"] 	as LineSymbolStyle;
+				areaSymbolStyle  = symbolStyles.areaSymStyles["defArea"] 	as AreaSymbolStyle;	
+			}
+						
+			private function onBaseMapComplete(event:Event):void {
+				// This function is necessary because "event:Event" is required.
+				resetView();
+			}
+			
+			protected function saveKitButton_clickHandler(event:MouseEvent):void
+			{
+				if (kitNameLabel.text == "") {
+					Alert.show("Open kit before save.", "Warning", 4, this);
+					return;
+				}
+				// Save the kit
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
+					file.addEventListener(Event.SELECT, saveKit);
+					file.browseForSave("Save kit file");		
+
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				} 
+			}
+			
+			private function saveKit(event:Event):void {	
+				var startIndex:int = file.nativePath.length - 4;
+				var suffix:String = file.nativePath.slice(startIndex);
+				if (suffix != ".kit") file.nativePath += ".kit";					
+
+				
+				var kitStream:FileStream = new FileStream();
+				kitStream.open(file, FileMode.WRITE);
+				kit.featureSetArray = featureSetArray;
+				kitStream.writeObject(kit);
+				
+				kitStream.close();	
+				kitNameLabel.text = file.name;
+			}
+						
+			//Geometry panel handlers
+			private function largerButton_clickHandler(event:MouseEvent):void
+			{
+				if (kit == null) return;
+				
+				scalingAtCenter(1.25, 225, 150);				
+			}
+			
+			private function smallerButton_clickHandler(event:MouseEvent):void
+			{	
+				if (kit == null) return;
+				
+				scalingAtCenter(0.8, 225, 150);				
+			}
+			
+			private function scalingAtCenter(s:Number, cx:Number, cy:Number):void 
+			{				
+				baseMapImage.scaleX = s * baseMapImage.scaleX;
+				baseMapImage.scaleY = baseMapImage.scaleX;
+				
+				var lx:Number = cx - baseMapImage.x;
+				var ly:Number = cy - baseMapImage.y;
+				
+				baseMapImage.x = baseMapImage.x - (s * lx - lx);
+				baseMapImage.y = baseMapImage.y - (s * ly - ly);
+				
+				workLayer.width  = baseMapImage.width;
+				workLayer.height = baseMapImage.height;
+				workLayer.x = baseMapImage.x;
+				workLayer.y = baseMapImage.y;
+				workLayer.scaleX = workLayer.scaleY = baseMapImage.scaleX;
+				
+				resetDrawing();
+				
+				annotationLayer.width  = baseMapImage.width;
+				annotationLayer.height = baseMapImage.height;
+				annotationLayer.x = baseMapImage.x;
+				annotationLayer.y = baseMapImage.y;
+				annotationLayer.scaleX = annotationLayer.scaleY = baseMapImage.scaleX;
+			}
+			
+			private function dragButton_clickHandler(event:MouseEvent):void
+			{
+				if (kit == null) return;
+				
+				if (dragFlag) { 
+					dragFlag = false;
+					dragButton.label = "off";
+					Mouse.cursor = "arrow";
+				}
+				else {
+					dragFlag = true;
+					dragButton.label = "on";
+					Mouse.cursor = "hand";
+				}
+				
+			}
+			
+			private function resetButton_clickHandler(event:MouseEvent):void
+			{
+				resetView();
+			}
+			
+			private function alphaSlider_changeHandler(event:Event):void
+			{
+				if (kit == null) return;
+
+				// content means the background image
+				baseMapImage.content.alpha = alphaSlider.value;
+			}
+			
+			private function resetView():void {
+				if (kit == null) return;
+				
+				var w0:Number = geometryBox.width;
+				var h0:Number = geometryBox.height;
+				var w1:Number = baseMapImage.width;
+				var h1:Number = baseMapImage.height;
+				
+				var hw0:Number = h0 / w0;
+				var hw1:Number = h1 / w1;
+				
+				var s:Number;
+				
+				// if horizontal ratio is larger than vertical of the panel,
+				if (hw0 < hw1) 
+					s = h0 / h1;
+				else
+					s = w0 / w1;
+				
+				baseMapImage.scaleX = baseMapImage.scaleY = s;
+				
+				baseMapImage.x = (w0 - s * w1) / 2.0;
+				baseMapImage.y = (h0 - s * h1) / 2.0;	
+				
+				baseMapImage.content.alpha = alphaSlider.alpha = 1.0;
+				
+				workLayer.width  = baseMapImage.width;
+				workLayer.height = baseMapImage.height;
+				workLayer.x      = baseMapImage.x;
+				workLayer.y      = baseMapImage.y;
+				workLayer.scaleX = workLayer.scaleY = s;
+				
+				annotationLayer.width  = baseMapImage.width;
+				annotationLayer.height = baseMapImage.height;
+				annotationLayer.x      = baseMapImage.x;
+				annotationLayer.y      = baseMapImage.y;
+				annotationLayer.scaleX = annotationLayer.scaleY = s;
+				
+				geometrySubBox.x = geometrySubBox.y = 0;
+				
+				resetDrawing();
+			}
+			
+			protected function resetDrawing():void {
+				if (kit == null) return;
+				
+				// remove all
+				var n:int = workLayer.numChildren;
+				for (var i:int = 0; i < n; i++) {
+					workLayer.removeChildAt(0);
+				}
+				
+				for each (var s:SG_Surface in surfaceList) {
+					aSym = new AreaSymbol();
+					var aObj:Object = new Object();
+					aObj.surface = s;
+					aObj.style = areaSymbolStyle;
+					aSym.decode(aObj);
+					aSym.name = s.id.toString();
+					workLayer.addChild(aSym);
+				}
+				
+				for each (var c:SG_Curve in curveList) {
+					lSym = new LineSymbol();
+					var lObj:Object = new Object();
+					lObj.curve = c;
+					lObj.style = lineSymbolStyle;
+					lSym.decode(lObj);
+					lSym.name = c.id.toString();
+					workLayer.addChild(lSym);
+				}
+				
+				for each (var p:SG_Point in pointList) {
+					pSym = new PointSymbol();
+					var pObj:Object = new Object();
+					pObj.point = p;
+					pObj.style = pointSymbolStyle;
+					pSym.decode(pObj);
+					pSym.name = p.id.toString();
+					workLayer.addChild(pSym);
+				}
+			}
+			
+			private function geometryPanel_mouseUpHandler(event:MouseEvent):void
+			{
+				if (dragFlag) {
+					geometrySubBox.stopDrag();
+					Mouse.cursor = "hand";
+				}
+			}
+
+			
+			private function geometryPanel_mouseDownHandler(event:MouseEvent):void
+			{
+				var coor:Coordinate2 = new Coordinate2();
+				coor.x = baseMapImage.mouseX;
+				coor.y = baseMapImage.mouseY;
+				
+				// IMAGE DRAGGING
+				if (dragFlag) {
+					geometrySubBox.startDrag(false);
+					Mouse.cursor = "button";
+					return;
+				}
+				
+				// SEARCH GEOMETRY
+				switch (geomGroup.selectedValue) {
+					case "SG_Point":
+						//search nearest point
+						var dist:Number = Number.MAX_VALUE;
+						for each (var wp:SG_Point in pointList) {
+							var wd:Number = math.Distance.p2p(wp.position, coor);
+							if (wd <= dist) {
+								dist = wd;
+								point = wp;
+							}	
+						}
+						
+						// Draw the Found Circle after removing the old one						
+						var circle:Circle = workLayer.getChildByName("circle") as Circle;
+						if (circle != null) workLayer.removeChild(circle);
+						circle = new Circle(point.position, 10)
+						circle.name = "circle";
+						workLayer.addChild(circle);	
+						
+						// searched geometry
+						instanceSetting(point);
+						break;
+					
+					case "SG_Curve":
+						// search the nearest curve
+						circle = workLayer.getChildByName("circle") as Circle;
+						if (circle != null) workLayer.removeChild(circle);
+						
+						dist = Number.MAX_VALUE;
+						var nearestCoord:Coordinate2;
+						for each (var wc:SG_Curve in curveList) {
+						var coors:ArrayList = new ArrayList();										
+						coors.addItem(wc.start.position);
+						coors.addAll(wc.shape);
+						coors.addItem(wc.end.position);
+						var nCoord:Coordinate2 = math.Relation.nearestPonLS(coor, coors);
+						wd = math.Distance.p2p(coor, nCoord);
+						if (wd <= dist) {
+							dist = wd;
+							nearestCoord = nCoord;
+							curve = wc
+						}
+					}
+						
+						// Draw Find Circle!!!
+						circle = new Circle(nearestCoord, 10);
+						circle.name = "circle";
+						workLayer.addChild(circle);
+						
+						//searched geometry
+						instanceSetting(curve);
+						break;
+					
+					case "SG_Surface":
+						// search the surface of which given coordinate is inside.
+						circle = workLayer.getChildByName("circle") as Circle;
+						if (circle != null) workLayer.removeChild(circle);
+						
+						for each(var s:SG_Surface in surfaceList) {
+							var ring:SG_Ring = s.exterior;
+							if (math.Relation.pointInRing(coor, ring)) {
+								surface = s;
+								circle = new Circle(coor, 10);
+								circle.name = "circle";
+								workLayer.addChild(circle);
+								break;
+							}
+						}
+						
+						//searched geometry
+						instanceSetting(surface);
+						break;
+				}
+			}
+			
+			protected function instanceSetting(geom:SG_Primitive):void {
+				var instanceID:String = geom.featureID;
+				
+				if (instanceID == "") {
+					// geom.featureID is not defined in case of that geom has no relationship between feature instance.
+					instanceIDList.dataProvider = null;
+					operationList.dataProvider = null;
+					return;
+				}
+				
+				if (featureTypeList.selectedItem == null) {
+					Alert.show("Feature type is not selected.", "Alert", 4, this);
+					return;
+				}
+				concreteType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
+				var featureSet:FeatureSet = featureSetArray[concreteType.name] as FeatureSet;
+
+				for each (feature in featureSet.features) {
+					if (feature.id == instanceID) {
+						instanceIDList.selectedItem = instanceID;
+						
+						// operation setting
+						operationList.dataProvider = concreteType.operationTypes;
+						// feature was selected too!!
+						return;
+					}
+				}
+			}
+			
+			protected function associationInstanceSetting(assoID:String):void {
+				if (associationTypeList.selectedItem == null) {
+					Alert.show("Association type is not selected.", "Alert", 4, this);
+					return;	
+				}
+				var association:Association = kit.associationList[assoID] as Association;
+				fromInstanceArray = association.relateFrom;
+				toInstanceArray   = association.relateTo;
+			}
+			
+			protected function associationTypeList_changeHandler(event:IndexChangeEvent):void
+			{
+				initializeScreen();
+				
+				associationType = associationTypeList.selectedItem as AssociationType;
+				fromFeatureTypeLabel.text = associationType.from.name;
+				toFeatureTypeLabel.text = associationType.to.name;
+				
+				operationList.dataProvider = associationType.operationTypes;
+				
+				var associationSet:AssociationSet = associationSetArray[associationType.name];
+				var associations:Dictionary = associationSet.associations;
+				assoInstanceList = new ArrayList();
+				for each(association in associations) {
+					assoInstanceList.addItem(association.id);		
+				}
+			}
+			
+			protected function assoInstanceIDList_changeHandler(event:IndexChangeEvent):void
+			{
+				association = associationSetArray[associationType.name].associations[assoInstanceIDList.selectedItem];
+				fromInstanceArray = association.relateFrom;
+				toInstanceArray   = association.relateTo;
+				
+				attValueList = new ArrayList();
+			}
+		
+			//---- Execute OPERATIONS -----
+			
+			protected function executeButton_clickHandler(event:MouseEvent):void
+			{
+				
+				var operationType:OperationType = operationList.selectedItem as OperationType;
+
+				if (operationType == null) {
+					Alert.show("Select operation before click execute button.", "Alert", 4, this);
+					return;	
+				}
+				
+				var className:String = "geoOperations." + operationType.type;
+				var opName:String = operationType.name;
+				
+				var classRef:Class = getDefinitionByName(className) as Class;
+								
+				var argAttPair:ArgAttPair;
+				
+				var alertStr:String;
+				
+				var attValues:ArrayList = new ArrayList();
+				
+				var argObj:Object = new Object();
+				
+				var attList:ArrayList;
+				
+				if (tabBar.selectedIndex == 0) {	//feature
+					if (instanceIDList.selectedIndex == -1) {
+						Alert.show("Select an instance before.", "Error", 4, this);
+						return;
+					}
+					
+					var selfType:FeatureType = featureTypeList.selectedItem as FeatureType;
+					var selfSet:FeatureSet = featureSetArray[selfType.name] as FeatureSet;
+					
+					var selfFeature:Feature = selfSet.features[instanceIDList.selectedItem] as Feature;
+					
+					for (var i:int = 0; i < operationType.arguments.length; i++) {
+						attValues = new ArrayList();
+						argAttPair = operationType.arguments.getItemAt(i) as ArgAttPair;	// a pair of argument and attribute 
+						var featureSet:FeatureSet = featureSetArray[selfFeature.typeName] as FeatureSet;	
+						var features:Dictionary = featureSet.features;	// a set of features having attribute for the operation
+						var attName:String = argAttPair.attributeType.name;
+						
+						if (argAttPair.fromTo == "self") {
+							attList = selfFeature.attributes[attName];
+							attValues.addItem(attList);
+						}
+						else { // toFeature
+							var toFType:FeatureType = argAttPair.targetType;
+							var toFSet:FeatureSet = featureSetArray[toFType.name] as FeatureSet;
+							for each(var toFeature:Feature in toFSet.features) {	// a feature may associate with more than one other features
+								if (toFeature.typeName == toFType.name) {
+									attList = toFeature.attributes[attName];	// arraylist of attribute values
+								}
+								if (attList == null) {
+									return;	
+								}
+								attValues.addItem(attList);
+							}
+						}
+						argObj[argAttPair.argumentType.name] = attValues;
+					}
+				}
+				
+				else {	//association
+					if (assoInstanceIDList.selectedIndex == -1) {
+						Alert.show("Select an association instance before.", "Error", 4, this);
+						return;
+					}					
+
+					for (i = 0; i < operationType.arguments.length; i++) {
+						argAttPair = operationType.arguments.getItemAt(i) as ArgAttPair;
+						attName = argAttPair.attributeType.name;
+						attValues = new ArrayList();
+						
+						if (argAttPair.fromTo == "from") {
+							// in case "from"
+							for (var j:int = 0; j < fromInstanceArray.length; j++) {
+								var fromFeature:Feature = fromInstanceArray.getItemAt(j) as Feature;
+								attList = fromFeature.attributes[attName] as ArrayList;
+								if (attList == null) {
+									alertStr = "Attribute " + association.typeName + "." + attName+ " is null."
+									Alert.show(alertStr, "Alert", 4, this);
+									return;	
+								}
+								attValues.addItem(attList);
+							}
+							argObj[argAttPair.argumentType.name] = attValues;
+						}
+						
+						else if (argAttPair.fromTo == "self") {
+							// in case "self"
+							attList = association.attributes[attName] as ArrayList;
+							attValues.addItem(attList);
+							argObj[argAttPair.argumentType.name] = attValues;							
+						}
+						
+						else if (argAttPair.fromTo == "to") { 
+							// in case "to"
+							var toFs:ArrayList = association.relateTo;
+							for (j = 0; j < toFs.length; j++) {
+								toFeature = toFs.getItemAt(j) as Feature;
+								attList = toFeature.attributes[attName];
+								if (attList.length == 0) {
+									alertStr = "Attribute " + association.typeName + "." + 
+										attName+ " is null."
+									Alert.show(alertStr, "Alert", 4, this);
+									return;	
+								}
+								attValues.addItem(attList);
+							}
+							argObj[argAttPair.argumentType.name] = attValues;
+						}
+					}
+				}
+				
+				// for coordinate conversion from screen to plane
+				argObj["affineParam"] = kit.affineParam;
+				
+				// target feature or association id and attribute name
+				
+				
+				/* 
+				EXECUTE THE OPERATION!!!
+				*/
+				var valueObject:* = classRef[opName](argObj);
+				
+				
+				// Initialize the attribute value (it may be sequence, if multiplicity is true)
+				attValueList = new ArrayList();
+				
+				if (tabBar.selectedIndex == 0) {	//feature	
+					//fs.addItem(selfFeature);
+					var wFeatureSet:FeatureSet = featureSetArray[operationType.returnFATypeID] as FeatureSet;
+					var fList:ArrayList = new ArrayList();
+					for each(var wf:Feature in wFeatureSet.features) {
+						fList.addItem(wf);	
+					}
+					attValueList = this.setAttValueList("f", valueObject, fList);
+					
+					var fType:FeatureType = applicationSchema.featureTypes[feature.typeName] as FeatureType;					
+					if (operationType.returnFATypeID == fType.name) {
+						// atribute in a feature itself 
+						feature.attributes[operationType.returnAttributeName] = attValueList;
+						
+					}
+					else {
+						// attribute in from or to-features
+						i = 0;
+						for each(wf in featureSet.features) {
+							attList = new ArrayList();
+							attList.addItem(attValueList.getItemAt(i));
+							wf.attributes[operationType.returnAttributeName] = attList;
+							kit.featureList[wf.id] = wf;
+							i += 1;
+						}
+					}
+					
+					var aname:String = operationType.returnAttributeName;
+					fType = applicationSchema.featureTypes[operationType.returnFATypeID] as FeatureType;
+					var attType:AttributeType = fType.getAttributeTypeByName(aname);
+					
+					unitLabel.text = attType.unit;
+					
+				}
+					
+				else {	// tabBar.index == 1 : association	
+					var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;
+					if (assoType.from.name == operationType.returnFATypeID) {
+						// return value to "from"
+						attValueList = this.setAttValueList("f", valueObject, association.relateFrom);
+						
+						for (i = 0; i < association.relateFrom.length; i++) {
+							wf = association.relateFrom.getItemAt(i) as Feature;
+							attList = new ArrayList();
+							attList.addItem(attValueList.getItemAt(i));
+							wf.attributes[operationType.returnAttributeName] = attList;
+							kit.featureList[wf.id] = wf;
+						}
+						
+						var fromType:FeatureType = assoType.from;
+						attType = fromType.getAttributeTypeByName(operationType.returnAttributeName);
+						unitLabel.text = attType.unit;
+						
+					}
+					else if (assoType.to.name == operationType.returnFATypeID) {
+						// return value to "to"
+						attValueList = this.setAttValueList("f", valueObject, association.relateTo);
+						
+						for (i = 0; i < association.relateTo.length; i++) {
+							wf = association.relateTo.getItemAt(i) as Feature;
+							attList = new ArrayList();
+							attList.addItem(attValueList.getItemAt(i));
+							wf.attributes[operationType.returnAttributeName] = attList;
+							kit.featureList[wf.id] = wf;
+						}
+						
+						var toType:FeatureType = assoType.to;
+						attType = toType.getAttributeTypeByName(operationType.returnAttributeName);
+						unitLabel.text = attType.unit;
+
+					}
+					else if (assoType.name == operationType.returnFATypeID) {
+						// return value to "self" as an association
+						attValueList = this.setAttValueList("a", valueObject, null, association);
+						
+						association.attributes[operationType.returnAttributeName] = attValueList;
+						for (i = 0; i < assoType.attributeTypes.length; i++) {
+							attType = assoType.attributeTypes.getItemAt(i) as AttributeType;
+							if (attType.name == operationType.returnAttributeName) {
+								unitLabel.text = attType.unit;
+							}
+						}
+					}
+				}
+												
+				// Reset graphics 
+				resetDrawing();
+				
+			}
+			
+			protected function setAttValueList(fa:String, valueObject:*, 
+											   features:ArrayList, association:Association = null):ArrayList {
+				var valueObjects:ArrayList = new ArrayList();
+				var attValueList:ArrayList = new ArrayList();
+				
+				if (valueObject is ArrayList) {
+					valueObjects = valueObject;	
+				}
+				else {
+					valueObjects.addItem(valueObject);
+				}
+				
+				var operationType:OperationType = operationList.selectedItem as OperationType;
+				var tp:String = operationType.returnAttributeType;
+				var ftr:Feature;
+				
+				for (var i:int = 0; i < valueObjects.length; i++) {				
+					var vobj:* = valueObjects.getItemAt(i);
+					
+					if (fa == "f") {
+						ftr = features.getItemAt(i) as Feature;
+					}
+					
+					if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
+						var geom:SG_Primitive = vobj as SG_Primitive;
+					
+						if (fa == "f") {
+							geom.featureID = ftr.id;
+						}
+						else
+							geom.featureID = association.id;
+					
+						geom.attributeName = operationType.returnAttributeName;
+					
+						attValueList.addItem(geom);
+					
+						if (tp == "SG_Point") {
+							var p:SG_Point = geom as SG_Point;
+							kit.pointList[p.id] = p;
+						}
+					
+						if (tp == "SG_Curve") { 
+							var c:SG_Curve = geom as SG_Curve;
+							kit.curveList[c.id] = c;
+							var sp:SG_Point = c.start;
+							var ep:SG_Point = c.end;
+							kit.pointList[sp.id] = sp;
+							kit.pointList[ep.id] = ep;
+						}
+					
+						if (tp == "SG_Surface") {
+							var s:SG_Surface = geom as SG_Surface;
+							kit.surfaceList[geom.id] = s;
+							var r:SG_Ring = s.exterior;
+							kit.ringList[r.id] = r;
+							var oc:SG_OrientableCurve;
+							for (var j:int = 0; j < r.elements.length; j++) {
+								oc = r.elements.getItemAt(j) as SG_OrientableCurve;
+								kit.orientableCurveList[oc.id] = oc;
+								c = oc.original;
+								kit.curveList[c.id] = c;
+								sp = c.start;
+								ep = c.end;
+								kit.pointList[sp.id] = sp;
+								kit.pointList[ep.id] = ep;
+							}
+						}
+					}
+				
+					if (tp == "SG_Complex") {
+						var complex:SG_Complex = vobj as SG_Complex;
+					
+						if (fa == "f")
+							complex.featureID = ftr.id;
+						else
+							complex.featureID = association.id;
+					
+						attValueList.addItem(complex);
+						kit.complexList[complex.id] = complex;
+
+					
+						for (j = 0; j < complex.pointSet.length; i++) {
+							p = complex.pointSet.getItemAt(j) as SG_Point;
+							kit.pointList[p.id] = p;
+						}
+					
+						for (j = 0; j < complex.curveSet.length; j++) {
+							c = complex.curveSet.getItemAt(j) as SG_Curve;
+							kit.curveList[c.id] = c;
+						}
+					
+						for (j = 0; j < complex.surfaceSet.length; j++) {
+							s = complex.surfaceSet.getItemAt(j) as SG_Surface;
+							kit.surfaceList[s.id] = s;
+						}
+					
+						for (j = 0; j < complex.orientableCurveSet.length; j++) {
+							oc = complex.orientableCurveSet.getItemAt(j) as SG_OrientableCurve;
+							kit.orientableCurveList[oc.id] = oc;
+						}
+					
+						for (j = 0; j < complex.ringSet.length; j++) {
+							r = complex.ringSet.getItemAt(j) as SG_Ring;
+							kit.ringList[r.id] = r;
+						}
+					}
+				
+					if (tp == "CharacterString") {
+						var cs:CharacterString = new CharacterString();
+						cs.value = vobj as String;
+						if (fa == "f") 
+							cs.featureID = ftr.id;
+						else
+							cs.featureID = association.id;
+						attValueList.addItem(cs);
+					}
+				
+					if (tp == "Real") {
+						var rl:Real = new Real();
+						rl = vobj as Real;
+						if (fa == "f")
+							rl.featureID = ftr.id;
+						else
+							rl.featureID = association.id;
+					
+						attValueList.addItem(rl);
+					}
+				
+					if (tp == "Integer") {
+						var inte:Integer = new Integer();
+						inte = vobj as Integer;
+						if (fa == "f") 
+							inte.featureID = ftr.id;
+						else
+							inte.featureID = association.id;
+					
+						attValueList.addItem(inte);
+					}
+				
+					if (tp == "Bool") {
+						var bl:Bool = new Bool();
+						bl = vobj as Bool;
+						if (fa == "f") 
+							bl.featureID = ftr.id;
+						else
+							bl.featureID = association.id;
+					
+						attValueList.addItem(bl);
+					}
+				
+					if (tp == "Image") {
+						var iml:ImageURL = new ImageURL();
+						if (fa == "f") 
+							iml.featureID = ftr.id;
+						else
+							iml.featureID = association.id;
+
+						iml.value = vobj as String;
+						attValueList.addItem(iml);
+					}
+				
+					if (tp == "Video") {
+						var vdl:VideoURL = new VideoURL();
+						if (fa == "f") 
+							vdl.featureID = ftr.id;
+						else
+							vdl.featureID = association.id;
+
+						vdl.value = vobj as String;
+						attValueList.addItem(vdl);
+					}	
+				
+					if (tp == "Sound") {
+						var snd:SoundURL = new SoundURL();
+						if (fa == "f") 
+							snd.featureID = ftr.id;
+						else
+							snd.featureID = association.id;
+					
+						snd.value = vobj as String;
+						attValueList.addItem(snd);
+					}
+				}
+
+				return attValueList;
+				
+			}
+			
+			protected function attributeValueList_clickHandler(event:MouseEvent):void
+			{
+				if (operationList.selectedIndex == -1) {
+					Alert.show("Select and execute operation before.", "Warning", 4, this);
+					return;
+				}
+				
+				if (attributeValueList.selectedIndex == -1) {
+					Alert.show("Select return value before.", "Warning", 4, this);
+					return;					
+				}
+					
+				var si:int = attributeValueList.selectedIndex;
+				var attValue:* = attValueList.getItemAt(si);
+				
+				var operationType:OperationType = operationList.selectedItem as OperationType;	
+				var faTypeID:String = operationType.returnFATypeID;
+				
+				if (tabBar.selectedIndex == 0) { 
+					// feature operation
+					var wFeatureSet:FeatureSet = featureSetArray[faTypeID] as FeatureSet;
+					this.displayFeature(wFeatureSet.features[attValue.featureID] as Feature);
+				}
+				else {		
+					// association operation
+					var wAssociationSet:AssociationSet = associationSetArray[faTypeID] as AssociationSet;
+					if (wAssociationSet != null) {
+						this.displayAssociation(wAssociationSet.associations[attValue.associationID] as Association);
+						return;
+					}
+					wFeatureSet = featureSetArray[faTypeID] as FeatureSet;
+					this.displayFeature(wFeatureSet.features[attValue.featureID] as Feature);
+				}
+			}
+			
+			public function displayFeature(ftr:Feature):void {
+				var position:Coordinate2;
+				var fType:FeatureType = applicationSchema.featureTypes[ftr.typeName] as FeatureType;
+				var attTypes:ArrayList = fType.attributeTypes;
+				var points:ArrayList = new ArrayList();
+				
+				for (var i:int = 0; i < attTypes.length; i++) {
+					var attType:AttributeType = attTypes.getItemAt(i) as AttributeType;
+					var dt:String = attType.dataType;
+					if (dt == "SG_Point" || dt == "SG_Curve" || dt == "SG_Surface" || dt == "SG_Complex") {
+						var attArray:ArrayList = ftr.attributes[attType.name];
+						var att:SG_Object = attArray.getItemAt(0) as SG_Object;
+				
+						if (dt == "SG_Point") {
+							point = att as SG_Point;
+							position = point.position;
+						}
+				
+						if (dt == "SG_Curve") {
+							curve = att as SG_Curve;
+							var attList:ArrayList = new ArrayList();
+							attList.addItem(curve);
+							var attValues:ArrayList = new ArrayList();
+							attValues.addItem(attList);
+							var argObj:Object = new Object();
+							argObj["curve"] = attValues;
+					
+							position = geoOperations.Center.centerLayingOnCurve(argObj).position;
+						}
+				
+						if (dt == "SG_Surface") {
+							surface = att as SG_Surface;
+							attList = new ArrayList();
+							attList.addItem(surface);
+							attValues = new ArrayList();
+							attValues.addItem(attList);
+							argObj = new Object();
+							argObj["surface"] = attValues;
+					
+							position = geoOperations.Center.centerOfMIC(argObj).position;
+						}
+				
+						if (dt == "SG_Complex") {
+							complex = att as SG_Complex;
+							attList = new ArrayList();
+							attList.addItem(complex);
+							attValues = new ArrayList();
+							attValues.addItem(attList);
+							argObj = new Object();
+							argObj["complex"] = attValues;
+					
+							position = geoOperations.Center.centerOfComplex(argObj).position;
+						}
+						
+						var p:SG_Point = new SG_Point();
+						p.position = position;
+						points.addItem(p);
+					}
+				}
+				
+				if (points.length > 0) {
+					argObj = new Object();
+					argObj["points"] = points;
+					position = geoOperations.Center.centerOfPoints(argObj).position;
+					
+					// Draw the Found Circle after removing the old one						
+					var circle:Circle = workLayer.getChildByName("circle") as Circle;
+					if (circle != null) workLayer.removeChild(circle);
+					circle = new Circle(position, 10);
+					circle.name = "circle";
+					workLayer.addChild(circle);	
+				}
+			}
+			
+			protected function tabBar_changeHandler(event:IndexChangeEvent):void
+			{
+				this.initializeScreen();
+			}
+
+			protected function featureTypeList_changeHandler(event:IndexChangeEvent):void
+			{
+				this.initializeScreen();
+				
+				concreteType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
+				var featureSet:FeatureSet = featureSetArray[concreteType.name] as FeatureSet;
+				instanceArray = new ArrayList();
+				for each(var feature:Feature in featureSet.features) {
+					instanceArray.addItem(feature.id);
+				}
+				
+				// Select geometry type, if proxy is geometry
+				var pxType:AttributeType = concreteType.getProxyType();
+				var geomType:String = pxType.dataType;
+				if (geomType == "SG_Point") 
+					pointRadio.selected = true;
+				else if (geomType == "SG_Curve") 	
+					curveRadio.selected = true;
+				else if (geomType == "SG_Surface") 	
+					surfaceRadio.selected = true;
+				else 
+					instanceIDList.selectedIndex = -1;
+				
+				
+				// operation setting
+				operationList.dataProvider = concreteType.operationTypes;
+
+			}
+			
+			private function initializeScreen():void {
+				instanceArray = new ArrayList();;
+				//attValueList = null;
+				//operationList.dataProvider = null;
+				
+				var circle:Circle = workLayer.getChildByName("circle") as Circle;
+				if (circle != null) workLayer.removeChild(circle);
+			}
+			
+			protected function displayAssociation(asso:Association):void {
+				this.clearAnnotationLayer();
+				
+				// from geometry
+				var fromFeatures:ArrayList = asso.relateFrom;	// instance
+				var pxType:AttributeType   = associationType.from.getProxyType();
+				if (pxType != null) {
+					for (var i:int = 0; i < fromFeatures.length; i++) {
+						var fromFeature:Feature = fromFeatures.getItemAt(i) as Feature;
+						var primiList:ArrayList = fromFeature.attributes[pxType.name] as ArrayList;
+						this.displayTriangle("fromTriangle", primiList.getItemAt(0) as SG_Primitive);
+					}
+				}
+				// to geometry
+				var toFeatures:ArrayList = asso.relateTo;		// instances
+				pxType                   = associationType.to.getProxyType();
+				if (pxType != null) {
+					for (i = 0; i < toFeatures.length; i++) {
+						var toFeature:Feature = toFeatures.getItemAt(i) as Feature;
+						primiList             = toFeature.attributes[pxType.name] as ArrayList;
+						this.displayTriangle("toTriangle", primiList.getItemAt(0) as SG_Primitive);
+					}
+				}
+			}
+			
+			public function clearAnnotationLayer():void {
+				var m:int = annotationLayer.numChildren;
+				if (m > 0) {
+					for (var i:int = 0; i < m; i++) {
+						annotationLayer.removeChildAt(0);
+					}
+				}
+			}
+			
+			public function displayTriangle(_name:String, gm:SG_Primitive):Coordinate2 {
+				var objArray:ArrayList = new ArrayList();
+				var obj:Object = new Object();
+				var center:Coordinate2;
+				
+				if (getQualifiedClassName(gm) == "dataTypes.spatialGeometry::SG_Point") {
+					point = gm as SG_Point;
+					center = point.position;
+				}
+				
+				if (getQualifiedClassName(gm) == "dataTypes.spatialGeometry::SG_Curve") {
+					curve = gm as SG_Curve;
+					objArray.addItem(curve);
+					var attValues:ArrayList = new ArrayList();
+					attValues.addItem(objArray);
+					obj["curve"] = attValues;
+					center = Center.centerLayingOnCurve(obj).position;
+				}
+				if (getQualifiedClassName(gm) == "dataTypes.spatialGeometry::SG_Surface") {
+					surface = gm as SG_Surface;
+					objArray.addItem(surface);
+					attValues = new ArrayList();
+					attValues.addItem(objArray);
+					obj["surface"] = attValues;
+					center = Center.centerOfSurface(obj).position;
+				}
+
+				if (_name == "fromTriangle" && center != null) {
+					var crdArray:CoordinateArray = new CoordinateArray();
+					var crd0:Coordinate2 = new Coordinate2();
+					crd0.x = center.x;
+					crd0.y = center.y + 5;
+					crdArray.addItem(crd0);
+					var crd1:Coordinate2 = new Coordinate2();
+					crd1.x = center.x;
+					crd1.y = center.y - 5;
+					crdArray.addItem(crd1);
+					var crd2:Coordinate2 = new Coordinate2();
+					crd2.x = center.x + 6;
+					crd2.y = center.y;
+					crdArray.addItem(crd2);
+					var fromTrg:Triangle = new Triangle("fromTriangle", crdArray, 0x0000ff);
+					this.annotationLayer.addChild(fromTrg);
+				}
+				
+				if (_name == "toTriangle" && center != null) {
+					crdArray = new CoordinateArray();
+					crd0   = new Coordinate2();
+					crd0.x = center.x;
+					crd0.y = center.y + 5;
+					crdArray.addItem(crd0);
+					crd1   = new Coordinate2();
+					crd1.x = center.x;
+					crd1.y = center.y - 5;
+					crdArray.addItem(crd1);
+					crd2   = new Coordinate2();
+					crd2.x = center.x - 6;
+					crd2.y = center.y;
+					
+					crdArray.addItem(crd2);
+					var toTrg:Triangle = new Triangle("toTriangle", crdArray, 0xff0000);
+					this.annotationLayer.addChild(toTrg);
+				}
+				return center;
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/analyst_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/analyst_en.html");
+				navigateToURL(request);
+			}
+
+			protected function showAssoButton_clickHandler(event:MouseEvent):void
+			{
+				if (showAssoButton.label == "show") {						
+					var assoID:String = assoInstanceIDList.selectedItem as String;
+					var assoSet:AssociationSet = associationSetArray[associationType.name] as AssociationSet;
+					association = assoSet.associations[assoID] as Association;
+					
+					this.displayAssociation(association);
+					
+					showAssoButton.label = "clear";
+				}	
+				else {
+					this.clearAnnotationLayer();
+					showAssoButton.label = "show";
+				}
+				
+			}
+			
+			protected function instanceIDList_changeHandler(event:IndexChangeEvent):void
+			{
+				var fID:String = instanceIDList.selectedItem as String;
+				var fType:FeatureType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
+				var featureSet:FeatureSet = featureSetArray[fType.name] as FeatureSet;
+				
+				feature = featureSet.features[fID] as Feature;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+		<s:RadioButtonGroup id="geomGroup" enabled="false"/>
+	</fx:Declarations>
+	
+	<mx:Image x="10" y="10" source="@Embed('images/pictAnalysis1.png')" />
+	<s:Label x="75" y="15" text="Analyst" fontSize="16"/>
+	<s:Button x="40" y="89" label="open" width="54" id="openKitButton" click="openKitButton_clickHandler(event)"/>
+	<s:Button x="101" y="89" label="save" width="51" id="saveKitButton" click="saveKitButton_clickHandler(event)"/>
+	<s:Label x="161" y="95" text="Kit"/>
+	<s:Label x="39" y="117" width="157" height="20" verticalAlign="middle" backgroundColor="#DADADA" id="kitNameLabel"/>
+
+	<s:Panel id="geometryPanel" x="37" y="216" width="434" height="347" title="Instance view panel"
+			 dropShadowVisible="false">
+		<s:Group clipAndEnableScrolling="true" width="432" height="314" visible="true" id="geometryBox" x="0" y="0"
+				 mouseDown="geometryPanel_mouseDownHandler(event)"
+				 mouseUp="geometryPanel_mouseUpHandler(event)">
+			<s:Group id="geometrySubBox">
+				<mx:Image id="baseMapImage" source="{imageFileURL}"/>
+				<mx:Image id="workLayer"  alpha="1.0"/>
+				<mx:Image id="annotationLayer" alpha="1.0" />
+			</s:Group>
+		</s:Group>
+		<s:Button x="391" y="-26" label="-" width="35" id="resetButton" click="resetButton_clickHandler(event)"/>
+		<s:Button x="353" y="-26" label="&lt;" width="35" id="largerButton" click="largerButton_clickHandler(event)"/>
+		<s:Button x="315" y="-26" label="&gt;" id="smallerButton" width="35" click="smallerButton_clickHandler(event)"/>
+		<s:Button x="277" y="-26" label="off" id="dragButton" width="35" click="dragButton_clickHandler(event)"/>
+		<s:HSlider x="195" y="-20" width="68" id="alphaSlider" minimum="0" maximum="1" stepSize="0.05" value="1" 
+				   change="alphaSlider_changeHandler(event)" chromeColor="#494848"/>
+	</s:Panel>
+	
+	<s:TabBar id="tabBar" dataProvider="{myViewStack}" x="250" y="17" height="20"  change="tabBar_changeHandler(event)"/>
+	
+	<mx:ViewStack id="myViewStack" 
+				  borderStyle="solid" width="432" height="150" x="250" y="37" backgroundColor="#fefee5"> 
+		
+		<s:NavigatorContent id="featureTab" label="Feature"> 
+			<s:Group width="100%" height="100%" id="featureDef" x="2" y="0">
+				<s:Label x="32" y="19" text="Feature type list"/>
+				<s:Label x="184" y="20" text="Instance ID"/>
+				<s:DropDownList x="32" y="34" width="136" id="featureTypeList" prompt="Feature types" 
+								dataProvider="{concreteTypes}" labelField="name"  change="featureTypeList_changeHandler(event)"></s:DropDownList>
+				<s:DropDownList id="instanceIDList" x="184" y="34" width="141" dataProvider="{instanceArray}"
+								change="instanceIDList_changeHandler(event)"></s:DropDownList>
+			</s:Group>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent id="associationTab" label="Association" > 
+			<s:Group width="100%" height="100%" id="associationDef" x="0" y="0">
+				<s:Label x="31" y="9" text="Association type list"/>
+				<s:DropDownList x="30" y="25" width="136" id="associationTypeList" prompt="Association types" 
+								dataProvider="{concreteAssociationTypes}" labelField="name" change="associationTypeList_changeHandler(event)"></s:DropDownList>
+				<s:List x="296" y="54" width="100" height="82" contentBackgroundColor="#DADADA" borderVisible="false" id="toInstanceIDs" 
+						dataProvider="{toInstanceArray}" labelField="id"></s:List>
+				<s:Label x="190" y="28" width="100" height="20" verticalAlign="middle" backgroundColor="#DADADA" id="fromFeatureTypeLabel"/>
+				<s:Label x="296" y="28" width="100" height="20" verticalAlign="middle" backgroundColor="#DADADA" id="toFeatureTypeLabel"/>
+				<s:List id="fromInstanceIDs" x="190" y="54" width="100" height="82"
+						borderVisible="false" contentBackgroundColor="#DADADA" dataProvider="{fromInstanceArray}" labelField="id"></s:List>
+				<s:DropDownList x="30" y="80" width="136" id="assoInstanceIDList" prompt="instance IDs" dataProvider="{assoInstanceList}" 
+								change="assoInstanceIDList_changeHandler(event)"></s:DropDownList>
+				<s:Label x="31" y="64" text="Association instance ID list"/>
+				<s:Label x="190" y="10" text="From"/>
+				<s:Label x="298" y="10" text="To"/>
+				<s:Button id="showAssoButton" x="110" y="115" width="55" height="20" label="show"
+						  click="showAssoButton_clickHandler(event)"/>
+			</s:Group>
+		</s:NavigatorContent>
+		
+	</mx:ViewStack>
+	
+	<mx:DataGrid id="operationList" x="483" y="243" width="200" height="108" verticalAlign="middle">
+		<mx:columns>
+			<mx:DataGridColumn width="120" dataField="name" headerText="name"/>
+			<mx:DataGridColumn width="80" dataField="returnType" headerText="return type"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<mx:DataGrid id="attributeValueList" x="483" y="406" width="200" height="124"
+				 click="attributeValueList_clickHandler(event)" dataProvider="{attValueList}"
+				 paddingTop="2" verticalAlign="middle">
+		<mx:columns>
+			<mx:DataGridColumn headerText="id" dataField="id" width="70"/>
+			<mx:DataGridColumn headerText="value" dataField="value" width="130"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<s:Label x="484" y="388" text="Return attribute value"/>
+
+	<s:Button x="483" y="216" label="execute" id="executeButton" width="75" click="executeButton_clickHandler(event)"/>
+	<s:Label x="564" y="221" text="Operation"/>
+	<s:Group x="38" y="195">
+		<s:RadioButton x="0" y="0" label="SG_Point" id="pointRadio" fontSize="11" groupName="geomGroup"/>
+		<s:RadioButton x="80" y="0" label="SG_Curve" id="curveRadio" fontSize="11" groupName="geomGroup"/>
+		<s:RadioButton x="165" y="0" label="SG_Surface" id="surfaceRadio" fontSize="11" groupName="geomGroup"/>
+	</s:Group>
+	<s:Label x="607" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="648" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:Label x="583" y="545" text="unit"/>
+	<s:Label id="unitLabel" x="617" y="540" width="65" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
+</s:Window>

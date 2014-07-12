@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="300" height="360"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayList;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var dataList:ArrayList;
+			
+			[Bindable]
+			public var selectedList:ArrayList = new ArrayList();
+			
+			public var selectedIndex:int = -1;
+			
+			protected function initializeApp():void {
+				this.move(600, 300);				
+			}
+		
+			protected function attributeList_changeHandler(event:IndexChangeEvent):void
+			{
+				selectedIndex = attributeList.selectedIndex;
+			}
+			
+		]]>
+	</fx:Script>
+
+	<mx:Image x="10" y="16" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
+	<s:Label x="76" y="15" text="List" fontSize="16"/>
+	<s:Label x="75" y="50" text="feature type"/>
+	<s:Label id="typeNameLabel" x="148" y="45" width="120" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
+	<s:List id="attributeList" x="29" y="101" width="239" height="119" dataProvider="{dataList}" labelField="value" 
+			change="attributeList_changeHandler(event)"></s:List>
+	<s:Label x="108" y="80" text="proxy"/>
+	<s:Label id="proxyNameLabel" x="148" y="76" width="120" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
+	<s:Label id="fromToLabel" x="29" y="76" width="55" height="20" verticalAlign="middle"/>
+	<s:List id="selectedItemList" x="29" y="252" width="239" height="61"
+			contentBackgroundColor="#DADADA" dataProvider="{selectedList}"
+			labelField="value"></s:List>
+	<s:Label x="30" y="236" text="selected items"/>
+</s:Window>

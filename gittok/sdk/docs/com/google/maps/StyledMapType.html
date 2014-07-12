@@ -1,0 +1,797 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="StyledMapType,com.google.maps.StyledMapType,getAlt,getBoundsZoomLevel,getCopyrights,getErrorMessage,getLinkColor,getMaxResolutionOverride,getMaximumResolution,getMinimumResolution,getName,getProjection,getRadius,getSpanZoomLevel,getStyle,getTextColor,getTileLayers,getTileSize,getUrlArg,setMaxResolutionOverride,setStyle" name="keywords">
+<title>com.google.maps.StyledMapType</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'StyledMapType - Google Maps API for Flash Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?com/google/maps/StyledMapType.html&amp;com/google/maps/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;StyledMapType</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class StyledMapType"); titleBar_setSubNav(false,false,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class StyledMapType</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implements</td><td>flash.events.IEventDispatcher, <a href="interfaces/IStyledMapType.html">IStyledMapType</a></td>
+</tr>
+</table>
+<p></p>
+   Class StyledMapType defines a styled map type for the map.
+   <p></p>
+<br>
+<span class="label">Example</span>
+<br>Set one styled map type, then change to another.
+   <div class='listing'><pre>
+   import com.google.maps.StyledMapType;
+   import com.google.maps.StyledMapTypeOptions;
+   import com.google.maps.styles.MapTypeStyleElementType;
+   import com.google.maps.styles.MapTypeStyleFeatureType;
+   import com.google.maps.styles.MapTypeStyleRule;<br>
+   var options:StyledMapTypeOptions = new StyledMapTypeOptions({
+       name: 'Styled map',
+       alt: 'Style',
+       minResolution: 2,
+       maxResolution: 12
+   });<br>
+   var originalStyles:Array = [
+     new MapTypeStyle(MapTypeStyleFeatureType.ALL,
+                      MapTypeStyleElementType.ALL,
+                      [MapTypeStyleRule.saturation(-80)]),
+     new MapTypeStyle(MapTypeStyleFeatureType.ROAD,
+                      MapTypeStyleElementType.GEOMETRY,
+                      [MapTypeStyleRule.saturation(70),
+                       MapTypeStyleRule.hue(0xff0000)])
+     ];
+   var styledMapType:StyledMapType =
+       new StyledMapType(originalStyles, options);
+   map.addMapType(styledMapType);
+   map.SetMapType(styledMapType);<br>
+     :<br>
+   var updatedStyles:Array = [
+     new MapTypeStyle(MapTypeStyleFeatureType.ALL,
+                      MapTypeStyleElementType.ALL,
+                      [MapTypeStyleRule.lightness(-20)])
+     ];
+   styledMapType.setStyle(updatedStyles);</pre></div>
+   <p></p>
+<br>
+<hr>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#StyledMapType()">StyledMapType</a>(style:Array, options:<a href="StyledMapTypeOptions.html">StyledMapTypeOptions</a> = null)</div>
+<div class="summaryTableDescription">
+     Creates an instance of a StyledMapType object.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getAlt()">getAlt</a>():String</div>
+<div class="summaryTableDescription">
+   Returns the text of the hint that is displayed when the user
+   hovers over a control that allows selection of this map type.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getBoundsZoomLevel()">getBoundsZoomLevel</a>(bounds:<a href="LatLngBounds.html">LatLngBounds</a>, viewSize:Point):Number</div>
+<div class="summaryTableDescription">
+   Returns the highest resolution zoom level required to show the given
+   lat/lng bounds in a map of the given pixel size.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getCopyrights()">getCopyrights</a>(bounds:<a href="LatLngBounds.html">LatLngBounds</a>, zoom:Number):Array</div>
+<div class="summaryTableDescription">
+   Returns an array of copyright notices for the given bounds and zoom level.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getErrorMessage()">getErrorMessage</a>():String</div>
+<div class="summaryTableDescription">
+   Returns the text to be displayed if a tile fails to download.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getLinkColor()">getLinkColor</a>():Number</div>
+<div class="summaryTableDescription">
+   If a control displays a link above the map, returns the color we
+   should use.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getMaximumResolution()">getMaximumResolution</a>(opt_point:<a href="LatLng.html">LatLng</a> = null):Number</div>
+<div class="summaryTableDescription">
+   Returns the zoom level of the maximum resolution supported by this
+   map type.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getMaxResolutionOverride()">getMaxResolutionOverride</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the max resolution override.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getMinimumResolution()">getMinimumResolution</a>(opt_point:<a href="LatLng.html">LatLng</a> = null):Number</div>
+<div class="summaryTableDescription">
+   Returns the zoom level of the minimum resolution supported by this
+   map type.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getName()">getName</a>(opt_short:Boolean = false):String</div>
+<div class="summaryTableDescription">
+   Retrieves the map type name.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getProjection()">getProjection</a>():<a href="interfaces/IProjection.html">IProjection</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the map type projection.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getRadius()">getRadius</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the radius of the planet for which this map type is defined.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getSpanZoomLevel()">getSpanZoomLevel</a>(center:<a href="LatLng.html">LatLng</a>, span:<a href="LatLng.html">LatLng</a>, viewSize:Point):Number</div>
+<div class="summaryTableDescription">
+   Returns the highest resolution zoom level required to show the
+   given lat/lng span with the given center point.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getStyle()">getStyle</a>():Array</div>
+<div class="summaryTableDescription">
+     Gets the map type style.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getTextColor()">getTextColor</a>():Number</div>
+<div class="summaryTableDescription">
+   If controls are textual, returns the appropriate color to display
+   the text.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getTileLayers()">getTileLayers</a>():Array</div>
+<div class="summaryTableDescription">
+   Gets the list of tile layers for this map type in the z-order
+   they should be displayed.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getTileSize()">getTileSize</a>():Number</div>
+<div class="summaryTableDescription">
+   Gets the tile size for this map type.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getUrlArg()">getUrlArg</a>():String</div>
+<div class="summaryTableDescription">
+   Returns a string that may be used as a URL parameter to
+   identify this map type in permalinks to the current map view.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setMaxResolutionOverride()">setMaxResolutionOverride</a>(maxResolution:Number):void</div>
+<div class="summaryTableDescription">
+   Sets the max resolution override, such that, if this number is
+   greater than the max resolution that our map type reports to us,
+   we will use this number instead.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setStyle()">setStyle</a>(style:Array):void</div>
+<div class="summaryTableDescription">
+     Sets the map type style.</div>
+</td><td class="summaryTableOwnerCol">StyledMapType</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="StyledMapType()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">StyledMapType</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function StyledMapType(style:Array, options:<a href="StyledMapTypeOptions.html">StyledMapTypeOptions</a> = null)</code><p>
+     Creates an instance of a StyledMapType object.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">style</span>:Array</code> &mdash; Array of MapTypeStyle elements. Each is applied
+         consecutively. You can also use an array of untyped objects
+         containing the appropriate fields. See <code>setStyle()</code>
+         for details.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">options</span>:<a href="StyledMapTypeOptions.html">StyledMapTypeOptions</a></code> (default = <code>null</code>)<code></code> &mdash; Options for the styled map.
+     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../maps/StyledMapType.html#setStyle()" target="">setStyle()</a>
+<br>
+<a href="styles/MapTypeStyle.html" target="">com.google.maps.styles.MapTypeStyle</a>
+</div>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="getAlt()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getAlt</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getAlt():String</code><p>
+   Returns the text of the hint that is displayed when the user
+   hovers over a control that allows selection of this map type.
+   MapTypeControl is such a control.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash; Map type hint text.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getBoundsZoomLevel()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getBoundsZoomLevel</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getBoundsZoomLevel(bounds:<a href="LatLngBounds.html">LatLngBounds</a>, viewSize:Point):Number</code><p>
+   Returns the highest resolution zoom level required to show the given
+   lat/lng bounds in a map of the given pixel size.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">bounds</span>:<a href="LatLngBounds.html">LatLngBounds</a></code> &mdash;  Bounds to show.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">viewSize</span>:Point</code> &mdash;  Size of viewport.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Required zoom level for display.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getCopyrights()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getCopyrights</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getCopyrights(bounds:<a href="LatLngBounds.html">LatLngBounds</a>, zoom:Number):Array</code><p>
+   Returns an array of copyright notices for the given bounds and zoom level.
+   Each element in this array is of type CopyrightNotice.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">bounds</span>:<a href="LatLngBounds.html">LatLngBounds</a></code> &mdash;  Current viewport.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">zoom</span>:Number</code> &mdash;  Current zoom level.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Array</code> &mdash;  Array of copyright notices corresponding to this viewport.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getErrorMessage()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getErrorMessage</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getErrorMessage():String</code><p>
+   Returns the text to be displayed if a tile fails to download.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash;  Error message.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getLinkColor()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getLinkColor</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getLinkColor():Number</code><p>
+   If a control displays a link above the map, returns the color we
+   should use. The "terms of use" link in the copyright control uses
+   this color, for example.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Link color.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getMaximumResolution()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getMaximumResolution</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getMaximumResolution(opt_point:<a href="LatLng.html">LatLng</a> = null):Number</code><p>
+   Returns the zoom level of the maximum resolution supported by this
+   map type.  If opt_point is given, returns the maximum resolution at
+   the given lat/lng.  If opt_point is not given, returns the global
+   maximum.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_point</span>:<a href="LatLng.html">LatLng</a></code> (default = <code>null</code>)<code></code> &mdash;  Point at which to evaluate resolution.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Maximum resolution of this map type.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getMaxResolutionOverride()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getMaxResolutionOverride</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getMaxResolutionOverride():Number</code><p>
+   Returns the max resolution override.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Max resolution override.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getMinimumResolution()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getMinimumResolution</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getMinimumResolution(opt_point:<a href="LatLng.html">LatLng</a> = null):Number</code><p>
+   Returns the zoom level of the minimum resolution supported by this
+   map type.  If opt_point is given, returns the minimum resolution at
+   the given lat/lng.  If opt_point is not given, returns the global
+   minimum.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_point</span>:<a href="LatLng.html">LatLng</a></code> (default = <code>null</code>)<code></code> &mdash;  Point at which to evaluate resolution (ignored).
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Minimum resolution of this map type.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getName()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getName</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getName(opt_short:Boolean = false):String</code><p>
+   Retrieves the map type name.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_short</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash;  Return the abbreviated name.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash; Map type name.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getProjection()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getProjection</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getProjection():<a href="interfaces/IProjection.html">IProjection</a></code><p>
+   Retrieves the map type projection.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="interfaces/IProjection.html">IProjection</a></code> &mdash; 
+                        Map type projection.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getRadius()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getRadius</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getRadius():Number</code><p>
+   Returns the radius of the planet for which this map type is defined.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Radius of the planet.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getSpanZoomLevel()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getSpanZoomLevel</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getSpanZoomLevel(center:<a href="LatLng.html">LatLng</a>, span:<a href="LatLng.html">LatLng</a>, viewSize:Point):Number</code><p>
+   Returns the highest resolution zoom level required to show the
+   given lat/lng span with the given center point.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">center</span>:<a href="LatLng.html">LatLng</a></code> &mdash;  Center of viewport.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">span</span>:<a href="LatLng.html">LatLng</a></code> &mdash;  Span of viewport.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">viewSize</span>:Point</code> &mdash;  Size of viewport in pixels.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Required zoom level for display.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getStyle()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getStyle</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getStyle():Array</code><p>
+     Gets the map type style.
+     </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Array</code> &mdash; Array of MapTypeStyle instances.
+     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="styles/MapTypeStyle.html" target="">com.google.maps.styles.MapTypeStyle</a>
+</div>
+</div>
+<a name="getTextColor()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getTextColor</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getTextColor():Number</code><p>
+   If controls are textual, returns the appropriate color to display
+   the text.  The copyright control uses this color, for example.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Text color.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getTileLayers()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getTileLayers</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getTileLayers():Array</code><p>
+   Gets the list of tile layers for this map type in the z-order
+   they should be displayed. Note that this cannot be used to change the
+   displayed tile layers after construction of a MapType instance. You must
+   create a new MapType if you wish to display a different set of layers.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Array</code> &mdash;  An array of elements of type ITileLayer, the list of tile layers.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getTileSize()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getTileSize</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getTileSize():Number</code><p>
+   Gets the tile size for this map type. The predefined map types' tiles are
+   all 256 by 256 pixels in size: this function would, for these map types,
+   return 256.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Tile size.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getUrlArg()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getUrlArg</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getUrlArg():String</code><p>
+   Returns a string that may be used as a URL parameter to
+   identify this map type in permalinks to the current map view.
+   This is currently only used internally. Note that if any built-in
+   tile layers are used in constructing a custom map type, the returned value
+   will be based on the set of layers rather than on any developer-supplied
+   value.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash;  URL argument.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setMaxResolutionOverride()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setMaxResolutionOverride</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setMaxResolutionOverride(maxResolution:Number):void</code><p>
+   Sets the max resolution override, such that, if this number is
+   greater than the max resolution that our map type reports to us,
+   we will use this number instead. It represents the number of levels
+   shown on the ZoomControl's scrollbar.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">maxResolution</span>:Number</code> &mdash;  Value to set max resolution override to.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setStyle()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setStyle</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setStyle(style:Array):void</code><p>
+     Sets the map type style.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">style</span>:Array</code> &mdash; Array of MapTypeStyle instances. You can also pass in an
+         Array of untyped objects containing the appropriate fields: it
+         is often more concise to specify style as an object literal.
+     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="styles/MapTypeStyle.html" target="">com.google.maps.styles.MapTypeStyle</a>
+</div>
+<br>
+<span class="label">Example</span>
+<br>Setting the style using an array of MapTypeStyle instance.
+     <div class='listing'><pre>
+     styledMapType.setStyle([
+         new MapTypeStyle(MapTypeStyleFeatureType.ALL,
+                          MapTypeStyleElementType.ALL,
+                          [MapTypeStyleRule.saturation(-20)]),
+         new MapTypeStyle(MapTypeStyleFeatureType.ROAD,
+                          MapTypeStyleElementType.GEOMETRY,
+                          [MapTypeStyleRule.hue(0xff0000)])]);
+         ]);</pre></div>
+     <p></p>Setting the style using an array of objects.
+     <div class='listing'><pre>
+     styledMapType.setStyle([
+         {elementType: 'all',
+          featureType: 'all',
+          stylers: [{saturation: -20}]},
+         {elementType: 'geometry',
+          featureType: 'road',
+          stylers: [{hue: 0xff0000}]}]);</pre></div>
+     <p></p>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

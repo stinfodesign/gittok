@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="588" height="503"
+		  title="Association Type Designer"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import gfm.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.ListEvent;
+			
+			import spark.events.TextOperationEvent;
+			
+			public var attWindow:AttributeWindow;
+			public var operationWindow:OperationWindow;
+			
+			public var associationTypes:Dictionary;
+			public var featureTypes:Dictionary;
+			 
+			[Bindable]
+			public var fTypeArray:ArrayList;
+			
+			[Bindable]
+			public var aTypeArray:ArrayList;
+			
+			[Bindable]
+			protected var attributeList:ArrayList;
+			
+			[Bindable]
+			protected var operationList:ArrayList;
+			
+			protected var associationType:AssociationType = new AssociationType();
+			
+			private var color1:uint = 0x13233a;
+			private var color2:uint = 0xd9d9dc;
+			
+			[Bindable]
+			private var chrColor:uint = color1;
+			
+			[Bindable]
+			private var chromeColor:uint = color2;			
+			
+			private var atts:ArrayList;
+			private var opts:ArrayList;
+			
+
+			protected function initializeApp():void {
+				this.move(350, 50);
+				
+				fTypeArray = new ArrayList();
+				for each(var fType:FeatureType in featureTypes) {
+					fTypeArray.addItem(fType);
+				}
+				
+				aTypeArray = new ArrayList();
+				for each(var aType:AssociationType in associationTypes) {
+					aTypeArray.addItem(aType);
+				}
+				
+				
+			}
+			
+			protected function addButton_clickHandler(event:MouseEvent):void
+			{
+				//Set parameters
+				associationType.name  = associationTypeName.text;
+				associationType.style = assGroup.selectedValue as String;
+				associationType.roleName     = roleLabel.text;
+				associationType.definition	 = defInput.text;
+				
+				associationType.from.links.addItem(associationType);
+				associationType.to.linkedBy.addItem(associationType);
+				
+				if (checkFromMulti.selected)
+					associationType.correspondence = (checkToMulti.selected) ? "m:n" : "m:1";	
+				else 
+					associationType.correspondence = (checkToMulti.selected) ? "1:n" : "1:1";
+
+				// double define check
+				var index:int = aTypeArray.getItemIndex(associationType);
+				if (index > -1) {
+					Alert.show('Double association type definition!', 'Alert', Alert.OK, this);
+					return;
+				}
+				
+				// null name check
+				if (associationType.name == "")
+					Alert.show('No name is defined!', 'Type:', Alert.OK, this);
+				
+				// double name check
+				var asstype:AssociationType;
+				for (var i:int = 0; i < aTypeArray.length; i++) {
+					asstype = aTypeArray.getItemAt(i) as AssociationType;
+					if (name == asstype.name) {
+						Alert.show('Double name!', 'Type: ' + name, Alert.OK, this);
+						associationTypeName.text = "";
+						return;
+					}					
+				}
+				
+				// inverse composition check
+				var invAssociationTypes:ArrayList = associationType.to.links;
+				var m:int = invAssociationTypes.length;
+				for (i = 0; i < m; i++) {
+					var invAssoType:AssociationType = invAssociationTypes.getItemAt(i) as AssociationType;
+					var assStyle:String = assGroup.selectedValue as String;
+					if (assStyle == "composite") {
+						if (invAssoType.to == associationType.from) {
+							Alert.show('Inverse composition of ' + invAssoType.name + '.', 'Error', Alert.OK, this);
+							assGroup.selectedValue = "associate";
+							compositionMark.visible = false;
+							return;
+						}
+					}
+				}
+				
+				// Composition root class shall be one or zero. 
+				var toFType:FeatureType   = associationType.to;
+				
+				if (toFType.linkedBy.length > 0) {
+					
+					m = toFType.linkedBy.length;
+					var roots:int = 0;
+					for (i = 0; i < m; i++) {
+						var assType:AssociationType = toFType.linkedBy.getItemAt(i) as AssociationType;
+						if (assType.style == "composite") roots++;
+					}
+					
+					if (roots > 1) {
+						Alert.show('' + toFType.name + ' has more than one composition roots.', 'Error', Alert.OK, this);
+						return;								
+					}
+					
+				}
+				
+				//Add association type
+				aTypeArray.addItem(associationType);
+				
+				//Initialize asscoation type and screen
+				initializeAssociationTypeAndScreen();
+				
+			}
+			
+			protected function editButton_clickHandler(event:MouseEvent):void
+			{
+				//Set association type
+				var index:int = associationTypeList.selectedIndex;
+				if (index > -1)
+					associationType = aTypeArray.getItemAt(index) as AssociationType;
+				else {
+					Alert.show('Select association!', 'Alert', Alert.OK, this);
+					return;
+				}
+				
+				//View parameters on screen
+				toLabel.text = associationType.to.name;
+				fromLabel.text = associationType.from.name;
+				roleLabel.text = associationType.roleName;
+				associationTypeName.text = associationType.name;
+				defInput.text = associationType.definition;
+				
+				var corres:String = associationType.correspondence;
+				if (corres.search("m") > -1)	checkFromMulti.selected = true;
+				if (corres.search("n") > -1)	checkToMulti.selected = true;
+				if (corres.search("1:") > -1)	checkFromMulti.selected = false;
+				if (corres.search(":1") > -1)	checkToMulti.selected = false; 
+				
+				attributeList = associationType.attributeTypes;
+				operationList = associationType.operationTypes;
+				
+				var assoStyle:String = associationType.style;
+				assGroup.selectedValue = assoStyle;
+				compositionMark.visible = false;
+				if (assoStyle == "composite") compositionMark.visible = true;
+								
+			}
+			
+			protected function updateButton_clickHandler(event:MouseEvent):void
+			{
+				
+				// double define check
+				var index:int = aTypeArray.getItemIndex(associationType);
+				if (index == -1) {
+					Alert.show('Edit before update!', 'Error', Alert.OK, this);
+					return;
+				}
+				
+				// name check
+				var name:String = associationTypeName.text;
+				
+				// null name check
+				if (name == "") {
+					Alert.show('No name is defined!', 'Error', Alert.OK, this);
+					return;
+				}
+				
+				//Set parameters
+				associationType.name = name;
+				associationType.style = assGroup.selectedValue as String;
+				associationType.roleName = roleLabel.text;
+				associationType.definition = defInput.text;
+				if (checkFromMulti.selected)
+					associationType.correspondence = (checkToMulti.selected) ? "m:n" : "m:1";	
+				else 
+					associationType.correspondence = (checkToMulti.selected) ? "1:n" : "1:1";
+				
+				//Update association type
+				index = aTypeArray.getItemIndex(associationType);
+				aTypeArray.setItemAt(associationType, index);
+				
+				//Initialize asscoation type and screen
+				initializeAssociationTypeAndScreen();
+			}
+			
+			protected function deleteButton_clickHandler(event:MouseEvent):void {
+				//Set association type
+				var index:int = associationTypeList.selectedIndex;
+				if (index > -1)
+					associationType = aTypeArray.getItemAt(index) as AssociationType;
+				else {
+					Alert.show('Select association for delete!', 'Error', Alert.OK, this);
+					return;
+				}
+								
+				//Remove association to and from
+				associationType.from.links.removeItem(associationType);
+				associationType.to.linkedBy.removeItem(associationType);
+				
+				//Delete association type
+				if (!aTypeArray.removeItem(associationType)) {
+					Alert.show('Could not remove!', 'Error', Alert.OK, this);
+					return;
+				}
+				
+				//Initialize asscoation type and screen
+				initializeAssociationTypeAndScreen();				
+			}
+			
+			protected function initializeAssociationTypeAndScreen():void {
+				//Initialize association type
+				associationType = new AssociationType();
+				
+				//Initialize screen
+				fromLabel.text = "";
+				toLabel.text = "";
+				associationTypeName.text = "";
+				checkFromMulti.selected = false;
+				checkToMulti.selected = false;
+				roleLabel.text = "";
+				defInput.text = "";
+				
+				attributeList = null;
+				operationList = null;
+				
+				compositionMark.visible = false;
+				assGroup.selectedValue = "associate";
+			}
+
+			protected function fromButton_clickHandler(event:MouseEvent):void
+			{
+				// if from is not declared ...
+				if (featureTypeList.selectedIndex == -1) {
+					Alert.show("Select feature type before push this button.", "Error", Alert.OK, this);
+					return;
+				}
+				
+				// if 'from' was already defined, then the element of 'links' shall be initialized before operation.
+				if (associationType.from.links.getItemIndex(associationType) != -1) {
+					associationType.from.links.removeItem(associationType);
+				}
+				
+				associationType.from = fTypeArray.getItemAt(featureTypeList.selectedIndex)
+					as FeatureType;
+				
+				fromLabel.text = associationType.from.name;
+				
+				//associationType.from.links.addItem(associationType);
+			}
+			
+			protected function toButton_clickHandler(event:MouseEvent):void
+			{
+				// if to is not declared ...
+				if (featureTypeList.selectedIndex == -1) {
+					Alert.show("Select feature type before push this button.", "Error", Alert.OK, this);
+					return;
+				}
+				
+				// if 'to' was already defined, then the element of 'linkedBy' shall be initialized before operation.
+				if (associationType.to.linkedBy.getItemIndex(associationType) != -1) {
+					associationType.to.linkedBy.removeItem(associationType);
+				}
+				
+				associationType.to = fTypeArray.getItemAt(featureTypeList.selectedIndex)
+											as FeatureType;
+				
+				toLabel.text = associationType.to.name;		
+				
+				//associationType.to.linkedBy.addItem(associationType);
+			}
+
+			protected function text_jp_clickHandler(event:MouseEvent):void {
+				var request:URLRequest = new URLRequest("/documents/jp/associationTypeDesigner_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void {
+				var request:URLRequest = new URLRequest("/documents/en/associationTypeDesigner_en.html");
+				navigateToURL(request);
+			}
+			
+
+			protected function editAttributeButton_clickHandler(event:MouseEvent):void
+			{
+				attWindow = new AttributeWindow();
+				attWindow.open();
+				attWindow.title = "Association Type >";
+				attWindow.addEventListener(Event.CLOSING, attWindowClosing);
+				attWindow.attributeList = associationType.attributeTypes;
+				attWindow.dataTypeTree.dataProvider = dataTypeMenu;
+				attWindow.featureTypeList = fTypeArray;
+				attWindow.inheritedAttGrid.visible = false;
+			}
+			
+			protected function attWindowClosing(event:Event):void
+			{
+				attributeList = attWindow.attributeList;
+				associationType.attributeTypes = attributeList;
+				attWindow.inheritedAttGrid.visible = true;
+
+			}
+
+			protected function editOperationButton_clickHandler(event:MouseEvent):void
+			{
+				operationWindow = new OperationWindow();
+				operationWindow.open();
+				operationWindow.title = "Association Type >";
+				operationWindow.associationType = associationType;
+				operationWindow.addEventListener(Event.CLOSING, operationWindowClosing);
+				
+				// Operations in association type shall be declared
+				operationWindow.faSelection = false;　
+				
+				//Collect attrubute and operation types				
+				operationWindow.attributeGrid.dataProvider 	= associationType.attributeTypes;
+				operationWindow.selectedOperations 			= associationType.operationTypes;
+
+			}
+			
+			protected function operationWindowClosing(event:Event):void 
+			{
+				associationType.operationTypes = operationWindow.selectedOperations;
+				operationList = operationWindow.selectedOperations;
+				
+				var m:int = associationType.operationTypes.length;
+				for (var i:int = 0; i < m; i++) {
+					var opType:OperationType = associationType.operationTypes.getItemAt(i) as OperationType;
+					trace(opType.getXML().toXMLString());
+				}
+
+			}
+
+			protected function assButton_clickHandler(event:MouseEvent):void
+			{
+				compositionMark.visible = false;
+			}
+			
+			protected function comButton_clickHandler(event:MouseEvent):void
+			{
+				if (!compositionMark.visible) compositionMark.visible = true;
+			}
+
+
+			protected function clearButton_clickHandler(event:MouseEvent):void
+			{
+				initializeAssociationTypeAndScreen()
+			}
+
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:RadioButtonGroup id="assGroup"/>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+		<!-- data type list for attribute types -->
+		<fx:XML id="dataTypeMenu" source="texts/dataTypes.xml"/>
+	</fx:Declarations>
+	
+	<s:Label x="75" y="16" text="Association Type" fontSize="16"/>	
+	<s:Label x="498" y="5" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="539" y="7" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	
+	<mx:Image x="10" y="10" source="@Embed(source='images/pictModeling1.png')" width="60" height="60"/>
+	<mx:Image source="@Embed(source='images/associationTypeFrame.png')" x="145" y="143" />
+	<mx:Image id="compositionMark" x="370" y="219" width="20" height="20" visible="false"
+			  source="@Embed('images/compositionMark.png')"/>
+
+	<s:List x="20" y="120" id="featureTypeList" width="128" height="80" contentBackgroundColor="#DADADA" 
+			dataProvider="{fTypeArray}" labelField="name" borderVisible="false"/>
+	
+	<s:Button x="153" y="148" label="to" width="50" id="toButton" click="toButton_clickHandler(event)" chromeColor="{chromeColor}"/>
+	<s:Label x="18" y="250" backgroundColor="#DADADA" width="129" height="21" id="fromLabel" verticalAlign="middle"/>
+	<s:Label x="438" y="216" backgroundColor="#DADADA" width="117" height="20" id="toLabel" verticalAlign="middle"/>
+	<s:TextInput x="221" y="169" width="143" height="22" id="associationTypeName"/>
+	
+	<s:List x="386" y="324" id="associationTypeList" width="116" height="119" contentBackgroundColor="#DADADA" 
+			dataProvider="{aTypeArray}" labelField="name" borderVisible="false"/>
+	
+	<s:Button x="509" y="330" id="addButton" click="addButton_clickHandler(event)" width="60" label="add" chromeColor="{chromeColor}"/>
+	<s:Button x="509" y="358" label="edit" id="editButton" click="editButton_clickHandler(event)" width="60" chromeColor="{chromeColor}"/>
+	<s:Button x="509" y="415" label="delete" id="deleteButton" click="deleteButton_clickHandler(event)" width="60" chromeColor="{chromeColor}"/>
+	<s:RadioButton x="482" y="173" label="associate" groupName="assGroup" id="assButton" selected="true"  click="assButton_clickHandler(event)"/>
+	<s:RadioButton x="482" y="192" label="composite" groupName="assGroup" id="comButton" click="comButton_clickHandler(event)"/>
+	<s:TextInput x="437" y="261" width="116" id="roleLabel"/>
+	<s:CheckBox id="checkFromMulti" x="73" y="273" label="multiplicity"/>
+	<s:CheckBox id="checkToMulti" x="482" y="238" label="multiplicity"/>
+	<s:Label x="19" y="238" text="from"/>
+	<s:Label x="439" y="200" text="to"/>
+	<s:Label x="221" y="151" fontSize="14" text="Association type"/>
+	<s:Button x="154" y="120" label="from" id="fromButton" width="50" click="fromButton_clickHandler(event)" chromeColor="{chromeColor}"/>
+	<s:Label x="437" y="246" text="role"/>
+	<s:Button x="509" y="386" label="update" id="updateButton" click="updateButton_clickHandler(event)" 
+			  width="60" chromeColor="{chromeColor}"/>
+	<s:Button id="editAttributeButton" x="221" y="212" width="51" height="20"
+			  label="edit »" chromeColor="{chromeColor}"
+			  click="editAttributeButton_clickHandler(event)"/>
+	<s:Button id="editOperationButton" x="221" y="339" width="51" label="edit »"
+			  chromeColor="{chromeColor}" click="editOperationButton_clickHandler(event)"/>
+	<s:List x="220" y="237" width="143" height="78" chromeColor="#DADADA" contentBackgroundColor="#DADADA" dataProvider="{attributeList}" labelField="name"  borderVisible="false"/>
+	<s:List x="220" y="365" width="143" height="70" contentBackgroundColor="#DADADA" 
+			dataProvider="{operationList}" labelField="name"  id="operationTitleList" borderVisible="false"/>
+	<s:Button x="312" y="119" label="clear" width="60" id="clearButton" click="clearButton_clickHandler(event)" 
+			  chromeColor="{chromeColor}"/>
+	<s:TextArea id="defInput" x="409" y="78" width="142" height="80"/>
+	<s:Label x="409" y="63" text="definition"/>
+	<s:Label x="279" y="217" text="attributes"/>
+	<s:Label x="278" y="344" text="operations"/>
+	<s:Label x="20" y="104" text="feature types"/>
+	<s:Label x="386" y="308" text="association types"/>
+	
+</s:Window>

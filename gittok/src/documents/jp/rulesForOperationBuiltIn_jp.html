@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Rules for Operation Built-in</title>
+<style type="text/css">
+.mainSentence {
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 12px;
+}
+.FirstHeader {
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: bold;
+}
+.secondHeader {
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+}
+.thirdHeader {
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+}
+.sourceCode {
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 11px;
+	line-height: 80%;
+}
+
+
+</style>
+<script language="javascript">
+resizeTo(600,650);
+moveTo(750,20);
+</script></head>
+
+<body>
+<p class="FirstHeader">操作実行の仕組み</p>
+<p class="mainSentence">gittok ではソースプログラムを公開するので，GPLライセンスの範囲で，ユーザは自由に操作のプログラムを作成し，gittok に組み込むことができます．ここでは，gittok がどのように，操作を実行するか，解説します．ただしこの節は，actionscript 3.0 によるプログラム開発経験がある方を，読者として想定しています．</p>
+<p class="mainSentence">以下，Analyst.mxml に含まれる，操作を実行する関数 runButton_clickHandler の処理手順を，概説します．ソースリストを手元において，以下の説明をお読み下さい．</p>
+<p class="mainSentence">1. 応用スキーマ中の地物型または関連型がもつ操作型のリストを「操作型リスト」とする．<br />
+  2. 操作型リストから，該当する　操作の型 (OperationType) を選択する．<br />
+  3. 操作型から型名を取り出し，geoOperations. ＋ 操作クラス名を，操作クラス名とする．ここでgeoOperationsは，操作クラスが入るフォルダーである．<br />
+  4. この操作クラスの名前をキーとして，flash.utilにあるにgetDefinitionByName関数を使って操作参照クラス classRefを取り出す．ちなみにclassRefは，操作の名前をキーにして操作を特定する object である．<br />
+  5.1. 操作が距離や面積等，計測単位をもつ値を求める場合を想定し，スクリーン座標を地上の平面座標に変換する affine parametersを引数に入れる．そのとき，引数の型は &quot;affineParam&quot;であり，これをキーとする引数辞書argObjを作成する．<br/>
+  5.2. 地物の操作を実行する場合は，操作型から，使用する引数の組を取り出し，それを使って，地物インスタンスから，引数になる属性値を選択し，引数の型をキーとする引数辞書 argObj を作成する．<br />
+5.3. 関連の操作を実行する場合は，以下の手順で，from 地物.　to 地物，及び／又は関連インスタンスから，操作に使われる引数を取り出し，引数型の名前をキーとする引数辞書 argObj を作成する．</p>
+<p class="mainSentence">引数辞書 argObj の構造は以下のとおりである．<br />
+  キー：引数型の名<br />
+  値：属性値の配列リスト（多重度がfalseの場合は，引数の要素は一つ，trueの場合は複数になる）<br />
+  属性値：任意の型をとる値</p>
+<p class="mainSentence">自分で操作クラスを作成する場合は，引数が上記のルールで与えられることを念頭において制作する．<br/>6. 操作参照クラス classRef にキーとなる操作名と，引数辞書を与えて，操作を実行させる．</p>
+<p class="mainSentence">戻り値は，多重度が複数に設定されている場合は，ArrayListになる．単数の場合でも，要素が一つだけのArrayListにする．</p>
+<p class="mainSentence">7.1. 戻り値が単純データ型をとる場合は，attValueList に加える．<br/>
+7.2. 戻り値が幾何プリミティブの場合は，attValueList に加えるとともに kit の幾何データリスト (pointList, curveList, surfaceList) にそれを格納する．<br />
+7.3. 戻り値が幾何複体の場合は，attValueListに加えるとともに複体を構成するプリミティブをそれぞれのリストに格納する．<br />
+  8. attValueList は地物インスタンスまたは関連インスタンスの属性辞書に保存する．その場合のキーは，戻り値になる属性の名前である．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="FirstHeader">操作の組み込みのための規則</p>
+<p class="mainSentence">gittokには，実例となる操作が少数，組み込まれているに過ぎないので，あなたにとって興味のある操作は見つからないかもしれない．また，gittokの開発目的は空間解析の知識や方法を提供することよりも，空間情報技術の活用のための知識と方法を提供することである．従って，あなたが，自分の好みにあった操作を実現したいときは，ここで述べられている規則に従って，自分でプログラムを作成し，あなたのgittokに組み入れて使用するとよい．その行為は，gittokの目的にも沿うものである．</p>
+<p><span class="secondHeader">操作とは</span></p>
+<p> <span class="mainSentence">操作とは，ユーザの要求に応じて地物または関連が働いて，その時点で未定の属性値を求める行為である．これをgittokで行うためには，規則に従った引数と戻り値が定義されたプログラムを，Actionscript 3.0 で作成し，gittokに組み込む．</span></p>
+<p><span class="secondHeader">操作クラス</span></p>
+<p><span class="mainSentence">操作は操作クラスに含まれる関数（クラスメソッド）である．例えば，中心を求める操作クラスには，点群，線，面の重心や，凹な面の内部に合理的な中心を求める操作が含まれる．</span></p>
+<p class="mainSentence">操作クラスは，geoOperationsパッケージの中のクラスとして宣言する．例えば，gittokの中で，中心を求める操作クラス (Center) は，以下のように宣言されている．</p>
+<pre class="sourceCode">package geoOperations<br/>
+{<br />
+	import dataTypes.spatialGeometry.*;<br/> 
+	import mx.collections.ArrayList;<br />
+  <br />
+  	public class Center<br />
+ 	 {<br />
+ 		 …………………
+
+ 	 }<br />
+}</pre>
+<p><span class="secondHeader">操作の宣言</span></p>
+<p><span class="mainSentence">操作は，操作クラスに含まれるクラスメソッドである．gittokでは，スタティックな関数として宣言し，インスタンスを作らなくても実行できるようにする．例えば点群を引数にして重心を求める操作 (centerOfPoints) は，以下の様に表現できる．プログラムの大まかな構造（引数を受け取り，処理をおこない，戻り値を返す）をみてほしい．</span></p>
+<pre>package geoOperations
+  {
+  	import dataTypes.spatialGeometry.*;
+  	import mx.collections.ArrayList;<br />
+  	public class Center
+  	{<br />
+  		………………………………….<br />
+		public static function centerOfPoints(argObj:Object):SG_Point {<br />			var attValues:ArrayList = argObj[&quot;points&quot;] as ArrayList;
+			var m:int = attValues.length;<br />			var points:ArrayList = new ArrayList();<br />			for (var i:int = 0; i &lt; m; i++) {<br />				var attList:ArrayList = attValues.getItemAt(i) as ArrayList;<br />				points.addAll(attList);<br />			}<br />			
+			var wp:SG_Point = points.getItemAt(0) as SG_Point;<br />			var n:int = points.length;<br />
+			if (n == 0) return null;<br />			<br />			var x:Number = 0;<br />			var y:Number = 0;<br />			
+			var coord:Coordinate2;
+			for (i = 0; i &lt; n; i++) {<br />				wp = points.getItemAt(i) as SG_Point;<br />				coord = wp.position;<br />				x += coord.x;<br />				y += coord.y;<br />			}<br />			<br />			var p:SG_Point = new SG_Point;<br />			p.featureID = wp.featureID;<br />			p.attributeName = wp.attributeName;<br />			p.position.x = x/n;<br />			p.position.y = y/n;<br />			return p;<br />		}
+ 		 …………………………………
+  }</pre>
+
+<p><span class="secondHeader">地上座標への変換</span></p>
+<p class="mainSentence">戻り値が長さや面積など，計測単位を持つ場合は，以下に示すように，計算に入る前に，使われる座標値をスクリーン座標から平面座標に換算しておく必要がある．操作に渡される引数には，スクリーン座標を地上の平面座標に換算することを想定し，アフィン変換パラメータ &quot;affineParam&quot; が必ず含まれている．このパラメータを使って，// coordinate conversion from screen to groud以下の部分で，換算を行っている．この操作は曲面の外周を使った面積を求めるものだが，closedLS つまり曲面の外周の輪が，地上の平面座標に換算されている．なお，操作結果が座標由来の計測単位を持たない場合は，換算は不要である．</p>
+<pre>public class SurfaceArea
+{
+    public static function getArea(argObj:Object):Real {
+ 		var ap:AffineParam = argObj[&quot;affineParam&quot;] as AffineParam;<br />
+  		var attValues:ArrayList = argObj[&quot;surface&quot;] as ArrayList;
+  		var attValue:ArrayList = attValues.getItemAt(0) as ArrayList;
+  		var srf:SG_Surface = attValue.getItemAt(0) as SG_Surface;
+  		var area:Number;<
+  		var ring:SG_Ring = srf.exterior;
+  		var closedLS:CoordinateArray = ring.coordinateSequence();<br />
+			// coordinate conversion from screen to ground
+  		var n:int = closedLS.length;
+  		for (var i:int = 0; i &lt; n; i++) {
+  			var coor:Coordinate2 = closedLS.getItemAt(i) as Coordinate2;
+  			coor = math.Affine.conversion(coor, ap.coefficient);
+  			closedLS.setItemAt(coor, i);
+  		}
+
+	    area = math.Area.getSimpleArea(closedLS);
+  		n = srf.interior.length;
+  		for (i = 0; i &lt; n; i++) {
+  			ring = srf.interior.getItemAt(i) as SG_Ring;
+  			closedLS = ring.coordinateSequence();
+  			area += math.Area.getSimpleArea(closedLS);
+  		}
+ 		 if (area &lt; 0) area = -area;<br />
+ 		 var ans:Real = new Real();
+  		ans.value = area;
+  		return ans;
+		}
+   }
+}
+</pre>
+<p><span class="secondHeader">引数</span></p>
+<p class="mainSentence">引数は，操作のために使われる入力パラメータで，その操作を含む地物，関連又は関連が結ぶfrom地物，to地物の属性から選ばれる．地物インスタンスの属性は，多重度が 1 の場合でも，属性値の配列 (ArrayList)として格納されている．この配列を， 操作の引数名をキーにした要素として，Object 型をとるオブジェクト (argObj) に渡す．従って，操作は，argObjを受け取ると，引数名をキーにして，ArrayList型の引数を取り出し，さらに，多重度が１の場合は，ArrayListの最初の要素を取り出す．</p>
+<pre>public static function distancePtoP(argObj:Object):ArrayList {<br />	var ap:AffineParam = argObj[&quot;affineParam&quot;] as AffineParam;<br />			<br />	var fromAttValues:ArrayList = argObj[&quot;fromPoint&quot;] as ArrayList;<br />	var toAttValues:ArrayList   = argObj[&quot;toPoint&quot;] as ArrayList;<br />			<br />	var dists:ArrayList = new ArrayList();<br />			<br />	for (var i:int = 0; i &lt; fromAttValues.length; i++) {<br />		var nearest:Number = Number.MAX_VALUE;<br />		var attValue:ArrayList = fromAttValues.getItemAt(i) as ArrayList;<br />		var fromPoint:SG_Point = attValue.getItemAt(0) as SG_Point;<br />			<br />		var fcr:Coordinate2 = math.Affine.conversion(fromPoint.position, ap.coefficient);<br />			<br />		for (var j:int = 0; j &lt; toAttValues.length; j++) {<br />			attValue = toAttValues.getItemAt(j) as ArrayList;<br />			var toPoint:SG_Point = attValue.getItemAt(0) as SG_Point;<br />			<br />			var tcr:Coordinate2 = math.Affine.conversion(toPoint.position, ap.coefficient);<br />			<br />			var d:Number = math.Distance.p2p(fcr, tcr);<br />			nearest = (nearest &gt; d) ? d: nearest;<br />		}<br />		var distance:Real = new Real();<br />		distance.value = nearest;<br />		dists.addItem(distance);<br />	}<br />	return dists;<br />}</pre>
+<pre>例えば上の例では，fromPoint と toPoint を引数にして，その間の距離を求める操作を示している．引数それぞれの多重度は１でも複数でもかまわないがデータ型はArrayListである．</pre>
+<p class="mainSentence">argObjはオブジェクトであり，引数の配列になる．またそれぞれの引数も，多重度がある場合を考慮して配列になっている．下図では，引数１は複数の値をもっている．</p>
+<p class="mainSentence"><img src="../figures/ArgumentStructure_jp.png" width="276" height="139" alt="structure of argObj" /></p>
+<p><span class="secondHeader">戻り値の型</span></p>
+<p><span class="mainSentence">戻り値 (return value) とは，操作の結果得られる値のことである．操作の宣言をするときは，戻り値の型を示さなければいけない．上に示した例では，重心の位置をもつ点が返されるので，その型はSG_Pointである． </span></p>
+<p class="secondHeader">操作クラス及び操作の組み込み</p>
+<p class="mainSentence">操作クラスは，geoOperationパッケージの中で、クラスとして組み入れる．そのときに同時に行わなければいけないことが二つある．その一つは，operations.xmlへのパラメータの (操作クラス名，操作名，引数及び戻り値) の登録である．もう一つは，操作クラスを新たに作ったときは，空間解析用のコンポーネントであるAnarysisWindow.mxmlの中で，クラスのインポートを行うことである．</p>
+<p><span class="thirdHeader">1. operations.xmlについて</span><br />
+  <span class="mainSentence">操作クラス及び操作を組み込むときには，その位置と引数、戻り値の設定をするために，gittokの libsフォルダーにあるoperations.xmlに，必要な情報を挿入する．</span><br />
+  <span class="mainSentence">operations.xmlは，以下のような構造をしている．</span></p>
+<pre>&lt;opDef name=&quot;GeoOperations&quot;&gt;<br />		&lt;opClass className=&quot;CenterOfGravity&quot;&gt;
+  		&lt;operation opeName=&quot;centerOfPoints&quot; returnType=&quot;SG_Point&quot;&gt;<br />				&lt;argument argName=&quot;points&quot; dataType=&quot;SG_Point&quot; multiplicity=&quot;true&quot;/&gt;<br />  		&lt;/operation&gt;<br />	
+  			………(複数のoperation要素が続くことがある)…<br />
+  	&lt;/opClass&gt;
+&lt;/opDef&gt;</pre>
+<p class="mainSentence">&lt;opDef&gt;要素は，このXML文書のタイトルであるGeoOperationsをもつルート要素である．<br />
+  &lt;opClass&gt;要素は，同様の機能をもつ一つ以上の操作の集合を示す．この要素はclassNameという，操作集合の名称を示す属性をもつ．<br />
+  &lt;operation&gt;要素は，個別の操作を定義する要素で，操作の名称 (opeName)，戻り値のデータ型 (returnType）を属性とする．そして一つ以上の引数の定義を含む．<br />
+  &lt;argument&gt;要素は引数の定義を示す要素で，引数の名前 (argName)，データ型 (dataType)，そして引数の多重度 (multiplicity)を属性にする．<br />
+  新たに開発した操作をgittokに追加するときは，開発者はopClasstまたはoperation要素を追加しなければいけない． </p>
+<p><span class="thirdHeader">2. クラスの宣言</span><br />
+  <span class="mainSentence">操作集合クラスを新たに作ってgeoOpeartionsフォルダーに登録しても，gittokはそのことを認識していないので，操作を使用するAnalysisWindow.mxmlの中でクラスをインポートする必要がある．このmxmlは，gittokの src.components.analysis にある．<br />
+  インポートの宣言は，AnalysisWindow.mxmlの中にある，<br />
+  //------<br />
+  の下にインポート文を追加するかたちで行う．なお，AnalysisWindowページの詳細については，そちらの解説を参照してほしい．</span></p>
+<pre> <span class="sourceCode">// ------- import operation classes ---------<br />
+  import geoOperations.CenterOfGravity;<br />
+  import geoOperations.ConvexHull;<br />
+  import geoOperations.DistanceBetween;<br />
+  import geoOperations.Length;<br />
+  // -------<br />
+<br />
+  // Add a new operation class above.  </span></pre>
+</body>
+</html>

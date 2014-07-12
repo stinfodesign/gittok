@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Symbol Designer</title>
+<style type="text/css">
+.mainSentence {
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 12px;
+}
+.FirstHeader {
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 20px;
+	font-style: normal;
+	font-weight: bold;
+}
+.secondHeader {
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+}
+.thirdHeader {
+	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+}
+.mainSentence .thirdHeader .mainSentence .mainSentence {
+	font-weight: normal;
+	font-size:12px;
+}
+</style>
+<script language="JavaScript">
+window.resizeTo(600,650);
+window.moveTo(750,20);
+</script>
+</head>
+
+<body>
+<p class="FirstHeader">Symbol Style Designer<br/>
+  記号スタイルのデザイン</p>
+<p class="mainSentence">記号とは，地図を図示するときに使用される，実世界の地物の表現のことです．記号は，個別の記号をデザインするための記号スタイルスキーマに準拠して作成します．地図は２次元の平面なので，記号は，点，線，面に分類できます．記号スタイルスキーマは，点，線，面それぞれがどのような表示用属性をもつか，また，互いにどのような関係があるかを示します．ここでは，まず記号スタイルスキーマについて説明し，記号の設計手順を示し，最後に具体的な操作方法を解説します．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="FirstHeader">記号スタイルスキーマ</p>
+<p><img src="../figures/SymbolStyleSchema.png" width="600" height="369" alt="SymbolStyleSchema" /></p>
+<p class="mainSentence">図１．gittok の記号スタイルスキーマ</p>
+<p class="secondHeader">SymbolStyleDictionary</p>
+<p class="mainSentence">記号スタイル辞書は，点，線そして面を表現する記号の定義の集りです．名前 (name) をもつとともに，点，線，そして面の記号の集りであるpointSym, lineSym, areaSymと関連します．</p>
+<p class="secondHeader">SymbolStyle</p>
+<p class="mainSentence">記号スタイルクラスは名前 (name) をもちますが，記号のルートクラスで抽象クラスです．ただし，pintSymbolStyleから参照されます．点記号はこの参照によって，他の線，面記号をもつことができます．これによって，複雑な形状の点記号をデザインすることが可能になります．</p>
+<p class="secondHeader">PointSymbolStyle</p>
+<p class="mainSentence">点記号スタイルは，それぞれが線，面の記号定義に対応づけられる，複数の座標列 (elements) で構成されます．面記号の定義と対応する座標列は，最後の点は始点に結ばれ，内部は面記号の定義に従って塗りつぶされます．なお，このクラス図では，点記号は他の点記号を参照できますが，gittokでは現状，それはできません．</p>
+<p class="secondHeader">LineSymbolStyle</p>
+<p class="mainSentence">線記号スタイルは，色(color)，太さ(thickness)，透明度 (alpha)，端点形状 (caps)，頂点形状 (joints)，点線の場合は実線部の長さ (dash)，空白部の長さ (gap)で定義します．</p>
+<p class="secondHeader">AreaSymbolStyle</p>
+<p class="mainSentence">面記号スタイルは，面を塗りつぶす色 (color)，透明度 (alpha)，面が円形かどうか (isCircle)， そして領域の境界を示す線記号 (borderStyle) で定義します．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="FirstHeader">操作画面</p>
+<p class="mainSentence">下に示す図２を参照のこと．</p>
+<p class="secondHeader">表示欄</p>
+<p class="mainSentence"><span class="thirdHeader">symbol style schema</span><br/>
+記号スタイルスキーマがオープンまたはセーブされると，ここにファイル名が表示されます．</p>
+<p class="secondHeader">ボタン</p>
+<p class="mainSentence"><span class="thirdHeader">open</span><br/>
+記号スタイルスキーマをオープンします．</p>
+<p class="mainSentence"><span class="thirdHeader">save</span><br/>
+記号スタイルスキーマをセーブします．</p>
+<p class="mainSentence"><span class="thirdHeader">日本語</span><br />
+今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><span class="thirdHeader">English</span><br />
+You can read the tutorial written in English</p>
+<p class="FirstHeader">&nbsp;</p>
+<p class="FirstHeader">Line </p>
+<p class="mainSentence"><img src="../figures/SymbolStyleDesigner_Line.png" width="474" height="540" alt="SYmbolDesigner_Line" /></p>
+<p class="mainSentence">図２．Symbol Designer: line</p>
+<p class="secondHeader">表示欄</p>
+<p class="mainSentence"><span class="thirdHeader">name (編集可能)</span><br/>
+線記号の名前を記入します．</p>
+<p class="mainSentence"><span class="thirdHeader">thickness (編集可能)</span><br/>
+線の太さを記入します．</p>
+<p class="mainSentence"><span class="thirdHeader">dash (編集可能)</span><br/>
+点線を定義するとき，実線部の長さを記入します．単位はピクセルです．</p>
+<p class="mainSentence"><span class="thirdHeader">gap (編集可能)</span><br/>
+  点線を
+定義するとき，空白部の長さを記入します．単位はピクセルです．</p>
+<p class="mainSentence"><span class="thirdHeader">line</span><br/>
+登録された線記号の一覧です．</p>
+<p class="secondHeader">ボタン</p>
+<p class="mainSentence"><span class="thirdHeader">show</span><br/>
+線記号のデザインが確認できます．</p>
+<p class="mainSentence"><span class="thirdHeader">color</span><br/>
+線記号の色を指定できます．</p>
+<p class="mainSentence"><span class="thirdHeader">caps</span><br/>
+線記号の端点の形状をnone, round, square の中から選択できます．</p>
+<p class="mainSentence"><img src="../figures/Line_caps.png" width="340" height="72" alt="Line Caps" /></p>
+<p class="mainSentence"><span class="thirdHeader">joints</span><br/>
+線記号の折れ線頂点の形状をmiter, round, bevel の中から選択できます．</p>
+<p class="mainSentence"><img src="../figures/Line_joints.png" width="290" height="109" alt="Line Joints" /></p>
+<p class="mainSentence"><span class="thirdHeader">add</span><br/>
+線記号を追加します．</p>
+<p class="mainSentence"><span class="thirdHeader">edit</span><br/>
+席号の属性を編集します．</p>
+<p class="mainSentence"><span class="thirdHeader">update</span><br/>
+編集結果で記号を更新します．</p>
+<p class="mainSentence"><span class="thirdHeader">delteline</span><br/>
+一覧から線記号を削除します．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="FirstHeader">Area</p>
+<p class="mainSentence"><img src="../figures/SymbolStyleDesigner_Area.png" width="474" height="540" alt="SymbolDesigner_Area" /></p>
+<p class="mainSentence">図３．Synbol Designer: area</p>
+<p class="secondHeader">表示欄</p>
+<p class="mainSentence"><span class="thirdHeader">name (編集可能)</span><br/>
+面記号スタイルの名前を記入します．</p>
+<p class="mainSentence"><span class="thirdHeader">pattern</span><br/>
+面の内部を塗る画像の名前が表示されます．</p>
+<p class="mainSentence"><span class="thirdHeader">line</span><br/>
+面の境界の表示に使う線記号スタイルの名前が一覧表示されます．面記号スタイルを定義するときは，線記号スタイルを選択しなければいけません．</p>
+<p class="mainSentence"><span class="thirdHeader">area</span><br/>
+登録された面記号スタイルの名前が一覧表示されます．編集，更新，削除するときは，この一覧の中から面記号スタイルを選択します．</p>
+<p class="mainSentence"><span class="thirdHeader">design</span><br/>
+編集された面記号スタイルが表示されます．</p>
+<p class="secondHeader">ボタン</p>
+<p class="mainSentence"><span class="thirdHeader">open</span><br/>
+面を塗りつぶすパターンの画像ファイルをオープンします．</p>
+<p class="mainSentence"><span class="thirdHeader">clear</span><br/>
+面を塗りつぶす画像を未定義状態にクリアします．</p>
+<p class="mainSentence"><span class="thirdHeader">add</span><br/>
+面記号スタイルをarea一覧に追加します．</p>
+<p class="mainSentence"><span class="thirdHeader">edit</span><br/>
+面記号スタイルの編集が行えるようにします．</p>
+<p class="mainSentence"><span class="thirdHeader">update</span><br/>
+編集した結果を登録します．</p>
+<p class="mainSentence"><span class="thirdHeader">delete</span><br/>
+area一覧に登録されている面記号スタイルを削除します．</p>
+<p class="mainSentence"><span class="thirdHeader">show</span><br/>
+このボタンを押すと，編集した面記号スタイルをテスト表示します．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="FirstHeader">Point</p>
+<p class="secondHeader"><img src="../figures/SymbolStyleDesigner_Point.png" width="474" height="540" alt="SymbolDesigner_Point" /></p>
+<p class="mainSentence">図４．Symbol Designer . point</p>
+<p class="secondHeader">表示欄</p>
+<p class="mainSentence"><span class="thirdHeader">name（編集可能）</span><br/>
+ポイントシンボルの名前をここに記入します．</p>
+<p class="mainSentence"><span class="thirdHeader">mode</span><br/>
+下にある編集用のパネルでデジタイズできるときは，表示がdigitizeになります．また，検索ができるときは，searchになります．それぞれの作業が終わったときにbreakボタンを押すと，モードが切り替わります．</p>
+<p class="mainSentence"><span class="thirdHeader">size（編集可能）</span><br/>
+点記号の，画面上のサイズ（幅と高さは同じと考える）を指定します．デフォルトは100pixelです．</p>
+<p class="mainSentence"><span class="thirdHeader">Edit Panel（編集可能）</span><br/>
+点記号を編集するためのパネルです．ラジオボタンで，線，面，円のどれかを選択すると，それぞれ，線記号スタイル，面記号スタイル（円の場合もスタイルは面）の一覧が表示されるので，スタイルを選択します．そして，このパネルの上でカーソルをクリックすることによって，線や面の形状を描くことができます．円の場合は，中心と円の境界位置（つまり半径）を指定すると，円が描けます．一つの図形を描いたら，breakボタンを押します．以上の操作は何回も続けることができます．図形の形が気に入らない場合は，searchボタンをおして，カーソルを該当する図形の上（円の場合は境界）でクリックします．すると，線が太くなり，選択されたことが分かりますので，deleteボタンを押すと，その図形は削除されます．</p>
+<p class="mainSentence"><span class="thirdHeader">line style</span><br/>
+デジタイズする線のスタイルの一覧が表示されます．</p>
+<p class="mainSentence"><span class="thirdHeader">area style</span><br/>
+デジタイズする面又は円のスタイルの一覧が表示されます．上の図には見えないですが，ラジオボタンでareaまたはcircleを選択すると，一覧が現れます．</p>
+<p class="mainSentence"><span class="thirdHeader">point</span><br/>
+点記号スタイルの名前の一覧がここに表示されます．編集したり，削除したりするときは，事前にこの中から該当するものを選択してきます．</p>
+<p class="secondHeader">ボタン</p>
+<p class="mainSentence"><span class="thirdHeader">line</span><br/>
+このラジオボタンを押すと，右側に線記号スタイルの一覧が現れます．その中から適当なものを選ぶと，そのスタイルで線（折れ線）のデジタイズができます．</p>
+<p class="mainSentence"><span class="thirdHeader">area</span><br/>
+このラジオボタンを押すと，右側に面記号スタイルの一覧が現れます．その中から適当なものを選ぶと，そのスタイルで面（多角形）のデジタイズができます．</p>
+<p class="mainSentence"><span class="thirdHeader">circle</span><br/>
+このラジオボタンを押すと，右側に面記号スタイルの一覧が現れます．その中から適当なものを選ぶと，そのスタイルで円のデジタイズができます（中心と境界の位置を指定）．</p>
+<p class="mainSentence"><span class="thirdHeader">break</span><br/>
+デジタイズの区切り，または検索の終了時にこのボタンを押します．</p>
+<p class="mainSentence"><span class="thirdHeader">search</span><br/>
+デジタイズモードからサーチモードに変更するときに，このボタンを押します．</p>
+<p class="mainSentence"><span class="thirdHeader">delete</span><br/>
+サーチされた図形を消去するときに，このボタンを押します．</p>
+<p class="mainSentence"><span class="thirdHeader">clear all</span><br/>
+デジタイズした図形全部を消去するときに，このボタンを押します．</p>
+<p class="mainSentence"><span class="thirdHeader">add</span><br/>
+デジタイズした点記号スタイルをpointリストに追加するときに，このボタンを押します．</p>
+<p class="mainSentence"><span class="thirdHeader">edit</span><br/>
+pointリスト上で選択した点記号スタイルを編集したいときに，このボタンを押します．</p>
+<p class="mainSentence"><span class="thirdHeader">update</span><br/>
+編集した結果を使って，スタイルを更新するときに，このボタンを押します．</p>
+<p class="mainSentence"><span class="thirdHeader">delete</span><br/>
+pointリスト上で選択したスタイルを削除するときに，このボタンを押します．</p>
+</body>
+</html>

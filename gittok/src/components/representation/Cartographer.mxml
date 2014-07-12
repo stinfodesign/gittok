@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="313" height="292"
+		  title="Cartographer"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			
+			public var symbolDesigner:SymbolDesigner;
+			public var labelDesigner:LabelDesigner;
+			public var portrayalDesigner:PortrayalDesigner;
+			public var mapEditor:MapEditor;
+						
+			protected function initializeApp():void {
+				this.move(300, 400);
+			}
+
+			protected function editingButton_clickHandler(event:MouseEvent):void
+			{
+				symbolDesigner = new SymbolDesigner();
+				
+				symbolDesigner.open();
+				symbolDesigner.title = "Cartographer >";
+			}
+			
+			protected function labelButton_clickHandler(event:MouseEvent):void
+			{
+				labelDesigner = new LabelDesigner();
+				
+				labelDesigner.open();
+				labelDesigner.title = "Cartographer >";
+			}
+			
+			protected function portrayalDesignButton_clickHandler(event:MouseEvent):void
+			{
+				
+				portrayalDesigner = new PortrayalDesigner();
+				
+				portrayalDesigner.open();
+				portrayalDesigner.title = "Cartographer >";
+				
+			}
+			
+			protected function mapEditingButton_clickHandler(event:MouseEvent):void
+			{
+				mapEditor = new MapEditor();
+				
+				mapEditor.open();
+				mapEditor.title = "Cartographer >";
+				mapEditor.addEventListener(Event.CLOSING, mapClose);
+				
+			}
+			
+			private function mapClose(event:Event):void {
+				Mouse.cursor = "arrow";
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/cartographer_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/cartographer_en.html");
+				navigateToURL(request);
+			}
+			
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="77" y="15" text="Cartographer" fontSize="16"/>
+	<s:Button x="101" y="77" label="Symbol Design " width="115" height="25" id="editingButton" 
+			  click="editingButton_clickHandler(event)" />
+	<s:Button x="101" y="111" label="Label Design " width="115" height="25" id="labelButton" 
+			  click="labelButton_clickHandler(event)" />
+	<s:Button id="portrayalDesignButton" x="101" y="145" width="115" height="25" label="Portrayal Design"
+			  click="portrayalDesignButton_clickHandler(event)"/>
+	<s:Button id="mapEditingButton" x="101" y="202" width="115" height="35" label="Mapping"
+			  click="mapEditingButton_clickHandler(event)"/>
+	<s:Label x="220" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="261" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+</s:Window>

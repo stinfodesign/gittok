@@ -1,0 +1,1761 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="608" height="716"
+		  title="Map Editor"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+
+	<fx:Script>
+		<![CDATA[
+			import com.google.maps.Map;
+			
+			import dataTypes.place.*;
+			import dataTypes.simpleDataTypes.*;
+			import dataTypes.spatialGeometry.*;
+			
+			import flash.filesystem.*;
+			import flash.geom.Point;
+			import flash.text.TextField;
+			import flash.text.TextFormat;
+			
+			import geoOperations.*;
+			
+			import gfm.*;
+			
+			import instanceModel.*;
+			
+			import math.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.controls.Image;
+			import mx.utils.object_proxy;
+			
+			import portrayal.label.Label;
+			import portrayal.labelStyle.*;
+			import portrayal.map.*;
+			import portrayal.portrayalStyle.*;
+			import portrayal.symbol.*;
+			import portrayal.symbolStyle.*;
+			
+			import spark.events.IndexChangeEvent;
+			
+			private var file:File;
+			private var stream:FileStream;
+			private var portrayalSchemaFile:File;
+			
+			public var kit:Kit;
+			protected var kitURL:String;
+			protected var applicationSchema:ApplicationSchema;
+			
+			private var concreteTypes:ArrayList;
+			private var concreteAssociationTypes:ArrayList;
+			
+			private var feature:Feature;
+			private var featureSet:FeatureSet;
+			private var featureSetArray:Dictionary;
+			private var associationSetArray:Dictionary;
+			
+			private var syms:SymbolStyleDictionary;			
+			private var labels:LabelStyleDictionary;
+			private var portrayals:PortrayalSchema;
+			private var featurePortrayalPairDic:Dictionary = new Dictionary();
+			private var ftPtlPair:FeaturePortrayalPair = new FeaturePortrayalPair();
+			
+			private var curve:SG_Curve;
+			private var surface:SG_Surface;
+			
+			protected var atts:ArrayList;	// attributeTypes, variable using for recursive process	
+			protected var assos:ArrayList;	// associationTypes
+			protected var opts:ArrayList;	// operationTypes
+			
+			private var origin:Coordinate2;
+			private var scale:Number = 1.0;
+			private var dragFlag:Boolean = false;
+			private var clickFlag:Boolean   = false;
+			private var initialLength:int = 200;
+			private var selectedLabel:portrayal.label.Label;
+			
+			private var map:portrayal.map.Map;
+			private var maintitle:Title;
+			private var subtitle:Title;
+			private var northArrow:NorthArrow;
+			private var legend:MapLegend;
+			private var barScale:BarScale;
+			private var affineParam:AffineParam;
+			
+			// multimedia attibutes
+			private var picts:Array = new Array(6);
+			private var multimediaType:Array = ["Memo", "URL", "ImageURL", "VideoURL", "SoundURL", "Address"];
+			private var foundFlag:Boolean = false;
+			private var pictPushedFlag:Boolean = false;
+			private var selectedFeature:Feature;
+			private var selectedAttArray:ArrayList;
+			
+			//attribute list windows
+			protected var memoListWindow:MemoListWindow;
+			protected var urlListWindow:UrlListWindow;
+			protected var imageListWindow:ImageListWindow;
+			protected var videoListWindow:VideoListWindow;
+			protected var soundListWindow:SoundListWindow;
+			protected var addressListWindow:AddressListWindow;
+
+			// define marginal parameters
+			public var titleEditor:TitleEditor;
+			public var northArrowSelector:NorthArrowSelector;
+			protected var movingLayer:String;
+			
+			[Bindable]
+			private var thematicProvider:ArrayList;
+			
+			[Bindable]
+			private var arrowSource:String;
+			
+			[Bindable]
+			private var scaleSizeText:String;
+			
+			[Bindable]
+			private var scaleLabelPos:Number;
+
+			
+			public function initializeApp(): void {
+				this.move(400, 50);
+				// Basic Types
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
+				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
+				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
+				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				
+				// Location
+				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
+				registerClassAlias("dataTypes.place.URL", URL);
+				registerClassAlias("dataTypes.place.VideoURL", VideoURL);
+				registerClassAlias("dataTypes.place.SoundURL", SoundURL);
+				registerClassAlias("dataTypes.place.Address", Address);
+				
+				// General Feature Model
+				registerClassAlias("gfm.AttributeType", AttributeType);
+				registerClassAlias("gfm.OperationType", OperationType);
+				registerClassAlias("gfm.FeatureType", FeatureType);
+				registerClassAlias("gfm.AssociationType", AssociationType);
+				registerClassAlias("gfm.ApplicationSchema", ApplicationSchema);	
+				registerClassAlias("gfm.ArgAttPair", ArgAttPair);
+				
+				// Instance Model
+				registerClassAlias("instanceModel.Kit", Kit);
+				registerClassAlias("instanceModel.FeatureSet", FeatureSet);
+				registerClassAlias("instanceModel.Feature", Feature);
+				registerClassAlias("instanceModel.Association", Association);
+				registerClassAlias("instanceModel.AssociationSet", AssociationSet);
+				
+				// Symbol styles
+				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
+				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
+				
+				// Label Styles
+				registerClassAlias("portrayal.labelStyle.LabelStyle", LabelStyle);
+				registerClassAlias("portrayal.labelStyle.LabelStyleDictionary", LabelStyleDictionary);
+				
+				// Portrayal Schema
+				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);								
+				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalPair", FeaturePortrayalPair);								
+				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
+				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);
+				registerClassAlias("portrayal.portrayalStyle.ThematicCondition", ThematicCondition);
+				registerClassAlias("portrayal.portrayalStyle.Modifier", Modifier);
+				registerClassAlias("portrayal.portrayalStyle.BooleanModifier", BooleanModifier);				
+				registerClassAlias("portrayal.portrayalStyle.QualitativeModifier", QualitativeModifier);				
+				registerClassAlias("portrayal.portrayalStyle.QuantitativeModifier", QuantitativeModifier);
+				
+				// Symbol
+				registerClassAlias("portrayal.symbol.AreaSymbol", AreaSymbol);				
+				registerClassAlias("portrayal.symbol.LineSymbol", LineSymbol);
+				registerClassAlias("portrayal.symbol.PointSymbol", PointSymbol);		
+				registerClassAlias("portrayal.symbol.Circle", Circle);	
+				
+				// Label
+				registerClassAlias("portrayal.label.Label", portrayal.label.Label);				
+				
+				// Map
+				registerClassAlias("portrayal.map.Map", portrayal.map.Map);
+				registerClassAlias("portrayal.map.MapLegend", MapLegend);
+				registerClassAlias("portrayal.map.MapLegendParam", MapLegendParam);
+				registerClassAlias("portrayal.map.NorthArrow", NorthArrow);
+				registerClassAlias("portrayal.map.BarScale", BarScale);
+				registerClassAlias("portrayal.map.Title", Title);
+				
+				// Geometry
+				registerClassAlias("dataTypes.spatialGeometry.SG_Point", SG_Point);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Surface", SG_Surface);
+				registerClassAlias("dataTypes.spatialGeometry.SG_OrientableCurve", SG_OrientableCurve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Primitive", SG_Primitive);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Rectangle", SG_Rectangle);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Ring", SG_Ring);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
+				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
+				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
+				
+				// Affine
+				registerClassAlias("math.AffineParam", AffineParam);
+				
+				scaleSpace.visible  = false;
+			}
+			
+			//Open Kit 			
+			public function openKitButton_clickHandler(event:MouseEvent):void
+			{
+				// Open kit
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
+					file.addEventListener(Event.SELECT, openKit);
+					file.browseForOpen("Open kit file", [filter]);
+					
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				}
+			}
+			
+			public function openKit(event:Event):void {
+				this.setKitOpened();
+				this.setKitParameters();
+			}
+			
+			public function setKitOpened():void {
+				stream = new FileStream();
+				try {
+					stream.open(file, FileMode.READ);
+					kit = stream.readObject() as Kit;
+					stream.close();
+				} catch(e:IOError) {
+					trace("kit open error:" + e);
+				}
+				
+				//set affine paramters
+				affineParam = kit.affineParam;
+				
+				//display name of the kit file.
+				kitNameLabel.text = file.name;
+				
+				//Open application schema
+				var pathURL:String = file.url;
+				var pathArray:Array = pathURL.split("/");
+				kitURL = "";
+				for (var i:int = 0; i < pathArray.length - 1; i++) {
+					kitURL += pathArray[i] + "/";
+				}
+				
+				kit.applicationSchema = openApplicationSchema(kitURL, kit.applicationSchemaURL);
+			}
+			
+			private function openApplicationSchema(_kitURL:String, _appURL:String):ApplicationSchema {
+				var appStream:FileStream = new FileStream();
+				var appSchema:ApplicationSchema;
+				var apsURL:String = _kitURL + _appURL;
+				file = new File();
+				file.url = apsURL;
+				try {
+					appStream.open(file, FileMode.READ);
+					appSchema = appStream.readObject();
+					appStream.close();
+				} catch(e:IOError) {
+					trace("application schema open error:" + e);
+				}
+				
+				// make concrete types
+				var fTypes:Dictionary = new Dictionary();
+				var concreteTypes:ArrayList = appSchema.constructConcreteTypes();
+				var cType:FeatureType;
+				for (var i:int = 0; i < concreteTypes.length; i++) {
+					cType = concreteTypes.getItemAt(i) as FeatureType;
+					fTypes[cType.name] = cType;
+				}
+				appSchema.featureTypes = fTypes;
+				
+				return appSchema;
+				
+			}
+			
+			public function setKitParameters():void {
+				
+				//Initialize concrete (non abstract) types
+				concreteTypes = new ArrayList();
+				for each(var ftType:FeatureType in kit.applicationSchema.featureTypes) {				
+					if (!ftType.isAbstract) 
+						concreteTypes.addItem(ftType);
+				}
+				
+				//Inherit properties from parent types, if required.
+				var n:int = concreteTypes.length;
+				var concreteType:FeatureType;
+				for (var i:int = 0; i < n; i++) {
+					atts 	= new ArrayList();
+					opts 	= new ArrayList();
+					concreteType = concreteTypes.getItemAt(i) as FeatureType;
+					if (!concreteType.isAbstract) {
+						// collect attrubute and association types
+						atts.addAll(concreteType.attributeTypes);
+						opts.addAll(concreteType.operationTypes);
+						if (concreteType.parent != null) inheritProperties(concreteType.parent);
+						concreteType = concreteTypes.getItemAt(i) as FeatureType;
+						concreteType.attributeTypes = atts;
+						concreteType.operationTypes = opts;
+						concreteTypes.setItemAt(concreteType, i);
+					}
+				}
+				
+				//Set association type list
+				concreteAssociationTypes = new ArrayList();
+				for each(var aType:AssociationType in kit.applicationSchema.associationTypes) {
+					concreteAssociationTypes.addItem(aType);
+				}
+				
+				//Set feature instance
+				featureSetArray = kit.featureSetArray;
+				
+				//Set association instance
+				associationSetArray = kit.associationSetArray;
+							
+				origin = kit.getCenter();
+				
+				resetView();
+				
+				
+				
+			}
+			
+			// Recursive operation to inherit properties
+			protected function inheritProperties(fType:FeatureType):void {
+				var m:int = fType.attributeTypes.length;
+				var n:int = atts.length;
+				var watts:ArrayList = new ArrayList();
+				for (var i:int = 0; i < m; i++) {
+					var wattf:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+					var flag:Boolean = false;
+					for (var j:int = 0; j < n; j++) {
+						var watt:AttributeType = atts.getItemAt(j) as AttributeType;
+						if (watt.name == wattf.name) flag = true;
+					}
+					if (!flag) watts.addItem(wattf);
+				}
+				atts.addAll(watts);
+				
+				m = fType.operationTypes.length;
+				n = opts.length;
+				var wopts:ArrayList = new ArrayList();
+				for (i = 0; i < m; i++) {
+					var woptf:OperationType = fType.operationTypes.getItemAt(i) as OperationType;
+					flag = false;
+					for (j = 0; j < n; j++) {
+						var wopt:OperationType = opts.getItemAt(j) as OperationType;
+						if (wopt.name == woptf.name) flag = true;
+					}
+					if (!flag) wopts.addItem(woptf);
+				}
+				
+				opts.addAll(wopts);
+				
+				if (fType.parent != null) {
+					inheritProperties(fType.parent);
+				}
+			}
+			
+			private function resetView():void {
+				var ctr:Coordinate2 = new Coordinate2();
+				var mapWidth:Number  = mappingBox.width;
+				var mapHeight:Number = mappingBox.height;
+				ctr.x = mapWidth  * 0.5;
+				ctr.y = mapHeight * 0.5;
+				
+				// Get extent and scale on the screen
+				var extent:SG_Rectangle = kit.getGeographicExtent();
+				var horizon:Number  = extent.upperRight.x - extent.lowerLeft.x;
+				var vertical:Number = extent.upperRight.y - extent.lowerLeft.y;
+				
+				var kitSize:Number = (horizon > vertical) ? horizon : vertical;
+				var mapSize:Number = (mapWidth > mapHeight) ? mapWidth : mapHeight;
+				
+				scale = mapSize / kitSize;
+				
+				var kitCenter:Coordinate2 = kit.getCenter();
+				kitCenter.x *= scale;
+				kitCenter.y *= scale;
+
+				drawingSpace.scaleX = drawingSpace.scaleY = scale;
+				
+				drawingSpace.width  = mappingBox.width;
+				drawingSpace.height = mappingBox.height;
+				
+				drawingSpace.x = mappingBox.x - kitCenter.x + ctr.x;
+				drawingSpace.y = mappingBox.y - kitCenter.y + ctr.y;				
+
+				//Draw a map scale
+				barScale = new BarScale();
+				barScale.drawScale(kit.affineParam, scale);
+				if (scaleSpace.numChildren > 0) scaleSpace.removeChildAt(0);
+				scaleSpace.addChild(barScale);
+			}
+			
+			protected function openportrayalSchemaButton_clickHandler(event:MouseEvent):void
+			{
+				try {
+					portrayalSchemaFile = new File();
+					var filter:FileFilter = new FileFilter("Portrayal Schema", "*.psc");
+					portrayalSchemaFile.addEventListener(Event.SELECT, openPortrayalFiles);
+					portrayalSchemaFile.browseForOpen("Open file", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+			}
+			
+			private function openPortrayalFiles(event:Event):void {
+				var path:String = portrayalSchemaFile.nativePath.replace(portrayalSchemaFile.name, "");
+				portrayalSchemaLabel.text = portrayalSchemaFile.name;
+				stream = new FileStream();
+				var appSchemaFile:File    = new File();
+				var symbolSchemaFile:File = new File();
+				var labelSchemaFile:File  = new File();
+				
+				try {
+					stream.open(portrayalSchemaFile,FileMode.READ);
+					portrayals = stream.readObject() as PortrayalSchema;
+					appSchemaFile.nativePath    = path + portrayals.applicationSchema;
+					symbolSchemaFile.nativePath = path + portrayals.symbolStyleSchema;
+					labelSchemaFile.nativePath  = path + portrayals.labelStyleSchema;				
+					featurePortrayalPairDic = portrayals.fpPairs;
+					stream.close();
+					
+					stream.open(symbolSchemaFile, FileMode.READ);
+					syms = stream.readObject();		// symbol schema				
+					stream.close();
+					
+					stream.open(labelSchemaFile, FileMode.READ);
+					labels = stream.readObject();	// label schema
+					stream.close();				
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+			}
+			
+			protected function drawMapButton_clickHandler(event:MouseEvent):void
+			{
+				scaleSpace.visible  = true;
+								
+				// reset work space
+				var num:int = labelSpace.numChildren;
+				for (var j:int = 0; j < num; j++) labelSpace.removeChildAt(0);
+				num = symbolSpace.numChildren;
+				for (j = 0; j < num; j++) symbolSpace.removeChildAt(0);
+				
+				// re-open portrayalSchema file for acceptance of new portrayals
+				this.openPortrayalFiles(null);
+				
+				//Set feature instance
+				featureSetArray = kit.featureSetArray;
+				
+				//Set association instance
+				//associationSetArray = kit.associationSetArray;
+				
+				thematicProvider = new ArrayList();
+				
+				for each(featureSet in featureSetArray) {
+					ftPtlPair = featurePortrayalPairDic[featureSet.typeID] as FeaturePortrayalPair;
+					if (ftPtlPair != null) {
+						var thematicModifier:ThematicCondition = ftPtlPair.thematicModifier;
+						
+						if (thematicModifier.modifierName != "") {
+							// set Legend on the map
+							this.makeLegend(thematicModifier);
+						}
+
+						var fType:FeatureType = kit.applicationSchema.featureTypes[featureSet.typeID] as FeatureType;							
+						
+						// attribute type
+						var attributeTypes:ArrayList = fType.attributeTypes;
+						
+						// draw graphics
+						var refGeom:SG_Primitive;
+						for each(feature in featureSet.features) {
+							var attributes:Dictionary = feature.attributes;
+							
+							for each(var primitiveList:ArrayList in attributes) {
+								var primi:* = primitiveList.getItemAt(0);
+								if (primi is SG_Primitive) {
+									refGeom = primi as SG_Primitive;
+							
+									/* thematic mapping
+									*/							
+									if (thematicModifier != null) {
+										var attArray:ArrayList = attributes[thematicModifier.modifierName] as ArrayList;
+										var modifierType:String = thematicModifier.modifierType;
+										if (modifierType == "Bool") {
+											if (attArray == null) {
+												var bm:BooleanModifier = thematicModifier.elements.getItemAt(2) as BooleanModifier;
+												if (!bm.hasValue) {
+													var m:int = primitiveList.length;
+													for (var i:int = 0; i < m; i++) {
+														refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+														this.drawSymbol(bm.symName, refGeom);
+													}											
+												}
+											}
+											else {
+												var attBool:Bool = attArray.getItemAt(0) as Bool;
+												if (attBool.value) {
+													bm = thematicModifier.elements.getItemAt(0) as BooleanModifier;
+													if (bm != null) {
+														m = primitiveList.length;
+														for (i = 0; i < m; i++) {
+															refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+															this.drawSymbol(bm.symName, refGeom);
+														}
+													}
+												}
+												else {
+													bm = thematicModifier.elements.getItemAt(1) as BooleanModifier;
+													if (bm != null) {
+														m = primitiveList.length;
+														for (i = 0; i < m; i++) {
+															refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+															this.drawSymbol(bm.symName, refGeom);
+														}
+													}
+												}
+											}
+										}	
+										else if (modifierType == "CharacterString") {
+											var attString:CharacterString = attArray.getItemAt(0) as CharacterString;
+											var stringModifiers:ArrayList = thematicModifier.elements;
+											m = stringModifiers.length;
+											for (i = 0; i < m; i++) {
+												var sm:QualitativeModifier = stringModifiers.getItemAt(i) as QualitativeModifier;
+												if (sm.stringValue != null) {
+													if (attString.value == sm.stringValue) {
+														m = primitiveList.length;
+														for (j = 0; j < m; j++) {
+															refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
+															this.drawSymbol(sm.symName, refGeom);
+														}											
+													}
+												}
+											}
+										}
+									
+										else if (modifierType == "Integer" || modifierType == "Real") {
+											var attNumber:Number;
+											if (modifierType == "Integer") {
+												var attInteger:Integer = attArray.getItemAt(0) as Integer;
+												attNumber = attInteger.value;
+											}
+											else {
+												var attReal:Real = attArray.getItemAt(0) as Real;
+												attNumber = attReal.value;
+											}
+											var numberModifiers:ArrayList = thematicModifier.elements;
+											m = numberModifiers.length;
+											for (i = 0; i < m; i++) {
+												var nm:QuantitativeModifier = numberModifiers.getItemAt(i) as QuantitativeModifier;
+												if (nm !=  null) {
+													var lower:Number = Number(nm.lowerValue);
+													var upper:Number = Number(nm.upperValue);
+											 		if (lower <= attNumber && attNumber < upper) {
+														m = primitiveList.length;
+														for (j = 0; j < m; j++) {
+															refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
+															this.drawSymbol(nm.symName, refGeom);
+														}
+													}
+												}
+											}
+										}
+									}
+							
+									/* general mapping
+									*/
+									var attributeModifiers:Dictionary = ftPtlPair.generalModifiers;
+									for (i = 0; i < attributeTypes.length; i++) {
+										var attType:AttributeType = attributeTypes.getItemAt(i) as AttributeType;
+										var attValueList:ArrayList = attributes[attType.name];
+										if (attValueList == null) {
+											fType = kit.applicationSchema.featureTypes[feature.typeName] as FeatureType;									}
+										else {
+											var asPair:AttributeStylePair = attributeModifiers[attType.name] as AttributeStylePair;
+											if (asPair != null) {
+												if (asPair.symLabName != "") {	
+													for (j = 0; j < attValueList.length; j++) {
+														if (asPair.symLabType == "Label")
+															this.drawLabel(attValueList, asPair.symLabName, refGeom);
+														else
+															this.drawSymbol(asPair.symLabName, refGeom);
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			protected function makeLegend(thematicModifier:ThematicCondition):void {
+				// legend setting
+				var mType:String = thematicModifier.modifierType;
+				
+				legend = new MapLegend();
+				legend.setTitle(thematicModifier.modifierName);
+				var element:Object;
+				if (mType == "Bool") {					
+					for (var j:int = 0; j < 3; j++) {
+						var bElement:BooleanModifier = thematicModifier.elements.getItemAt(j) as BooleanModifier;
+						var areaSymbolStyle:AreaSymbolStyle = syms.areaSymStyles[bElement.symName] as AreaSymbolStyle;
+						var bValue:String;
+						if (bElement.hasValue)
+							bValue = bElement.boolValue.toString();
+						else
+							bValue = "null";
+						element = legend.addLine(areaSymbolStyle.color, areaSymbolStyle.alpha, bValue);
+						legend.param.elements.addItem(element);
+					}
+				}
+				else if (mType == "CharacterString") {
+					var m:int = thematicModifier.elements.length;
+					for (j = 0; j < m; j++) {
+						var qlElement:QualitativeModifier = thematicModifier.elements.getItemAt(j) as QualitativeModifier;
+						if (qlElement.stringValue != null) {
+							areaSymbolStyle  = syms.areaSymStyles[qlElement.symName] as AreaSymbolStyle;
+							
+							element = legend.addLine(areaSymbolStyle.color, areaSymbolStyle.alpha, qlElement.stringValue);
+							legend.param.elements.addItem(element);
+						}
+					}
+				}
+				else if (mType == "Integer" || mType == "Real") {
+					m = thematicModifier.elements.length;
+					for (j = 0; j < m; j++) {
+						var  qnElement:QuantitativeModifier = thematicModifier.elements.getItemAt(j) as QuantitativeModifier;
+						if (!isNaN(qnElement.lowerValue)) {
+							areaSymbolStyle  = syms.areaSymStyles[qnElement.symName] as AreaSymbolStyle;
+							
+							var str:String = "" + qnElement.lowerValue + " ≤ x < " + qnElement.upperValue;
+							
+							element = legend.addLine(areaSymbolStyle.color, areaSymbolStyle.alpha, str);
+							legend.param.elements.addItem(element);
+						}
+					}
+				}
+				
+				if (legendSpace.numChildren > 0) legendSpace.removeChildAt(0); // remove old legend
+				legendSpace.addChild(legend);
+			}
+			
+			protected function drawLabel(attValueList:ArrayList, labelName:String, refGeom:SG_Primitive):void {
+				var objArray:ArrayList = new ArrayList();
+				var obj:Object = new Object();
+				// Get reference position
+				var rPos:Coordinate2;
+				
+				if (refGeom is SG_Point) {
+					var point:SG_Point = refGeom as SG_Point;
+					rPos = point.position;
+				}
+				
+				if (refGeom is SG_Curve) {
+					curve = refGeom as SG_Curve;
+					var attValue:ArrayList = new ArrayList();
+					attValue.addItem(curve);
+					var attValues:ArrayList = new ArrayList();
+					attValues.addItem(attValue);
+					var argObj:Object = new Object();
+					argObj["curve"] = attValues;
+					rPos = geoOperations.Center.centerLayingOnCurve(argObj).position;
+				}
+				if (refGeom is SG_Surface) {
+					surface = refGeom as SG_Surface;
+					attValue = new ArrayList();
+					attValue.addItem(surface);
+					attValues = new ArrayList();
+					attValues.addItem(attValue);
+					argObj = new Object();
+					argObj["surface"] = attValues;
+					rPos = geoOperations.Center.centerOfMIC(argObj).position;
+				}
+				
+				var lblStyle:LabelStyle = labels.labelStyles[labelName] as LabelStyle;
+				for (var i:int = 0; i < attValueList.length; i++) {
+					var element:* = attValueList.getItemAt(0);
+					var value:String = element.value.toString();
+					
+					// Draw label
+					var lbl:portrayal.label.Label = new portrayal.label.Label();
+					var labelObj:Object = new Object();
+					
+					labelObj.text   = value;
+					labelObj.refPos = rPos;
+					labelObj.style  = lblStyle;
+					
+					lbl.decode(labelObj);
+					labelSpace.addChild(lbl);
+				}
+			}
+			
+			protected function drawSymbol(symbolName:String, refGeom:SG_Primitive):void {
+				if (symbolName == "") return;
+				
+				if (refGeom is SG_Point) {
+					var point:SG_Point = refGeom as SG_Point;
+					var pointSymbolStyle:PointSymbolStyle = syms.pointSymStyles[symbolName] as PointSymbolStyle;
+					var pSym:PointSymbol = new PointSymbol()
+					var pObj:Object = new Object();
+					pObj.point = point
+					pObj.style = pointSymbolStyle;
+					pSym.decode(pObj);
+					symbolSpace.addChild(pSym);						
+				}
+				if (refGeom is SG_Curve) {
+					var curve:SG_Curve = refGeom as SG_Curve;
+					var lineSymbolStyle:LineSymbolStyle = syms.lineSymStyles[symbolName] as LineSymbolStyle;
+					var lSym:LineSymbol = new LineSymbol();
+					var lObj:Object = new Object();
+					lObj.curve = curve;
+					lObj.style = lineSymbolStyle;
+					lSym.decode(lObj);
+					symbolSpace.addChild(lSym);
+				}
+				if (refGeom is SG_Surface) {
+					var surface:SG_Surface = refGeom as SG_Surface;
+					var areaSymbolStyle:AreaSymbolStyle = syms.areaSymStyles[symbolName] as AreaSymbolStyle;
+					var aSym:AreaSymbol = new AreaSymbol()
+					var aObj:Object = new Object();
+					aObj.surface = surface;
+					aObj.style   = areaSymbolStyle;
+					aSym.decode(aObj);
+					symbolSpace.addChild(aSym);
+				}
+			}
+			
+			//Geometry panel handlers
+			private function largerButton_clickHandler(event:MouseEvent):void
+			{
+				if (kit == null) {
+					if (map == null) return;
+				}
+				
+				var beta:Number = 1.05;
+				
+				scale *= beta;
+				
+				barScale = new BarScale();
+				barScale.drawScale(affineParam, scale);
+				scaleSpace.removeChildAt(0);
+				scaleSpace.addChild(barScale);
+				
+				var center:Coordinate2 = new Coordinate2();
+				center.x = mappingBox.width * 0.5;
+				center.y = mappingBox.height * 0.5;
+				drawingSpace.x = center.x - (center.x - drawingSpace.x) * beta;
+				drawingSpace.y = center.y - (center.y - drawingSpace.y) * beta;
+				
+				drawingSpace.scaleX = drawingSpace.scaleY = scale;
+				
+			}
+			
+			private function smallerButton_clickHandler(event:MouseEvent):void
+			{
+				if (kit == null) {
+					if (map == null) return;
+				}
+				
+				var beta:Number = 1.05;
+				
+				scale /= beta;
+				
+				barScale = new BarScale();
+				barScale.drawScale(affineParam, scale);
+				scaleSpace.removeChildAt(0);
+				scaleSpace.addChild(barScale);
+				
+				var center:Coordinate2 = new Coordinate2();
+				center.x = mappingBox.width * 0.5;
+				center.y = mappingBox.height * 0.5;
+				drawingSpace.x = center.x - (center.x - drawingSpace.x) / beta;
+				drawingSpace.y = center.y - (center.y - drawingSpace.y) / beta;
+				
+				drawingSpace.scaleX = drawingSpace.scaleY = scale;
+			}
+			
+			private function resetButton_clickHandler(event:MouseEvent):void
+			{
+				if (kit == null || portrayalSchemaFile == null) {
+					Alert.show("Open kit and portrayal schema before reset.", "Alert", 4, this);
+					return;
+				}
+				resetView();
+				
+				barScale = new BarScale();
+				barScale.drawScale(kit.affineParam, scale);
+				scaleSpace.removeChildAt(0);
+				scaleSpace.addChild(barScale);
+				
+				var m:int = symbolSpace.numChildren;
+				for (var i:int = 0; i < m; i++) {
+					symbolSpace.removeChildAt(0);
+				}
+				
+				m = labelSpace.numChildren;
+				for (i = 0; i < m; i++) {
+					labelSpace.removeChildAt(0);
+				}
+				
+				for each(featureSet in featureSetArray) {
+					ftPtlPair = featurePortrayalPairDic[featureSet.typeID] as FeaturePortrayalPair;
+					if (ftPtlPair != null) {
+						var thematicModifier:ThematicCondition = ftPtlPair.thematicModifier;
+						
+						if (thematicModifier.modifierName != "") {
+							// set Legend on the map
+							this.makeLegend(thematicModifier);
+						}
+						
+						var fType:FeatureType = kit.applicationSchema.featureTypes[featureSet.typeID] as FeatureType;							
+						
+						// attribute type
+						var attributeTypes:ArrayList = fType.attributeTypes;
+						
+						// draw graphics
+						var refGeom:SG_Primitive;
+						for each(feature in featureSet.features) {
+							var attributes:Dictionary = feature.attributes;
+							
+							for each(var primitiveList:ArrayList in attributes) {
+								var primi:* = primitiveList.getItemAt(0);
+								if (primi is SG_Object) {
+									refGeom = primi as SG_Primitive;
+									
+									/* thematic mapping
+									*/							
+									if (thematicModifier != null) {
+										var attArray:ArrayList = attributes[thematicModifier.modifierName] as ArrayList;
+										var modifierType:String = thematicModifier.modifierType;
+										if (modifierType == "Bool") {
+											if (attArray == null) {
+												var bm:BooleanModifier = thematicModifier.elements.getItemAt(2) as BooleanModifier;
+												if (!bm.hasValue) {
+													for (i = 0; i < primitiveList.length; i++) {
+														refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+														this.drawSymbol(bm.symName, refGeom);
+													}											
+												}
+											}
+											else {
+												var attBool:Bool = attArray.getItemAt(0) as Bool;
+												if (attBool.value) {
+													bm = thematicModifier.elements.getItemAt(0) as BooleanModifier;
+													if (bm != null) {
+														m = primitiveList.length;
+														for (i = 0; i < m; i++) {
+															refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+															this.drawSymbol(bm.symName, refGeom);
+														}
+													}
+												}
+												else {
+													bm = thematicModifier.elements.getItemAt(1) as BooleanModifier;
+													if (bm != null) {
+														m = primitiveList.length;
+														for (i = 0; i < m; i++) {
+															refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+															this.drawSymbol(bm.symName, refGeom);
+														}
+													}
+												}
+											}
+										}	
+										else if (modifierType == "CharacterString") {
+											var attString:CharacterString = attArray.getItemAt(0) as CharacterString;
+											var stringModifiers:ArrayList = thematicModifier.elements;
+											m = stringModifiers.length;
+											for (i = 0; i < m; i++) {
+												var sm:QualitativeModifier = stringModifiers.getItemAt(i) as QualitativeModifier;
+												if (sm.stringValue != null) {
+													if (attString.value == sm.stringValue) {
+														m = primitiveList.length;
+														for (var j:int = 0; j < m; j++) {
+															refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
+															this.drawSymbol(sm.symName, refGeom);
+														}											
+													}
+												}
+											}
+										}
+											
+										else if (modifierType == "Integer" || modifierType == "Real") {
+											var attNumber:Number;
+											if (modifierType == "Integer") {
+												var attInteger:Integer = attArray.getItemAt(0) as Integer;
+												attNumber = attInteger.value;
+											}
+											else {
+												var attReal:Real = attArray.getItemAt(0) as Real;
+												attNumber = attReal.value;
+											}
+											var numberModifiers:ArrayList = thematicModifier.elements;
+											m = numberModifiers.length;
+											for (i = 0; i < m; i++) {
+												var nm:QuantitativeModifier = numberModifiers.getItemAt(i) as QuantitativeModifier;
+												if (nm !=  null) {
+													var lower:Number = Number(nm.lowerValue);
+													var upper:Number = Number(nm.upperValue);
+													if (lower <= attNumber && attNumber < upper) {
+														m = primitiveList.length;
+														for (j = 0; j < m; j++) {
+															refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
+															this.drawSymbol(nm.symName, refGeom);
+														}
+													}
+												}
+											}
+										}
+									}
+									
+									/* general mapping
+									*/
+									var attributeModifiers:Dictionary = ftPtlPair.generalModifiers;
+									for (i = 0; i < attributeTypes.length; i++) {
+										var attType:AttributeType = attributeTypes.getItemAt(i) as AttributeType;
+										var attValueList:ArrayList = attributes[attType.name];
+										if (attValueList == null) {
+											fType = kit.applicationSchema.featureTypes[feature.typeName] as FeatureType;									}
+										else {
+											var asPair:AttributeStylePair = attributeModifiers[attType.name] as AttributeStylePair;
+											if (asPair != null) {
+												if (asPair.symLabName != "") {	
+													for (j = 0; j < attValueList.length; j++) {
+														if (asPair.symLabType == "Label")
+															this.drawLabel(attValueList, asPair.symLabName, refGeom);
+														else
+															this.drawSymbol(asPair.symLabName, refGeom);
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+						
+			private function scalingAtCenter(s:Number, center:Coordinate2):void 
+			{
+				var shift:Coordinate2 = new Coordinate2();
+				shift.x = mappingBox.width * 0.5;
+				shift.y = mappingBox.height * 0.5;
+				
+				kit.planeCoordinateTransfer(s, center, shift);
+				
+				featureSetArray = kit.featureSetArray;
+			}
+			
+			private function dragButton_clickHandler(event:MouseEvent):void
+			{				
+				if (dragFlag) { 
+					dragFlag = false;
+					dragButton.label = "off";
+					Mouse.cursor = "arrow";
+				}
+				else {
+					dragFlag = true;
+					dragButton.label = "on";
+				}
+			}
+			
+			private function mappingMainBox_mouseUpHandler(event:MouseEvent):void
+			{
+				if (dragFlag) {	
+					drawingSpace.stopDrag();
+					Mouse.cursor = "arrow";
+				}
+				
+
+				if (movingLayer == "title") {
+					titleSpace.stopDrag();
+					if (maintitle == null) maintitle = new Title();
+					maintitle.x = titleSpace.x;
+					maintitle.y = titleSpace.y;
+				}
+				
+				if (movingLayer == "subtitle") {
+					subtitleSpace.stopDrag();
+					if (subtitle == null) subtitle = new Title();
+					subtitle.x = subtitleSpace.x;
+					subtitle.y = subtitleSpace.y;
+				}
+				
+				if (movingLayer == "legend") {
+					legendSpace.stopDrag();
+					if (legendSpace.numChildren > 0)
+						legend = legendSpace.getChildAt(0) as MapLegend;
+				}
+				
+				if (movingLayer == "north arrow") {
+					northArrowImage.stopDrag();
+					northArrow   = new NorthArrow();
+					northArrow.x = northArrowImage.x;
+					northArrow.y = northArrowImage.y;
+					northArrow.source = arrowSource;
+				}
+				
+				if (movingLayer == "bar-scale") scaleSpace.stopDrag();
+				
+				if (movingLayer == "label") {
+					if (selectedLabel != null) {
+						selectedLabel.stopDrag();
+						selectedLabel.refPos.x += selectedLabel.x;
+						selectedLabel.refPos.y += selectedLabel.y;
+					}
+					Mouse.cursor = "arrow";
+				}
+
+			}
+			
+			
+			private function mappingMainBox_mouseDownHandler(event:MouseEvent):void
+			{
+				// IMAGE DRAGGING
+				if (dragFlag) {
+					drawingSpace.startDrag(false);
+					Mouse.cursor = "button";					
+					return;
+				}
+				
+				if (movingLayer == "title") titleSpace.startDrag(false);
+				
+				if (movingLayer == "subtitle") subtitleSpace.startDrag(false);
+				
+				if (movingLayer == "legend") legendSpace.startDrag(false);
+				
+				if (movingLayer == "north arrow") {
+					northArrowImage.startDrag(false);
+					northArrow = new NorthArrow();
+				}
+				
+				if (movingLayer == "bar-scale") scaleSpace.startDrag(false);
+				
+				if (movingLayer == "label") {
+					var p:Point = new Point(drawingSpace.mouseX, drawingSpace.mouseY);
+					var labelArray:Array = labelSpace.getObjectsUnderPoint(p);
+					
+					if (labelArray.length > 0) {
+						var selectedText:TextField = labelArray[0] as TextField;
+						selectedLabel = selectedText.parent as portrayal.label.Label;
+						selectedLabel.startDrag(false);
+						Mouse.cursor = "button";
+					}
+				}
+				
+				if (movingLayer == "balloon") {
+					if (pictPushedFlag) {
+						var i:int = int((drawingSpace.mouseX - pictBox.x) * drawingSpace.scaleX / 18.);
+						var j:int = int((drawingSpace.mouseY - pictBox.y) * drawingSpace.scaleY / 18.);
+						
+						if (i < 0 || i > 2 || j < 0 || j > 1) {
+							foundFlag = false;
+							pictPushedFlag = false;
+							pictBox.visible = false;
+							return;
+						}
+						
+						var pictNo:int = i + j * 3;
+						var attTypeName:String = multimediaType[pictNo];
+						var attName:String = "";
+						var fType:FeatureType = kit.applicationSchema.featureTypes[selectedFeature.typeName] as FeatureType;
+						trace(fType.name);
+						var attTypes:ArrayList = fType.attributeTypes;
+						for (i = 0; i < attTypes.length; i++) {
+							var attType:AttributeType = attTypes.getItemAt(i) as AttributeType;
+							if (attType.dataType == attTypeName) attName = attType.name;
+						}
+						
+						if (pictNo == 0 && attName != "") {
+							if (memoListWindow == null) {
+								memoListWindow = new MemoListWindow();
+							}
+							memoListWindow.open();
+							memoListWindow.title = "MapEditor >";
+							memoListWindow.memoArray = selectedFeature.attributes[attName] as ArrayList;
+							memoListWindow.addEventListener(Event.CLOSE, memoListWindowClose);
+						}
+						
+						if (pictNo == 1 && attName != "") {
+							if (urlListWindow == null) {
+								urlListWindow = new UrlListWindow();
+							}
+							urlListWindow.open();
+							urlListWindow.title = "MapEditor >";
+							urlListWindow.urlArray = selectedFeature.attributes[attName] as ArrayList;
+							urlListWindow.addEventListener(Event.CLOSE, urlListWindowClose);
+						}
+						
+						if (pictNo == 2 && attName != "") {
+							if (imageListWindow == null) {
+								imageListWindow = new ImageListWindow();
+							}
+							imageListWindow.open();
+							imageListWindow.title = "MapEditor >";
+							imageListWindow.kitURL = kitURL;
+							imageListWindow.imageArray = selectedFeature.attributes[attName] as ArrayList;
+							imageListWindow.addEventListener(Event.CLOSE, imageListWindowClose);
+						}
+						
+						if (pictNo == 3 && attName != "") {
+							if (videoListWindow == null) {
+								videoListWindow = new VideoListWindow();
+							}
+							videoListWindow.open();
+							videoListWindow.title = "MapEditor >";
+							videoListWindow.kitURL = kitURL;
+							videoListWindow.videoArray = selectedFeature.attributes[attName] as ArrayList;
+							videoListWindow.addEventListener(Event.CLOSE, videoListWindowClose);						
+						}
+						
+						if (pictNo == 4 && attName != "") {
+							if (soundListWindow == null) {
+								soundListWindow = new SoundListWindow();
+							}
+							soundListWindow.open();
+							soundListWindow.title = "MapEditor >";
+							soundListWindow.kitURL = kitURL;
+							soundListWindow.soundArray = selectedFeature.attributes[attName] as ArrayList;
+							soundListWindow.addEventListener(Event.CLOSE, soundListWindowClose);						
+						}
+					}
+					
+					if (pictNo == 5 && attName != "") {
+						if (addressListWindow == null) {
+							addressListWindow = new AddressListWindow();
+						}
+						
+						addressListWindow.open();
+						addressListWindow.title = "MapEditor >";
+						addressListWindow.kitURL = kitURL;
+						addressListWindow.addressArray = selectedFeature.attributes[attName] as ArrayList;
+						addressListWindow.addEventListener(Event.CLOSE, addressListWindowClose);						
+					}
+					
+					if (foundFlag) {
+						pictPushedFlag = true;
+						Mouse.show();
+					}
+					
+				}
+			}
+			
+			protected function memoListWindowClose(event:Event):void {
+				memoListWindow = null;
+			}
+			
+			protected function urlListWindowClose(event:Event):void {
+				urlListWindow = null;
+			}
+			
+			protected function imageListWindowClose(event:Event):void {
+				imageListWindow = null;
+			}
+			
+			protected function videoListWindowClose(event:Event):void {
+				videoListWindow = null;
+			}
+			
+			protected function soundListWindowClose(event:Event):void {
+				if (soundListWindow.sndChannel != null) 
+					soundListWindow.sndChannel.stop();
+
+				soundListWindow = null;
+			}
+			
+			protected function addressListWindowClose(event:Event):void {
+				addressListWindow = null;
+			}
+
+			
+			protected function mappingMainBox_mouseMoveHandler(event:MouseEvent):void
+			{
+				if (pictPushedFlag) return;
+				
+				var p:Point = new Point(drawingSpace.mouseX, drawingSpace.mouseY);
+				var crd:Coordinate2 = new Coordinate2();
+				crd.x = p.x;
+				crd.y = p.y;
+				
+				if (movingLayer == "label") {
+					var labelArray:Array = labelSpace.getObjectsUnderPoint(p);
+				
+					if (labelArray.length > 0) {
+						Mouse.cursor = "button";
+						labelArray = new Array();
+					}
+					else 
+						Mouse.cursor = "arrow";
+				}
+				
+				if (movingLayer == "balloon") {
+					//var symbolArray:Array = symbolSpace.getObjectsUnderPoint(p);
+					var pSym:PointSymbol;
+					var lSym:LineSymbol;
+					var aSym:AreaSymbol;
+					foundFlag = false;
+					
+					if (symbolSpace.numChildren > 0) {
+						var i:int = 0;						
+						while(!foundFlag && i < symbolSpace.numChildren) {
+							var sym:* = symbolSpace.getChildAt(i);
+							if (sym is PointSymbol) {
+								pSym = sym as PointSymbol;
+								selectedFeature = kit.featureList[pSym.point.featureID];
+								if (math.Distance.p2p(crd, pSym.point.position) < 5.0) foundFlag = true;
+							}
+					
+							if (sym is LineSymbol) {
+								lSym = sym as LineSymbol;
+								selectedFeature = kit.featureList[lSym.curve.featureID];
+								var ls:CoordinateArray = lSym.curve.coordinateSeqence();
+								if (math.Distance.p2ls(crd, ls) < 5.0) foundFlag = true;
+							}
+					
+							if (sym is AreaSymbol) {
+								aSym = sym as AreaSymbol;
+								selectedFeature = kit.featureList[aSym.surface.featureID];
+								var ring:SG_Ring = aSym.surface.exterior;
+								if (math.Relation.pointInRing(crd, ring)) foundFlag = true;
+							}
+							i++;
+						}
+						
+						if (!foundFlag) {
+							pictBox.visible = false;
+							Mouse.show();
+							return;
+						}
+						
+						// Found a symbol with multimedia attributes!
+						pictBox.visible = true;
+						Mouse.hide();
+						
+						var fType:FeatureType = kit.applicationSchema.featureTypes[selectedFeature.typeName] as FeatureType;
+						var selected:Number = 0.9;
+						var unselected:Number = 0.2;
+						picts = [0, 0, 0, 0, 0, 0];
+						
+						memoButton.alpha 	= unselected;
+						urlButton.alpha 	= unselected;
+						imageButton.alpha 	= unselected;
+						videoButton.alpha 	= unselected;
+						soundButton.alpha 	= unselected;
+						addressButton.alpha	= unselected;
+						
+						for (i = 0; i < fType.attributeTypes.length; i++) {
+							var attType:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+							
+							var multiIndex:int = -1;
+							for (var j:int = 0; j < 6; j++) {
+								if (attType.dataType == multimediaType[j]) {
+									multiIndex = j;
+									selectedAttArray = selectedFeature.attributes[attType.name] as ArrayList;
+								}
+							}
+							picts[multiIndex] = 1;
+							if (multiIndex == 0) memoButton.alpha 	= selected;
+							if (multiIndex == 1) urlButton.alpha 	= selected;
+							if (multiIndex == 2) imageButton.alpha 	= selected;
+							if (multiIndex == 3) videoButton.alpha 	= selected;
+							if (multiIndex == 4) soundButton.alpha 	= selected;
+							if (multiIndex == 5) addressButton.alpha= selected;
+						}
+						
+						pictBox.x = p.x - 26./scale;
+						pictBox.y = p.y - 17./scale;
+						pictBox.scaleX = 1./scale;
+						pictBox.scaleY = 1./scale;
+						
+					}
+				}
+			}
+			
+			public function setKit(kitFileURL:String):void {
+				var kitStream:FileStream = new FileStream();
+				var kitFile:File = new File();
+				kitFile.url = kitFileURL;  // THis url shall be an absolute path
+				try {
+					kitStream.open(kitFile, FileMode.READ);
+					
+					kit = kitStream.readObject();
+					
+					kitStream.close();
+				} catch(e:IOError) {
+					trace("kit open error:" + e);
+				}
+				
+				kitNameLabel.text = kitFile.name;
+				
+				var pathURL:String = kitFileURL;
+				var pathArray:Array = pathURL.split("/");
+				var kitURL:String = "";
+				for (var i:int = 0; i < pathArray.length - 1; i++) {
+					kitURL += pathArray[i] + "/";
+				}
+
+				kit.applicationSchema = this.openApplicationSchema(kitURL, kit.applicationSchemaURL);
+				
+				this.setKitParameters();
+				
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/mapEditor_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/mapEditor_en.html");
+				navigateToURL(request);
+			}
+			
+			protected function titleRadio_clickHandler(event:MouseEvent):void
+			{
+			}
+			
+			protected function titleButton_clickHandler(event:MouseEvent):void
+			{
+				titleEditor = new TitleEditor();
+				titleEditor.open();
+				titleEditor.title = "MapEditor >";
+				titleEditor.addEventListener(Event.CLOSE, titleEditorClose);
+				titleEditor.addEventListener(MouseEvent.CLICK, drawTitles);
+			}
+			
+			protected function titleEditorClose(event:Event):void {
+
+			}
+			
+			protected function drawTitles(event:Event):void {
+				if (!titleEditor.setButtonFlag) return;
+				
+				titleEditor.setButtonFlag = false;
+					
+				maintitle = titleEditor.mapTitle;
+				subtitle  = titleEditor.mapSubtitle;
+				
+				var maintxt:TextField = this.setTitleText(maintitle);
+				var subtxt:TextField  = this.setTitleText(subtitle);
+
+				maintxt.width  = 500;
+				maintxt.height = 100;
+								
+				titleSpace.x = maintitle.x;
+				titleSpace.y = maintitle.y;
+				
+				if (titleSpace.numChildren > 0) titleSpace.removeChildAt(0);
+				titleSpace.addChild(maintxt);
+				
+				subtxt.width = 500;
+				subtxt.height = 100;
+								
+				subtitleSpace.x = subtitle.x;
+				subtitleSpace.y = subtitle.y;
+				
+				if (subtitleSpace.numChildren > 0) subtitleSpace.removeChildAt(0);
+				subtitleSpace.addChild(subtxt);
+			}
+			
+			protected function setTitleText(title:Title):TextField {
+				var txt:TextField = new TextField();
+				
+				txt.text = title.text
+				
+				txt.width = 500;
+				txt.height = 100;
+				
+				var tf:TextFormat = new TextFormat();
+				tf.font = title.font;
+				tf.size = title.size;
+				tf.bold = title.bold;
+				tf.color = title.color;
+				txt.setTextFormat(tf);	
+				
+				return txt;
+			}
+			
+			protected function moveMarginalDropDown_changeHandler(event:IndexChangeEvent):void
+			{
+				var marginalItem:Array = new Array("title", "subtitle", "north arrow", "legend", "bar-scale", "label");
+				var i:int = moveMarginalDropDown.selectedIndex;
+				if (i == -1) return;
+				movingLayer = marginalItem[i];
+			}
+			
+			protected function northArrowRadio_clickHandler(event:MouseEvent):void
+			{
+			}
+			
+			protected function northArrowButton_clickHandler(event:MouseEvent):void
+			{
+				northArrowSelector = new NorthArrowSelector();
+				northArrowSelector.open();
+				northArrowSelector.addEventListener(Event.CLOSE, northArrowSelectorClose);
+				northArrowSelector.addEventListener(MouseEvent.CLICK, setNorthArrowSelector);
+			}
+			
+			protected function northArrowSelectorClose(event:Event):void {
+				
+			}
+			
+			protected function setNorthArrowSelector(event:Event):void {
+				arrowSource = northArrowSelector.imageSource;	
+			}
+						
+			protected function openMapButton_clickHandler(event:MouseEvent):void
+			{
+				// Open the map
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Map File", "*.map");
+					file.addEventListener(Event.SELECT, openMap);
+					file.browseForOpen("Open map   [キャンセル:CANCEL  保存:SAVE]");		
+				} catch (error:IOError) {
+					Alert.show("Error", "Open map error:" + error.message, 4, this);
+				}				
+			}
+			
+			protected function openMap(event:Event):void {
+				scaleSpace.visible  = true;
+
+				stream = new FileStream();
+				stream.open(file, FileMode.READ);
+				map = stream.readObject() as portrayal.map.Map;
+				stream.close();
+				mapFileLabel.text = file.name;
+				
+				drawingSpace.x = map.x;
+				drawingSpace.y = map.y;
+				drawingSpace.width  = map.width;
+				drawingSpace.height = map.height;
+				drawingSpace.scaleX = drawingSpace.scaleY = map.scale;
+				
+				// north arrow
+				if (map.northArrow != null) {
+					northArrow = map.northArrow;
+					arrowSource = map.northArrow.source;
+					northArrowImage.x = map.northArrow.x;
+					northArrowImage.y = map.northArrow.y;
+				}
+				
+				//barScale
+				scaleSpace.x = map.barScale.offset.x;
+				scaleSpace.y = map.barScale.offset.y;
+				
+				affineParam  = map.barScale.affine;
+				scale = map.scale;
+				
+				if (scaleSpace.numChildren > 0) scaleSpace.removeChildAt(0);
+				
+				barScale = new BarScale();
+				
+				barScale.drawScale(affineParam, scale);
+				scaleSpace.addChild(barScale);
+				
+				// lagend
+				if (legend == null) legend = new MapLegend();
+				if (map.legendParam != null) {
+					legend.param = map.legendParam;
+					legend.setLegend();
+					legendSpace.addChild(legend);
+					legendSpace.x = legend.param.offset.x;
+					legendSpace.y = legend.param.offset.y;
+				}
+				
+				// title
+				if (map.title != null) {
+					var maintxt:TextField = this.setTitleText(map.title);
+				
+					maintxt.width = 500;
+					maintxt.height = 100;
+				
+					maintitle = map.title;
+					titleSpace.x = map.title.x;
+					titleSpace.y = map.title.y;
+				
+					if (titleSpace.numChildren > 0) titleSpace.removeChildAt(0);
+					titleSpace.addChild(maintxt);
+				}
+				
+				// subtitle
+				if (map.subtitle != null) {
+					var subtxt:TextField  = this.setTitleText(map.subtitle);
+				
+					subtxt.width = 500;
+					subtxt.height = 100;
+				
+					subtitle = map.subtitle;
+					subtitleSpace.x = map.subtitle.x;
+					subtitleSpace.y = map.subtitle.y;
+				
+					if (subtitleSpace.numChildren > 0) subtitleSpace.removeChildAt(0);
+					subtitleSpace.addChild(subtxt);
+				}
+				
+				//labels
+				for (var i:int = 0; i < labelSpace.numChildren; i++) {
+					labelSpace.removeChildAt(0);	
+				}
+				for (i = 0; i < map.labelArray.length; i++) {
+					var lblObj:Object = map.labelArray.getItemAt(i) as Object;
+					var lbl:portrayal.label.Label = new portrayal.label.Label();
+					lbl.decode(lblObj);
+					labelSpace.addChild(lbl);
+				}
+				
+				// symbols
+				for (i = 0; i < symbolSpace.numChildren; i++) {
+					symbolSpace.removeChildAt(0);	
+				}
+				for (i = 0; i < map.symbolArray.length; i++) {
+					var symObj:Object = map.symbolArray.getItemAt(i) as Object;
+					
+					if (symObj.style is PointSymbolStyle) {
+						var pSym:PointSymbol = new PointSymbol();
+						pSym.decode(symObj);
+						symbolSpace.addChild(pSym);
+					}
+					
+					if (symObj.style is LineSymbolStyle)  {
+						var lSym:LineSymbol = new LineSymbol();
+						lSym.decode(symObj);
+						symbolSpace.addChild(lSym);
+					}
+					
+					if (symObj.style is AreaSymbolStyle)  {
+						var aSym:AreaSymbol = new AreaSymbol();
+						aSym.decode(symObj);
+						symbolSpace.addChild(aSym);
+					}
+				}
+			}
+			
+			protected function saveMapButton_clickHandler(event:MouseEvent):void
+			{
+				// Save the map
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Map File", "*.map");
+					file.addEventListener(Event.SELECT, saveMap);
+					file.browseForSave("Save map   [キャンセル:CANCEL  保存:SAVE]");		
+				} catch (error:IOError) {
+					Alert.show("Error", "Save map error:" + error.message, 4, this);
+				}
+			}
+			
+			protected function saveMap(event:Event):void {
+				// Map data compilation
+				map   = new portrayal.map.Map;
+				
+				map.x = drawingSpace.x;
+				map.y = drawingSpace.y;
+				map.width  = drawingSpace.width;
+				map.height = drawingSpace.height;
+				map.scale  = drawingSpace.scaleX;  // this value is always same as scaleY.
+				
+				// barScale
+				var offset:Coordinate2 = new Coordinate2();
+				offset.x = scaleSpace.x;
+				offset.y = scaleSpace.y;
+				map.barScale.offset = offset;
+	
+				if (kit != null) 
+					map.barScale.affine = kit.affineParam;
+				else
+					map.barScale.affine = affineParam;
+				
+				
+				// legend
+				if (legend != null) {
+					map.legendParam = legend.param;
+					map.legendParam.offset.x = legendSpace.x;
+					map.legendParam.offset.y = legendSpace.y;
+				}
+				
+				// north arrow
+				northArrow = new NorthArrow();
+				northArrow.source = arrowSource;
+				northArrow.x = northArrowImage.x;
+				northArrow.y = northArrowImage.y;
+				map.northArrow = northArrow;
+				
+				// titles
+				map.title      = maintitle;
+				map.subtitle   = subtitle;
+				
+				// label array
+				map.labelArray = new ArrayList();
+				var n:int = labelSpace.numChildren;
+				for (var i:int = 0; i < n; i++) {
+					var lbl:portrayal.label.Label = labelSpace.getChildAt(i) as portrayal.label.Label;
+					map.labelArray.addItem(lbl.encode());
+				}
+				
+				// symbol array
+				map.symbolArray = new ArrayList();
+				n = symbolSpace.numChildren;
+				for (i = 0; i < n; i++) {
+					var sym:* = symbolSpace.getChildAt(i);
+					map.symbolArray.addItem(sym.encode());
+				}
+				
+				var startIndex:int = file.nativePath.length - 4;
+				var suffix:String = file.nativePath.slice(startIndex);
+				if (suffix != ".map") file.nativePath += ".map";
+				
+				stream = new FileStream();
+				stream.open(file, FileMode.WRITE);
+				stream.writeObject(map);
+				stream.close();
+				mapFileLabel.text = file.name;
+			}
+			
+			protected function viewAttCheckBox_clickHandler(event:MouseEvent):void
+			{
+				if (viewAttCheckBox.selected) movingLayer = "balloon";
+				else {
+					pictBox.visible = false;
+					var marginalItem:Array = new Array("title", "subtitle", "north arrow", "legend", "bar-scale", "label");
+					var i:int = moveMarginalDropDown.selectedIndex;
+					if (i == -1) {
+						movingLayer = "";
+						return;
+					}
+					movingLayer = marginalItem[i];
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RadioButtonGroup id="moveMarginalInfoGroup"/>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>	
+	<s:Image x="10" y="10" source="@Embed(source='images/pictRepresentation1.png')"/>
+	<s:Label x="75" y="13" fontFamily="Arial" fontSize="16" text="Map Editor"/>
+	
+	<s:Button id="openKitButton" x="80" y="54" width="50" height="20" label="open"
+			  click="openKitButton_clickHandler(event)"/>
+	<s:Label x="136" y="61" width="27" height="10" fontSize="11" text="Kit"/>
+	<s:Label id="kitNameLabel" x="78" y="80" width="110" height="20" backgroundColor="#DADADA"
+			 fontSize="11" verticalAlign="middle"/>
+	<s:Button id="openportrayalSchemaButton" x="205" y="54" width="50" height="20" label="open"
+			  click="openportrayalSchemaButton_clickHandler(event)"/>
+	<s:Label x="260" y="53" width="48" height="29" fontSize="11" text="Portrayal Schema"/>
+	<s:Label id="portrayalSchemaLabel" x="203" y="80" width="114" height="20" backgroundColor="#DADADA"
+			 fontSize="11" verticalAlign="middle"/>
+	<s:Button id="drawMapButton" x="333" y="54" width="50" height="45" label="draw"
+			  click="drawMapButton_clickHandler(event)"/>
+	<s:Label x="388" y="73" fontSize="11" text="Map"/>
+	
+	<s:Panel id="mappingPanel" x="76" y="114" width="500" height="533" dropShadowVisible="false"
+			 fontSize="14" title="Map">
+		<s:Button id="resetButton" x="454" y="-27" width="35" height="20" label="-"
+				  click="resetButton_clickHandler(event)" color="#000000" cornerRadius="2"
+				  fontSize="12"/>
+		<s:Button id="largerButton" x="416" y="-27" width="35" height="20" label="&lt;"
+				  click="largerButton_clickHandler(event)" color="#000000" cornerRadius="2"
+				  fontSize="12"/>
+		<s:Button id="smallerButton" x="378" y="-27" width="35" height="20" label="&gt;"
+				  click="smallerButton_clickHandler(event)" color="#000000" cornerRadius="2"
+				  fontSize="12"/>
+		<s:Button id="dragButton" x="340" y="-27" width="35" height="20" label="off"
+				  click="dragButton_clickHandler(event)" color="#000000" cornerRadius="2"
+				  fontSize="12"/>
+		<s:DropDownList id="moveMarginalDropDown" x="107" y="-27" width="100" height="20"
+						change="moveMarginalDropDown_changeHandler(event)" fontSize="12"
+						labelField="item" prompt="select item">
+			<s:dataProvider>
+				<s:ArrayList>
+					<fx:Object item="title"/>
+					<fx:Object item="subtitle"/>
+					<fx:Object item="north arrow"/>
+					<fx:Object item="legend"/>
+					<fx:Object item="bar-scale"/>
+					<fx:Object item="label"/>
+				</s:ArrayList>
+			</s:dataProvider>
+		</s:DropDownList>
+		<s:Label x="74" y="-21" fontSize="12" text="Move"/>
+		<s:CheckBox id="viewAttCheckBox" x="230" y="-26" label="View attributes"
+					click="viewAttCheckBox_clickHandler(event)" fontSize="12"/>
+
+	</s:Panel>	
+	
+	<s:Group id="mappingMainBox" clipAndEnableScrolling="true" width="500" height="500" visible="true" x="76" y="147" 
+			 mouseDown="mappingMainBox_mouseDownHandler(event)"
+			 mouseUp="mappingMainBox_mouseUpHandler(event)"
+			 mouseMove="mappingMainBox_mouseMoveHandler(event)">
+		
+		<s:Group id="mappingBox" x="0" y="0" width="100%" height="100%">
+			<s:Group id="drawingSpace" x="0" y="0" width="100%" height="100%">
+				<s:SpriteVisualElement id="symbolSpace" x="0" y="0"/>
+				<s:SpriteVisualElement id="labelSpace"  x="0" y="0"/>
+				<s:Group id="pictBox" x="0" y="0" visible="false">
+					<s:Image id="memoButton"  source="images/MultimediaPict/memoPict.png" x="0" y="0"/>
+					<s:Image id="urlButton"   source="images/MultimediaPict/urlPict.png" x="18" y="0"/>
+					<s:Image id="imageButton" source="images/MultimediaPict/imagePict.png" x="36" y="0"/>	
+					<s:Image id="videoButton" source="images/MultimediaPict/videoPict.png" x="0" y="18"/>
+					<s:Image id="soundButton" source="images/MultimediaPict/soundPict.png" x="18" y="18"/>
+					<s:Image id="addressButton" source="images/MultimediaPict/addressPict.png" x="36" y="18"/>
+				</s:Group> 
+			</s:Group>
+	
+			<s:Group id="marginalSpace" x="0" y="0" width="100%" height="100%">
+				<s:SpriteVisualElement id="titleSpace" x="10" y="10"/>
+				<s:SpriteVisualElement id="subtitleSpace" x="10" y="60"/>
+				<s:SpriteVisualElement id="legendSpace" x="10" y="300"/>
+				<s:SpriteVisualElement id="scaleSpace" x="0" y="0"/>
+				<s:Image id="northArrowImage" x="400" y="10" source="{arrowSource}" />
+			</s:Group>				
+		</s:Group>
+		
+	</s:Group>
+	
+	<s:Label x="515" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="556" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:Rect x="439" y="38" width="136" height="62" >
+		<s:fill>
+			<s:SolidColor color="0x888888"/>
+		</s:fill>
+	</s:Rect>
+	<s:Button id="titleButton" x="446" y="46" width="123" height="20" label="set title / subtitle »"
+			  click="titleButton_clickHandler(event)"/>
+	<s:Button id="northArrowButton" x="446" y="73" width="123" height="20" label="set north arrow »"
+			  click="northArrowButton_clickHandler(event)"/>
+	<s:Button id="openMapButton" x="318" y="654" width="50" height="20" label="open"
+			  click="openMapButton_clickHandler(event)"/>
+	<s:Button id="saveMapButton" x="376" y="654" width="50" height="20" label="save"
+			  click="saveMapButton_clickHandler(event)"/>
+	<s:Label id="mapFileLabel" x="465" y="654" width="110" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
+	<s:Label x="433" y="659" text="Map"/>
+	
+</s:Window>

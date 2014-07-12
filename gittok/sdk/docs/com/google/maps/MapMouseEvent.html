@@ -1,0 +1,554 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="MapMouseEvent,com.google.maps.MapMouseEvent,CLICK,DOUBLE_CLICK,DRAG_END,DRAG_START,DRAG_STEP,MOUSE_DOWN,MOUSE_MOVE,MOUSE_UP,ROLL_OUT,ROLL_OVER,altKey,ctrlKey,latLng,shiftKey" name="keywords">
+<title>com.google.maps.MapMouseEvent</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'MapMouseEvent - Google Maps API for Flash Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?com/google/maps/MapMouseEvent.html&amp;com/google/maps/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MapMouseEvent</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class MapMouseEvent"); titleBar_setSubNav(true,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class MapMouseEvent</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">MapMouseEvent <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> <a href="MapEvent.html">MapEvent</a> <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> flash.events.Event</td>
+</tr>
+</table>
+<p></p>
+ A MapMouseEvent object is dispatched into the event flow whenever
+ a mouse-related event specific to the map or its overlays occurs.
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<div class="showHideLinks">
+<div class="hideInheritedProperty" id="hideInheritedProperty">
+<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
+</div>
+<div class="showInheritedProperty" id="showInheritedProperty">
+<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
+</div>
+</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#altKey">altKey</a> : Boolean<div class="summaryTableDescription">
+   Whether the Alt key was pressed.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#ctrlKey">ctrlKey</a> : Boolean<div class="summaryTableDescription">
+   Whether the Ctrl key was pressed.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#feature">feature</a> : Object<div class="summaryTableDescription">
+   The object that the event refers to (such as an instance of
+   <code>IMapType</code> for <code>MapEvent.MAPTYPE_ADDED</code> event
+   or an instance of <code>IControl</code> for
+   <code>MapEvent.CONTROL_REMOVED</code>).</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#latLng">latLng</a> : <a href="../maps/LatLng.html">LatLng</a>
+<div class="summaryTableDescription">[read-only]
+   LatLng over which the MapMouseEvent occurred.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#shiftKey">shiftKey</a> : Boolean<div class="summaryTableDescription">
+   Whether the Shift key was pressed.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#MapMouseEvent()">MapMouseEvent</a>(type:String, feature:Object, latLng:<a href="LatLng.html">LatLng</a>, bubbles:Boolean = false, cancellable:Boolean = false, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false)</div>
+<div class="summaryTableDescription">
+   Creates a MapMouseEvent object to pass as a parameter to event listeners.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+</table>
+</div>
+<a name="constantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Constants</div>
+<div class="showHideLinks">
+<div class="hideInheritedConstant" id="hideInheritedConstant">
+<a onclick="javascript:setInheritedVisible(false,'Constant');" href="#constantSummary" class="showHideLink"><img src="../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Constants</a>
+</div>
+<div class="showInheritedConstant" id="showInheritedConstant">
+<a onclick="javascript:setInheritedVisible(true,'Constant');" href="#constantSummary" class="showHideLink"><img src="../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Constants</a>
+</div>
+</div>
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#CLICK">CLICK</a> : String = "mapevent_click"<div class="summaryTableDescription">[static]
+   This event is fired when the map is clicked with the mouse.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#CONTROL_ADDED">CONTROL_ADDED</a> : String = "mapevent_controladded"<div class="summaryTableDescription">[static]
+   This event is fired on the map when a control is added to the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#CONTROL_REMOVED">CONTROL_REMOVED</a> : String = "mapevent_controlremoved"<div class="summaryTableDescription">[static]
+   This event is fired on the map when a control is removed from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#COPYRIGHTS_UPDATED">COPYRIGHTS_UPDATED</a> : String = "mapevent_copyrightsupdated"<div class="summaryTableDescription">[static]
+   This event is fired when the copyright that should be displayed on the
+   map is updated.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DOUBLE_CLICK">DOUBLE_CLICK</a> : String = "mapevent_doubleclick"<div class="summaryTableDescription">[static]
+   This event is fired when a double click is done on the map.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DRAG_END">DRAG_END</a> : String = "mapevent_dragend"<div class="summaryTableDescription">[static]
+   This event is fired when the user stops dragging the map.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DRAG_START">DRAG_START</a> : String = "mapevent_dragstart"<div class="summaryTableDescription">[static]
+   This event is fired when the user starts dragging the map.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#DRAG_STEP">DRAG_STEP</a> : String = "mapevent_dragstep"<div class="summaryTableDescription">[static]
+   This event is fired repeatedly while the user drags the map.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#FLY_TO_CANCELED">FLY_TO_CANCELED</a> : String = "mapevent_flytocanceled"<div class="summaryTableDescription">[static]
+   This event is fired when the map motion produced by a call to
+   <code>Map3D.flyTo()</code> is canceled via a call to
+   <code>Map3D.cancelFlyTo()</code>.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#FLY_TO_DONE">FLY_TO_DONE</a> : String = "mapevent_flytodone"<div class="summaryTableDescription">[static]
+   This event is fired when the map motion produced by a call to
+   <code>Map3D.flyTo()</code> completes.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#INFOWINDOW_CLOSED">INFOWINDOW_CLOSED</a> : String = "mapevent_infowindowclosed"<div class="summaryTableDescription">[static]
+   This event is fired when the info window closes.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#INFOWINDOW_CLOSING">INFOWINDOW_CLOSING</a> : String = "mapevent_infowindowclosing"<div class="summaryTableDescription">[static]
+   This event is fired before the info window closes.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#INFOWINDOW_OPENED">INFOWINDOW_OPENED</a> : String = "mapevent_infowindowopened"<div class="summaryTableDescription">[static]
+   This event is fired when the info window opens.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#MAP_PREINITIALIZE">MAP_PREINITIALIZE</a> : String = "mapevent_mappreinitialize"<div class="summaryTableDescription">[static]
+   This event is fired immediately before the map is initialized.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#MAP_READY">MAP_READY</a> : String = "mapevent_mapready"<div class="summaryTableDescription">[static]
+   This event is fired when map initialization is complete and isLoaded()
+   would return true.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#MAPTYPE_ADDED">MAPTYPE_ADDED</a> : String = "mapevent_maptypeadded"<div class="summaryTableDescription">[static]
+   This event is fired when a new MapType has been added to the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#MAPTYPE_CHANGED">MAPTYPE_CHANGED</a> : String = "maptypechanged"<div class="summaryTableDescription">[static]
+   This event is fired when another map type is selected.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#MAPTYPE_REMOVED">MAPTYPE_REMOVED</a> : String = "mapevent_maptyperemoved"<div class="summaryTableDescription">[static]
+   This event is fired when a MapType has been removed from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#MAPTYPE_STYLE_CHANGED">MAPTYPE_STYLE_CHANGED</a> : String = "mapevent_maptypestylechanged"<div class="summaryTableDescription">[static]
+   This event is fired when the style of a styled map type changes.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MOUSE_DOWN">MOUSE_DOWN</a> : String = "mapevent_mousedown"<div class="summaryTableDescription">[static]
+   This event is fired when the user presses the mouse button over the map.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MOUSE_MOVE">MOUSE_MOVE</a> : String = "mapevent_mousemove"<div class="summaryTableDescription">[static]
+   This event is fired when the mouse moves over the map.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MOUSE_UP">MOUSE_UP</a> : String = "mapevent_mouseup"<div class="summaryTableDescription">[static]
+   This event is fired when the user releases the mouse button over the map.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#OVERLAY_BEFORE_REMOVED">OVERLAY_BEFORE_REMOVED</a> : String = "mapevent_overlaybeforeremoved"<div class="summaryTableDescription">[static]
+   This event is fired when an overlay is about to be removed from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#OVERLAY_MOVED">OVERLAY_MOVED</a> : String = "mapevent_overlaymoved"<div class="summaryTableDescription">[static]
+   This event is fired when an overlay's position is changed.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#OVERLAY_REMOVED">OVERLAY_REMOVED</a> : String = "mapevent_overlayremoved"<div class="summaryTableDescription">[static]
+   This event is fired after a single overlay is removed from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#ROLL_OUT">ROLL_OUT</a> : String = "mapevent_rollout"<div class="summaryTableDescription">[static]
+   This event is fired when the user rolls the mouse off the map.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#ROLL_OVER">ROLL_OVER</a> : String = "mapevent_rollover"<div class="summaryTableDescription">[static]
+   This event is fired when the user rolls the mouse over the map.</div>
+</td><td class="summaryTableOwnerCol">MapMouseEvent</td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#SIZE_CHANGED">SIZE_CHANGED</a> : String = "mapevent_sizechanged"<div class="summaryTableDescription">[static]
+   This event is fired when the size of the map has changed.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#TILES_LOADED">TILES_LOADED</a> : String = "mapevent_tilesloaded"<div class="summaryTableDescription">[static]
+   This event is fired when all visible target tiles have finished loading.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#TILES_LOADED_PENDING">TILES_LOADED_PENDING</a> : String = "mapevent_tilesloadedpending"<div class="summaryTableDescription">[static]
+   This is a companion event to <code>MapEvent.TILES_LOADED</code>
+   indicating that loading of new tiles has been initiated and that
+   <code>MapEvent.TILES_LOADED</code> will be dispatched when all
+   tiles have loaded.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#VIEW_CHANGED">VIEW_CHANGED</a> : String = "mapevent_viewchanged"<div class="summaryTableDescription">[static]
+   This event is fired when the map view changes.</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="MapEvent.html#VISIBILITY_CHANGED">VISIBILITY_CHANGED</a> : String = "mapevent_visibilitychanged"<div class="summaryTableDescription">[static]
+   This event is fired when an overlay's visibility has changed
+   (from visible to hidden or vice-versa).</div>
+</td><td class="summaryTableOwnerCol"><a href="MapEvent.html">MapEvent</a></td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="altKey"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">altKey</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>altKey:Boolean</code>&nbsp;&nbsp;[read-write]<p>
+   Whether the Alt key was pressed.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get altKey():Boolean</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set altKey(value:Boolean):void</code>
+<br>
+</div>
+<a name="ctrlKey"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ctrlKey</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>ctrlKey:Boolean</code>&nbsp;&nbsp;[read-write]<p>
+   Whether the Ctrl key was pressed.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get ctrlKey():Boolean</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set ctrlKey(value:Boolean):void</code>
+<br>
+</div>
+<a name="latLng"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">latLng</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>latLng:<a href="../maps/LatLng.html">LatLng</a></code>&nbsp;&nbsp;[read-only]<p>
+   LatLng over which the MapMouseEvent occurred.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get latLng():<a href="../maps/LatLng.html">LatLng</a></code>
+<br>
+</div>
+<a name="shiftKey"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">shiftKey</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>shiftKey:Boolean</code>&nbsp;&nbsp;[read-write]<p>
+   Whether the Shift key was pressed.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get shiftKey():Boolean</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set shiftKey(value:Boolean):void</code>
+<br>
+</div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="MapMouseEvent()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MapMouseEvent</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function MapMouseEvent(type:String, feature:Object, latLng:<a href="LatLng.html">LatLng</a>, bubbles:Boolean = false, cancellable:Boolean = false, ctrlKey:Boolean = false, altKey:Boolean = false, shiftKey:Boolean = false)</code><p>
+   Creates a MapMouseEvent object to pass as a parameter to event listeners.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">type</span>:String</code> &mdash;  The type of the event, accessible as MapEvent.type.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">feature</span>:Object</code> &mdash;  Map feature (e.g. overlay, control or the map itself)
+       that the event relates to. For MapMouseEvent, this will match the
+       event target.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="LatLng.html">LatLng</a></code> &mdash;  Map's latLng.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">bubbles</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Determines whether the Event object participates in
+       the bubbling stage of the event flow. The default value is false.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">cancellable</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash;  Determines whether the Event object can be cancelled.
+       The default values is false.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">ctrlKey</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">altKey</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">shiftKey</span>:Boolean</code> (default = <code>false</code>)<code></code></td>
+</tr>
+</table>
+</div>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="CLICK"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">CLICK</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const CLICK:String = "mapevent_click"</code><p>
+   This event is fired when the map is clicked with the mouse. If the click
+   was on a clickable overlay (like a Marker, Polygon, etc), then then
+   an event is also fired on the overlay.
+   </p></div>
+<a name="DOUBLE_CLICK"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">DOUBLE_CLICK</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const DOUBLE_CLICK:String = "mapevent_doubleclick"</code><p>
+   This event is fired when a double click is done on the map. Note that
+   this event will not be fired if the double click was on a marker or
+   other clickable overlay.
+   </p></div>
+<a name="DRAG_END"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">DRAG_END</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const DRAG_END:String = "mapevent_dragend"</code><p>
+   This event is fired when the user stops dragging the map.
+   </p></div>
+<a name="DRAG_START"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">DRAG_START</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const DRAG_START:String = "mapevent_dragstart"</code><p>
+   This event is fired when the user starts dragging the map.
+   </p></div>
+<a name="DRAG_STEP"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">DRAG_STEP</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const DRAG_STEP:String = "mapevent_dragstep"</code><p>
+   This event is fired repeatedly while the user drags the map.
+   </p></div>
+<a name="MOUSE_DOWN"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MOUSE_DOWN</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MOUSE_DOWN:String = "mapevent_mousedown"</code><p>
+   This event is fired when the user presses the mouse button over the map.
+   </p></div>
+<a name="MOUSE_MOVE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MOUSE_MOVE</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MOUSE_MOVE:String = "mapevent_mousemove"</code><p>
+   This event is fired when the mouse moves over the map.
+   </p></div>
+<a name="MOUSE_UP"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MOUSE_UP</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MOUSE_UP:String = "mapevent_mouseup"</code><p>
+   This event is fired when the user releases the mouse button over the map.
+   </p></div>
+<a name="ROLL_OUT"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ROLL_OUT</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const ROLL_OUT:String = "mapevent_rollout"</code><p>
+   This event is fired when the user rolls the mouse off the map.
+   </p></div>
+<a name="ROLL_OVER"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ROLL_OVER</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const ROLL_OVER:String = "mapevent_rollover"</code><p>
+   This event is fired when the user rolls the mouse over the map.
+   </p></div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

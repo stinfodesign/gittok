@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="396" height="154"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import dataTypes.place.URL;
+			
+			import mx.collections.ArrayList;
+			
+			import spark.events.IndexChangeEvent;
+			
+			[Bindable]
+			public var urlArray:ArrayList;
+			
+			public function initializeApp():void {
+				this.move(300, 400);
+			}
+			
+			protected function urlList_changeHandler(event:IndexChangeEvent):void
+			{
+				var urlIndex:int = urlList.selectedIndex;
+				if (urlIndex == -1) return;
+				
+				var url:URL = urlArray.getItemAt(urlIndex) as URL;
+				
+				navigateToURL (new URLRequest(url.value));
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="77" y="15" text="URLs" fontSize="16"/>
+	<s:DropDownList id="urlList" x="82" y="63" width="254" height="20" 
+					dataProvider="{urlArray}" labelField="value"
+					change="urlList_changeHandler(event)"></s:DropDownList>
+	<s:Label x="84" y="46" text="Select URL"/>
+</s:Window>

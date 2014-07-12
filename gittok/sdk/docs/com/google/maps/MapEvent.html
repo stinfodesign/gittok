@@ -1,0 +1,567 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="MapEvent,com.google.maps.MapEvent,CONTROL_ADDED,CONTROL_REMOVED,COPYRIGHTS_UPDATED,FLY_TO_CANCELED,FLY_TO_DONE,INFOWINDOW_CLOSED,INFOWINDOW_CLOSING,INFOWINDOW_OPENED,MAPTYPE_ADDED,MAPTYPE_CHANGED,MAPTYPE_REMOVED,MAPTYPE_STYLE_CHANGED,MAP_PREINITIALIZE,MAP_READY,OVERLAY_BEFORE_REMOVED,OVERLAY_MOVED,OVERLAY_REMOVED,SIZE_CHANGED,TILES_LOADED,TILES_LOADED_PENDING,VIEW_CHANGED,VISIBILITY_CHANGED,feature" name="keywords">
+<title>com.google.maps.MapEvent</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'MapEvent - Google Maps API for Flash Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?com/google/maps/MapEvent.html&amp;com/google/maps/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MapEvent</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class MapEvent"); titleBar_setSubNav(true,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class MapEvent</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">MapEvent <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> flash.events.Event</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Subclasses</td><td><a href="services/DirectionsEvent.html">DirectionsEvent</a>, <a href="services/ElevationEvent.html">ElevationEvent</a>, <a href="services/GeocodingEvent.html">GeocodingEvent</a>, <a href="../maps/MapAttitudeEvent.html">MapAttitudeEvent</a>, <a href="../maps/MapMouseEvent.html">MapMouseEvent</a>, <a href="../maps/MapMoveEvent.html">MapMoveEvent</a>, <a href="../maps/MapZoomEvent.html">MapZoomEvent</a>, <a href="services/MaxZoomEvent.html">MaxZoomEvent</a></td>
+</tr>
+</table>
+<p></p>
+ A MapEvent object is dispatched into the event flow whenever map-specific
+ events occur. Map events may be dispatched by the map object itself or its
+ elements (i.e. overlays/infowindows etc).
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#feature">feature</a> : Object<div class="summaryTableDescription">[read-only]
+   The object that the event refers to (such as an instance of
+   <code>IMapType</code> for <code>MapEvent.MAPTYPE_ADDED</code> event
+   or an instance of <code>IControl</code> for
+   <code>MapEvent.CONTROL_REMOVED</code>).</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#MapEvent()">MapEvent</a>(type:String, feature:Object, bubbles:Boolean = false, cancellable:Boolean = false)</div>
+<div class="summaryTableDescription">
+   Creates an Event object to pass as a parameter to event listeners.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+</table>
+</div>
+<a name="constantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Constants</div>
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#CONTROL_ADDED">CONTROL_ADDED</a> : String = "mapevent_controladded"<div class="summaryTableDescription">[static]
+   This event is fired on the map when a control is added to the map.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#CONTROL_REMOVED">CONTROL_REMOVED</a> : String = "mapevent_controlremoved"<div class="summaryTableDescription">[static]
+   This event is fired on the map when a control is removed from the map.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#COPYRIGHTS_UPDATED">COPYRIGHTS_UPDATED</a> : String = "mapevent_copyrightsupdated"<div class="summaryTableDescription">[static]
+   This event is fired when the copyright that should be displayed on the
+   map is updated.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FLY_TO_CANCELED">FLY_TO_CANCELED</a> : String = "mapevent_flytocanceled"<div class="summaryTableDescription">[static]
+   This event is fired when the map motion produced by a call to
+   <code>Map3D.flyTo()</code> is canceled via a call to
+   <code>Map3D.cancelFlyTo()</code>.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#FLY_TO_DONE">FLY_TO_DONE</a> : String = "mapevent_flytodone"<div class="summaryTableDescription">[static]
+   This event is fired when the map motion produced by a call to
+   <code>Map3D.flyTo()</code> completes.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#INFOWINDOW_CLOSED">INFOWINDOW_CLOSED</a> : String = "mapevent_infowindowclosed"<div class="summaryTableDescription">[static]
+   This event is fired when the info window closes.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#INFOWINDOW_CLOSING">INFOWINDOW_CLOSING</a> : String = "mapevent_infowindowclosing"<div class="summaryTableDescription">[static]
+   This event is fired before the info window closes.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#INFOWINDOW_OPENED">INFOWINDOW_OPENED</a> : String = "mapevent_infowindowopened"<div class="summaryTableDescription">[static]
+   This event is fired when the info window opens.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MAP_PREINITIALIZE">MAP_PREINITIALIZE</a> : String = "mapevent_mappreinitialize"<div class="summaryTableDescription">[static]
+   This event is fired immediately before the map is initialized.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MAP_READY">MAP_READY</a> : String = "mapevent_mapready"<div class="summaryTableDescription">[static]
+   This event is fired when map initialization is complete and isLoaded()
+   would return true.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MAPTYPE_ADDED">MAPTYPE_ADDED</a> : String = "mapevent_maptypeadded"<div class="summaryTableDescription">[static]
+   This event is fired when a new MapType has been added to the map.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MAPTYPE_CHANGED">MAPTYPE_CHANGED</a> : String = "maptypechanged"<div class="summaryTableDescription">[static]
+   This event is fired when another map type is selected.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MAPTYPE_REMOVED">MAPTYPE_REMOVED</a> : String = "mapevent_maptyperemoved"<div class="summaryTableDescription">[static]
+   This event is fired when a MapType has been removed from the map.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MAPTYPE_STYLE_CHANGED">MAPTYPE_STYLE_CHANGED</a> : String = "mapevent_maptypestylechanged"<div class="summaryTableDescription">[static]
+   This event is fired when the style of a styled map type changes.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#OVERLAY_BEFORE_REMOVED">OVERLAY_BEFORE_REMOVED</a> : String = "mapevent_overlaybeforeremoved"<div class="summaryTableDescription">[static]
+   This event is fired when an overlay is about to be removed from the map.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#OVERLAY_MOVED">OVERLAY_MOVED</a> : String = "mapevent_overlaymoved"<div class="summaryTableDescription">[static]
+   This event is fired when an overlay's position is changed.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#OVERLAY_REMOVED">OVERLAY_REMOVED</a> : String = "mapevent_overlayremoved"<div class="summaryTableDescription">[static]
+   This event is fired after a single overlay is removed from the map.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#SIZE_CHANGED">SIZE_CHANGED</a> : String = "mapevent_sizechanged"<div class="summaryTableDescription">[static]
+   This event is fired when the size of the map has changed.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#TILES_LOADED">TILES_LOADED</a> : String = "mapevent_tilesloaded"<div class="summaryTableDescription">[static]
+   This event is fired when all visible target tiles have finished loading.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#TILES_LOADED_PENDING">TILES_LOADED_PENDING</a> : String = "mapevent_tilesloadedpending"<div class="summaryTableDescription">[static]
+   This is a companion event to <code>MapEvent.TILES_LOADED</code>
+   indicating that loading of new tiles has been initiated and that
+   <code>MapEvent.TILES_LOADED</code> will be dispatched when all
+   tiles have loaded.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#VIEW_CHANGED">VIEW_CHANGED</a> : String = "mapevent_viewchanged"<div class="summaryTableDescription">[static]
+   This event is fired when the map view changes.</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#VISIBILITY_CHANGED">VISIBILITY_CHANGED</a> : String = "mapevent_visibilitychanged"<div class="summaryTableDescription">[static]
+   This event is fired when an overlay's visibility has changed
+   (from visible to hidden or vice-versa).</div>
+</td><td class="summaryTableOwnerCol">MapEvent</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="feature"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">feature</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>feature:Object</code>&nbsp;&nbsp;[read-only]<p>
+   The object that the event refers to (such as an instance of
+   <code>IMapType</code> for <code>MapEvent.MAPTYPE_ADDED</code> event
+   or an instance of <code>IControl</code> for
+   <code>MapEvent.CONTROL_REMOVED</code>).
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get feature():Object</code>
+<br>
+</div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="MapEvent()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MapEvent</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function MapEvent(type:String, feature:Object, bubbles:Boolean = false, cancellable:Boolean = false)</code><p>
+   Creates an Event object to pass as a parameter to event listeners.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">type</span>:String</code> &mdash;  The type of the event, accessible as MapEvent.type.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">feature</span>:Object</code> &mdash;  Map feature (overlay, control or the map itself)
+       that the event relates to. A MapEvent may be dispatched either on the
+       map itself (in which case the target and feature will be different
+       as the map will be the target) or on a feature (in which case
+       the feature field will match the target).
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">bubbles</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Determines whether the Event object participates in
+       the bubbling stage of the event flow. The default value is false.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">cancellable</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash;  Determines whether the Event object can be cancelled.
+       The default value is false.
+   </td>
+</tr>
+</table>
+</div>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="CONTROL_ADDED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">CONTROL_ADDED</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const CONTROL_ADDED:String = "mapevent_controladded"</code><p>
+   This event is fired on the map when a control is added to the map.
+   </p></div>
+<a name="CONTROL_REMOVED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">CONTROL_REMOVED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const CONTROL_REMOVED:String = "mapevent_controlremoved"</code><p>
+   This event is fired on the map when a control is removed from the map.
+   </p></div>
+<a name="COPYRIGHTS_UPDATED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">COPYRIGHTS_UPDATED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const COPYRIGHTS_UPDATED:String = "mapevent_copyrightsupdated"</code><p>
+   This event is fired when the copyright that should be displayed on the
+   map is updated. Dispatched by MapType and CopyrightCollection objects.
+   </p></div>
+<a name="FLY_TO_CANCELED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">FLY_TO_CANCELED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const FLY_TO_CANCELED:String = "mapevent_flytocanceled"</code><p>
+   This event is fired when the map motion produced by a call to
+   <code>Map3D.flyTo()</code> is canceled via a call to
+   <code>Map3D.cancelFlyTo()</code>.
+   The <code>flyyTo()</code> and <code>flyToCancel()</code> methods
+   are only supported on 3-D maps.
+   </p></div>
+<a name="FLY_TO_DONE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">FLY_TO_DONE</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const FLY_TO_DONE:String = "mapevent_flytodone"</code><p>
+   This event is fired when the map motion produced by a call to
+   <code>Map3D.flyTo()</code> completes.
+   The <code>flyTo()</code> method is currently only supported on 3-D maps.
+   </p></div>
+<a name="INFOWINDOW_CLOSED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">INFOWINDOW_CLOSED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const INFOWINDOW_CLOSED:String = "mapevent_infowindowclosed"</code><p>
+   This event is fired when the info window closes. The event
+   INFOWINDOW_CLOSING is fired before this event. If a currently
+   open info window is reopened at a different point using another call
+   to openInfoWindow(), the events INFOWINDOW_CLOSING,
+   INFOWINDOW_CLOSED and INFOWINDOW_OPENED are fired in this order.
+   </p></div>
+<a name="INFOWINDOW_CLOSING"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">INFOWINDOW_CLOSING</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const INFOWINDOW_CLOSING:String = "mapevent_infowindowclosing"</code><p>
+   This event is fired before the info window closes.
+   </p></div>
+<a name="INFOWINDOW_OPENED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">INFOWINDOW_OPENED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const INFOWINDOW_OPENED:String = "mapevent_infowindowopened"</code><p>
+   This event is fired when the info window opens.
+   </p></div>
+<a name="MAP_PREINITIALIZE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MAP_PREINITIALIZE</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MAP_PREINITIALIZE:String = "mapevent_mappreinitialize"</code><p>
+   This event is fired immediately before the map is initialized. This event
+   indicates the correct time to call setInitOptions(...) on the map,
+   passing an instance of MapOptions that contains options that the map
+   should have when first displayed.
+   </p></div>
+<a name="MAP_READY"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MAP_READY</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MAP_READY:String = "mapevent_mapready"</code><p>
+   This event is fired when map initialization is complete and isLoaded()
+   would return true. This means position, zoom and map type are all
+   initialized, but tile images may still be loading.
+   </p></div>
+<a name="MAPTYPE_ADDED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MAPTYPE_ADDED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MAPTYPE_ADDED:String = "mapevent_maptypeadded"</code><p>
+   This event is fired when a new MapType has been added to the map.
+   Note that this is a separate event from MAPTYPE_CHANGED, which indicates
+   that the map type has changed, rather than just the map can now support
+   this neew map type.
+   </p></div>
+<a name="MAPTYPE_CHANGED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MAPTYPE_CHANGED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MAPTYPE_CHANGED:String = "maptypechanged"</code><p>
+   This event is fired when another map type is selected.
+   </p></div>
+<a name="MAPTYPE_REMOVED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MAPTYPE_REMOVED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MAPTYPE_REMOVED:String = "mapevent_maptyperemoved"</code><p>
+   This event is fired when a MapType has been removed from the map.
+   </p></div>
+<a name="MAPTYPE_STYLE_CHANGED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MAPTYPE_STYLE_CHANGED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MAPTYPE_STYLE_CHANGED:String = "mapevent_maptypestylechanged"</code><p>
+   This event is fired when the style of a styled map type changes.
+   </p></div>
+<a name="OVERLAY_BEFORE_REMOVED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">OVERLAY_BEFORE_REMOVED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const OVERLAY_BEFORE_REMOVED:String = "mapevent_overlaybeforeremoved"</code><p>
+   This event is fired when an overlay is about to be removed from the map.
+   </p></div>
+<a name="OVERLAY_MOVED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">OVERLAY_MOVED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const OVERLAY_MOVED:String = "mapevent_overlaymoved"</code><p>
+   This event is fired when an overlay's position is changed. This currently
+   applies only to markers and is fired either at the end
+   of dragging or after a call to setLatLng().
+   </p></div>
+<a name="OVERLAY_REMOVED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">OVERLAY_REMOVED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const OVERLAY_REMOVED:String = "mapevent_overlayremoved"</code><p>
+   This event is fired after a single overlay is removed from the map.
+   Developers can use this event to do final clean-up on an overlay instance.
+   </p></div>
+<a name="SIZE_CHANGED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">SIZE_CHANGED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const SIZE_CHANGED:String = "mapevent_sizechanged"</code><p>
+   This event is fired when the size of the map has changed.
+   </p></div>
+<a name="TILES_LOADED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">TILES_LOADED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const TILES_LOADED:String = "mapevent_tilesloaded"</code><p>
+   This event is fired when all visible target tiles have finished loading.
+      </p><p>Target tiles are the tiles that we ideally use to render the map. The
+   distinction between target tiles and all tiles is relevant mainly when
+   displaying a 3-D map. The target tiles make up the set of tiles that
+   we wish to use to render the map. However, while any of these tiles
+   have not yet been loaded we may use lower or higher resolution tiles
+   in their place so that holes do not appear in the rendered map.</p>
+      <p>Note that this event is dispatched repeatedly during normal
+   panning and zooming of the map.</p>
+      <p><b>If you wish to detect when the map's tiles are first loaded,
+   attach a listener for this event while handling
+   <code>MapEvent.MAP_PREINITIALIZE</code>. You should also set the initial
+   map view (center, zoom, map type, and, if you are showing a 3-D map,
+   attitude) within this function as this initial map view is the one to
+   which the subsequent <code>TILES_LOADED</code> event will apply.</b></p>
+      <p>This event is dispatched by the map and by
+   <code>TileLayerOverlay</code> instances.</p>
+   </div>
+<a name="TILES_LOADED_PENDING"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">TILES_LOADED_PENDING</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const TILES_LOADED_PENDING:String = "mapevent_tilesloadedpending"</code><p>
+   This is a companion event to <code>MapEvent.TILES_LOADED</code>
+   indicating that loading of new tiles has been initiated and that
+   <code>MapEvent.TILES_LOADED</code> will be dispatched when all
+   tiles have loaded.
+      </p><p><code>MapEvent.TILES_LOADED_PENDING</code>
+   may be dispatched multiple times before <code>MapEvent.TILES_LOADED</code>
+   is dispatched if we are repeatedly loading more tiles. If you want to
+   use a timeout to perform appropriate action should tiles not load, the API
+   behavior allows flexibility in whether you count the time from when the
+   first or the last tile load is initiated.</p>
+   </div>
+<a name="VIEW_CHANGED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">VIEW_CHANGED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const VIEW_CHANGED:String = "mapevent_viewchanged"</code><p>
+   This event is fired when the map view changes.
+   </p></div>
+<a name="VISIBILITY_CHANGED"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">VISIBILITY_CHANGED</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const VISIBILITY_CHANGED:String = "mapevent_visibilitychanged"</code><p>
+   This event is fired when an overlay's visibility has changed
+   (from visible to hidden or vice-versa).
+   </p></div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

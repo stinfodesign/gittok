@@ -1,0 +1,2236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" 
+		  title="Editor"
+		  width="524" height="628"
+		  creationComplete="initializeApp()" backgroundColor="#faeed1">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import components.modeling.FeatureWindow;
+			
+			import coordinateReference.*;
+			
+			import dataTypes.place.*;
+			import dataTypes.simpleDataTypes.*;
+			import dataTypes.spatialGeometry.*;
+			
+			import flash.filesystem.*;
+			import flash.utils.Dictionary;
+			
+			import flashx.textLayout.tlf_internal;
+			
+			import gfm.*;
+			
+			import instanceModel.*;
+			
+			import math.*;
+			
+			import message.InfoWindow;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.core.mx_internal;
+			import mx.events.AIREvent;
+			import mx.events.CloseEvent;
+			import mx.events.ListEvent;
+			import mx.messaging.management.Attribute;
+			
+			import portrayal.symbolStyle.*;
+			
+			import spark.events.IndexChangeEvent;
+			
+			protected var info:InfoWindow = new InfoWindow();
+			
+			private var kitFile:File;
+			private var kitStream:FileStream;
+			private var apsFile:File;
+			private var apsStream:FileStream = new FileStream();
+
+			private var applicationSchema:ApplicationSchema = new ApplicationSchema();
+			
+			protected var atts:ArrayList;	// attributeTypes, variable using for recursive process	
+			protected var assos:ArrayList;	// associationTypes
+			protected var opts:ArrayList;	// operationTypes
+			
+			protected var featureSet:FeatureSet;
+			//protected var featureSetArray:Dictionary = new Dictionary();
+			protected var concreteType:FeatureType;
+			protected var f:Feature;
+			protected var idForDelete:String;
+			
+			protected var associationSet:AssociationSet;
+			protected var associationSetArray:Dictionary = new Dictionary();
+			protected var associationType:AssociationType;
+			
+			public var geometryWindow:GeometryWindow;
+			public var imageWindow:ImageWindow;
+			public var videoWindow:VideoWindow;
+			public var soundWindow:SoundWindow;
+			public var urlWindow:UrlWindow;
+			public var addressWindow:AddressWindow;
+			public var memoWindow:MemoWindow;
+			public var crsEditor:CRSEditor;
+			public var fromListWindow:ListWindow;
+			public var toListWindow:ListWindow;
+			
+			public var kitURL:String;
+			
+			public var crs:CRS;
+			
+			[Bindable]
+			public var kit:Kit;
+			
+			[Bindable]
+			protected var attributeTList:ArrayList 	= new ArrayList();
+			
+			[Bindable]
+			protected var assoAttributeList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var concreteTypes:ArrayList;
+			
+			[Bindable]
+			protected var associationTypes:ArrayList;
+			
+			[Bindable]
+			protected var feature:Feature;
+			
+			[Bindable]
+			public var association:Association;
+			
+			[Bindable]
+			public var fromFeatures:ArrayList;
+			
+			[Bindable]
+			public var toFeatures:ArrayList;
+			
+			[Bindable]
+			protected var idList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var assIdList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var attValueList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var assoAttValueList:ArrayList = new ArrayList();
+			
+			public function initializeApp(): void {
+				this.move(250, 100);
+				
+				// Basic Types
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
+				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
+				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
+				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				
+				// Geometry
+				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
+				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
+				registerClassAlias("dataTypes.spatialGeometry.GeodeticCoordinate", GeodeticCoordinate);
+				registerClassAlias("dataTypes.spatialGeometry.PlaneRectangularCoordinate", PlaneRectangularCoordinate);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);				
+				registerClassAlias("dataTypes.spatialGeometry.SG_Object", SG_Object);				
+				registerClassAlias("dataTypes.spatialGeometry.SG_OrientableCurve", SG_OrientableCurve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Ring", SG_Ring);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Point", SG_Point);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Primitive", SG_Primitive);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Rectangle", SG_Rectangle);				
+				registerClassAlias("dataTypes.spatialGeometry.SG_Surface", SG_Surface);
+				
+				// Location
+				registerClassAlias("dataTypes.place.Address", Address);
+				registerClassAlias("dataTypes.place.URL", URL);
+				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
+				registerClassAlias("dataTypes.place.VideoURL", VideoURL);
+				registerClassAlias("dataTypes.place.SoundURL", SoundURL);
+			
+				// General Feature Model
+				registerClassAlias("gfm.AttributeType", AttributeType);
+				registerClassAlias("gfm.OperationType", OperationType);
+				registerClassAlias("gfm.FeatureType", FeatureType);
+				registerClassAlias("gfm.AssociationType", AssociationType);
+				registerClassAlias("gfm.ApplicationSchema", ApplicationSchema);	
+				registerClassAlias("gfm.ArgAttPair", ArgAttPair);
+				
+				// Instance Model
+				registerClassAlias("instanceModel.Kit", Kit);
+				registerClassAlias("instanceModel.FeatureSet", FeatureSet);
+				registerClassAlias("instanceModel.Feature", Feature);
+				registerClassAlias("instanceModel.AssociationSet", AssociationSet);
+				registerClassAlias("instanceModel.Association", Association);
+				
+				// File
+				registerClassAlias("flash.filesystem.File", File);
+							
+				// Symbol styles
+				registerClassAlias("symbolStyle.PointSymbolStyle", PointSymbolStyle);
+				registerClassAlias("symbolStyle.LineSymbolStyle", LineSymbolStyle);
+				registerClassAlias("symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("symbolStyle.SymbolStyleSchema", SymbolStyleDictionary);
+				registerClassAlias("symbolStyle.SymbolStyle", SymbolStyle);
+				
+				// Affine parameter
+				registerClassAlias("math.AffineParam", AffineParam);
+				
+				//Coordinate ReferenceSystem
+				registerClassAlias("coordinateReference.CRS", CRS);
+				registerClassAlias("coordinateReference.Axis", Axis);
+				registerClassAlias("coordinateReference.CoordinateSystem", CoordinateSystem);
+				registerClassAlias("coordinateReference.Ellipsoid", Ellipsoid);
+				registerClassAlias("coordinateReference.GeodeticDatum", GeodeticDatum);
+				registerClassAlias("coordinateReference.PrimeMeridian", PrimeMeridian);
+				registerClassAlias("coordinateReference.ProjectionSystem", ProjectionSystem);
+				registerClassAlias("coordinateReference.PSOrigin", IdentifiedCoordinate);
+				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);		
+							
+			}
+			
+			/*
+			Open Application Shcema
+			*/
+			
+			public function openSchemaButton_clickHandler(event:MouseEvent):void
+			{
+				if (kit != null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Do you realy call Application Schema?", true);
+					info.addEventListener(MouseEvent.CLICK, openAlertClickHandler);
+				}
+				else {
+					openApplicationSchema();
+				}
+			}
+			
+			private function openAlertClickHandler(event:Event):void {
+				if (info.button == "YES") openApplicationSchema();
+				info.close();
+				info = null;
+			}
+			
+			private function openApplicationSchema():void {
+				try {				
+					apsFile = new File();
+					var filter:FileFilter = new FileFilter("ApplicationSchema File", "*.aps");
+					apsFile.addEventListener(Event.SELECT, callAppStream);
+					apsFile.browseForOpen("Open file    [キャンセル:CANCEL  選択:SELECT]", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+			}
+			
+			private function callAppStream(event:Event):void {
+				
+				kit = new Kit();
+				var pathURL:String = apsFile.url;
+				var pathArray:Array = pathURL.split("/");
+				kitURL = "";
+				for (var i:int = 0; i < pathArray.length - 1; i++) {
+					kitURL += pathArray[i] + "/";
+				}
+				
+				appSchemaLabel.text = apsFile.name;
+				
+				try {
+					apsStream.open(apsFile, FileMode.READ);
+					applicationSchema = apsStream.readObject();
+					apsStream.close();
+				} catch (e:IOError) {
+					trace("application schema open error:" + e);					
+				}
+				
+				kit.applicationSchemaURL = apsFile.name;
+				
+				/*
+				Concrete Feature Types -----------
+				*/
+				concreteTypes = applicationSchema.constructConcreteTypes();
+				
+				//Create feature set array
+				kit.featureSetArray = new Dictionary();
+				for (i = 0; i < concreteTypes.length; i++) {
+					concreteType = concreteTypes.getItemAt(i) as FeatureType;
+					// Initialize feature set
+					featureSet = new FeatureSet();
+					featureSet.features = new Dictionary();
+					featureSet.typeID = concreteType.name;
+					
+					kit.featureSetArray[concreteType.name] = featureSet;
+				}
+				
+				//Initilize association types
+				associationTypes = new ArrayList();
+				for each(var assType:AssociationType in applicationSchema.associationTypes) {
+					associationTypes.addItem(assType);
+				}				
+			}
+
+			/*
+			Open and save Kit -------------
+			*/
+			
+			//Open Kit 
+			
+			protected function openKitButton_clickHandler(event:MouseEvent):void
+			{
+				// Open kit
+				try {
+					kitFile = new File();
+					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
+					kitFile.addEventListener(Event.SELECT, openKit);
+					kitFile.browseForOpen("Open kit file    [キャンセル:CANCEL  選択:SELECT]", [filter]);
+
+				} catch (error:IOError) {
+					info = new InfoWindow();
+					info.initInfo("Alert", error.message, false);
+				}
+			}
+			
+			private function openKit(event:Event):void {
+				this.setKit(kitFile.url);
+			}
+			
+			public function setKit(kitFileURL:String):void {
+				// Remind that this function is called from other components
+				kitStream = new FileStream();
+				if (kitFile == null) {
+					kitFile = new File();
+					kitFile.url = kitFileURL;
+				}
+				try {
+					kitStream.open(kitFile, FileMode.READ);
+					kit = kitStream.readObject();
+					kitStream.close();
+				} catch(e:IOError) {
+					trace("kit open error:" + e);
+				}
+				
+				var pathURL:String = kitFile.url;
+				var pathArray:Array = pathURL.split("/");
+				kitURL = "";
+				for (var i:int = 0; i < pathArray.length - 1; i++) {
+					kitURL += pathArray[i] + "/";
+				}
+				
+				appSchemaLabel.text = kit.applicationSchemaURL;
+				if (kit.crsURL != null) crsLabel.text = kit.crsURL;
+				
+				apsStream = new FileStream();
+				apsFile = new File();
+				apsFile.url = kitURL + kit.applicationSchemaURL;
+				
+				try {
+					apsStream.open(apsFile, FileMode.READ);
+					applicationSchema = apsStream.readObject();
+					apsStream.close();
+				} catch (e:IOError) {
+					trace("application schema open error:" + e);
+				}
+				
+				//Set parameters
+				kitName.text = kitFile.name;
+				
+				concreteTypes = applicationSchema.constructConcreteTypes();
+				
+				//Set feature instance
+				//featureSetArray = kit.featureSetArray;
+				
+				//Set association instance
+				associationSetArray = kit.associationSetArray;
+				if (associationSetArray == null) {
+					associationSetArray = new Dictionary();
+				}
+				
+				//Initilize association types
+				associationTypes = new ArrayList();
+				for each(var assType:AssociationType in applicationSchema.associationTypes) {
+					associationTypes.addItem(assType);
+				}				
+			}
+			
+			//Save Kit
+			
+			protected function saveKitButton_clickHandler(event:MouseEvent):void
+			{
+				// Save the kit
+				try {
+					kitFile = new File();
+					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
+					kitFile.addEventListener(Event.SELECT, saveKit);
+					kitFile.browseForSave("Save kit file    [キャンセル:CANCEL  保存:SAVE]");		
+				} catch (error:IOError) {
+					info = new InfoWindow();
+					info.initInfo("Alert", error.message, false);				} 
+			}
+			
+			private function saveKit(event:Event):void {	
+
+				if (geometryWindow != null) {
+					kit = geometryWindow.kit;
+				}
+				
+				//kit.featureSetArray = featureSetArray;
+				kit.associationSetArray = associationSetArray;
+				
+				if (crsLabel.text != "") 
+					kit.crsURL = crsLabel.text;
+				
+				try {
+					var startIndex:int = kitFile.nativePath.length - 4;
+					var suffix:String = kitFile.nativePath.slice(startIndex);
+					if (suffix != ".kit") kitFile.nativePath += ".kit";					
+					
+					kitStream = new FileStream();
+					kitStream.open(kitFile, FileMode.WRITE);
+				
+					kit.kitURL = kitURL;
+					kit.applicationSchema = applicationSchema;
+					//var kitXML:XML = kit.getXML();
+					//kit.setXML(kitXML);
+				
+					kitStream.writeObject(kit);
+					kitStream.close();
+				} catch (e:IOError) {
+					trace("kit close error:" + e);
+				}
+				
+				kitName.text = kitFile.name;
+							
+				Mouse.cursor = "arrow";
+			}
+			
+			
+			
+			protected function featureTypeList_changeHandler(event:IndexChangeEvent):void
+			{
+				concreteType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
+				
+				featureSet = kit.featureSetArray[concreteType.name] as FeatureSet;
+				
+				feature = null; // this is necessary, because when feature set is null but feature is non-null;
+				
+				if (featureSet != null) {
+					idList = new ArrayList();	// idList is a dataprovider for instanceIDList
+					var features:Dictionary = featureSet.features;
+					var m:int = 0;
+					for each (var feature:Feature in features) {
+						idList.addItem(feature.id);	
+						m++;
+					}
+				}
+				instanceIDList.selectedIndex = -1;
+				instanceIDList.prompt = "";
+				attValueList = new ArrayList();
+				
+				//show attribute type list on "attributeGrid"
+				attributeTList = concreteType.attributeTypes;
+			}
+						
+			protected function associationTypeList_changeHandler(event:IndexChangeEvent):void
+			{
+				var asTypeIndex:int = associationTypeList.selectedIndex;
+				if (asTypeIndex == -1) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Select association type.", false);
+					return;					
+				}
+				associationType = associationTypes.getItemAt(asTypeIndex) as AssociationType;
+				
+				fromFeatures = new ArrayList();
+				toFeatures = new ArrayList();
+				
+				assIdList = new ArrayList();
+				associationIDList.prompt = "";
+				
+				associationSet = associationSetArray[associationType.name] as AssociationSet;
+				if (associationSet == null) {
+					associationSet = new AssociationSet();
+					associationSet.associations = new Dictionary();
+					associationSet.typeID = associationType.name;
+					associationSetArray[associationType.name] = associationSet;
+
+				}
+				else {
+					assIdList = new ArrayList();
+					var associations:Dictionary = associationSet.associations;
+					for each (var association:Association in associations) {
+						assIdList.addItem(association.id);	
+					}
+				}
+				
+				fromFeatureTypeLabel.text	= associationType.from.name;
+				if (associationType.from.proxyName != null) {
+					fromProxyLabel.text     = associationType.from.proxyName;
+					var pxType:AttributeType = associationType.from.getProxyType();
+					fromProxyTypeLabel.text = pxType.dataType;
+				}
+				toFeatureTypeLabel.text   	= associationType.to.name;
+				if (associationType.to.proxyName != null) {
+					toProxyLabel.text = associationType.to.proxyName;
+					pxType = associationType.to.getProxyType();
+					toProxyTypeLabel.text = pxType.dataType;
+				}
+				roleNameLabel.text			= associationType.roleName;
+				correspondenceLabel.text	= associationType.correspondence;
+				assoStyleLabel.text			= associationType.style;
+				
+				assoAttributeList = associationType.attributeTypes;
+
+			}
+			
+			protected function addInstButton_clickHandler(event:MouseEvent):void
+			{
+				// if this button is pushed without type selection ...
+				if (concreteType == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Select feature type before add instance.", false);
+					return;
+				}
+				
+				// feature definition
+				feature = new Feature();
+				feature.typeName = concreteType.name;
+
+				kit.featureList[feature.id] = feature;
+				
+				if (featureSet == null) {
+					featureSet = new FeatureSet()
+					featureSet.typeID = feature.typeName;
+					kit.featureSetArray[featureSet.typeID] = featureSet;
+				}
+				
+				featureSet.features[feature.id] = feature;
+
+				idList.addItem(feature.id);
+				instanceIDList.selectedItem = feature.id;
+				
+				attValueList = new ArrayList();
+			}
+			
+			protected function instanceIDList_changeHandler(event:IndexChangeEvent):void
+			{
+				var id:String = instanceIDList.selectedItem as String;
+				feature = featureSet.features[id] as Feature;
+				
+				//clear attribute value list on "valueGrid"
+				attValueList = null;	
+			}
+			
+			protected function deleteInstanceButton_clickHandler(event:MouseEvent):void
+			{
+				if (instanceIDList.selectedIndex == -1) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Select instance ID before delete.", false);
+					return;
+				}
+				
+				
+				idForDelete = instanceIDList.selectedItem as String;
+								
+				f = featureSet.features[idForDelete] as Feature;
+				
+				if (f == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Select instance ID before delete.", false);
+					return;
+				}
+				
+				var fType:FeatureType = applicationSchema.featureTypes[f.typeName] as FeatureType;
+				for (var i:int = 0; i < fType.links.length; i++) {
+					var assoType:AssociationType = fType.links.getItemAt(i) as AssociationType;
+					if (assoType.style == "composite") {
+						info = new InfoWindow();
+						info.initInfo("Alert", "Feature associates with other feature as composite. Are you share?", true);
+						info.addEventListener(MouseEvent.CLICK, yesOrNoDelete);
+					}
+				}
+				
+				idList.removeItem(idForDelete);
+				delete featureSet.features[idForDelete];
+				delete kit.featureList[idForDelete];
+				instanceIDList.prompt = "";
+			}
+			
+			private function yesOrNoDelete(event:MouseEvent):void {
+				if (info.button == "YES") {
+					this.deleteFeature(f);
+				
+					idList.removeItem(idForDelete);
+					instanceIDList.prompt = "";
+				
+					attValueList = new ArrayList();
+				}
+				info.close();
+			}
+			
+			private function deleteFeature(f:Feature):void {
+				// The feature cannot be removed as long as it is linked by other features, 
+				if (f.connectedBy.length > 0) {
+ 					info = new InfoWindow();
+					info.initInfo("Alert", "This feature cannot be removed, because it is connected by another feature.", false);
+					return;										
+				}
+				
+				// delete FEATURE ID in the geometry attributes before delete a feature
+				var attTypes:ArrayList = concreteType.attributeTypes;
+				for each(var attType:AttributeType in attTypes) {
+					var dType:String = attType.dataType;
+					if (dType == "SG_Point" || dType == "SG_Curve" || dType == "SG_Surface" || dType == "SG_Complex") {
+						var valueList:ArrayList = f.attributes[attType.name] as ArrayList;
+						if (valueList != null) {
+							var n:int = valueList.length;
+							for (var j:int = 0; j < n; j++) {
+								var geom:SG_Primitive = valueList.getItemAt(j) as SG_Primitive;
+								geom.featureID = geom.attributeName = "";
+							}
+						}
+					}
+				}
+				
+				// delete ADDRESS in the addressList, if the feature has address as its asstribute
+				for each(attType in attTypes) {
+					dType = attType.dataType;
+					if (dType == "Address") {
+						valueList = f.attributes[attType.name] as ArrayList;
+						if (valueList != null) {
+							n = valueList.length;
+							for (j = 0; j < n; j++) {
+								var ad:Address = valueList.getItemAt(j) as Address;
+								delete kit.addressList[ad.id];
+							}
+						}
+					}
+				}
+				
+				/* If the feature links to other features by association, associations are removed.
+				   however if association style is "composite", 
+				   not only association but also associated features are removed recursively.
+				*/
+				
+				var m:int = f.connects.length;
+				for (var i:int = 0; i < m; i++) {
+					var assoc:Association = f.connects.getItemAt(i) as Association;
+					var assoType:AssociationType = applicationSchema.associationTypes[assoc.typeName] as AssociationType;
+					var assocID:String = assoc.id;
+					n = assoc.relateTo.length;
+					for (j = 0; j < n; j++) {
+						var relateToF:Feature = assoc.relateTo.getItemAt(j) as Feature;
+						relateToF.connectedBy = new ArrayList();
+						if (assoType.style == "composite") deleteFeature(relateToF);
+					}
+					associationSet = associationSetArray[assoc.typeName] as AssociationSet;
+					delete associationSet.associations[assocID];	
+					delete kit.associationList[assocID];
+				}
+				
+				// delete a feature
+				var fSet:FeatureSet = kit.featureSetArray[f.typeName] as FeatureSet;
+				delete fSet.features[f.id];
+				delete kit.featureList[f.id];
+				
+			}
+		
+			
+			protected function attributeGrid_clickHandler(event:MouseEvent):void
+			{
+				if (attributeGrid.selectedItem == null ) return;
+				
+				var attType:AttributeType = attributeGrid.selectedItem  as AttributeType;
+				
+				var tp:String = attType.dataType;
+				
+				//show attribute value on "valueGrid"
+				if (feature != null) {
+					attValueList = feature.attributes[attType.name] as ArrayList;					
+				}
+										
+				if (tp.search("SG_") > -1) {
+					if (geometryWindow == null) {
+						this.openGeometryWindow();
+						if (kitName.text != "" && kit.baseMapImageURL != "null") 
+							geometryWindow.opViewStack.selectedChild = geometryWindow.orientationView;
+						geometryWindow.addEventListener(MouseEvent.MOUSE_DOWN, geometryWindowCheckFeature);
+					}
+				}
+				
+				if (tp == "ImageURL") {
+					//Image
+					if (imageWindow == null) {
+						imageWindow = new ImageWindow();
+						imageWindow.open();
+						imageWindow.title = "Editor >";
+						imageWindow.addEventListener(Event.CLOSE, imageWindowClose);
+					}
+				}
+				
+				if (tp == "VideoURL") {
+					// Video
+					if (videoWindow == null) {
+						videoWindow = new VideoWindow();
+						videoWindow.open();
+						videoWindow.title = "Editor >";
+						videoWindow.addEventListener(Event.CLOSE, videoWindowClose);
+					}
+				}
+				
+				if (tp == "SoundURL") {
+					//Sound
+					if (soundWindow == null) {
+						soundWindow = new SoundWindow();
+						soundWindow.open();
+						soundWindow.title = "Editor >";
+						soundWindow.addEventListener(Event.CLOSE, soundWindowClose);
+					}
+				}
+				
+				if (tp == "URL") {
+					//URL
+					if (urlWindow == null) {
+						urlWindow = new UrlWindow();
+						urlWindow.open();
+						urlWindow.title = "Editor >";
+						urlWindow.addEventListener(Event.CLOSE, urlWindowClose);
+					}
+				}
+
+				if (tp == "Address") {
+					//Address
+					if (addressWindow == null) {
+						addressWindow = new AddressWindow();
+						addressWindow.open();
+						addressWindow.title = "Editor >";
+						addressWindow.addEventListener(Event.CLOSE, addressWindowClose);
+					}
+				}
+				
+				if (tp == "Memo") {
+					//Memo
+					if (memoWindow == null) {
+						memoWindow = new MemoWindow();
+						memoWindow.open();
+						memoWindow.title = "Editor >";
+						memoWindow.addEventListener(Event.CLOSE, memoWindowClose);
+					}
+				}
+			}
+			
+			protected function openGeometryWindow():void {
+				geometryWindow = new GeometryWindow();
+				geometryWindow.kit = kit;
+				geometryWindow.kitURL = kitURL;
+				geometryWindow.applicationSchema = applicationSchema;
+				geometryWindow.open();
+				geometryWindow.title = "Editor >";
+				geometryWindow.clearAnnotationLayer();
+				geometryWindow.addEventListener(Event.CLOSE, geometryWindowClose);				
+			}
+			
+			protected function geometryWindowCheckFeature(event:MouseEvent):void {
+				var geom:SG_Primitive = geometryWindow.searchedGM;
+				if (geom != null) {
+					if (geom.featureID != "") {
+						var m:int = idList.length;
+						for (var i:int = 0; i < m; i++) {
+							var fid:String = idList.getItemAt(i) as String;
+							if (geom.featureID == fid) {
+								instanceIDList.selectedItem = geom.featureID.toString();
+								instanceIDList.prompt = geom.featureID.toString();
+								feature = featureSet.features[geom.featureID] as Feature;
+								//clear attribute value list on "valueGrid"
+								
+								attValueList = null;								
+								return;
+							}
+						}
+					}
+					
+					instanceIDList.selectedIndex = -1;
+					instanceIDList.prompt = "";
+					feature = null;
+					attValueList = null;
+				}
+			}
+			
+			protected function geometryWindowClose(event:Event):void {
+				// Collect newest geometries
+				
+				kit = geometryWindow.kit;
+				
+				if (kit.affineParam == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Geometry entry is not completed.", false);
+					kit = new Kit();
+					kit.applicationSchemaURL = appSchemaLabel.text
+				}
+
+				geometryWindow = null;
+				Mouse.cursor = "arrow";
+			}
+			
+			protected function imageWindowClose(event:Event):void {
+				imageWindow = null;
+
+			}
+			
+			protected function videoWindowClose(event:Event):void {
+				videoWindow.videoView.stop();
+				videoWindow = null;
+				valueGrid.selectedItem = null;
+			}
+			
+			protected function soundWindowClose(event:Event):void {
+				if (soundWindow.sndChannel != null) 
+						soundWindow.sndChannel.stop();
+				soundWindow = null;
+			}
+			
+			protected function urlWindowClose(event:Event):void {
+				urlWindow = null;
+			}
+			
+			protected function addressWindowClose(event:Event):void {
+				kit.addressList[addressWindow.address.id] = addressWindow.address;
+				valueGrid.selectedItem = null;
+				addressWindow.close();
+				addressWindow = null;
+			}
+			
+			protected function memoWindowClose(event:Event):void {
+				memoWindow = null;
+			}
+
+			/*
+			Add, Search and Delete an attribute value
+			*/
+			
+			// add
+			protected function addValueButton_clickHandler(event:MouseEvent):void
+			{
+				if (feature == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Select feature instance before adding attributes.", false); 
+					return;
+				}
+				
+				if (attributeGrid.selectedItem == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Select attribute before adding value.", false);
+					return;					
+				}
+
+				var attType:AttributeType = attributeGrid.selectedItem as AttributeType;
+				/*
+				if (attType.derived == "/") {
+					info = new InfoWindow();
+					info.initInfo("Alert", "You cannot add attribute value as this is derived.", false);
+					return;
+				}
+				*/
+				
+				attValueList = feature.attributes[attType.name] as ArrayList;
+				if (attValueList == null) attValueList = new ArrayList();
+				
+				if ((attType.multiplicity == false) && (attValueList.length  > 0)) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Attribute value must be one", false);
+					return;
+				}
+				
+				var tp:String = attType.dataType;
+				
+				if (tp.substring(0, 3) == "SG_") {
+					if (geometryWindow == null) {
+						info = new InfoWindow();
+						info.initInfo("Alert", "No geometry is selected.", false);
+						return;												
+					}
+					
+					if (geometryWindow.searchedGM == null) {
+						info = new InfoWindow();
+						info.initInfo("Alert", "Select geometry before.", false);
+						return;						
+					}
+					var str:String = getQualifiedClassName(geometryWindow.searchedGM);
+					var strArray:Array = str.split("::");
+					var geomTp:String = strArray[1];
+				
+				
+					if (tp == "SG_Point") {
+						if (tp != geomTp) {
+							info = new InfoWindow();
+							info.initInfo("Alert", "Geometry type is different!", false);
+							return;						
+						}
+						
+						geometryWindow.searchedGM.featureID = feature.id;
+						geometryWindow.searchedGM.attributeName = attType.name;
+						attValueList.addItem(geometryWindow.searchedGM);
+						feature.attributes[attType.name] = attValueList;
+					}
+				
+					if (tp == "SG_Curve") {
+						if (tp != geomTp) {
+							info = new InfoWindow();
+							info.initInfo("Alert", "Geometry type is different!", false);
+							return;						
+						}
+					
+						geometryWindow.searchedGM.featureID = feature.id;
+						geometryWindow.searchedGM.attributeName = attType.name;
+						attValueList.addItem(geometryWindow.searchedGM);
+						feature.attributes[attType.name] = attValueList;
+					}
+				
+					if (tp == "SG_Surface") {
+						if (tp != geomTp) {
+							info = new InfoWindow();
+							info.initInfo("Alert", "Geometry type is different!", false);
+							return;						
+						}
+					
+						geometryWindow.searchedGM.featureID = feature.id;
+						geometryWindow.searchedGM.attributeName = attType.name;
+						attValueList.addItem(geometryWindow.searchedGM);
+						feature.attributes[attType.name] = attValueList;
+					}
+				}
+
+				if (tp == "Address") {
+					if (addressWindow == null || addressWindow.address == null) {
+						info = new InfoWindow();
+						info.initInfo("Alert", "No address is entered!", false);
+						return;						
+					}
+
+					addressWindow.address.zipCode = addressWindow.zipInput.text;
+					addressWindow.address.element = addressWindow.addressInput.text;
+					addressWindow.address.country = addressWindow.countryLabel.text;
+					
+					var ad:Address = addressWindow.address;
+					attValueList.addItem(ad);
+					feature.attributes[attType.name] = attValueList;
+					kit.addressList[ad.id] = ad;
+				}
+				
+				if (tp == "CharacterString") {
+					var cs:CharacterString = new CharacterString();
+					if (valueInput.text == "") {
+						info = new InfoWindow();
+						info.initInfo("Alert", "Input text before.", false);
+						return;						
+					}
+					cs.value = valueInput.text;
+					cs.featureID = feature.id;
+
+					attValueList.addItem(cs);
+					valueInput.text = "";
+					feature.attributes[attType.name] = attValueList;
+				}
+				
+				if (tp == "Memo") {
+					var mm:Memo = new Memo();
+					if (memoWindow == null || memoWindow.memoArea.text == "") {
+						info = new InfoWindow();
+						info.initInfo("Alert", "No memo is entered.", false);
+						return;						
+					}
+					
+					mm.value = memoWindow.memoArea.text;
+					mm.featureID = feature.id;
+					attValueList.addItem(mm);
+					
+					feature.attributes[attType.name] = attValueList;
+					
+					memoWindow.close();
+					
+				}
+				
+				if (tp == "Real") {
+					var rl:Real = new Real();
+					if (valueInput.text == "") {
+						info = new InfoWindow();
+						info.initInfo("Alert", "Input value before.", false);
+						return;						
+					}					
+					rl.value = parseFloat(valueInput.text);
+					rl.featureID = feature.id;
+
+					attValueList.addItem(rl);
+					valueInput.text = "";
+					feature.attributes[attType.name] = attValueList;					
+				}
+				
+				if (tp == "Integer") {
+					var inte:Integer = new Integer();
+					if (valueInput.text == "") {
+						info = new InfoWindow();
+						info.initInfo("Alert", "Input value before.", false);
+						return;						
+					}					
+					inte.value = parseInt(valueInput.text);
+					inte.featureID = feature.id;
+
+					attValueList.addItem(inte);
+					valueInput.text = "";
+					feature.attributes[attType.name] = attValueList;					
+				}
+				
+				if (tp == "Bool") {
+					var bl:Bool = new Bool();
+					if (valueInput.text == "") {
+						info = new InfoWindow();
+						info.initInfo("Alert", "Input value before.", false);
+						return;						
+					}					
+					if (valueInput.text == "true") 
+						bl.value = true;
+					else if (valueInput.text == "false") 
+						bl.value = false;
+					else {
+						info = new InfoWindow();
+						info.initInfo("Alert", "Value must be true or false.", false);
+						return;
+					}
+					bl.featureID = feature.id;
+
+					attValueList.addItem(bl);
+					valueInput.text = "";
+					feature.attributes[attType.name] = attValueList;										
+				}
+				
+				if (tp == "ImageURL") {
+					var iml:ImageURL = new ImageURL();
+					
+					if (imageWindow == null || imageWindow.imageFile == null) {
+						info = new InfoWindow();
+						info.initInfo("Alert", "No image is selected.", false);
+						return;
+					}
+
+					iml.value = "images/" + imageWindow.imageFile.name;
+					attValueList.addItem(iml);
+					feature.attributes[attType.name] = attValueList;					
+				}
+				
+				if (tp == "VideoURL") {
+					var vdl:VideoURL = new VideoURL();
+					
+					if (videoWindow == null || videoWindow.videoFile == null) {
+						info = new InfoWindow();
+						info.initInfo("Alert", "No video is selected.", false);
+						return;
+					}
+
+					vdl.value = "videos/" + videoWindow.videoFile.name;
+					attValueList.addItem(vdl);
+					feature.attributes[attType.name] = attValueList;					
+				}
+				
+				if (tp == "SoundURL") {
+					var snd:SoundURL = new SoundURL();
+					
+					if (soundWindow == null || soundWindow.soundFile == null) {
+						info = new InfoWindow();
+						info.initInfo("Alert", "No sound is selected.", false);
+						return;
+					}
+					
+					snd.value = "sounds/" + soundWindow.soundFile.name;
+					attValueList.addItem(snd);
+					feature.attributes[attType.name] = attValueList;					
+				}
+				
+				if (tp == "URL") {
+					var url:URL = new URL();
+					
+					if (urlWindow == null || urlWindow.urlInput.text == "") {
+						info = new InfoWindow();
+						info.initInfo("Alert", "No url is selected.", false);
+						return;
+					}
+
+					url.value = urlWindow.urlInput.text;
+					attValueList.addItem(url);
+					feature.attributes[attType.name] = attValueList;					
+				}
+				
+			}
+
+			// search
+			protected function valueGrid_clickHandler(event:MouseEvent):void
+			{
+				var i:int = valueGrid.selectedIndex;
+				
+				var attType:AttributeType = attributeGrid.selectedItem as AttributeType;
+				var tp:String = attType.dataType;
+				
+				if (tp.search("SG_") > -1) {
+					if (geometryWindow == null) {
+						this.openGeometryWindow();
+						if (kitName.text != "" && kit.baseMapImageURL != "null") 
+							geometryWindow.opViewStack.selectedChild = geometryWindow.orientationView;
+					}
+					geometryWindow.clearAnnotationLayer();
+					
+					var primi:SG_Primitive = attValueList.getItemAt(i) as SG_Primitive;
+					
+  					geometryWindow.displaySGPrimitive("circle", primi);	
+				}
+				
+				if (tp == "ImageURL") {
+					if (imageWindow == null) {
+						imageWindow = new ImageWindow();
+					}
+					imageWindow.open();
+					imageWindow.title = "Editor >";
+					imageWindow.addEventListener(Event.CLOSE, imageWindowClose);
+					
+					var imageLoc:Object = valueGrid.selectedItem as Object;
+					var il:ImageURL = new ImageURL();
+					il.value = kitURL + imageLoc.value;
+					imageWindow.displayAttributeValue(il);
+				}
+				
+				if (tp == "VideoURL") {
+					if (videoWindow == null) {
+						videoWindow = new VideoWindow();
+					}
+					videoWindow.open();
+					videoWindow.title = "Editor >";
+					videoWindow.addEventListener(Event.CLOSE, videoWindowClose);
+					
+					var videoLoc:VideoURL = valueGrid.selectedItem as VideoURL;
+					var vl:VideoURL = new VideoURL();
+					vl.value = kitURL + videoLoc.value;
+					videoWindow.displayAttributeValue(vl);
+				}
+				
+				if (tp == "SoundURL") {
+					if (soundWindow == null) {
+						soundWindow = new SoundWindow();
+					}
+					soundWindow.open();
+					soundWindow.title = "Editor >";
+					soundWindow.addEventListener(Event.CLOSE, soundWindowClose);
+					
+					var soundLoc:Object = valueGrid.selectedItem as Object;
+					var sl:SoundURL = new SoundURL();
+					sl.value = kitURL + soundLoc.value;					
+					soundWindow.displayAttributeValue(sl);
+				}
+				
+				if (tp == "URL") {
+					if (urlWindow == null) {
+						urlWindow = new UrlWindow();
+					}
+					urlWindow.open();
+					urlWindow.title = "Editor >";
+					urlWindow.addEventListener(Event.CLOSE, urlWindowClose);
+					
+					urlWindow.displayAttributeValue(valueGrid.selectedItem as URL);
+				}
+				
+				if (tp == "Address") {
+					if (addressWindow == null) {
+						addressWindow = new AddressWindow();
+					}
+
+					addressWindow.open();
+					addressWindow.title = "Editor >";
+					addressWindow.address = valueGrid.selectedItem as Address;
+					addressWindow.displayAttributeValue(valueGrid.selectedItem as Address);							
+					addressWindow.addEventListener(Event.CLOSE, addressWindowClose);
+				}
+				
+				if (tp == "Memo") {
+					if (memoWindow == null) {
+						memoWindow = new MemoWindow();
+					}
+					
+					memoWindow.open();
+					memoWindow.title = "Editor >";
+					var mm:Memo = valueGrid.selectedItem as Memo;
+					memoWindow.memoArea.text = mm.value;
+					memoWindow.addEventListener(Event.CLOSE, memoWindowClose);
+				}
+			}
+
+			// delete
+			protected function deleteValueButton_clickHandler(event:MouseEvent):void
+			{
+				if (attValueList == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "No attribute.", false);
+					return;
+				}
+				
+				if (valueGrid.selectedItem == null || valueGrid.selectedIndex == -1) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "No row in value grid is selected.", false);
+					return;
+				}
+				
+				var attType:AttributeType = attributeGrid.selectedItem as AttributeType;				
+				var tp:String = attType.dataType;
+				
+				if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
+					var primi:SG_Primitive = valueGrid.selectedItem as SG_Primitive;
+					
+					if (tp == "SG_Point") primi = kit.pointList[primi.id] as SG_Point;
+					if (tp == "SG_Curve")   primi = kit.curveList[primi.id] as SG_Curve;
+					if (tp == "SG_Surface") primi = kit.surfaceList[primi.id] as SG_Surface;
+					primi.featureID = primi.attributeName = "";
+					
+					geometryWindow.searchedGM.featureID = "";
+					
+					attValueList.removeItem(primi);
+				}
+				else if (tp == "Address") {
+					var adID:String = valueGrid.selectedItem as String;
+					attValueList.removeItem(adID);
+					delete kit.addressList[adID];
+				}
+				else if (tp == "Memo") {
+					attValueList.removeItemAt(valueGrid.selectedIndex);
+				}
+				else if (tp == "CharacterString" || tp == "Real"|| tp == "Integer" || 
+					tp == "Bool" || tp == "ImageURL" || tp == "VideoURL" || 
+					tp == "SoundURL" || tp == "URL") {					
+					attValueList.removeItemAt(valueGrid.selectedIndex);
+				}
+			}
+
+			protected function addAssoIDButton_clickHandler(event:MouseEvent):void
+			{				
+				if (associationType == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Select association type before.", false);
+					return;
+				}
+				
+				association = new Association();
+				association.typeName = associationType.name;
+				
+				fromFeatures = new ArrayList();
+				toFeatures   = new ArrayList();
+				
+				association.relateFrom	= fromFeatures;
+				association.relateTo	= toFeatures;
+				
+				/*
+				var fSet:FeatureSet = featureSetArray[associationType.from.name] as FeatureSet;
+				for each (var f:Feature in fSet.features) {
+					fromFeatures.addItem(f);	
+				}
+
+				fSet = featureSetArray[associationType.to.name] as FeatureSet;
+				for each (f in fSet.features) {
+					toFeatures.addItem(f);	
+				}
+				*/
+				
+				associationSet.associations[association.id] = association;
+				kit.associationList[association.id] = association;
+				
+				assIdList.addItem(association.id);
+				associationIDList.prompt = association.id;
+				associationIDList.selectedItem = association.id;
+			}
+						
+			protected function deleteAssoIDButton_clickHandler(event:MouseEvent):void
+			{
+				if (assIdList.length == 0 ) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "There is no instances.", false);
+					return;
+				}
+				
+				if (associationIDList.selectedIndex == -1) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "No instance is selected.", false);
+					return;
+				}
+				
+				association = associationSet.associations[associationIDList.selectedItem];
+				
+				// Remove relate from
+				if (association.relateFrom != null) {
+					var fromFs:ArrayList = association.relateFrom;
+					for (var i:int = 0; i < fromFs.length; i++) {
+						var fromFeature:Feature = fromFs.getItemAt(i) as Feature;
+						fromFeature.connects.removeItem(association);	
+					}
+				}
+				
+				// Remove relate to
+				if (association.relateTo != null) {
+					var toFs:ArrayList = association.relateTo;
+					for (i = 0; i < toFs.length; i++) {
+						var toFeature:Feature = toFs.getItemAt(i) as Feature;
+						toFeature.connectedBy.removeItem(association);
+					}
+				}
+				
+				assIdList.removeItem(association.id);
+				delete associationSet.associations[association.id];
+				delete kit.associationList[association.id];
+				
+				fromFeatures = new ArrayList();
+				toFeatures = new ArrayList();
+				
+				associationIDList.selectedIndex = -1;
+				associationIDList.prompt = "";
+				
+			}
+
+			protected function associationIDList_changeHandler(event:IndexChangeEvent):void
+			{				
+				// Initialize association instance view
+				association = associationSet.associations[associationIDList.selectedItem] as Association;
+
+				//show attribute type list on "attributeGrid"
+				var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;
+				assoAttributeList = assoType.attributeTypes;
+				
+				//clear attribute value list on "valueGrid"
+				assoAttValueList = null;
+				
+				// show from and to instance lists
+				fromFeatures = association.relateFrom;
+				toFeatures   = association.relateTo;
+			
+			}
+
+			protected function cancelFromToButton_clickHandler(event:MouseEvent):void
+			{
+				var info:InfoWindow = new InfoWindow();
+				
+				if (fromRadio.selected) {
+					var ff:Feature = fromIDList.selectedItem as Feature;
+					if (ff == null) {
+						info.initInfo('Alert', 'Select "from" feature on the list before.', false);	
+					}
+					fromFeatures.removeItem(ff);
+				}
+				
+				if (toRadio.selected) {
+					var tf:Feature = toIDList.selectedItem as Feature;
+					if (tf == null) {
+						info.initInfo('Alert', 'Select "to" feature on the list before.', false);	
+					}
+					toFeatures.removeItem(tf);
+				}
+				if (geometryWindow != null) geometryWindow.clearAnnotationLayer();
+			}
+
+			protected function assoAttributeGrid_clickHandler(event:MouseEvent):void
+			{
+				var attType:AttributeType = assoAttributeList.getItemAt(assoAttributeGrid.selectedIndex) as AttributeType;
+				if (association != null) {
+				assoAttValueList = association.attributes[attType.name] as ArrayList;
+				}
+				else {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Add association instance before.", false);
+					return;
+				}
+			}
+			
+			protected function assoAddValueButton_clickHandler(event:MouseEvent):void
+			{
+				if (association == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Select association instance before adding attributes.", false);
+					return;
+				}
+				
+				var attType:AttributeType = assoAttributeGrid.selectedItem as AttributeType;
+							
+				assoAttValueList = association.attributes[attType.name] as ArrayList;
+				if (assoAttValueList == null) assoAttValueList = new ArrayList();
+				
+				if ((attType.multiplicity == false) && (assoAttValueList.length  > 0)) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Attribute value must be one", false);
+					return;
+				}
+				
+				var tp:String = attType.dataType;
+				
+				if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
+					if (geometryWindow.searchedGM == null) {
+						info = new InfoWindow();
+						info.initInfo("Alert", "Geometry is not selected!", false);
+						return;
+					}
+					assoAttValueList.addItem(geometryWindow.searchedGM.id);
+					association.attributes[attType.name] = assoAttValueList;
+				}
+				
+				if (tp == "CharacterString") {
+					var cs:CharacterString = new CharacterString();
+					cs.value = assoValueInput.text;
+					assoAttValueList.addItem(cs);
+					assoValueInput.text = "";
+					association.attributes[attType.name] = assoAttValueList;
+				}
+				
+				if (tp == "Memo") {
+					var mm:Memo = new Memo();
+					if (memoWindow == null || memoWindow.memoArea.text == "") {
+						info = new InfoWindow();
+						info.initInfo("Alert", "No memo is entered.", false);
+						return;						
+					}
+					
+					mm.value = memoWindow.memoArea.text;
+					mm.featureID = feature.id;
+					
+					assoAttValueList.addItem(mm);
+					association.attributes[attType.name] = assoAttValueList;
+				}
+				
+				if (tp == "Real") {
+					var rl:Real = new Real();
+					rl.value = parseFloat(assoValueInput.text);
+					assoAttValueList.addItem(rl);
+					assoValueInput.text = "";
+					association.attributes[attType.name] = assoAttValueList;					
+				}
+				
+				if (tp == "Integer") {
+					var inte:Integer = new Integer();
+					inte.value = parseInt(assoValueInput.text);
+					assoAttValueList.addItem(inte);
+					assoValueInput.text = "";
+					association.attributes[attType.name] = assoAttValueList;					
+				}
+				
+				if (tp == "Bool") {
+					var bs:Bool = new Bool();
+					if (assoValueInput.text == "true") bs.value = true;
+					else if (assoValueInput.text == "false") 
+						bs.value = false;
+					else {
+						info = new InfoWindow();
+						info.initInfo("Alert", "Value must be true or false.", false);
+						return;
+					}
+					assoAttValueList.addItem(bs);
+					assoValueInput.text = "";
+					association.attributes[attType.name] = assoAttValueList;										
+				}
+				
+				if (tp == "ImageURL") {
+					var iml:ImageURL = new ImageURL();
+					iml.value = imageWindow.imageFile.url;
+					assoAttValueList.addItem(iml);
+					association.attributes[attType.name] = assoAttValueList;					
+				}
+				
+				if (tp == "VideoURL") {
+					var vdl:VideoURL = new VideoURL();
+					vdl.value = videoWindow.videoFile.url;
+					assoAttValueList.addItem(vdl);
+					association.attributes[attType.name] = assoAttValueList;					
+				}
+				
+				if (tp == "SoundURL") {
+					var snd:SoundURL = new SoundURL();
+					snd.value = soundWindow.soundFile.url;
+					assoAttValueList.addItem(snd);
+					association.attributes[attType.name] = assoAttValueList;					
+				}
+				
+				if (tp == "URL") {
+					var url:URL = new URL();
+					url.value = urlWindow.urlInput.text;
+					assoAttValueList.addItem(url);
+					association.attributes[attType.name] = assoAttValueList;					
+				}
+
+				if (tp == "Address") {
+					var address:Address = new Address();
+					address = addressWindow.address;
+					assoAttValueList.addItem(address.id);
+					association.attributes[attType.name] = assoAttValueList;					
+				}
+
+			}
+
+
+			protected function assoDeleteValueButton_clickHandler(event:MouseEvent):void
+			{
+				if (assoAttValueList == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "No attribute.", false);
+					return;
+				}
+				
+				if (assoValueGrid.selectedItem == null) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "No row is selected.", false);
+					return;
+				}
+				
+				var attType:AttributeType = assoAttributeGrid.selectedItem as AttributeType;				
+				var tp:String = attType.dataType;
+				var primi:SG_Primitive;
+				if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
+					var primiID:String = assoValueGrid.selectedItem as String;
+					if (tp == "SG_Point")   primi = kit.pointList[primiID] as SG_Primitive;
+					if (tp == "SG_Curve")   primi = kit.curveList[primiID] as SG_Primitive;
+					if (tp == "SG_Surface") primi = kit.surfaceList[primiID] as SG_Primitive;					
+					
+					primi.featureID = primi.attributeName = "";
+					assoAttValueList.removeItem(primiID);
+				}
+				
+				if (tp == "CharacterString" || tp == "Real"|| tp == "Integer" || 
+					tp == "Bool" || tp == "ImageURL" || tp == "VideoURL" ||
+					tp == "SoundURL" || tp =="URL" || tp=="Address") {					
+					assoAttValueList.removeItemAt(assoValueGrid.selectedIndex);
+				}
+				
+				if (tp == "Memo") {
+					assoAttributeList.removeItemAt(assoValueGrid.selectedIndex);
+				}
+
+			}
+
+
+			protected function showAssoButton_clickHandler(event:MouseEvent):void
+			{
+				if (association.relateFrom.length == 0 && association.relateTo.length == 0) {
+					info = new InfoWindow()
+					info.initInfo("Alert", "Set from and to feature before showing association.", false);
+					return;
+				}
+					
+				var assoType:AssociationType;
+				for (var i:int = 0; i < associationTypes.length; i++) {
+					assoType = associationTypes.getItemAt(i) as AssociationType;
+					if (assoType.name == association.typeName) break;
+				}
+
+				var fAttType:AttributeType = assoType.from.getAttributeTypeByName(assoType.from.proxyName);
+				var tAttType:AttributeType = assoType.to.getAttributeTypeByName(assoType.to.proxyName);
+					
+				if (showAssoButton.label == "show") {										
+
+					if (fAttType.dataType == "CharacterString") {
+					    if (fromListWindow == null) this.openFromListWindow();
+						fromListWindow.selectedList = new ArrayList();
+						for (i = 0; i < fromFeatures.length; i++) {
+							var f:Feature = fromFeatures.getItemAt(i) as Feature;
+							var attList:ArrayList = f.attributes[assoType.from.proxyName];
+							var att:CharacterString = attList.getItemAt(0) as CharacterString;
+							fromListWindow.selectedList.addItem(att);
+						}
+					}
+					
+					if (tAttType.dataType == "CharacterString") {
+						if (toListWindow == null) this.openToListWindow();
+						toListWindow.selectedList = new ArrayList();
+						for (i = 0; i < toFeatures.length; i++) {
+							f = toFeatures.getItemAt(i) as Feature;
+							attList = f.attributes[assoType.to.proxyName];
+							att = attList.getItemAt(0) as CharacterString;
+							toListWindow.selectedList.addItem(att);
+						}
+					}
+					
+					//geometry
+					if (fAttType.dataType.search("SG_") > -1 || tAttType.dataType.search("SG_") > -1) {
+						if (geometryWindow == null) {
+							this.openGeometryWindow();
+							if (kitName.text != "" && kit.baseMapImageURL != "null") 
+								geometryWindow.opViewStack.selectedChild = geometryWindow.orientationView;
+						}
+				
+						// draw association
+						fromRadio.selected = false;
+						toRadio.selected   = false;
+						geometryWindow.showAssociation(association);
+					}
+					
+					showAssoButton.label = "clear";
+				}
+				else {
+					if (fAttType.dataType.search("SG_") > -1 || tAttType.dataType.search("SG_") > -1) {
+						if (geometryWindow != null)
+							geometryWindow.clearAnnotationLayer();
+					}
+					showAssoButton.label = "show";	
+				}
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/editor_jp.html");
+				navigateToURL(request);
+			}
+
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/editor_en.html");
+				navigateToURL(request);
+			}
+
+			protected function fromRadio_clickHandler(event:MouseEvent):void
+			{
+				if (associationIDList.selectedIndex == -1) {
+					info = new InfoWindow()
+					info.initInfo("Alert", "Select or add association instance before.", false);
+					fromRadio.selected = false;
+					return;						
+				}
+				
+				var fromType:FeatureType = associationType.from;
+				var pType:FeatureType = fromType.parent;
+				while (pType != null) {
+					if (pType.proxyName != null) fromType.proxyName = pType.proxyName;
+					pType = pType.parent;
+				}
+				
+				if (fromType.proxyName != null) {
+					var pxType:AttributeType = fromType.getProxyType();
+					var dt:String = pxType.dataType;
+								
+					if (dt == "SG_Point" || dt == "SG_Curve" || dt == "SG_Surface") {
+						if (geometryWindow == null) {
+							this.openGeometryWindow();
+							geometryWindow.multiLabel.visible = false;
+							geometryWindow.addEventListener(MouseEvent.MOUSE_DOWN, geometryWindowCheckFeature);
+						}
+						
+						if (dt == "SG_Point") 	geometryWindow.pointRadio.selected = true;
+						if (dt == "SG_Curve") 	geometryWindow.curveRadio.selected = true;
+						if (dt == "SG_Surface")	geometryWindow.surfaceRadio.selected = true;
+						
+						geometryWindow.fromToLabel.text = "from";
+						geometryWindow.searchGeomButton.selected = true;
+						geometryWindow.geomFlag = "search";
+						geometryWindow.multiLabel.visible = (associationType.correspondence.search("m") > -1) ? true : false;
+						geometryWindow.clearAnnotationLayer();
+						geometryWindow.addEventListener(MouseEvent.MOUSE_DOWN, geometryWindowCheckFrom);
+					}
+					
+					if (dt == "CharacterString") {
+						this.openFromListWindow();
+					}
+				}
+			}
+			
+			private function openFromListWindow():void {
+				var fSet:FeatureSet = kit.featureSetArray[associationType.from.name] as FeatureSet;
+				var fType:FeatureType = associationType.from;
+				var pxType:AttributeType = fType.getAttributeTypeByName(fType.proxyName);
+				if (fromListWindow == null) fromListWindow = new ListWindow();
+				fromListWindow.open();
+				fromListWindow.addEventListener(MouseEvent.CLICK, getFromSelectedIndex);
+				fromListWindow.addEventListener(Event.CLOSE, fromListWindowClosed);
+				
+				var dataList:ArrayList = new ArrayList();
+				for each (var f:Feature in fSet.features) {
+					var dArray:ArrayList = f.attributes[pxType.name] as ArrayList;
+					var d:CharacterString = dArray.getItemAt(0) as CharacterString;
+					d.featureID = f.id;
+					dataList.addItem(d);
+				}
+				
+				fromListWindow.dataList = dataList;
+				fromListWindow.typeNameLabel.text  = associationType.from.name;
+				fromListWindow.proxyNameLabel.text = pxType.name;
+				fromListWindow.fromToLabel.text = "FROM";				
+			}
+			
+			protected function getFromSelectedIndex(event:Event):void {
+				if (fromListWindow.selectedIndex == -1) return;
+				
+				var crp:String = associationType.correspondence;
+				if ((crp == "1:1" || crp == "1:n") && fromFeatures.length == 1) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "From-feature shall be one.", false);
+					return;
+				}
+				
+				var fSet:FeatureSet = kit.featureSetArray[associationType.from.name] as FeatureSet;
+				var d:CharacterString = fromListWindow.dataList.getItemAt(fromListWindow.selectedIndex) as CharacterString;
+				var f:Feature = fSet.features[d.featureID];
+				if (fromFeatures.getItemIndex(f) != -1) {
+					fromListWindow.attributeList.selectedIndex = -1;
+					fromListWindow.selectedItemList.selectedIndex = -1;
+					return;
+				}
+				fromFeatures.addItem(f);
+			}
+			
+			protected function fromListWindowClosed(event:Event):void {
+				association.relateFrom = fromFeatures;
+				fromListWindow = null;
+			}
+			
+			protected function geometryWindowCheckFrom(event:MouseEvent):void {
+				if (toRadio.selected) return;
+				
+				var geom:SG_Primitive = geometryWindow.searchedGM;
+				if (geom != null) {
+					if (geom.featureID != "") {
+						if (association == null) {
+							info = new InfoWindow();
+							info.initInfo("Alert", "Add association before.", false);
+							return;
+						}
+						var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;						
+						var fSet:FeatureSet = kit.featureSetArray[assoType.from.name] as FeatureSet;
+						var ff:Feature = fSet.features[geom.featureID];
+						if (fromFeatures.getItemIndex(ff) > -1) {
+							var lastIndex:int = fromIDList.selectedItems.length;
+							fromIDList.selectedItems.push(ff);
+							return;
+						}
+						
+						ff.connects.addItem(association);
+						fromFeatures.addItem(ff);
+						association.relateFrom = fromFeatures;
+					}
+					else {
+						info = new InfoWindow();
+						info.initInfo("Alert", "selected geometry is not an attribute of the from feature.", false);
+						return;
+					}
+				}
+			}
+			
+			protected function toRadio_clickHandler(event:MouseEvent):void
+			{
+				if (associationIDList.selectedIndex == -1) {
+					info = new InfoWindow()
+					info.initInfo("Alert", "Select or add association instance before.", false);
+					toRadio.selected = false;
+					return;						
+				}
+				
+				var toType:FeatureType = associationType.to;
+				var pType:FeatureType = toType.parent;
+				while (pType != null) {
+					if (pType.proxyName != null) toType.proxyName = pType.proxyName;
+					pType = pType.parent;
+				}
+
+				if (toType.proxyName != null) {
+					var pxType:AttributeType = toType.getProxyType();
+					var dt:String = pxType.dataType;
+					if (dt.search("SG_") > -1) {						
+						if (geometryWindow == null) {
+							this.openGeometryWindow();
+							geometryWindow.multiLabel.visible = false;	
+							geometryWindow.addEventListener(MouseEvent.MOUSE_DOWN, geometryWindowCheckFeature);
+						}
+						
+						if (dt == "SG_Point") 	geometryWindow.pointRadio.selected = true;
+						if (dt == "SG_Curve") 	geometryWindow.curveRadio.selected = true;
+						if (dt == "SG_Surface")	geometryWindow.surfaceRadio.selected = true;
+				
+						geometryWindow.fromToLabel.text = "to";
+						geometryWindow.searchGeomButton.selected = true;
+						geometryWindow.geomFlag = "search";
+						geometryWindow.multiLabel.visible = (associationType.correspondence.search("n") > -1) ? true : false;
+						geometryWindow.clearAnnotationLayer();
+						geometryWindow.addEventListener(MouseEvent.MOUSE_DOWN, geometryWindowCheckTo);
+					}
+				
+					if (dt == "CharacterString") {
+						this.openToListWindow();
+					}
+				}
+			}
+			
+			protected function openToListWindow():void {
+				var fSet:FeatureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
+				var fType:FeatureType = associationType.to;
+				var pxType:AttributeType = fType.getAttributeTypeByName(fType.proxyName);
+				if (toListWindow == null) toListWindow = new ListWindow();
+				toListWindow = new ListWindow();
+				toListWindow.open();
+				toListWindow.addEventListener(MouseEvent.CLICK, getToSelectedIndex);
+				toListWindow.addEventListener(Event.CLOSE, toListWindowClosed);
+				
+				var dataList:ArrayList = new ArrayList();
+				for each (var f:Feature in fSet.features) {
+					var dArray:ArrayList = f.attributes[pxType.name] as ArrayList;
+					var d:CharacterString = dArray.getItemAt(0) as CharacterString;
+					d.featureID = f.id;
+					dataList.addItem(d);
+				}
+				
+				toListWindow.dataList = dataList;
+				toListWindow.typeNameLabel.text  = associationType.from.name;
+				toListWindow.proxyNameLabel.text = pxType.name;
+				toListWindow.fromToLabel.text = "TO";				
+			}
+			
+			protected function getToSelectedIndex(event:Event):void {
+				if(toListWindow.selectedIndex == -1) return;
+				
+				var crp:String = associationType.correspondence;
+				if ((crp == "1:1" || crp == "m:1") && toFeatures.length == 1) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "To-feature shall be one.", false);
+					return;
+				}
+
+				var fSet:FeatureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
+				var d:CharacterString = toListWindow.dataList.getItemAt(toListWindow.selectedIndex) as CharacterString;
+				var f:Feature = fSet.features[d.featureID];
+				if (toFeatures.getItemIndex(f) != -1) {
+					toListWindow.attributeList.selectedIndex = -1;
+					toListWindow.selectedItemList.selectedIndex = -1;
+					return;
+				}
+				toFeatures.addItem(f);
+			}
+			
+			protected function toListWindowClosed(event:Event):void {
+				association.relateTo = toFeatures;
+				toListWindow = null;
+			}
+			
+			protected function geometryWindowCheckTo(event:MouseEvent):void {
+				if (fromRadio.selected) return;
+				
+				var geom:SG_Primitive = geometryWindow.searchedGM;
+				if (geom != null) {
+					if (geom.featureID != "") {
+						var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;
+						var fSet:FeatureSet = kit.featureSetArray[assoType.to.name] as FeatureSet;
+						var tf:Feature = fSet.features[geom.featureID];
+						if (toFeatures.getItemIndex(tf) > -1) {
+							var len:int = toIDList.selectedItems.length;
+							toIDList.selectedIndices[len] = toFeatures.getItemIndex(tf);
+							return;
+						}
+						
+						tf.connectedBy.addItem(association);
+						toFeatures.addItem(fSet.features[geom.featureID]);
+						association.relateTo = toFeatures;
+					}
+					else {
+						info = new InfoWindow();
+						info.initInfo("Alert", "selected geometry is not an attribute of the to feature.", false);
+						return;
+					}
+				}
+			}
+			
+			/* CRS
+			*/
+			
+			protected function openCRSButton_clickHandler(event:MouseEvent):void
+			{
+				crsEditor = new CRSEditor();
+				crsEditor.open();
+				
+				crsEditor.title = "Editor >";
+				
+				if (crsLabel.text != "" && this.kitURL != null) { 
+					crsEditor.crsFileLabel.text = crsLabel.text;
+					crsEditor.file.url = kit.kitURL + kit.crsURL;
+					var crsFile:File = new File();
+					crsFile.url = kit.kitURL + kit.crsURL;
+					var crsStream:FileStream = new FileStream();
+					try {
+						crsStream.open(crsFile, FileMode.READ);
+						crsEditor.crs = crsStream.readObject();
+					} catch (e:IOError) {
+						trace(e.message);
+					}
+					crsEditor.setDisplay();
+					
+				}
+			}
+			
+			protected function getCRSButton_clickHandler(event:MouseEvent):void
+			{
+				crsLabel.text = crsEditor.crsFileLabel.text;
+			}
+			
+			protected function fromIDList_clickHandler(event:MouseEvent):void
+			{
+				var fromFeature:Feature = fromIDList.selectedItem as Feature;
+				var fromType:FeatureType = applicationSchema.featureTypes[fromFeature.typeName] as FeatureType;
+				var attType:AttributeType = fromType.getAttributeTypeByName(fromType.proxyName);
+				var attArray:ArrayList = fromFeature.attributes[attType.name] as ArrayList;
+				var att:* = attArray.getItemAt(0);
+				
+				if (attType.dataType == "CharacterString") {
+					var catt:CharacterString = att as CharacterString;
+					if (fromListWindow != null) {
+						fromListWindow.attributeList.selectedItem = catt;
+					}
+				}
+			}
+			
+			protected function toIDList_clickHandler(event:MouseEvent):void
+			{
+				var toFeature:Feature = toIDList.selectedItem as Feature;
+				var toType:FeatureType = applicationSchema.featureTypes[toFeature.typeName] as FeatureType;
+				var attType:AttributeType = toType.getAttributeTypeByName(toType.proxyName);
+				var attArray:ArrayList = toFeature.attributes[attType.name] as ArrayList;
+				var att:* = attArray.getItemAt(0);
+				
+				if (attType.dataType == "CharacterString") {
+					var catt:CharacterString = att as CharacterString;
+					if (toListWindow != null) {
+						toListWindow.attributeList.selectedItem = catt;
+					}
+				}
+			}
+
+			
+			protected function mergeKitButton_clickHandler(event:MouseEvent):void
+			{
+				// Open merge kit
+				try {
+					kitFile = new File();
+					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
+					kitFile.addEventListener(Event.SELECT, openMergeKit);
+					kitFile.browseForOpen("Open kit file    [キャンセル:CANCEL  選択:SELECT]", [filter]);
+					
+				} catch (error:IOError) {
+					info = new InfoWindow();
+					info.initInfo("Alert", error.message, false);
+				}
+				
+			}
+			
+			private function openMergeKit(event:Event):void {
+				this.setMergedKit(kitFile.url);
+			}
+			
+			public function setMergedKit(kitFileURL:String):void {
+				// Remind that this function is called from other components
+				var mkit:Kit;
+				kitStream = new FileStream();
+				if (kitFile == null) {
+					kitFile = new File();
+					kitFile.url = kitFileURL;
+				}
+				try {
+					kitStream.open(kitFile, FileMode.READ);
+					mkit = kitStream.readObject();
+					kitStream.close();
+				} catch(e:IOError) {
+					trace("Merge kit open error:" + e);
+				}
+				
+				var pathURL:String = kitFile.url;
+				var pathArray:Array = pathURL.split("/");
+				kitURL = "";
+				for (var i:int = 0; i < pathArray.length - 1; i++) {
+					kitURL += pathArray[i] + "/";
+				}
+				
+				if (kit.applicationSchemaURL != mkit.applicationSchemaURL) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Different application schema", false);
+					return;
+				}
+				
+				if (kit.crsURL != mkit.crsURL) {
+					info = new InfoWindow();
+					info.initInfo("Alert", "Different CRS", false);
+					return;
+				}
+				
+				/*
+				featureSetArray     = new Dictionary();
+				associationSetArray = new Dictionary();
+				
+				featureList		= new Dictionary(); 
+				associationList	= new Dictionary();
+				
+				pointList   		= new Dictionary();
+				curveList   		= new Dictionary();
+				surfaceList 		= new Dictionary();
+				complexList		= new Dictionary();
+				orientableCurveList = new Dictionary();
+				ringList			= new Dictionary();
+				
+				addressList		= new Dictionary();				
+				*/
+				
+				//Set feature instance
+				for each(var mfSet:FeatureSet in mkit.featureSetArray) {
+					var fSet:FeatureSet = kit.featureSetArray[mfSet.typeID] as FeatureSet;
+					if (fSet == null) {
+						fSet = mfSet;
+					}
+					else {
+						for each(var mf:Feature in mfSet.features) {
+							fSet.features[mf.id] = mf;
+						}
+					}
+					kit.featureSetArray[fSet.typeID] = fSet;
+				}
+				
+				//Set association instance
+				for each(var maSet:AssociationSet in mkit.associationSetArray) {
+					var aSet:AssociationSet = associationSetArray[maSet.typeID] as AssociationSet;
+					if (aSet == null) {
+						aSet = maSet;
+					}
+					else {
+						for each(var ma:Association in maSet.associations) {
+							aSet.associations[ma.id] = mf;
+						}
+					}
+					associationSetArray[aSet.typeID] = aSet;
+				}
+				
+				//Set feature list
+				for each (mf in mkit.featureList) {
+					kit.featureList[mf.id] = mf;
+				}
+				
+				//Set association list
+				for each (ma in mkit.associationList) {
+					kit.associationList[ma.id] = ma;
+				}
+				
+				//Set point list 
+				for each (var mp:SG_Point in mkit.pointList) {
+					kit.pointList[mp.id] = mp;
+				}
+				
+				//Set curve list 
+				for each (var mc:SG_Curve in mkit.curveList) {
+					kit.curveList[mc.id] = mc;
+				}
+				
+				//Set surface list 
+				for each (var ms:SG_Surface in mkit.surfaceList) {
+					kit.surfaceList[ms.id] = ms;
+				}
+				
+				//Set complex list 
+				for each (var mcx:SG_Complex in mkit.complexList) {
+					kit.complexList[mcx.id] = mcx;
+				}
+
+				//Set orientable curve list 
+				for each (var moc:SG_OrientableCurve in mkit.orientableCurveList) {
+					kit.orientableCurveList[moc.id] = moc;
+				}
+
+				//Set ring list 
+				for each (var mr:SG_Ring in mkit.ringList) {
+					kit.ringList[mr.id] = mr;
+				}
+				
+				//Set address list 
+				for each (var mad:Address in mkit.addressList) {
+					kit.addressList[mad.id] = mad;
+				}
+			}
+			
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RadioButtonGroup id="fromToGroup"/>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<mx:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="60" height="60"/>
+	<s:Label x="80" y="15" text="Editor" fontSize="16"/>
+	<s:Button id="openSchemaButton" x="42" y="81" width="55" height="20" label="open"
+			  click="openSchemaButton_clickHandler(event)"/>
+	<s:Label id="appSchemaLabel" x="41" y="106" width="140" height="20" backgroundColor="#dadada"
+			 verticalAlign="middle"/>
+	<s:Label x="105" y="78" text="Application Schema" width="66" height="31"/>
+	<s:Label x="266" y="86" text="Kit"/>
+	<s:Button id="openKitButton" x="201" y="56" width="60" height="20" label="open"
+			  click="openKitButton_clickHandler(event)"/>
+	<s:Button id="saveKitButton" x="266" y="56" width="60" height="20" label="save"
+			  click="saveKitButton_clickHandler(event)"/>
+	<s:TextInput x="201" y="106" width="142" id="kitName" contentBackgroundColor="#DADADA" borderVisible="false" editable="false" height="20"/>
+	
+	<s:TabBar id="tabBar" dataProvider="{myViewStack}" x="16" y="142" height="20" />
+	
+	<mx:ViewStack id="myViewStack" 
+				  borderStyle="solid" width="490" height="418" x="16" y="161" backgroundColor="#fefee5"> 
+		<s:NavigatorContent id="featureTab" label="Feature">
+			<s:Group width="488" height="100%" id="featureDef" x="0" y="0">
+				<s:DropDownList id="featureTypeList" x="15" y="36" width="140" height="20"
+								change="featureTypeList_changeHandler(event)" chromeColor="#CCCCCC"
+								dataProvider="{concreteTypes}" labelField="name"
+								prompt="Select F_Type"
+								skinClass="spark.skins.spark.DropDownListSkin"></s:DropDownList>
+				<mx:DataGrid id="attributeGrid" x="10" y="168" width="300" height="170"
+							 click="attributeGrid_clickHandler(event)"
+							 dataProvider="{attributeTList}" editable="false"
+							 variableRowHeight="true">
+					<mx:columns>
+						<mx:DataGridColumn headerText="dr" dataField="derived" width="25"/>
+						<mx:DataGridColumn headerText="name" dataField="name" width="100" />
+						<mx:DataGridColumn headerText="data type" dataField="dataType" width="100" />
+						<mx:DataGridColumn dataField="multiplicity" headerText="multi." width="40" />
+						<mx:DataGridColumn width="40" dataField="unit" headerText="unit"
+										   resizable="false"/>
+					</mx:columns>
+				</mx:DataGrid>
+				<s:DropDownList id="instanceIDList" x="273" y="64" width="165" height="20"
+								change="instanceIDList_changeHandler(event)" dataProvider="{idList}"></s:DropDownList>
+				<s:Button id="addInstButton" x="273" y="37" width="55" height="20" label="add"
+						  click="addInstButton_clickHandler(event)"/>
+				<s:Button id="deleteInstanceButton" x="335" y="37" width="55" height="20"
+						  label="delete" click="deleteInstanceButton_clickHandler(event)"/>
+				<s:Label x="15" y="21" text="Feature Type"/>
+				<mx:DataGrid id="valueGrid" x="318" y="168" width="161" height="170"
+							 click="valueGrid_clickHandler(event)" dataProvider="{attValueList}">
+					<mx:columns>
+						<mx:DataGridColumn headerText="ID" dataField="id" width="30"/>
+						<mx:DataGridColumn headerText="value" dataField="value" width="60"/>
+					</mx:columns>
+				</mx:DataGrid>
+				<s:Button id="addValueButton" x="317" y="346" width="55" height="20" label="add"
+						  click="addValueButton_clickHandler(event)"/>
+				<s:Button id="deleteValueButton" x="379" y="346" width="55" height="20"
+						  label="delete" click="deleteValueButton_clickHandler(event)"/>
+				<s:TextInput id="valueInput" x="319" y="120" width="158" height="20"/>
+				<s:Label x="282" y="126" text="Value"/>
+				<s:Label x="396" y="43" text="Feature"/>
+				<s:Label x="15" y="154" text="AttributeType List »"/>
+				<s:Label x="319" y="154" text="Attribute ID Value List »"/>
+				<s:Label x="205" y="70" text="Instance ID"/>
+				<s:Label x="416" y="374" text="Attribute"/>
+			</s:Group>
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent id="associationTab" label="Association" > 
+			<s:Group width="100%" height="100%" id="associationDef" x="0" y="0">
+				<s:Label x="15" y="21" text="AssociationType"/>
+				<s:DropDownList id="associationTypeList" x="15" y="36" width="140" height="20"
+								change="associationTypeList_changeHandler(event)"
+								dataProvider="{associationTypes}" labelField="name"
+								prompt="Select Asso_Type"></s:DropDownList>
+				<s:Label x="205" y="70" text="Instance ID" width="64" height="17"/>
+				<s:Button id="addAssoIDButton" x="273" y="37" width="55" height="20" label="add"
+						  click="addAssoIDButton_clickHandler(event)"/>
+				<s:Button id="deleteAssoIDButton" x="335" y="37" width="55" height="20"
+						  label="delete" click="deleteAssoIDButton_clickHandler(event)"/>
+				<s:DropDownList id="associationIDList" x="273" y="64" width="165" height="20"
+								change="associationIDList_changeHandler(event)"
+								dataProvider="{assIdList}" prompt="add or select ID"></s:DropDownList>
+				
+				<s:TabBar id="assoTabBar" x="16" y="90" dataProvider="{assoViewStack}" height="20"/>
+				
+				<mx:ViewStack id="assoViewStack" borderStyle="solid" width="455" 
+							  height="290" x="16" y="109" backgroundColor="#ffffff"> 
+					<s:NavigatorContent id="assoTab" label="Connecter"> 
+						<s:Group width="100%" height="288" id="asso" x="0" y="0">				
+							<s:RadioButton id="fromRadio" x="93" y="34" label="from"
+										   click="fromRadio_clickHandler(event)"
+										   groupName="fromToGroup"/>
+							<s:RadioButton id="toRadio" x="222" y="34" label="to"
+										   click="toRadio_clickHandler(event)"
+										   groupName="fromToGroup"/>
+							<s:Label x="16" y="61" text="Feature type"/>
+							<s:Label x="93" y="58" width="120" height="18" id="fromFeatureTypeLabel" backgroundColor="#DADADA" verticalAlign="middle"/>
+							<s:Label x="221" y="58" id="toFeatureTypeLabel" backgroundColor="#DADADA" width="120" verticalAlign="middle" height="18"/>
+							<s:Label x="16" y="85" text="Role name"/>
+							<s:Label x="221" y="82" id="roleNameLabel" backgroundColor="#DADADA" width="120" height="18" verticalAlign="middle"/>
+							<s:Label x="269" y="39" text="Correspondence"/>
+							<s:Label x="365" y="36" id="correspondenceLabel" backgroundColor="#DADADA" width="30" verticalAlign="middle" height="18"/>
+							<s:Label x="16" y="108" text="Instance ID"/>
+							<s:Button id="cancelFromToButton" x="350" y="136" width="60" height="20"
+									  label="cancel" click="cancelFromToButton_clickHandler(event)"/>
+							<s:Button id="showAssoButton" x="350" y="106" width="60" height="20"
+									  label="show" click="showAssoButton_clickHandler(event)"/>
+							<s:Label x="14" y="13" text=" Association style"/>
+							<s:Label x="116" y="8" backgroundColor="#E0E0E0" verticalAlign="middle" height="20" width="97" id="assoStyleLabel"/>
+							<s:Label x="16" y="236" text="Proxy"/>
+							<s:Label x="93" y="232" width="120" id="fromProxyLabel" backgroundColor="#E0E0E0" height="18" verticalAlign="middle"/>
+							<s:Label x="221" y="232" id="toProxyLabel" backgroundColor="#E0E0E0" width="120" height="18" verticalAlign="middle"/>
+							<s:Label x="16" y="259" text="Proxy type"/>
+							<s:Label x="93" y="257" id="fromProxyTypeLabel" verticalAlign="middle" backgroundColor="#E0E0E0" height="18" width="120"/>
+							<s:Label x="221" y="257" id="toProxyTypeLabel" verticalAlign="middle" backgroundColor="#E0E0E0" width="120" height="18"/>
+
+							<s:List id="fromIDList" x="93" y="106" width="120" height="120"
+									borderVisible="false" contentBackgroundColor="#DADADA" labelField="id"
+									dataProvider="{fromFeatures}" allowMultipleSelection="true"
+								 	click="fromIDList_clickHandler(event)"/>
+							<s:List x="221" y="106" width="120" height="120" id="toIDList" labelField="id" 
+									contentBackgroundColor="#DADADA" dataProvider="{toFeatures}" 
+									borderVisible="false" allowMultipleSelection="true"
+								    click="toIDList_clickHandler(event)"/>
+							<s:Label x="375" y="164" text="Association"/>
+						</s:Group>
+					</s:NavigatorContent>
+					
+					<s:NavigatorContent id="attTab" label="AttributeEditor">
+						<s:Group width="100%" height="288" id="att" x="0" y="0">
+							<mx:DataGrid id="assoAttributeGrid" x="5" y="62" width="275" height="170"
+										 click="assoAttributeGrid_clickHandler(event)"
+										 contentBackgroundColor="#FFFFFF"
+										 dataProvider="{assoAttributeList}">
+								<mx:columns>
+									<mx:DataGridColumn headerText="der." dataField="derived" width="40" resizable="false" />									
+									<mx:DataGridColumn headerText="name" dataField="name" width="100" resizable="false" />
+									<mx:DataGridColumn headerText="data type" dataField="dataType" width="100" resizable="false"/>
+									<mx:DataGridColumn dataField="multiplicity" headerText="multi." width="40" resizable="false"/>
+								</mx:columns>
+							</mx:DataGrid>
+							<mx:DataGrid x="286" y="62" width="161" height="170" id="assoValueGrid" dataProvider="{assoAttValueList}">
+								<mx:columns>
+									<mx:DataGridColumn headerText="ID" dataField="id" width="30"/>
+									<mx:DataGridColumn headerText="value" dataField="value" width="60"/>
+								</mx:columns>
+							</mx:DataGrid>
+							<s:Label x="300" y="17" text="Value"/>
+							<s:TextInput id="assoValueInput" x="337" y="11" width="110" height="20"/>
+							<s:Button id="assoAddValueButton" x="286" y="237" width="55" height="20"
+									  label="add" click="assoAddValueButton_clickHandler(event)"/>
+							<s:Button id="assoDeleteValueButton" x="345" y="237" width="55"
+									  height="20" label="delete"
+									  click="assoDeleteValueButton_clickHandler(event)"/>
+							<s:Label x="6" y="46" text="Attribute Type List »"/>
+							<s:Label x="286" y="46" text="Attribute ID / Value List »"/>
+							<s:Label x="404" y="243" text="Attribute"/>
+							
+						</s:Group>
+					</s:NavigatorContent>
+					
+				</mx:ViewStack>
+				<s:Label x="395" y="44" text="Association"/>
+				
+			</s:Group>
+		</s:NavigatorContent>
+		
+	</mx:ViewStack>
+	<s:Label x="428" y="9" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="469" y="11" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:Button id="editCRSButton" x="364" y="56" width="55" height="20" label="edit »"
+			  click="openCRSButton_clickHandler(event)"/>
+	<s:Label id="crsLabel" x="363" y="106" width="142" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
+	<s:Label x="426" y="62" text="CRS"/>
+	<s:Button id="getCRSButton" x="364" y="81" width="55" height="20" label="get"
+			  click="getCRSButton_clickHandler(event)"/>
+	<s:Button id="mergeKitButton" x="201" y="81" width="60" height="20" label="merge"
+			  click="mergeKitButton_clickHandler(event)"/>
+	
+</s:Window>

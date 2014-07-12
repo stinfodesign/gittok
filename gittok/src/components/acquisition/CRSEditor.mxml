@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="714"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import coordinateReference.*;
+			
+			import dataTypes.spatialGeometry.Coordinate2;
+			
+			import flash.filesystem.*;
+			
+			import flashx.textLayout.tlf_internal;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.events.ListEvent;
+			
+			public var file:File = new File();
+			private var stream:FileStream = new FileStream();
+			
+			public var crs:CRS = new CRS();
+			
+			[Bindable]
+			protected var axes:ArrayList = new ArrayList();
+			
+			public function initializeApp(): void {
+				this.move(650, 150);
+				
+				//Coordinate ReferenceSystem
+				registerClassAlias("coordinateReference.CRS", CRS);
+				registerClassAlias("coordinateReference.Axis", Axis);
+				registerClassAlias("coordinateReference.CoordinateSystem", CoordinateSystem);
+				registerClassAlias("coordinateReference.Ellipsoid", Ellipsoid);
+				registerClassAlias("coordinateReference.GeodeticDatum", GeodeticDatum);
+				registerClassAlias("coordinateReference.PrimeMeridian", PrimeMeridian);
+				registerClassAlias("coordinateReference.ProjectionSystem", ProjectionSystem);
+				registerClassAlias("coordinateReference.PSOrigin", IdentifiedCoordinate);
+				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);				
+				
+				//Spatial Geometry
+ 				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
+				
+			}
+			
+			protected function crsOpenButton_clickHandler(event:MouseEvent):void
+			{
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Coordinate Reference System File", "*.crs");
+					file.addEventListener(Event.SELECT, openCRS);
+					file.browseForOpen("Open file", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}												
+			}
+			
+			protected function openCRS(event:Event):void {
+				try {
+					stream.open(file, FileMode.READ);
+					crs = stream.readObject();
+					stream.close();
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+				
+				this.setDisplay();
+			}
+			
+			public function setDisplay():void {
+				crsFileLabel.text = file.name;
+				crsIDInput.text = crs.id;
+				datumIDInput.text = crs.datum.id;
+				datumNameInput.text = crs.datum.name;
+				ellipsNameInput.text = crs.datum.ellips.name;
+				semiMajorAxisInput.text = "" + crs.datum.ellips.semiMajorAxis;
+				inverseFlatteningInput.text = "" + crs.datum.ellips.inverseFlattening;
+				primeMeridianInput.text = "" + crs.datum.pm.greenwichLongitude;
+				
+				
+				csIDInput.text = crs.cs.id;
+				csNameInput.text = crs.cs.name;
+				csDimensionInput.text = "" + crs.cs.dimension;
+				axes = crs.cs.axis;
+				axisGrid.dataProvider = axes;
+				
+				projectionNameInput.text = crs.cs.ps.name;
+				psScaleFactorInput.text = "" + crs.cs.ps.scaleFactor;
+				
+				originLatInput.text = "" + crs.cs.ps.origin.x;
+				originLonInput.text = "" + crs.cs.ps.origin.y;
+				
+				vdIDInput.text = "" + crs.vDatum.id;
+				vdNameInput.text = "" + crs.vDatum.name;				
+			}
+
+
+			protected function crsSaveButton_clickHandler(event:MouseEvent):void
+			{
+				crs.id = crsIDInput.text;
+				
+				crs.datum.id = datumIDInput.text;
+				crs.datum.name = datumNameInput.text;
+				crs.datum.ellips.name = ellipsNameInput.text;
+				crs.datum.ellips.semiMajorAxis = parseFloat(semiMajorAxisInput.text);
+				crs.datum.ellips.inverseFlattening = parseFloat(inverseFlatteningInput.text);
+				
+				crs.datum.pm.greenwichLongitude = parseFloat(primeMeridianInput.text);
+				
+				
+				crs.cs.id = csIDInput.text;
+				if (crs.cs.id.search("X, Y") == -1 && crs.cs.id.search("E, N") == -1) {
+					Alert.show("Coordinatte system id shall be (X, Y) or (E, N).", "Error", 4, this);
+				}
+				crs.cs.name = csNameInput.text;
+				crs.cs.dimension = parseInt(csDimensionInput.text);
+				crs.cs.axis = axes;
+				
+				crs.cs.ps.name = projectionNameInput.text;
+				crs.cs.ps.scaleFactor = parseFloat(psScaleFactorInput.text);				
+				crs.cs.ps.origin.x = parseFloat(originLatInput.text); 
+				crs.cs.ps.origin.y = parseFloat(originLonInput.text);
+				
+				crs.vDatum.id = vdIDInput.text;
+				crs.vDatum.name = vdNameInput.text;
+				
+				try {
+					file = new File();
+					file.addEventListener(Event.SELECT, saveCRS);
+					file.browseForSave("Save file");					
+				} catch (error:IOError) {
+					trace(error.message);
+				} 				
+			}
+			
+			private function saveCRS(event:Event):void {
+				try {
+					var startIndex:int = file.nativePath.length - 4;
+					var suffix:String = file.nativePath.slice(startIndex);
+					if (suffix != ".crs") file.nativePath += ".crs";					
+
+					stream.open(file, FileMode.WRITE);
+					stream.writeObject(crs);
+					stream.close();
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+				crsFileLabel.text = file.name;
+			}
+
+			protected function addAxisButton_clickHandler(event:MouseEvent):void
+			{
+				var ax:Axis = new Axis();
+				axes.addItem(ax);
+				axisGrid.dataProvider = axes;	
+			}
+
+			protected function deleteAxisButton_clickHandler(event:MouseEvent):void
+			{
+				axes.removeItemAt(axisGrid.selectedIndex);
+				axisGrid.dataProvider = axes;
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/crsEditor_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/crsManager_en.html");
+				navigateToURL(request);
+			}
+
+		]]>
+	</fx:Script>
+	<mx:Image x="10" y="4" source="images/pictManagement1.png"/>
+	<s:Label x="75" y="15" text="CRS Editor" fontSize="16"/>
+	
+	<s:Rect x="246" y="57" width="120" height="89">
+		<s:fill>
+			<s:SolidColor color="0x888888"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:Label x="22" y="84" text="CRS"/>
+	<s:Label x="56" y="83" text="id"/>
+	<s:Label x="83" y="137" text="id"/>
+	<s:Label x="39" y="113" text="Geodetic datum "/>
+	<s:Label x="83" y="163" width="36" text="name"/>
+	<s:Label x="145" y="188" text="name"/>
+	<s:Label x="83" y="189" text="Ellipsoid"/>
+	<s:Label x="145" y="209" text="semi major axis"/>
+	<s:Label x="145" y="233" text="inverse flattening"/>
+	<s:Label x="83" y="259" text="Prime meridian"/>
+	<s:Label x="174" y="258" text="longitude"/>
+	<s:Label x="39" y="287" text="Coordinate system"/>
+	<s:Label x="145" y="287" text="id"/>
+	<s:Label x="83" y="316" text="name"/>
+	<s:Label x="82" y="345" text="dimension"/>
+	<s:Label x="83" y="389" text="Axis"/>
+	<s:Label x="83" y="503" text="Projection system (Gauss-Kruger or UTM)"/>
+	<s:Label x="125" y="521" text="name"/>
+	<s:Label x="124" y="549" text="scale factor"/>
+	<s:Label x="123" y="576" text="origin"/>
+	<s:Label x="75" y="38" text="Coordinate Reference System"/>
+	<s:TextInput x="74" y="78" height="20" width="161" id="crsIDInput"/>
+	<s:TextInput x="123" y="131" height="20" width="112" id="datumIDInput"/>
+	<s:TextInput x="137" y="157" height="20" width="230" id="datumNameInput"/>
+	<s:TextInput x="259" y="181" height="20" width="108" id="ellipsNameInput"/>
+	<s:TextInput x="259" y="205" height="20" width="108" id="semiMajorAxisInput"/>
+	<s:TextInput x="259" y="229" height="20" width="108" id="inverseFlatteningInput"/>
+	<s:TextInput x="259" y="254" height="20" width="108" id="primeMeridianInput"/>
+	<s:TextInput x="187" y="284" height="20" width="180" id="csIDInput"/>
+	<s:TextInput x="145" y="310" height="20" width="222" id="csNameInput"/>
+	<s:TextInput x="200" y="517" height="20" width="167" id="projectionNameInput"/>
+	<s:TextInput x="200" y="544" height="20" width="167" id="psScaleFactorInput"/>
+	<s:TextInput x="145" y="340" height="20" width="31" id="csDimensionInput"/>
+	<s:Label id="crsFileLabel" x="252" y="119" width="108" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
+	<s:Button x="252" y="65" label="open" width="55" id="crsOpenButton" click="crsOpenButton_clickHandler(event)"/>
+	<s:Button x="252" y="91" label="save" width="55" id="crsSaveButton" click="crsSaveButton_clickHandler(event)"/>
+	<mx:DataGrid id="axisGrid" x="123" y="382" width="244" height="109" editable="true"
+				 variableRowHeight="true">
+		<mx:columns>
+			<mx:DataGridColumn width="45" dataField="name" headerText="name"/>
+			<mx:DataGridColumn width="65" dataField="direction" headerText="direction"/>
+			<mx:DataGridColumn width="40" dataField="uom" headerText="uom"/>
+			<mx:DataGridColumn dataField="offset" headerText="offset"/>
+		</mx:columns>
+	</mx:DataGrid>
+	<s:Button x="254" y="353" label="add" width="55" id="addAxisButton" click="addAxisButton_clickHandler(event)"/>
+	<s:Button x="312" y="353" label="delete" width="55" id="deleteAxisButton" enabled="true" click="deleteAxisButton_clickHandler(event)"/>
+	<s:Label x="173" y="576" text="latitude"/>
+	<s:Label x="173" y="604" text="longitude"/>
+	<s:TextInput id="originLatInput" x="250" y="571" width="117"/>
+	<s:TextInput id="originLonInput" x="250" y="600" width="117"/>
+	<s:Label x="39" y="624" text="Vertical datum"/>
+	<s:Label x="79" y="646" text="id"/>
+	<s:TextInput x="96" y="640" width="55" id="vdIDInput"/>
+	<s:Label x="165" y="645" text="name"/>
+	<s:TextInput x="207" y="640" width="160" id="vdNameInput"/>
+	<s:Label x="175" y="269" fontSize="9" text="decimal degree"/>
+	<s:Label x="175" y="587" fontSize="9" text="decimal degree"/>
+	<s:Label x="175" y="616" fontSize="9" text="decimal degree"/>
+	<s:Label x="307" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="348" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:Label x="312" y="71" text="CRS file" color="#ffffff"/>
+	<s:Label x="175" y="220" fontSize="9" text="metre"/>
+</s:Window>

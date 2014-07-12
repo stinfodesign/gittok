@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="MaxZoomEvent,com.google.maps.services.MaxZoomEvent,MAXZOOM_FAILURE,MAXZOOM_SUCCESS,latLng,zoom" name="keywords">
+<title>com.google.maps.services.MaxZoomEvent</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'MaxZoomEvent - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/services/MaxZoomEvent.html&amp;com/google/maps/services/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;MaxZoomEvent</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class MaxZoomEvent"); titleBar_setSubNav(true,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.services</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public final  class MaxZoomEvent</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">MaxZoomEvent <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../../images/inherit-arrow.gif"> <a href="../MapEvent.html">MapEvent</a> <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../../images/inherit-arrow.gif"> flash.events.Event</td>
+</tr>
+</table>
+<p></p>
+   A MaxZoomEvent object is dispatched into the event flow whenever
+   a max zoom request completes.
+   <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<div class="showHideLinks">
+<div class="hideInheritedProperty" id="hideInheritedProperty">
+<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
+</div>
+<div class="showInheritedProperty" id="showInheritedProperty">
+<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
+</div>
+</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#feature">feature</a> : Object<div class="summaryTableDescription">
+   The object that the event refers to (such as an instance of
+   <code>IMapType</code> for <code>MapEvent.MAPTYPE_ADDED</code> event
+   or an instance of <code>IControl</code> for
+   <code>MapEvent.CONTROL_REMOVED</code>).</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#latLng">latLng</a> : <a href="../../maps/LatLng.html">LatLng</a>
+<div class="summaryTableDescription">[read-only]
+     Gets the lat-lng associated with this event.</div>
+</td><td class="summaryTableOwnerCol">MaxZoomEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#zoom">zoom</a> : Number<div class="summaryTableDescription">[read-only]
+     Gets the zoom level associated with this event.</div>
+</td><td class="summaryTableOwnerCol">MaxZoomEvent</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#MaxZoomEvent()">MaxZoomEvent</a>(type:String, latLng:<a href="../LatLng.html">LatLng</a>, zoom:Number, bubbles:Boolean = false, cancellable:Boolean = false)</div>
+<div class="summaryTableDescription">
+     Creates a MaxZoomEvent object to pass as a parameter to event listeners.</div>
+</td><td class="summaryTableOwnerCol">MaxZoomEvent</td>
+</tr>
+</table>
+</div>
+<a name="constantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Constants</div>
+<div class="showHideLinks">
+<div class="hideInheritedConstant" id="hideInheritedConstant">
+<a onclick="javascript:setInheritedVisible(false,'Constant');" href="#constantSummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Constants</a>
+</div>
+<div class="showInheritedConstant" id="showInheritedConstant">
+<a onclick="javascript:setInheritedVisible(true,'Constant');" href="#constantSummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Constants</a>
+</div>
+</div>
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#CONTROL_ADDED">CONTROL_ADDED</a> : String = "mapevent_controladded"<div class="summaryTableDescription">[static]
+   This event is fired on the map when a control is added to the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#CONTROL_REMOVED">CONTROL_REMOVED</a> : String = "mapevent_controlremoved"<div class="summaryTableDescription">[static]
+   This event is fired on the map when a control is removed from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#COPYRIGHTS_UPDATED">COPYRIGHTS_UPDATED</a> : String = "mapevent_copyrightsupdated"<div class="summaryTableDescription">[static]
+   This event is fired when the copyright that should be displayed on the
+   map is updated.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#FLY_TO_CANCELED">FLY_TO_CANCELED</a> : String = "mapevent_flytocanceled"<div class="summaryTableDescription">[static]
+   This event is fired when the map motion produced by a call to
+   <code>Map3D.flyTo()</code> is canceled via a call to
+   <code>Map3D.cancelFlyTo()</code>.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#FLY_TO_DONE">FLY_TO_DONE</a> : String = "mapevent_flytodone"<div class="summaryTableDescription">[static]
+   This event is fired when the map motion produced by a call to
+   <code>Map3D.flyTo()</code> completes.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#INFOWINDOW_CLOSED">INFOWINDOW_CLOSED</a> : String = "mapevent_infowindowclosed"<div class="summaryTableDescription">[static]
+   This event is fired when the info window closes.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#INFOWINDOW_CLOSING">INFOWINDOW_CLOSING</a> : String = "mapevent_infowindowclosing"<div class="summaryTableDescription">[static]
+   This event is fired before the info window closes.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#INFOWINDOW_OPENED">INFOWINDOW_OPENED</a> : String = "mapevent_infowindowopened"<div class="summaryTableDescription">[static]
+   This event is fired when the info window opens.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#MAP_PREINITIALIZE">MAP_PREINITIALIZE</a> : String = "mapevent_mappreinitialize"<div class="summaryTableDescription">[static]
+   This event is fired immediately before the map is initialized.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#MAP_READY">MAP_READY</a> : String = "mapevent_mapready"<div class="summaryTableDescription">[static]
+   This event is fired when map initialization is complete and isLoaded()
+   would return true.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#MAPTYPE_ADDED">MAPTYPE_ADDED</a> : String = "mapevent_maptypeadded"<div class="summaryTableDescription">[static]
+   This event is fired when a new MapType has been added to the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#MAPTYPE_CHANGED">MAPTYPE_CHANGED</a> : String = "maptypechanged"<div class="summaryTableDescription">[static]
+   This event is fired when another map type is selected.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#MAPTYPE_REMOVED">MAPTYPE_REMOVED</a> : String = "mapevent_maptyperemoved"<div class="summaryTableDescription">[static]
+   This event is fired when a MapType has been removed from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#MAPTYPE_STYLE_CHANGED">MAPTYPE_STYLE_CHANGED</a> : String = "mapevent_maptypestylechanged"<div class="summaryTableDescription">[static]
+   This event is fired when the style of a styled map type changes.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MAXZOOM_FAILURE">MAXZOOM_FAILURE</a> : String = "maxzoomfailure"<div class="summaryTableDescription">[static] Max zoom failure event.</div>
+</td><td class="summaryTableOwnerCol">MaxZoomEvent</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#MAXZOOM_SUCCESS">MAXZOOM_SUCCESS</a> : String = "maxzoomsuccess"<div class="summaryTableDescription">[static] Max zoom success event.</div>
+</td><td class="summaryTableOwnerCol">MaxZoomEvent</td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#OVERLAY_BEFORE_REMOVED">OVERLAY_BEFORE_REMOVED</a> : String = "mapevent_overlaybeforeremoved"<div class="summaryTableDescription">[static]
+   This event is fired when an overlay is about to be removed from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#OVERLAY_MOVED">OVERLAY_MOVED</a> : String = "mapevent_overlaymoved"<div class="summaryTableDescription">[static]
+   This event is fired when an overlay's position is changed.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#OVERLAY_REMOVED">OVERLAY_REMOVED</a> : String = "mapevent_overlayremoved"<div class="summaryTableDescription">[static]
+   This event is fired after a single overlay is removed from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#SIZE_CHANGED">SIZE_CHANGED</a> : String = "mapevent_sizechanged"<div class="summaryTableDescription">[static]
+   This event is fired when the size of the map has changed.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#TILES_LOADED">TILES_LOADED</a> : String = "mapevent_tilesloaded"<div class="summaryTableDescription">[static]
+   This event is fired when all visible target tiles have finished loading.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#TILES_LOADED_PENDING">TILES_LOADED_PENDING</a> : String = "mapevent_tilesloadedpending"<div class="summaryTableDescription">[static]
+   This is a companion event to <code>MapEvent.TILES_LOADED</code>
+   indicating that loading of new tiles has been initiated and that
+   <code>MapEvent.TILES_LOADED</code> will be dispatched when all
+   tiles have loaded.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#VIEW_CHANGED">VIEW_CHANGED</a> : String = "mapevent_viewchanged"<div class="summaryTableDescription">[static]
+   This event is fired when the map view changes.</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+<tr class="hideInheritedConstant">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="../MapEvent.html#VISIBILITY_CHANGED">VISIBILITY_CHANGED</a> : String = "mapevent_visibilitychanged"<div class="summaryTableDescription">[static]
+   This event is fired when an overlay's visibility has changed
+   (from visible to hidden or vice-versa).</div>
+</td><td class="summaryTableOwnerCol"><a href="../MapEvent.html">MapEvent</a></td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="latLng"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">latLng</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>latLng:<a href="../../maps/LatLng.html">LatLng</a></code>&nbsp;&nbsp;[read-only]<p>
+     Gets the lat-lng associated with this event.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get latLng():<a href="../../maps/LatLng.html">LatLng</a></code>
+<br>
+</div>
+<a name="zoom"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">zoom</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>zoom:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Gets the zoom level associated with this event.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get zoom():Number</code>
+<br>
+</div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="MaxZoomEvent()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MaxZoomEvent</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function MaxZoomEvent(type:String, latLng:<a href="../LatLng.html">LatLng</a>, zoom:Number, bubbles:Boolean = false, cancellable:Boolean = false)</code><p>
+     Creates a MaxZoomEvent object to pass as a parameter to event listeners.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">type</span>:String</code> &mdash;  The type of the event.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  The lat-lng associated with the event.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">zoom</span>:Number</code> &mdash;  The zoom level associated with the event.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">bubbles</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Determines whether the Event object participates in
+         the bubbling stage of the event flow. The default value is false.
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">cancellable</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash;  Determines whether the Event object can be cancelled.
+         The default values is false.
+     </td>
+</tr>
+</table>
+</div>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="MAXZOOM_FAILURE"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MAXZOOM_FAILURE</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MAXZOOM_FAILURE:String = "maxzoomfailure"</code><p> Max zoom failure event. </p></div>
+<a name="MAXZOOM_SUCCESS"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">MAXZOOM_SUCCESS</td><td class="detailHeaderType">constant</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const MAXZOOM_SUCCESS:String = "maxzoomsuccess"</code><p> Max zoom success event. </p></div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

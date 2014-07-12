@@ -1,0 +1,463 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="IPaneManager,com.google.maps.interfaces.IPaneManager,map,paneCount,clearOverlays,containsPane,createPane,getPaneAt,getPaneById,getPaneIndex,placePaneAt,removeAllPanes,removePane" name="keywords">
+<title>com.google.maps.interfaces.IPaneManager</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'IPaneManager - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/interfaces/IPaneManager.html&amp;com/google/maps/interfaces/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Interface&nbsp;IPaneManager</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Interface IPaneManager"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.interfaces</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Interface</td><td class="classSignature">public interface IPaneManager extends <a href="IWrappable.html">IWrappable</a></td>
+</tr>
+</table>
+<p></p>
+ Interface to the pane manager of the map. The pane manager is responsible for
+ creating, removing and re-ordering overlay panes on the map.
+  <p>Objects that implement this class may manage both system default panes and
+ user-created panes.</p>
+  <p>The API provides 4 default panes, which are fixed in the following order
+ from bottom to top:
+ <ul>
+ <li><code>PaneId.PANE_MAP</code>
+ <li><code>PaneId.PANE_OVERLAYS</code>
+ <li><code>PaneId.PANE_MARKER</code>
+ <li><code>PaneId.PANE_FLOAT</code>
+ </ul></p>
+  <p>You may not re-order or remove these default panes. You may, however, add,
+ re-order, or remove user-created panes.</p>
+  <p>Pane order is specified using a zero-based index parameter, where 0
+ indicates the bottom-most pane (immediately above the map). Inserting a
+ user-created pane at an index causes the existing indices at or above that
+ value to shift one value up.
+ For example, inserting a new pane at index 2 causes indices at
+ 2, 3, and 4 to take on values of 3, 4, and 5. Inserting a pane at an index of
+ <code>paneCount</code> causes the new pane to be placed on top of all
+ existing panes.</p>
+  <p>Specifying an index value greater than the maximum valid value will force
+ the index value to the maximum valid value.</p>
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<div class="showHideLinks">
+<div class="hideInheritedProperty" id="hideInheritedProperty">
+<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
+</div>
+<div class="showInheritedProperty" id="showInheritedProperty">
+<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
+</div>
+</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#interfaceChain">interfaceChain</a> : Array<div class="summaryTableDescription">
+   List of interfaces for wrapping this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#map">map</a> : <a href="../interfaces/IMap.html">IMap</a>
+<div class="summaryTableDescription">[read-only]
+   Reference to the map.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#paneCount">paneCount</a> : int<div class="summaryTableDescription">[read-only]
+   Total number of panes available.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#wrapper">wrapper</a> : Object<div class="summaryTableDescription">
+   Instance of the cross-domain wrapper for this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clearOverlays()">clearOverlays</a>():void</div>
+<div class="summaryTableDescription">
+   Removes all overlays registered on all panes.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#containsPane()">containsPane</a>(pane:<a href="IPane.html">IPane</a>):Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether the pane manager contains the specified pane.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#createPane()">createPane</a>(index:int = -1):<a href="../interfaces/IPane.html">IPane</a>
+</div>
+<div class="summaryTableDescription">
+   Creates a new pane and adds it at the specified index, which should lie
+   in the range of 0 ..</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getPaneAt()">getPaneAt</a>(index:int):<a href="../interfaces/IPane.html">IPane</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the pane at the given index, or null if the index is out-of-range.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getPaneById()">getPaneById</a>(paneId:int):<a href="../interfaces/IPane.html">IPane</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the pane with the given id.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getPaneIndex()">getPaneIndex</a>(pane:<a href="IPane.html">IPane</a>):int</div>
+<div class="summaryTableDescription">
+   Returns the depth index of the given pane.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#placePaneAt()">placePaneAt</a>(pane:<a href="IPane.html">IPane</a>, index:int):void</div>
+<div class="summaryTableDescription">
+   Positions a pane at the specified depth.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#removeAllPanes()">removeAllPanes</a>():void</div>
+<div class="summaryTableDescription">
+   Removes all the user-created panes.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#removePane()">removePane</a>(pane:<a href="IPane.html">IPane</a>):void</div>
+<div class="summaryTableDescription">
+   Removes a pane.</div>
+</td><td class="summaryTableOwnerCol">IPaneManager</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="map"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">map</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>map:<a href="../interfaces/IMap.html">IMap</a></code>&nbsp;&nbsp;[read-only]<p>
+   Reference to the map.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get map():<a href="../interfaces/IMap.html">IMap</a></code>
+<br>
+</div>
+<a name="paneCount"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">paneCount</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>paneCount:int</code>&nbsp;&nbsp;[read-only]<p>
+   Total number of panes available. This includes the default panes, which
+   cannot be removed, and any user-created panes.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get paneCount():int</code>
+<br>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="clearOverlays()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clearOverlays</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function clearOverlays():void</code><p>
+   Removes all overlays registered on all panes.
+   </p></div>
+<a name="containsPane()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">containsPane</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function containsPane(pane:<a href="IPane.html">IPane</a>):Boolean</code><p>
+   Checks whether the pane manager contains the specified pane.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">pane</span>:<a href="IPane.html">IPane</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  Boolean indicating whether the pane is added to the pane manager.
+   </td>
+</tr>
+</table>
+</div>
+<a name="createPane()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">createPane</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function createPane(index:int = -1):<a href="../interfaces/IPane.html">IPane</a></code><p>
+   Creates a new pane and adds it at the specified index, which should lie
+   in the range of 0 .. paneCount.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">index</span>:int</code> (default = <code>-1</code>)<code></code> &mdash;  Index of the new pane in the pane stack (if not specified,
+       or if negative, the pane is added just below the infowindow pane).
+       The value 0 will place the new pane under all the existing panes.
+       A value of paneCount will place the new pane above all the existing
+       panes.
+       A value larger than paneCount will be clamped: the result will be
+       identical to that had a value of paneCount had been used.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IPane.html">IPane</a></code> &mdash; 
+                         Reference to the newly created pane.
+   
+                        
+                     </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>Create a new pane lying immediately below the marker pane.
+   <div class='listing'><pre>
+   var manager:IPaneManager = map.getPaneManager();
+   var markerPane:IPane = manager.getPaneById(PaneId.PANE_MARKER);
+   var markerIndex:int = manager.getPaneIndex(markerPane);
+   var pane:IPane = manager.createPane(markerIndex);</pre></div>
+   <p></p>
+</div>
+<a name="getPaneAt()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getPaneAt</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getPaneAt(index:int):<a href="../interfaces/IPane.html">IPane</a></code><p>
+   Returns the pane at the given index, or null if the index is out-of-range.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">index</span>:int</code> &mdash;  Depth index of the pane.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IPane.html">IPane</a></code> &mdash; 
+                         Pane that corresponds to the position.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getPaneById()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getPaneById</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getPaneById(paneId:int):<a href="../interfaces/IPane.html">IPane</a></code><p>
+   Returns the pane with the given id. This method is needed to obtain
+   references to the default panes.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">paneId</span>:int</code> &mdash;  Pane id.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IPane.html">IPane</a></code> &mdash; 
+                         Pane with the specified id.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getPaneIndex()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getPaneIndex</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getPaneIndex(pane:<a href="IPane.html">IPane</a>):int</code><p>
+   Returns the depth index of the given pane.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">pane</span>:<a href="IPane.html">IPane</a></code> &mdash;  Pane whose index will be returned.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>int</code> &mdash;  Depth index of the specified pane or -1 if the pane
+       is not registered with the pane manager.
+   </td>
+</tr>
+</table>
+</div>
+<a name="placePaneAt()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">placePaneAt</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function placePaneAt(pane:<a href="IPane.html">IPane</a>, index:int):void</code><p>
+   Positions a pane at the specified depth. Changing the pane's index
+   allows rearranging the depths of panes in relation to each other.
+   The relative order of the default panes may not be changed.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">pane</span>:<a href="IPane.html">IPane</a></code> &mdash;  Pane whose placement will be changed.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">index</span>:int</code> &mdash;  Depth index of the pane.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>Place myPane immediately above the overlays pane.
+   <div class='listing'><pre>
+   var manager:IPaneManager = map.getPaneManager();
+   var overlaysPane:IPane = manager.getPaneById(PaneId.PANE_OVERLAYS);
+   manager.placePaneAt(myPane, overlaysPane + 1);</pre></div>
+   <p></p>
+</div>
+<a name="removeAllPanes()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">removeAllPanes</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function removeAllPanes():void</code><p>
+   Removes all the user-created panes.
+   </p></div>
+<a name="removePane()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">removePane</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function removePane(pane:<a href="IPane.html">IPane</a>):void</code><p>
+   Removes a pane. This method has no effect if passed a default pane.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">pane</span>:<a href="IPane.html">IPane</a></code> &mdash;  Pane to remove.
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

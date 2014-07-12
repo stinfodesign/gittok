@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="224"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import dataTypes.place.SoundURL;
+			
+			import flash.filesystem.File;
+			import flash.media.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			
+			import spark.events.IndexChangeEvent;
+			
+			public var soundFile:File;
+			
+			private  var snd:Sound;			
+			public  var sndChannel:SoundChannel;
+			// This must be public, because Acquisition Manager closes the sound.
+			private var pos:Number;
+			private var volume:Number;
+			
+
+			public var kitURL:String = null;
+			
+			[Bindable]
+			public var soundArray:ArrayList;
+			
+			[Bindable]
+			protected var soundURLstr:String;
+			
+			protected function initializeApp():void {
+				this.move(800, 200);
+			}			
+			
+			protected function soundList_changeHandler(event:IndexChangeEvent):void
+			{
+				var soundIndex:int = soundList.selectedIndex;
+				if (soundIndex == -1) return;
+				
+				var soundFilePath:Object = soundArray.getItemAt(soundIndex) as Object;
+				soundURLstr = kitURL + soundFilePath.value;
+				
+				var req:URLRequest = new URLRequest(soundURLstr); 
+				snd = new Sound(req); 
+			}
+			
+			protected function playSoundButton_clickHandler(event:MouseEvent):void
+			{
+				sndChannel = snd.play();
+			}
+			
+			protected function stopSoundButton_clickHandler(event:MouseEvent):void
+			{
+				sndChannel.stop();
+				volumeSlider.value = 0.5;
+			}
+			
+			protected function pauseSoundButton_clickHandler(event:MouseEvent):void
+			{
+				if (pauseSoundButton.label == "pause") {
+					pos = sndChannel.position;
+					sndChannel.stop();
+					pauseSoundButton.label = "replay";
+				}
+				else {
+					pauseSoundButton.label = "pause";
+					sndChannel = snd.play(pos);
+					volume = volumeSlider.value;
+					sndChannel.soundTransform = new SoundTransform(volume);
+				}				
+			}
+			
+			protected function volumeSlider_changeHandler(event:Event):void
+			{
+				volume = volumeSlider.value;
+				sndChannel.soundTransform = new SoundTransform(volume);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Image x="10" y="6" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="75" y="15" text="Sounds" fontSize="16"/>
+	<s:Button id="playSoundButton" x="109" y="109" width="54" label="play"
+			  click="playSoundButton_clickHandler(event)"/>
+	<s:Button id="stopSoundButton" x="233" y="109" width="54" label="stop"
+			  click="stopSoundButton_clickHandler(event)"/>
+	<s:Button id="pauseSoundButton" x="171" y="109" width="54" label="pause"
+			  click="pauseSoundButton_clickHandler(event)"/>
+	<s:HSlider id="volumeSlider" x="166" y="157" width="67"
+			   change="volumeSlider_changeHandler(event)" maximum="1.0" stepSize="0.01" value="0.5"/>
+	<s:Label x="182" y="142" fontSize="10" text="Volume"/>
+	<s:DropDownList id="soundList" x="71" y="73" width="254" height="20"
+				    change="soundList_changeHandler(event)"	
+					dataProvider="{soundArray}" labelField="value"></s:DropDownList>
+
+	
+</s:Window>

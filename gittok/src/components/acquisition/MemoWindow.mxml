@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="354" height="304"
+		  backgroundColor="#faeed1"
+		  creationComplete="initializeApp()">
+	
+	<fx:Script>
+		<![CDATA[
+			import dataTypes.simpleDataTypes.Memo;
+			
+			import mx.collections.ArrayList;
+			
+			protected function initializeApp():void {
+				this.move(780, 150);
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/memoEditor_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/memoEditor_en.html");
+				navigateToURL(request);
+			}
+			
+
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<mx:Image x="10" y="16" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
+	<s:Label x="76" y="15" text="Memo" fontSize="16"/>
+	<s:TextArea id="memoArea" x="83" y="69" width="244" height="179" borderColor="#DADADA"/>
+	<s:Label x="244" y="9" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="283" y="11" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+</s:Window>
