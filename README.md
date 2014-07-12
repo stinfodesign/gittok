@@ -1,6 +1,6 @@
 gittok
 ======
 
-Geospatial information technology tool kit [pronouned: jee-tock] 
+Gittok [pronouced: JEE-TOCK]  is an Open Source Free Learning Assistance Tool for introductory courses on Geographic Information Technology. 
 
-Gittok is an education assistance tool for the course of Introduction to Geospatial technology in Higher education.
+Gittok is released under the GNU Public License (GPL) Version 3. 
