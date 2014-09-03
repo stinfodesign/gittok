@@ -107,8 +107,9 @@ package gfm
 		}		
 		
 		public function getXML():XML {
-			var str:String = '<ApplicationSchema>';
+			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
 			
+			str += '<ApplicationSchema>';
 			str += '<featureTypes>';
 			for each(var ftType:FeatureType in featureTypes) {
 				str += ftType.getXML();

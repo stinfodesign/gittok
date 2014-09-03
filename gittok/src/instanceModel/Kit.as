@@ -369,7 +369,9 @@ package instanceModel
 		}
 		
 		public function getXML():XML {
-			var str:String = '<Kit';
+			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
+
+			str += '<Kit';
 			str += ' applicationSchemaURL="' + applicationSchemaURL + '"';
 			str += ' baseMapImageURL="' + baseMapImageURL + '"';
 			if (crsURL == null)

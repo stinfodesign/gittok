@@ -7,19 +7,16 @@ package portrayal.symbolStyle
 	{
 		public var color:uint;
 		public var alpha:Number;
-		public var isCircle:Boolean;
 		public var borderStyle:LineSymbolStyle;
 		
 		public function AreaSymbolStyle()
 		{
 			super();
-			isCircle = false;
 		}
 		
 		public override function getXML():XML {
 			var str:String 	= '<AreaSymbolStyle '
-							+ 'color="' + this.color + '" alpha="' + this.alpha + '" '
-							+ 'isCircle="' + this.isCircle.toString() + '">';
+							+ 'color="' + this.color + '" alpha="' + this.alpha + '">';
 			
 			str += '<inheritance>';
 			str += super.getXML().toXMLString();
@@ -36,7 +33,6 @@ package portrayal.symbolStyle
 		public override function setXML(_xml:XML, lStyleDic:Dictionary = null):void {
 			this.color = _xml.@color.toString();
 			this.alpha = _xml.@alpha.toString();
-			this.isCircle = (_xml.@isCircle.toString() == "true") ? true : false;
 			
 			var strXMLList:XMLList = _xml.inheritance.children();	
 			super.setXML(strXMLList[0]);

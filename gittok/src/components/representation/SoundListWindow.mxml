@@ -38,7 +38,18 @@
 			protected var soundURLstr:String;
 			
 			protected function initializeApp():void {
-				this.move(800, 200);
+				this.move(300, 400);
+				if (soundArray == null) return;
+				if (soundArray.length > 0) {
+					var soundFilePath:Object = soundArray.getItemAt(0) as Object;
+					soundURLstr = kitURL + soundFilePath.value;
+					
+					var req:URLRequest = new URLRequest(soundURLstr); 
+					snd = new Sound(req); 
+					
+					soundList.prompt = soundFilePath.value;
+					soundList.selectedIndex = 0;
+				}
 			}			
 			
 			protected function soundList_changeHandler(event:IndexChangeEvent):void

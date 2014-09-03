@@ -233,8 +233,10 @@
 			
 			protected function imageTile_mouseDownHandler(event:MouseEvent):void
 			{
-				imageFile = imageFiles.getItemAt(imageTile.selectedIndex) as File;
-				imageFilePath = imageFile.url;
+				if (imageTile.selectedIndex > -1) {
+					imageFile = imageFiles.getItemAt(imageTile.selectedIndex) as File;
+					imageFilePath = imageFile.url;
+				}
 			}
 			
 

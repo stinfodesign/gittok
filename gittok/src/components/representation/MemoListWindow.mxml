@@ -21,6 +21,7 @@
 			
 			protected function initializeApp():void {
 				this.move(300, 400);
+				if (memoArray == null) return;
 				if (memoArray.length > 0) {
 					var memo:Memo = memoArray.getItemAt(0) as Memo;
 					memoList.prompt = memo.value;

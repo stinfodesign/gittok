@@ -382,6 +382,11 @@
 			{
 				initializeAssociationTypeAndScreen()
 			}
+			
+			protected function roleLabel_changeHandler(event:Event):void {
+				associationType.roleName = roleLabel.text;
+			}
+				
 
 		]]>
 	</fx:Script>
@@ -420,7 +425,7 @@
 	<s:Button x="509" y="415" label="delete" id="deleteButton" click="deleteButton_clickHandler(event)" width="60" chromeColor="{chromeColor}"/>
 	<s:RadioButton x="482" y="173" label="associate" groupName="assGroup" id="assButton" selected="true"  click="assButton_clickHandler(event)"/>
 	<s:RadioButton x="482" y="192" label="composite" groupName="assGroup" id="comButton" click="comButton_clickHandler(event)"/>
-	<s:TextInput x="437" y="261" width="116" id="roleLabel"/>
+	<s:TextInput x="437" y="261" width="116" id="roleLabel" change="roleLabel_changeHandler(event)"/>
 	<s:CheckBox id="checkFromMulti" x="73" y="273" label="multiplicity"/>
 	<s:CheckBox id="checkToMulti" x="482" y="238" label="multiplicity"/>
 	<s:Label x="19" y="238" text="from"/>

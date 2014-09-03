@@ -217,7 +217,16 @@
 
 			protected function setReturnAttributeButton_clickHandler(event:MouseEvent):void
 			{
-				var at:AttributeType = attributeGrid.selectedItem as AttributeType;
+				try {
+					var at:AttributeType = attributeGrid.selectedItem as AttributeType;
+					if (at == null) {
+						Alert.show("Return type shall be selected before.", "Alert", 4, this);
+						return;	
+					}
+				} catch (error:Error) {
+					trace("Return type shall be selected before.");
+					return;						
+				}
 				
 				if (at.derived == "") {
 					Alert.show("Return type shall be derived.", "Alert", 4, this);
@@ -233,17 +242,17 @@
 				
 				if (faSelection) { //feature
 					if (fSelfRadio.selected)
-						opType.returnFATypeID = featureType.name;
+						opType.returnFATypeName = featureType.name;
 					else if (fToRadio.selected)
-						opType.returnFATypeID = linkAssoType.to.name;
+						opType.returnFATypeName = linkAssoType.to.name;
 				}
 				else {  // association
 					if (aSelfRadio.selected)
-						opType.returnFATypeID = associationType.name;
+						opType.returnFATypeName = associationType.name;
 					else if (aFromRadio.selected)
-						opType.returnFATypeID = associationType.from.name;
+						opType.returnFATypeName = associationType.from.name;
 					else if (aToRadio.selected)
-						opType.returnFATypeID = associationType.to.name;
+						opType.returnFATypeName = associationType.to.name;
 				}
 			}
 

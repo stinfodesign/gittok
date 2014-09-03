@@ -87,6 +87,7 @@
 				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				
@@ -443,7 +444,6 @@
 				}
 
 				aStyle = new AreaSymbolStyle();
-				//aStyle.isCircle = false;
 				aStyle.name = areaSymName.text;
 				areaColor.color = aStyle.color = selectedAreaColor;
 				areaColor.alpha = aStyle.alpha = selectedAreaAlpha;
@@ -692,7 +692,14 @@
 						coords.addItem(bcrd);
 						elements.addItem(coords);
 						
-						styles.addItem(aStyle);
+						var cStyle:CircleSymbolStyle = new CircleSymbolStyle();
+						cStyle.alpha = aStyle.alpha;
+						cStyle.borderStyle = aStyle.borderStyle;
+						cStyle.color = aStyle.color;
+						cStyle.id = aStyle.id;
+						cStyle.name = aStyle.name;
+						styles.addItem(cStyle);
+						
 						startFlag = true;
 						return;
 					}
@@ -732,20 +739,17 @@
 					var element:* = elements.getItemAt(iw);
 					var style:* = styles.getItemAt(iw);
 					var dw:Number = Number.MAX_VALUE;
-					if (style is AreaSymbolStyle) {
-						var aStyle:AreaSymbolStyle = style as AreaSymbolStyle;
-						if (aStyle.isCircle) {
-							var crcl:SG_Circle = new SG_Circle();
-							var crds:CoordinateArray = element as CoordinateArray;
+					if (style is CircleSymbolStyle) {
+						var crcl:SG_Circle = new SG_Circle();
+						var crds:CoordinateArray = element as CoordinateArray;
 							
-							crcl.center = crds.getItemAt(0) as Coordinate2;
-							var bcrd:Coordinate2 = crds.getItemAt(1) as Coordinate2;
-							crcl.radius = math.Distance.p2p(crcl.center, bcrd);
-							dw = math.Distance.p2clb(p, crcl);	
-						}
-						else {
-							dw = math.Distance.p2ls(p, element as CoordinateArray); 							
-						}
+						crcl.center = crds.getItemAt(0) as Coordinate2;
+						var bcrd:Coordinate2 = crds.getItemAt(1) as Coordinate2;
+						crcl.radius = math.Distance.p2p(crcl.center, bcrd);
+						dw = math.Distance.p2clb(p, crcl);	
+					}
+					if (style is AreaSymbolStyle) {
+						dw = math.Distance.p2ls(p, element as CoordinateArray); 							
 					}
 					else {  //element is linestring
 						dw = math.Distance.p2ls(p, element as CoordinateArray); 
@@ -776,26 +780,30 @@
 				
 				// digitize break
 				startFlag = true;
-				elements.addItem(cString);
+				//elements.addItem(cString);
+				
 				if (lineRadioButton.selected) {
+					elements.addItem(cString);
 					styles.addItem(lineSymGrid4Point.selectedItem as LineSymbolStyle);
 				}
 				else if (areaRadioButton.selected) {
+					elements.addItem(cString);
 					aStyle = areaSymGrid4Point.selectedItem as AreaSymbolStyle;
-					//aStyle.isCircle = false;
 					styles.addItem(aStyle);
 				}
+				/*
 				else if (circleRadioButton.selected) {
-					aStyle = areaSymGrid4Point.selectedItem as AreaSymbolStyle;
-					var cStyle:AreaSymbolStyle = new AreaSymbolStyle();
-					cStyle.alpha = aStyle.alpha;
-					cStyle.borderStyle = aStyle.borderStyle;
-					cStyle.color = aStyle.color;
-					cStyle.id = aStyle.id;
-					cStyle.name = aStyle.name;
-					cStyle.isCircle = true;
+					var wStyle:AreaSymbolStyle = areaSymGrid4Point.selectedItem as AreaSymbolStyle;
+					var cStyle:CircleSymbolStyle = new CircleSymbolStyle();
+					cStyle.alpha = wStyle.alpha;
+					cStyle.borderStyle = wStyle.borderStyle;
+					cStyle.color = wStyle.color;
+					cStyle.id = wStyle.id;
+					cStyle.name = wStyle.name;
 					styles.addItem(cStyle);
+					
 				}
+				*/
 				
 				samplePointView.graphics.clear();
 				drawElements();
@@ -1021,55 +1029,55 @@
 					lSym.name = "sampleLine";
 					samplePointView.addChild(lSym);					
 				}
-				else {
-					if (style is AreaSymbolStyle) {
-						var aStyle:AreaSymbolStyle = styles.getItemAt(i) as AreaSymbolStyle;
+				else if (style is CircleSymbolStyle) {
+					var cStyle:CircleSymbolStyle = styles.getItemAt(i) as CircleSymbolStyle;
+					
+					var element:* = elements.getItemAt(i);
+					
+					var crds:CoordinateArray = element as CoordinateArray;
+					var center:Coordinate2 = crds.getItemAt(0) as Coordinate2;
+					var bcrd:Coordinate2   = crds.getItemAt(1) as Coordinate2;
+					var radius:Number = math.Distance.p2p(center, bcrd);
 						
-						var element:* = elements.getItemAt(i);
-						if (aStyle.isCircle) {
-							var crds:CoordinateArray = element as CoordinateArray;
-							var center:Coordinate2 = crds.getItemAt(0) as Coordinate2;
-							var bcrd:Coordinate2   = crds.getItemAt(1) as Coordinate2;
-							var radius:Number = math.Distance.p2p(center, bcrd);
-							
-							var bStyle:LineSymbolStyle = aStyle.borderStyle;
-							samplePointView.graphics.lineStyle(bStyle.thickness * thicknessRate, 
-								bStyle.color, bStyle.alpha, false, "normal", 
-								bStyle.caps, bStyle.joints, 3);
-							samplePointView.graphics.beginFill(aStyle.color, aStyle.alpha);
-							samplePointView.graphics.drawCircle(center.x, center.y, radius);
-							samplePointView.graphics.endFill();
-						}
-						else {
-							cString = elements.getItemAt(i) as CoordinateArray;
-							var crd:Coordinate2 = cString.getItemAt(0) as Coordinate2;
-							samplePointView.graphics.beginFill(aStyle.color, aStyle.alpha);
-							samplePointView.graphics.moveTo(crd.x, crd.y);
-							for (var i:int = 0; i < cString.length; i++) {
-								crd = cString.getItemAt(i) as Coordinate2;
-								samplePointView.graphics.lineTo(crd.x, crd.y);
-							}
-							samplePointView.graphics.endFill();
-							
-							p = new SG_Point();
-							p.position = cString.getItemAt(0) as Coordinate2;
-							crv.start = p;
-							p = new SG_Point();
-							p.position = cString.getItemAt(cString.length - 1) as Coordinate2;
-							crv.end = p;
-							crv.shape = cString;
+					var bStyle:LineSymbolStyle = cStyle.borderStyle;
+					samplePointView.graphics.lineStyle(bStyle.thickness * thicknessRate, 
+						bStyle.color, bStyle.alpha, false, "normal", 
+						bStyle.caps, bStyle.joints, 3);
+					samplePointView.graphics.beginFill(cStyle.color, cStyle.alpha);
+					samplePointView.graphics.drawCircle(center.x, center.y, radius);
+					samplePointView.graphics.endFill();
+				}
+				else if (style is AreaSymbolStyle) {
+					var aStyle:AreaSymbolStyle = styles.getItemAt(i) as AreaSymbolStyle;
 						
-							aStyle.borderStyle.thickness *= thicknessRate;
-							var border:LineSymbol = new LineSymbol();
-							lObj = new Object();
-							lObj.curve = crv;
-							lObj.style = aStyle.borderStyle;
-							border.decode(lObj);
-							aStyle.borderStyle.thickness /= thicknessRate;
-							border.name = "sampleLine";
-							samplePointView.addChild(border);					
-						}
+					element = elements.getItemAt(i);
+					cString = elements.getItemAt(i) as CoordinateArray;
+					var crd:Coordinate2 = cString.getItemAt(0) as Coordinate2;
+					samplePointView.graphics.beginFill(aStyle.color, aStyle.alpha);
+					samplePointView.graphics.moveTo(crd.x, crd.y);
+					for (var i:int = 0; i < cString.length; i++) {
+						crd = cString.getItemAt(i) as Coordinate2;
+						samplePointView.graphics.lineTo(crd.x, crd.y);
 					}
+					samplePointView.graphics.endFill();
+							
+					p = new SG_Point();
+					p.position = cString.getItemAt(0) as Coordinate2;
+					crv.start = p;
+					p = new SG_Point();
+					p.position = cString.getItemAt(cString.length - 1) as Coordinate2;
+					crv.end = p;
+					crv.shape = cString;
+						
+					aStyle.borderStyle.thickness *= thicknessRate;
+					var border:LineSymbol = new LineSymbol();
+					lObj = new Object();
+					lObj.curve = crv;
+					lObj.style = aStyle.borderStyle;
+					border.decode(lObj);
+					aStyle.borderStyle.thickness /= thicknessRate;
+					border.name = "sampleLine";
+					samplePointView.addChild(border);					
 				}
 			}
 			

@@ -25,7 +25,15 @@
 
 			
 			protected function initializeApp():void {
-				this.move(800, 200);
+				this.move(300, 400);
+				if (videoArray == null) return;
+				if(videoArray.length > 0) {
+					var videoFilePath:Object = videoArray.getItemAt(0) as Object;
+					videoURL = kitURL + videoFilePath.value;
+					
+					videoList.prompt = videoFilePath.value;
+					videoList.selectedIndex = 0;
+				}
 			}
 			
 			protected function volumeSlider_changeHandler(event:Event):void

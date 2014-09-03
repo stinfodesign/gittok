@@ -16,7 +16,9 @@ package portrayal.portrayalStyle
 		}
 		
 		public function getXML():XML {
-			var str:String = '<PortrayalDic applicationSchema="' + this.applicationSchema + '" ';
+			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
+
+			str += '<PortrayalDic applicationSchema="' + this.applicationSchema + '" ';
 			str += 'symbolStyleSchema="' + this.symbolStyleSchema + '" ';
 			str += 'labelStyleSchema="' + this.labelStyleSchema + '">';
 			for each(var fpPair:FeaturePortrayalPair in fpPairs) {

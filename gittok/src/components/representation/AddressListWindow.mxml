@@ -23,7 +23,16 @@
 			public var addressArray:ArrayList;
 			
 			protected function initializeApp():void {
-				this.move(800, 200);
+				this.move(300, 400);
+				if (addressArray == null) return;
+				if (addressArray.length > 0) {
+					var address:Address = addressArray.getItemAt(0) as Address;
+					zipCodeLabel.text = address.zipCode;
+					addressArea.text = address.element;
+					countryLabel.text = address.country;
+					addressList.prompt = address.element;
+					addressList.selectedIndex = 0;
+				}
 			}			
 			
 			protected function addressList_changeHandler(event:IndexChangeEvent):void

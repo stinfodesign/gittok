@@ -113,6 +113,7 @@
 				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				
@@ -170,8 +171,10 @@
 			
 			private function openAps(event:Event):void {
 				var apps:ApplicationSchema = new ApplicationSchema();
-				
+
+				trace(file.nativePath);
 				stream.open(file, FileMode.READ);
+
 				apps = stream.readObject();
 				featureTypes = apps.featureTypes;
 				associationTypes = apps.associationTypes; 
@@ -289,8 +292,16 @@
 					var yarray:Array = [10, 60, 10];
 					
 					var crv:SG_Curve = new SG_Curve;
+					var crd:Coordinate2 =new Coordinate2();
+					crd.x = xarray[0]; crd.y = yarray[0];
+					crv.start = new SG_Point();
+					crv.start.position = crd;
+					crd.x = xarray[2]; crd.y = yarray[2];
+					crv.end = new SG_Point();
+					crv.end.position = crd;
+					
 					for (i = 0; i < 3; i++) {
-						var crd:Coordinate2 =new Coordinate2();
+						crd =new Coordinate2();
 						crd.x = xarray[i]; crd.y = yarray[i];
 						crv.shape.addItem(crd);
 					}				
@@ -327,9 +338,18 @@
 					crv = new SG_Curve;
 					for (i = 0; i < 7; i++) {
 						crd =new Coordinate2();
-						crd.x = xarray[i]; crd.y = yarray[i];
+						crd.x = xarray[i]; 
+						crd.y = yarray[i];
 						crv.shape.addItem(crd);
-					}				
+					}
+					var sp:SG_Point = new SG_Point();
+					sp.position.x = xarray[0];
+					sp.position.y = yarray[0];
+					crv.start = sp;
+					var ep:SG_Point = new SG_Point();
+					ep.position.x = xarray[6];
+					ep.position.y = yarray[6];
+					crv.end = ep;					
 					
 					var border:LineSymbol = new LineSymbol();
 					cObj = new Object();

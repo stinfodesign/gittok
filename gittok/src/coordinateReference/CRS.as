@@ -15,7 +15,9 @@ package coordinateReference
 		}
 		
 		public function getXML():XML {
-			var str:String = '<CRS id="' + this.id + '">';
+			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
+
+			str += '<CRS id="' + this.id + '">';
 			str += '<datum>'
 			str += datum.getXML().toXMLString();
 			str += '</datum>';

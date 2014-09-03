@@ -35,7 +35,9 @@ package metadata
 		}
 		
 		public function getXML():XML {
-			var str:String = '<Metadata ';
+			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
+
+			str += '<Metadata ';
 			str += 'title="' + this.title + '" '
 				+  'overview="' + this.overview + '" '
 				+  'keywords="'

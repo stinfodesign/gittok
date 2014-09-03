@@ -15,7 +15,9 @@ package portrayal.labelStyle
 		}
 		
 		public function getXML():XML {
-			var str:String = '<LabelStyleSchema name="';
+			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
+			
+			str += '<LabelStyleSchema name="';
 			str += this.name + '">';
 			
 			for each(var lblStyle:LabelStyle in labelStyles) {

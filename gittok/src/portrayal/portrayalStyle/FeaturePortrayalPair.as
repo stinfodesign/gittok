@@ -36,7 +36,7 @@ package portrayal.portrayalStyle
 			for each(var balloonAttType:AttributeType in balloonsOnMap) {
 				str += balloonAttType.getXML();
 			}
-			str += '</balloonOnMap>';
+			str += '</balloonsOnMap>';
 			
 			
 			str += '</FeaturePortrayalPair>';

@@ -364,7 +364,6 @@
 				// Save the kit
 				try {
 					kitFile = new File();
-					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
 					kitFile.addEventListener(Event.SELECT, saveKit);
 					kitFile.browseForSave("Save kit file    [キャンセル:CANCEL  保存:SAVE]");		
 				} catch (error:IOError) {
@@ -596,7 +595,7 @@
 					}
 				}
 				
-				// delete ADDRESS in the addressList, if the feature has address as its asstribute
+				// delete ADDRESS in the addressList, if the feature has address as its attribute
 				for each(attType in attTypes) {
 					dType = attType.dataType;
 					if (dType == "Address") {
@@ -1195,9 +1194,12 @@
 					attValueList.removeItem(primi);
 				}
 				else if (tp == "Address") {
-					var adID:String = valueGrid.selectedItem as String;
+					/*
+					var adID:Address = valueGrid.selectedItem as Address;
 					attValueList.removeItem(adID);
 					delete kit.addressList[adID];
+					*/
+					attValueList.removeItemAt(valueGrid.selectedIndex);
 				}
 				else if (tp == "Memo") {
 					attValueList.removeItemAt(valueGrid.selectedIndex);

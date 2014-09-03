@@ -21,7 +21,9 @@ package portrayal.symbolStyle
 		}
 		
 		public function getXML():XML {
-			var str:String = '<SymbolStyleSchema>';
+			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
+			
+			str += '<SymbolStyleSchema>';
 			
 			str += '<pointSymStyles>';
 			for each(var pStyle:PointSymbolStyle in pointSymStyles) {

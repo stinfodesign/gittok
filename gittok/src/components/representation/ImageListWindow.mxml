@@ -23,7 +23,16 @@
 						
 			protected function initializeApp():void {
 				this.move(300, 400);
-
+				if (imageArray == null) return;
+				if (imageArray.length > 0) {
+					var imageFilePath:Object = imageArray.getItemAt(0) as Object;
+					var imageURL:String = kitURL + imageFilePath.value;
+					var wiFile:File = new File(imageURL);
+					imageView.load(imageURL);
+					imageView.addEventListener(Event.RESIZE, onResize);	
+					imageList.prompt = imageFilePath.value;
+					imageList.selectedIndex = 0;
+				}
 			}
 
 			protected function imagePanel_mouseDownHandler(event:MouseEvent):void

@@ -21,6 +21,13 @@
 			
 			public function initializeApp():void {
 				this.move(300, 400);
+				if (urlArray == null) return;
+				if (urlArray.length > 0) {
+					var url:URL = urlArray.getItemAt(0) as URL;
+					urlList.prompt = url.value;
+					urlList.selectedIndex = 0;
+					navigateToURL(new URLRequest(url.value));
+				}				
 			}
 			
 			protected function urlList_changeHandler(event:IndexChangeEvent):void

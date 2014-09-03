@@ -292,9 +292,8 @@
 			
 		]]>
 	</fx:Script>
-	<mx:Image x="61" y="98" width="335" height="396" source="documents/figures/GIT_Bok_Frame.png"/>
-	<mx:Image left="10" top="10" source="documents/pictgrams/gittokLogo.png"/>
-	<s:Label x="45" y="55" text="'dʒɪtɒk" fontFamily="Futura" color="#969696" fontSize="12" fontWeight="bold"/>
+	<mx:Image x="61" y="104" width="277" height="381" source="documents/figures/GIT_Bok_Frame.png"/>
+	<mx:Image left="14" top="14" source="documents/pictgrams/gittokLogo.png"/>
 	
 	<mx:Image id="action0" source="@Embed(source='documents/pictgrams/pictAction0.png')" x="304" y="242" width="80" height="60" visible="true"/>
 	<mx:Image id="action1" source="@Embed(source='documents/pictgrams/pictAction1.png')" x="304" y="242" width="80" height="60" visible="false"/>
@@ -347,13 +346,13 @@
 			 click="representationLabel_clickHandler(event)"
 			 mouseOver="representationMouseOver(event)"
 			 mouseOut="representationMouseOut(event)"/>
-	<s:Label x="108" y="148" text="Real World" fontSize="15" fontStyle="italic" fontWeight="bold" color="#5A5A5A"/>
+	<s:Label x="106" y="152" text="Real World" fontSize="14" fontStyle="italic" fontWeight="bold" color="#5A5A5A"/>
 	<s:Label x="322" y="309" text="Action" width="46" height="10" fontSize="12" color="#5A5A5A"/>
 	
 	<s:Label x="40" y="283" text="Modeling" color="#646464"/>
 	<s:Label x="196" y="283" text="Acquisition" color="#646464"/>
-	<s:Label x="41" y="397" text="Analysis" color="#646464"/>
-	<s:Label x="189" y="397" text="Management" color="#646464"/>
+	<s:Label x="41" y="402" text="Analysis" color="#646464"/>
+	<s:Label x="189" y="394" text="Management" color="#646464"/>
 	<s:Label x="37" y="519" text="Exchange" color="#646464"/>
 	<s:Label x="183" y="518" text="Representation" color="#646464"/>
 	
@@ -361,7 +360,7 @@
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label right="10" top="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:Label id="copyrightlabel" right="10" bottom="10" text="© Morishige Ota, 2014" fontSize="12"
+	<s:Label id="copyrightlabel" right="13" bottom="10" text="Morishige Ota, 2014" fontSize="10"
 			 buttonMode="true" click="copyrightLabel_clickHandler(event)"/>
 	
 </s:WindowedApplication>

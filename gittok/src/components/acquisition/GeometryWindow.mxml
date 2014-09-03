@@ -174,6 +174,7 @@
 				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				
@@ -190,7 +191,7 @@
 				
 				var pattern:RegExp = /\/\w*\.\w*/;	// regular expression to detect the file name
 				
-				if (kit.baseMapImageURL != "null") {
+				if (kit.baseMapImageURL != null) {
 					var bmURL:String = kitURL + kit.baseMapImageURL;
 					baseMapImage.load(bmURL);
 					baseMapImage.addEventListener(Event.RESIZE, onComplete2);
@@ -336,7 +337,13 @@
 				var controlPointsStream:FileStream = new FileStream();
 				controlPointsStream.open(controlPointsFile, FileMode.READ);
 				var str:String = controlPointsStream.readMultiByte(controlPointsStream.bytesAvailable, "utf-8");
-				var _xml:XML = XML(str);
+				try {
+					var _xml:XML = XML(str);
+				} catch (error:Error) {
+					Alert.show(error.message);
+					return;
+				}
+				
 				controlPoints = new IdentifiedCoordinateDic();
 				controlPoints.setXML(_xml);
 				
@@ -1070,7 +1077,7 @@
 				for (var i:int = 0; i < n; i++) {
 					workLayer.removeChildAt(0);
 				}
-
+				
 				for each (var s:SG_Surface in kit.surfaceList) {
 					aSym = new AreaSymbol();
 					var aObj:Object = new Object();
@@ -1691,5 +1698,4 @@
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="588" y="18" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-
 </s:Window>

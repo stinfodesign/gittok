@@ -386,7 +386,6 @@
 				
 				try {
 					metadataFile = new File();
-					var filter:FileFilter = new FileFilter("Metadata File", "*.mtd");
 					metadataFile.addEventListener(Event.SELECT, saveMetadata);
 					metadataFile.browseForSave("Save metadata file");	
 					
@@ -396,6 +395,10 @@
 			}
 			
 			private function saveMetadata(event:Event):void {
+				var startIndex:int = metadataFile.nativePath.length - 4;
+				var suffix:String = metadataFile.nativePath.slice(startIndex);
+				if (suffix != ".mtd") metadataFile.nativePath += ".mtd";					
+
 				var mtdStream:FileStream = new FileStream();
 				mtdStream.open(metadataFile, FileMode.WRITE);
 				mtdStream.writeObject(mtd);
@@ -709,9 +712,9 @@
 			map control
 			*/
 			protected function onMapAddedToStage(e:Event):void {
-				fxMap.map.addLayer(gsiMap); // 地理院地図  ズームレベル18未整備のため現時点(2013年12月)ではこちら  (numZoomLevels=18)
+				//fxMap.map.addLayer(gsiMap); // 地理院地図  ズームレベル18未整備のため現時点(2013年12月)ではこちら  (numZoomLevels=18)
 				
-				//fxMap.map.addLayer(new GSIMaps("地理院地図"));　// 地理院地図 ズームレベル18整備後はこちら  デフォルト値のため第２引数19省略 (numZoomLevels=19)
+				fxMap.map.addLayer(new GSIMaps("地理院地図"));　// 地理院地図 ズームレベル18整備後はこちら  デフォルト値のため第２引数19省略 (numZoomLevels=19)
 				//fxMap.map.addLayer(new GSIMaps("地理院地図2012", 19, 'http://cyberjapandata.gsi.go.jp/xyz/std2012/')); // 2012年度版地理院地図 (numZoomLevels=19)
 				//fxMap.map.resolution = new Resolution(1.195, "EPSG:900913");
 				

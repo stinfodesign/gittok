@@ -153,6 +153,7 @@
 				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
 				
@@ -776,8 +777,7 @@
 				attValueList = new ArrayList();
 				
 				if (tabBar.selectedIndex == 0) {	//feature	
-					//fs.addItem(selfFeature);
-					var wFeatureSet:FeatureSet = featureSetArray[operationType.returnFATypeID] as FeatureSet;
+					var wFeatureSet:FeatureSet = featureSetArray[operationType.returnFATypeName] as FeatureSet;
 					var fList:ArrayList = new ArrayList();
 					for each(var wf:Feature in wFeatureSet.features) {
 						fList.addItem(wf);	
@@ -785,7 +785,7 @@
 					attValueList = this.setAttValueList("f", valueObject, fList);
 					
 					var fType:FeatureType = applicationSchema.featureTypes[feature.typeName] as FeatureType;					
-					if (operationType.returnFATypeID == fType.name) {
+					if (operationType.returnFATypeName == fType.name) {
 						// atribute in a feature itself 
 						feature.attributes[operationType.returnAttributeName] = attValueList;
 						
@@ -803,7 +803,7 @@
 					}
 					
 					var aname:String = operationType.returnAttributeName;
-					fType = applicationSchema.featureTypes[operationType.returnFATypeID] as FeatureType;
+					fType = applicationSchema.featureTypes[operationType.returnFATypeName] as FeatureType;
 					var attType:AttributeType = fType.getAttributeTypeByName(aname);
 					
 					unitLabel.text = attType.unit;
@@ -812,7 +812,7 @@
 					
 				else {	// tabBar.index == 1 : association	
 					var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;
-					if (assoType.from.name == operationType.returnFATypeID) {
+					if (assoType.from.name == operationType.returnFATypeName) {
 						// return value to "from"
 						attValueList = this.setAttValueList("f", valueObject, association.relateFrom);
 						
@@ -829,7 +829,7 @@
 						unitLabel.text = attType.unit;
 						
 					}
-					else if (assoType.to.name == operationType.returnFATypeID) {
+					else if (assoType.to.name == operationType.returnFATypeName) {
 						// return value to "to"
 						attValueList = this.setAttValueList("f", valueObject, association.relateTo);
 						
@@ -846,7 +846,7 @@
 						unitLabel.text = attType.unit;
 
 					}
-					else if (assoType.name == operationType.returnFATypeID) {
+					else if (assoType.name == operationType.returnFATypeName) {
 						// return value to "self" as an association
 						attValueList = this.setAttValueList("a", valueObject, null, association);
 						
@@ -1069,21 +1069,21 @@
 				var attValue:* = attValueList.getItemAt(si);
 				
 				var operationType:OperationType = operationList.selectedItem as OperationType;	
-				var faTypeID:String = operationType.returnFATypeID;
+				var faTypeName:String = operationType.returnFATypeName;
 				
 				if (tabBar.selectedIndex == 0) { 
 					// feature operation
-					var wFeatureSet:FeatureSet = featureSetArray[faTypeID] as FeatureSet;
+					var wFeatureSet:FeatureSet = featureSetArray[faTypeName] as FeatureSet;
 					this.displayFeature(wFeatureSet.features[attValue.featureID] as Feature);
 				}
 				else {		
 					// association operation
-					var wAssociationSet:AssociationSet = associationSetArray[faTypeID] as AssociationSet;
+					var wAssociationSet:AssociationSet = associationSetArray[faTypeName] as AssociationSet;
 					if (wAssociationSet != null) {
 						this.displayAssociation(wAssociationSet.associations[attValue.associationID] as Association);
 						return;
 					}
-					wFeatureSet = featureSetArray[faTypeID] as FeatureSet;
+					wFeatureSet = featureSetArray[faTypeName] as FeatureSet;
 					this.displayFeature(wFeatureSet.features[attValue.featureID] as Feature);
 				}
 			}

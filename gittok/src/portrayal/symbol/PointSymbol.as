@@ -67,41 +67,44 @@ package portrayal.symbol
 					}
 
 				}
-				else {
+				else if (style is CircleSymbolStyle) {
+					var element:* = elements.getItemAt(i);
+
+					var cStyle:CircleSymbolStyle = styles.getItemAt(i) as CircleSymbolStyle;
+
+					var crds:CoordinateArray = element as CoordinateArray;
+					var center:Coordinate2 = crds.getItemAt(0) as Coordinate2;
+					var bcrd:Coordinate2 = crds.getItemAt(1) as Coordinate2;
+					var radius:Number = math.Distance.p2p(center, bcrd);
+						
+					var bStyle:LineSymbolStyle = cStyle.borderStyle;
+					graphics.lineStyle(bStyle.thickness, 
+					bStyle.color, bStyle.alpha, false, "normal", 
+					bStyle.caps, bStyle.joints, 3);
+					graphics.beginFill(cStyle.color, cStyle.alpha);
+					graphics.drawCircle(center.x, center.y, radius);
+					graphics.endFill();
+					
+				}
+				else if (style is AreaSymbolStyle) {
 					var aStyle:AreaSymbolStyle = styles.getItemAt(i) as AreaSymbolStyle;
 					lStyle = aStyle.borderStyle;
 					graphics.lineStyle(lStyle.thickness, 
 						lStyle.color, lStyle.alpha, false, "normal", 
 						lStyle.caps, lStyle.joints, 3);
 										
-					var element:* = elements.getItemAt(i);
-					if (aStyle.isCircle) {
-						var crds:CoordinateArray = element as CoordinateArray;
-						var center:Coordinate2 = crds.getItemAt(0) as Coordinate2;
-						var bcrd:Coordinate2 = crds.getItemAt(1) as Coordinate2;
-						var radius:Number = math.Distance.p2p(center, bcrd);
+					element = elements.getItemAt(i);
+					cString = element as CoordinateArray;
 						
-						var bStyle:LineSymbolStyle = aStyle.borderStyle;
-						graphics.lineStyle(bStyle.thickness, 
-						bStyle.color, bStyle.alpha, false, "normal", 
-						bStyle.caps, bStyle.joints, 3);
-						graphics.beginFill(aStyle.color, aStyle.alpha);
-						graphics.drawCircle(center.x, center.y, radius);
-						graphics.endFill();
+					m = cString.length;
+					coord = cString.getItemAt(0) as Coordinate2;
+					graphics.beginFill(aStyle.color, aStyle.alpha);
+					graphics.moveTo(coord.x, coord.y);
+					for (j = 1; j < m; j++) {
+						coord = cString.getItemAt(j) as Coordinate2;
+						graphics.lineTo(coord.x, coord.y);
 					}
-					else {
-						cString = element as CoordinateArray;
-						
-						m = cString.length;
-						coord = cString.getItemAt(0) as Coordinate2;
-						graphics.beginFill(aStyle.color, aStyle.alpha);
-						graphics.moveTo(coord.x, coord.y);
-						for (j = 1; j < m; j++) {
-							coord = cString.getItemAt(j) as Coordinate2;
-							graphics.lineTo(coord.x, coord.y);
-						}
-						graphics.endFill();
-					}
+					graphics.endFill();
 				}
 			} 
 			var size:Number = style.size;

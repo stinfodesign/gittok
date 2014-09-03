@@ -3,9 +3,15 @@ package portrayal.map
 	import dataTypes.spatialGeometry.Coordinate2;
 	
 	import mx.collections.ArrayList;
-
+	
+	import portrayal.portrayalStyle.PortrayalSchema;
+	
 	public class Map
 	{
+		// original data reference
+		public var kitFileName:String;
+		public var portrayalSchema:PortrayalSchema;
+		
 		// drawing space
 		public var x:Number;
 		public var y:Number;
