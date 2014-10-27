@@ -87,7 +87,7 @@
 	</fx:Script>
 	<mx:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="60" height="60"/>
 	<s:Label x="81" y="15" text="Accuracy Evaluation" fontSize="16" color="{chrColor}"/>
-	<s:Label x="85" y="76" text="Variance, co-varince matrix" width="59" height="48" textAlign="left"/>
+	<s:Label x="85" y="76" text="Variance, co-variance matrix" width="68" height="48" textAlign="left"/>
 	<s:Label x="214" y="55" text="X"/>
 	<s:Label x="297" y="55" text="Y"/>
 	<s:Label x="180" y="72" width="75" height="20" backgroundColor="#DADADA" id="varXXLabel" verticalAlign="middle"/>

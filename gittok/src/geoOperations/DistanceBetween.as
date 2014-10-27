@@ -45,6 +45,7 @@ package geoOperations
 					var d:Number = math.Distance.p2p(fcr, tcr);
 					nearest = (nearest > d) ? d: nearest;
 				}
+				
 				var distance:Real = new Real();
 				distance.value = nearest;
 				dists.addItem(distance);
@@ -138,7 +139,7 @@ package geoOperations
 			var dists:ArrayList = new ArrayList();
 			
 			var wargObj:Object     = new Object();
-			wargObj["affineparam"] = ap;
+			wargObj["affineParam"] = ap;
 			wargObj["toCurve"]     = toAttValues;
 			
 			for (var i:int = 0; i < fromAttValues.length; i++) {
@@ -169,6 +170,8 @@ package geoOperations
 				distance.value = nearest;
 				dists.addItem(distance);
 			}
+			
+			
 			return dists;			
 		}
 		
@@ -181,7 +184,7 @@ package geoOperations
 			var dists:ArrayList = new ArrayList();
 			
 			var wargObj:Object     = new Object();
-			wargObj["affineparam"] = ap;
+			wargObj["affineParam"] = ap;
 			wargObj["toSurface"]     = toAttValues;
 			
 			for (var i:int = 0; i < fromAttValues.length; i++) {
@@ -196,16 +199,19 @@ package geoOperations
 					var crd:Coordinate2 = crds.getItemAt(j) as Coordinate2;
 					var p:SG_Point = new SG_Point;
 					p.position = crd;
-					fromPointArray.addItem(p);
+					var pArray:ArrayList = new ArrayList();
+					pArray.addItem(p);
+					fromPointArray.addItem(pArray);
 				}
 				
 				wargObj["fromPoint"] = fromPointArray;
 				
 				var ds:ArrayList = distancePtoS(wargObj);
 				
-				for (var k:int = 0; k < dists.length; k++) {
-					var d:Number = ds.getItemAt(k) as Number;
-					nearest = (nearest > d) ? d: nearest;
+				nearest = Number.MAX_VALUE;
+				for (var k:int = 0; k < ds.length; k++) {
+					var d:Real = ds.getItemAt(k) as Real;
+					nearest = (nearest > d.value) ? d.value: nearest;
 				}
 				
 				var distance:Real = new Real();

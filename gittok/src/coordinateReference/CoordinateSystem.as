@@ -8,12 +8,12 @@ package coordinateReference
 		public var name:String;		// name of the system such as "Geodetic Coordinate System"
 		public var dimension:int;	// number of dimension such as 2
 		public var axis:ArrayList;		// definition of axes. the type must be "Axis".
-		public var ps:ProjectionSystem;
+		public var ps:GaussKrugerProjection;
 		
 		public function CoordinateSystem()
 		{
 			axis = new ArrayList();
-			ps = new ProjectionSystem();
+			ps = new GaussKrugerProjection();
 		}
 		
 		public function getXML():XML {
@@ -47,7 +47,7 @@ package coordinateReference
 				ax.setXML(axXML);
 				this.axis.addItem(ax);
 			}
-			var psXMLList:XMLList = _xml.ps.ProjectionSystem;
+			var psXMLList:XMLList = _xml.ps.GaussKrugerProjection;
 			this.ps.setXML(psXMLList[0]);
 
 		}

@@ -2,6 +2,8 @@ package portrayal.map
 {
 	import dataTypes.spatialGeometry.Coordinate2;
 	
+	import flashx.textLayout.formats.Float;
+	
 	import mx.collections.ArrayList;
 	
 	import portrayal.portrayalStyle.PortrayalSchema;
@@ -18,6 +20,9 @@ package portrayal.map
 		public var width:Number;
 		public var height:Number;
 		public var scale:Number;
+		
+		public var backgroundColor:uint;
+		public var backgroundColorAlpha:Number;
 		
 		// symbol space
 		public var symbolArray:ArrayList;

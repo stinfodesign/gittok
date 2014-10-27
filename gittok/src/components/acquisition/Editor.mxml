@@ -189,7 +189,7 @@
 				registerClassAlias("coordinateReference.Ellipsoid", Ellipsoid);
 				registerClassAlias("coordinateReference.GeodeticDatum", GeodeticDatum);
 				registerClassAlias("coordinateReference.PrimeMeridian", PrimeMeridian);
-				registerClassAlias("coordinateReference.ProjectionSystem", ProjectionSystem);
+				registerClassAlias("coordinateReference.GaussKrugerProjection", GaussKrugerProjection);
 				registerClassAlias("coordinateReference.PSOrigin", IdentifiedCoordinate);
 				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);		
 							
@@ -1107,7 +1107,7 @@
 					videoWindow.title = "Editor >";
 					videoWindow.addEventListener(Event.CLOSE, videoWindowClose);
 					
-					var videoLoc:VideoURL = valueGrid.selectedItem as VideoURL;
+					var videoLoc:Object = valueGrid.selectedItem as Object;
 					var vl:VideoURL = new VideoURL();
 					vl.value = kitURL + videoLoc.value;
 					videoWindow.displayAttributeValue(vl);

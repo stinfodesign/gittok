@@ -1506,7 +1506,9 @@
 						for (var i:int = 0; i < fromFeatures.length; i++) {
 							var fromFeature:Feature = fromFeatures.getItemAt(i) as Feature;
 							var primiList:ArrayList   = fromFeature.attributes[attType.name] as ArrayList;
-							this.displaySGPrimitive("fromTriangle", primiList.getItemAt(0) as SG_Primitive);
+							for (var j:int = 0; j < primiList.length; j++) {
+								this.displaySGPrimitive("fromTriangle", primiList.getItemAt(j) as SG_Primitive);
+							}
 						}
 					}					
 				}
@@ -1521,7 +1523,9 @@
 						for (i = 0; i < toFeatures.length; i++) {
 							var toFeature:Feature = toFeatures.getItemAt(i) as Feature;
 							primiList = toFeature.attributes[attType.name] as ArrayList;
-							this.displaySGPrimitive("toTriangle", primiList.getItemAt(0) as SG_Primitive);
+							for (j = 0; j < primiList.length; j++) {
+								this.displaySGPrimitive("toTriangle", primiList.getItemAt(j) as SG_Primitive);
+							}
 						}
 					}
 				}

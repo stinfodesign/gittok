@@ -139,7 +139,7 @@
 				registerClassAlias("coordinateReference.Ellipsoid", Ellipsoid);
 				registerClassAlias("coordinateReference.GeodeticDatum", GeodeticDatum);
 				registerClassAlias("coordinateReference.PrimeMeridian", PrimeMeridian);
-				registerClassAlias("coordinateReference.ProjectionSystem", ProjectionSystem);
+				registerClassAlias("coordinateReference.GaussKrugerProjection", GaussKrugerProjection);
 				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);
 				
 				// Affine

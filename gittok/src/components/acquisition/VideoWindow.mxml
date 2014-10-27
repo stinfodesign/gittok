@@ -111,26 +111,29 @@
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
 	<mx:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
-	<s:VideoDisplay x="69" y="115" width="360" height="240" id="videoView" autoPlay="false"  source="{videoURL}"/>
-	<s:HGroup x="147" y="374" width="208" height="24">
-	</s:HGroup>
-	<s:Label x="286" y="69" id="videoFileLabel" backgroundColor="#DADADA" width="135" height="24" verticalAlign="middle"/>
-	<s:Button x="287" y="43" label="open" width="57" id="openVideoButton" click="openVideoButton_clickHandler(event)" />
-	<s:Label x="350" y="49" text="Video"/>
-	<s:Label x="406" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
-			 buttonMode="true" click="text_jp_clickHandler(event)"/>
-	<s:Label x="447" y="12" text="English" color="#969696"
-			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:Label x="232" y="407" fontSize="10" text="Volume"/>
-	<s:HSlider id="volumeSlider" x="216" y="425" width="67"
-			   change="volumeSlider_changeHandler(event)" maximum="1.0" minimum="0.0"
-			   stepSize="0.01" value="0.5"/>
-	<s:Label x="76" y="15" text="Video Viewer " fontSize="16"/>
-	<s:Button id="startButton" x="158" y="374" width="54" label="start"
+	<s:VideoDisplay id="videoView" left="69" right="69" top="115" bottom="110" autoPlay="false"
+					source="{videoURL}"/>
+	<s:HGroup bottom="67" width="186" height="24" horizontalCenter="-9">
+		<s:Button id="startButton" x="158" bottom="70" width="54" label="start"
 			  click="startButton_clickHandler(event)"/>
-	<s:Button id="pauseButton" x="218" y="374" width="60" label="pause"
+		<s:Button id="pauseButton" x="218" bottom="70" width="60" label="pause"
 			  click="pauseButton_clickHandler(event)"/>
-	<s:Button id="stopButton" x="284" y="374" width="58" label="stop"
-			  click="stopButton_clickHandler(event)"/>
+		<s:Button id="stopButton" x="284" bottom="70" width="58" label="stop"
+			  click="stopButton_clickHandler(event)"/>	
+	</s:HGroup>
+	<s:Label id="videoFileLabel" right="77" top="69" width="135" height="24"
+			 backgroundColor="#DADADA" verticalAlign="middle"/>
+	<s:Button id="openVideoButton" right="154" top="43" width="57" label="open"
+			  click="openVideoButton_clickHandler(event)"/>
+	<s:Label right="117" top="49" text="Video"/>
+	<s:Label right="59" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="11" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
+	<s:Label bottom="48" fontSize="10" horizontalCenter="0" text="Volume"/>
+	<s:HSlider id="volumeSlider" bottom="29" width="67" change="volumeSlider_changeHandler(event)"
+			   horizontalCenter="0" maximum="1.0" minimum="0.0" stepSize="0.01" value="0.5"/>
+	<s:Label x="76" y="15" text="Video Viewer " fontSize="16"/>
+
 
 </s:Window>

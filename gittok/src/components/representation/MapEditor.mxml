@@ -19,6 +19,8 @@
 			import flash.text.TextField;
 			import flash.text.TextFormat;
 			
+			import flashx.textLayout.formats.Float;
+			
 			import geoOperations.*;
 			
 			import gfm.*;
@@ -103,6 +105,12 @@
 			protected var addressListWindow:AddressListWindow;
 
 			// define marginal parameters
+			protected  var colorSelector:ColorSelector;
+			
+			[Bindable]
+			protected var mapBackground:uint;
+			protected var mapBackgroundAlpha:Number;
+			
 			public var titleEditor:TitleEditor;
 			public var northArrowSelector:NorthArrowSelector;
 			protected var movingLayer:String;
@@ -209,6 +217,9 @@
 				registerClassAlias("math.AffineParam", AffineParam);
 				
 				scaleSpace.visible  = false;
+				
+				mapBackground = 0xffffff;
+				mapBackgroundAlpha = 1.0;
 			}
 			
 			//Open Kit 			
@@ -1483,6 +1494,9 @@
 				drawingSpace.height = map.height;
 				drawingSpace.scaleX = drawingSpace.scaleY = map.scale;
 				
+				mapBackground = map.backgroundColor;
+				mapBackgroundAlpha = map.backgroundColorAlpha;
+				
 				// north arrow
 				if (map.northArrow != null) {
 					northArrow = map.northArrow;
@@ -1610,6 +1624,8 @@
 				map.width  = drawingSpace.width;
 				map.height = drawingSpace.height;
 				map.scale  = drawingSpace.scaleX;  // this value is always same as scaleY.
+				map.backgroundColor = mapBackground;
+				map.backgroundColorAlpha = mapBackgroundAlpha;
 				
 				// barScale
 				var offset:Coordinate2 = new Coordinate2();
@@ -1688,28 +1704,45 @@
 				}
 			}
 			
+			protected function setBackground_clickHandler(event:MouseEvent):void
+			{
+				colorSelector = new ColorSelector();
+				colorSelector.open();
+				
+				colorSelector.initializeWindow(mapBackground, mapBackgroundAlpha);
+				
+				colorSelector.addEventListener(Event.CLOSE, setMapBackground);
+			}
+			
+			protected function setMapBackground(event:Event):void {
+				mapBackground = colorSelector.color;
+				mapBackgroundAlpha = colorSelector.cAlpha;
+				colorSelector = null;
+			}
+			
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<s:RadioButtonGroup id="moveMarginalInfoGroup"/>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>	
-	<s:Image x="10" y="10" source="@Embed(source='images/pictRepresentation1.png')"/>
-	<s:Label x="75" y="13" fontFamily="Arial" fontSize="16" text="Map Editor"/>
+	<s:Image x="15" y="7" source="@Embed(source='images/pictRepresentation1.png')"/>
+	<s:Label x="82" y="13" fontFamily="Arial" fontSize="16" text="Map Editor"/>
 	
-	<s:Button id="openKitButton" x="80" y="54" width="50" height="20" label="open"
+	<s:Button id="openKitButton" x="93" y="48" width="50" height="20" label="open"
 			  click="openKitButton_clickHandler(event)"/>
-	<s:Label x="136" y="61" width="27" height="10" fontSize="11" text="Kit"/>
-	<s:Label id="kitNameLabel" x="78" y="80" width="110" height="20" backgroundColor="#DADADA"
+	<s:Label x="149" y="55" width="27" height="10" fontSize="11" text="Kit"/>
+	<s:Label id="kitNameLabel" x="91" y="74" width="110" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
-	<s:Button id="openportrayalSchemaButton" x="205" y="54" width="50" height="20" label="open"
+	<s:Button id="openportrayalSchemaButton" x="218" y="48" width="50" height="20" label="open"
 			  click="openportrayalSchemaButton_clickHandler(event)"/>
-	<s:Label x="260" y="53" width="48" height="29" fontSize="11" text="Portrayal Schema"/>
-	<s:Label id="portrayalSchemaLabel" x="203" y="80" width="114" height="20" backgroundColor="#DADADA"
+	<s:Label x="273" y="47" width="48" height="29" fontSize="11" text="Portrayal Schema"/>
+	<s:Label id="portrayalSchemaLabel" x="216" y="74" width="114" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
-	<s:Button id="drawMapButton" x="333" y="54" width="50" height="45" label="draw"
+	<s:Button id="drawMapButton" x="346" y="48" width="50" height="45" label="draw"
 			  click="drawMapButton_clickHandler(event)"/>
-	<s:Label x="388" y="73" fontSize="11" text="Map"/>
+	<s:Label x="401" y="67" fontSize="11" text="Map"/>
 	
 	<s:Panel id="mappingPanel" x="76" y="114" width="500" height="533" dropShadowVisible="false"
 			 fontSize="14" title="Map">
@@ -1750,6 +1783,12 @@
 			 mouseUp="mappingMainBox_mouseUpHandler(event)"
 			 mouseMove="mappingMainBox_mouseMoveHandler(event)">
 		
+		<s:Rect x="0" y="0" width="100%" height="100%" >
+			<s:fill>
+				<s:SolidColor color="{mapBackground}"/>
+			</s:fill>
+		</s:Rect>
+	
 		<s:Group id="mappingBox" x="0" y="0" width="100%" height="100%">
 			<s:Group id="drawingSpace" x="0" y="0" width="100%" height="100%">
 				<s:SpriteVisualElement id="symbolSpace" x="0" y="0"/>
@@ -1779,14 +1818,14 @@
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="556" y="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:Rect x="439" y="38" width="136" height="62" >
+	<s:Rect x="460" y="30" width="116" height="80" >
 		<s:fill>
 			<s:SolidColor color="0x888888"/>
 		</s:fill>
 	</s:Rect>
-	<s:Button id="titleButton" x="446" y="46" width="123" height="20" label="set title / subtitle »"
+	<s:Button id="titleButton" x="466" y="35" width="103" height="20" label="title / subtitle »"
 			  click="titleButton_clickHandler(event)"/>
-	<s:Button id="northArrowButton" x="446" y="73" width="123" height="20" label="set north arrow »"
+	<s:Button id="northArrowButton" x="466" y="60" width="103" height="20" label="north arrow »"
 			  click="northArrowButton_clickHandler(event)"/>
 	<s:Button id="openMapButton" x="318" y="654" width="50" height="20" label="open"
 			  click="openMapButton_clickHandler(event)"/>
@@ -1795,5 +1834,8 @@
 	<s:Label id="mapFileLabel" x="465" y="654" width="110" height="20" backgroundColor="#DADADA"
 			 verticalAlign="middle"/>
 	<s:Label x="433" y="659" text="Map"/>
+	<s:Button id="setBackground" x="466" y="85" width="103" height="20" label="background »"
+			  click="setBackground_clickHandler(event)"/>
+	<s:Label x="435" y="39" fontSize="11" text="Set"/>
 	
 </s:Window>

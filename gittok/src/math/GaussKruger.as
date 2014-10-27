@@ -75,8 +75,8 @@ package math
 			var i:int = 0;
 			while(i < crs.cs.axis.length) {
 				var ax:Axis = crs.cs.axis.getItemAt(i) as Axis;
-				if (ax.direction == "east")  falseEasting  = ax.offset;
-				if (ax.direction == "north") falseNorthing = ax.offset;
+				falseEasting  = crs.cs.ps.falseEasting;
+				falseNorthing = crs.cs.ps.falseNorthing;
 				i++;
 			}
 			

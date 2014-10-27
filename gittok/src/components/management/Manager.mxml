@@ -143,7 +143,7 @@
 				registerClassAlias("coordinateReference.Ellipsoid", Ellipsoid);
 				registerClassAlias("coordinateReference.GeodeticDatum", GeodeticDatum);
 				registerClassAlias("coordinateReference.PrimeMeridian", PrimeMeridian);
-				registerClassAlias("coordinateReference.ProjectionSystem", ProjectionSystem);
+				registerClassAlias("coordinateReference.GaussKrugerProjection", GaussKrugerProjection);
 				registerClassAlias("coordinateReference.PSOrigin", IdentifiedCoordinate);
 				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);								
 				
@@ -212,7 +212,7 @@
 				}
 				
 				// If crs is not defined, you cannot watch the geographic extent on the map.
-				if (kit.crsURL == "") {
+				if (kit.crsURL == null) {
 					Alert.show("Attach CRS file to see the geographic extent.", "Error", 4, this);
 					return;
 				}
