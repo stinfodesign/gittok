@@ -7,40 +7,40 @@ package portrayal.symbol
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 	
-	import portrayal.symbolStyle.AreaSymbolStyle;
+	import portrayal.symbolStyle.CircleSymbolStyle;
 	import portrayal.symbolStyle.LineSymbolStyle;
 	
 	public class Circle extends Sprite
 	{
 		public var center:Coordinate2;
 		public var radius:Number;
-		public var aStyle:AreaSymbolStyle;
+		public var style:CircleSymbolStyle;
 		
 		public function Circle(_crd:Coordinate2, _radius:Number, 
-							   _aStyle:AreaSymbolStyle = null)
+							   _style:CircleSymbolStyle = null)
 		{
 			super();
 			
 			center = _crd;
 			radius = _radius;
-			aStyle = _aStyle;
+			style = _style;
 			
 			// dashed line is not allowed.
-			if (aStyle == null) {
+			if (style == null) {
 				graphics.lineStyle(3.0, 0xFF0000, 100, false, "normal", 
 					"round", "round", 3);
-				aStyle = new AreaSymbolStyle();
-				aStyle.color = 0xffffff;
-				aStyle.alpha = 0;
+				style = new CircleSymbolStyle();
+				style.color = 0xffffff;
+				style.alpha = 0;
 			}
 			else {
-				var lStyle:LineSymbolStyle = aStyle.borderStyle;
+				var lStyle:LineSymbolStyle = style.borderStyle;
 				graphics.lineStyle(lStyle.thickness, 
 					lStyle.color, lStyle.alpha, false, "normal", 
 					lStyle.caps, lStyle.joints, 3);
 				
 			}
-			graphics.beginFill(aStyle.color, aStyle.alpha);
+			graphics.beginFill(style.color, style.alpha);
 			graphics.drawCircle(center.x, center.y, radius);
 			graphics.endFill();
 			

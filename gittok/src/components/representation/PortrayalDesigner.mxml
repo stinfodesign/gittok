@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="700"
-		  title="Cartographic Disigner" backgroundColor="#faeed1"
+		  title="Cartographer &gt;&gt;" backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
 		<s:RadioButtonGroup id="attSelectGroup"/>
@@ -21,13 +21,15 @@
 			
 			import gfm.*;
 			
+			import math.Distance;
+			
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
 			import mx.controls.Image;
 			import mx.events.FlexEvent;
 			
 			import portrayal.labelStyle.*;
-			import portrayal.portrayalStyle.*;
+			import portrayal.gpm.*;
 			import portrayal.symbol.*;
 			import portrayal.symbolStyle.*;
 			
@@ -37,8 +39,8 @@
 			private var file:File;
 			private var stream:FileStream = new FileStream();
 			private var applicationSchemaFile:File;
-			private var symbolStyleSchemaFile:File;
-			private var labelStyleSchemaFile:File;
+			private var symbolStyleDicFile:File;
+			private var labelStyleDicFile:File;
 			
 			public var featureTypes:Dictionary 		= new Dictionary();
 			public var associationTypes:Dictionary 	= new Dictionary();
@@ -54,8 +56,8 @@
 			private var styles:ArrayList;			
 			private var labels:LabelStyleDictionary;
 			private var portrayalSch:PortrayalSchema;
-			private var fpPairs:Dictionary = new Dictionary();
-			private var ftPtlPair:FeaturePortrayalPair;
+			private var fpUnits:Dictionary = new Dictionary();
+			private var ftPtlUnit:FeaturePortrayalUnit;
 			
 			private var thematicModifier:ThematicCondition;
 			
@@ -99,7 +101,7 @@
 			public var balloonAttList:ArrayList;
 			
 			protected function initializeApp(): void {
-				this.move(320,70);
+				this.move(350,70);
 				
 				// General Feature Model
 				registerClassAlias("gfm.AttributeType", AttributeType);
@@ -124,7 +126,7 @@
 				// Portrayal Dictionary
 				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);	
 				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);								
-				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalPair", FeaturePortrayalPair);				
+				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);				
 				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
 				registerClassAlias("portrayal.portrayalStyle.ThematicCondition", ThematicCondition);
 				registerClassAlias("portrayal.portrayalStyle.Modifier", Modifier);
@@ -172,7 +174,6 @@
 			private function openAps(event:Event):void {
 				var apps:ApplicationSchema = new ApplicationSchema();
 
-				trace(file.nativePath);
 				stream.open(file, FileMode.READ);
 
 				apps = stream.readObject();
@@ -193,9 +194,9 @@
 			{
 				try {
 					file = new File();
-					var filter:FileFilter = new FileFilter("SymbolStyleSchema File", "*.sym");
+					var filter:FileFilter = new FileFilter("SymbolStyleDictionary File", "*.sym");
 					file.addEventListener(Event.SELECT, openSym);
-					file.browseForOpen("Open SymbolStyleSchema  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
+					file.browseForOpen("Open SymbolStyleDictionary  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
 					trace(error.message);
 				}												
@@ -234,7 +235,7 @@
 				stream.close();
 				symLabel.text = file.name;
 				
-				symbolStyleSchemaFile = file;
+				symbolStyleDicFile = file;
 				
 			}
 			
@@ -243,9 +244,9 @@
 			{
 				try {
 					file = new File();
-					var filter:FileFilter = new FileFilter("LabelStyleSchema File", "*.lab");
+					var filter:FileFilter = new FileFilter("LabelStyleDictionary File", "*.lab");
 					file.addEventListener(Event.SELECT, openLabelStyle);
-					file.browseForOpen("Open LabelStyleSchema  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
+					file.browseForOpen("Open labelStyleDicFile  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
 					trace(error.message);
 				}																
@@ -266,7 +267,7 @@
 				stream.close();
 				labelLabel.text = file.name;
 				
-				labelStyleSchemaFile = file;
+				labelStyleDicFile = file;
 			}
 
 			protected function symGrid_selectionChangeHandler(event:GridSelectionEvent):void
@@ -371,26 +372,38 @@
 					styles   = pointSymType.styles;
 					
 					symbolImage.graphics.clear();
-					drawElements();
+					drawPointSymElements(pointSymType.size);
 					　　	
 				}
 			}
 			
-			protected function drawElements():void {
+			protected function drawPointSymElements(pSize:Number):void {
 				var n:int = elements.length;
 				for (var i:int = 0; i < n; i++) {
-					drawElement(i, 1.0);
+					drawElement(i, pSize);
 				}				
 			}
 			
-			protected function drawElement(i:int, thicknessRate:Number):void {
+			protected function drawElement(i:int, pSize:Number):void {
 				var crv:SG_Curve = new SG_Curve();
 				var style:* = styles.getItemAt(i);
-				if (getQualifiedClassName(style) == "portrayalSchema.symbolStyle::LineSymbolStyle") {
+				if (style is LineSymbolStyle) {
 					var lStyle:LineSymbolStyle = styles.getItemAt(i) as LineSymbolStyle; 
 					var cString:CoordinateArray = elements.getItemAt(i) as CoordinateArray;
+					var m:int = cString.length;
+					for (var i:int = 0; i < m; i++) {
+						var crd:Coordinate2 = cString.getItemAt(i) as Coordinate2;
+						crd.x = (crd.x - 100.0) * pSize / 200.0 + 100.0;
+						crd.y = (crd.y - 100.0) * pSize / 200.0 + 100.0;
+						cString.setItemAt(crd, i);
+					}
 					crv.shape = cString;
-					lStyle.thickness *= thicknessRate;
+					var p:SG_Point = new SG_Point();
+					p.position = cString.getItemAt(0) as Coordinate2;
+					crv.start = p;
+					p = new SG_Point();
+					p.position = cString.getItemAt(cString.length - 1) as Coordinate2;
+					crv.end = p;
 					var lSym:LineSymbol = new LineSymbol();
 					var lObj:Object = new Object();
 					lObj.curve = crv;
@@ -398,47 +411,44 @@
 					lSym.decode(lObj);
 					lSym.name = "sampleLine";
 					symbolImage.addChild(lSym);					
-					lStyle.thickness /= thicknessRate;
 				}
-				else {
-					if (getQualifiedClassName(style) == "portrayalSchema.symbolStyle::AreaSymbolStyle") {
-						var aStyle:AreaSymbolStyle = styles.getItemAt(i) as AreaSymbolStyle;
+				else if (style is CircleSymbolStyle) {
+					var cStyle:CircleSymbolStyle = styles.getItemAt(i) as CircleSymbolStyle;
+					cString = elements.getItemAt(i) as CoordinateArray;
+					var center:Coordinate2 = cString.getItemAt(0) as Coordinate2;
+					var pointOnEdge:Coordinate2 = cString.getItemAt(1) as Coordinate2;
+					var radius:Number = math.Distance.p2p(center, pointOnEdge);
+					radius = radius * pSize / 200.0;
+					var bStyle:LineSymbolStyle = cStyle.borderStyle;
+					symbolImage.graphics.lineStyle(bStyle.thickness, 
+							bStyle.color, bStyle.alpha, false, "normal", 
+							bStyle.caps, bStyle.joints, 3);
+					symbolImage.graphics.beginFill(cStyle.color, cStyle.alpha);
+					symbolImage.graphics.drawCircle(center.x, center.y, radius);
+					symbolImage.graphics.endFill();					
+				}
+				else if (getQualifiedClassName(style) == "portrayalSchema.symbolStyle::AreaSymbolStyle") {
+					var aStyle:AreaSymbolStyle = styles.getItemAt(i) as AreaSymbolStyle;
 												
-						var element:* = elements.getItemAt(i);
-						if (getQualifiedClassName(element) == "dataTypes.spatialGeometry::SG_Circle") {
-							var cle:SG_Circle = element as SG_Circle;
-							var bStyle:LineSymbolStyle = aStyle.borderStyle;
-							symbolImage.graphics.lineStyle(bStyle.thickness * thicknessRate, 
-								bStyle.color, bStyle.alpha, false, "normal", 
-								bStyle.caps, bStyle.joints, 3);
-							symbolImage.graphics.beginFill(aStyle.color, aStyle.alpha);
-							symbolImage.graphics.drawCircle(cle.center.x, cle.center.y, cle.radius);
-							symbolImage.graphics.endFill();
-						}
-						else {
-							cString = elements.getItemAt(i) as CoordinateArray;
-							var crd:Coordinate2 = cString.getItemAt(0) as Coordinate2;
-							symbolImage.graphics.beginFill(aStyle.color, aStyle.alpha);
-							symbolImage.graphics.moveTo(crd.x, crd.y);
-							for (var i:int = 0; i < cString.length; i++) {
-								crd = cString.getItemAt(i) as Coordinate2;
-								symbolImage.graphics.lineTo(crd.x, crd.y);
-							}
-							symbolImage.graphics.endFill();
-							
-							crv.shape = cString;
-							
-							aStyle.borderStyle.thickness *= thicknessRate;
-							var border:LineSymbol = new LineSymbol();
-							lObj = new Object();
-							lObj.curve = crv;
-							lObj.style = aStyle.borderStyle;
-							aStyle.borderStyle.thickness /= thicknessRate;
-							border.name = "sampleLine";
-							border.decode(lObj);
-							symbolImage.addChild(border);
-						}
+					cString = elements.getItemAt(i) as CoordinateArray;
+					crd = cString.getItemAt(0) as Coordinate2;
+					symbolImage.graphics.beginFill(aStyle.color, aStyle.alpha);
+					symbolImage.graphics.moveTo(crd.x, crd.y);
+					for (i = 0; i < cString.length; i++) {
+						crd = cString.getItemAt(i) as Coordinate2;
+						symbolImage.graphics.lineTo(crd.x, crd.y);
 					}
+					symbolImage.graphics.endFill();
+						
+					crv.shape = cString;
+							
+					var border:LineSymbol = new LineSymbol();
+					lObj = new Object();
+					lObj.curve = crv;
+					lObj.style = aStyle.borderStyle;
+					border.name = "sampleLine";
+					border.decode(lObj);
+					symbolImage.addChild(border);
 				}
 			}
 			
@@ -498,10 +508,10 @@
 				if (attributeTypeLabel != null)
 					attributeTypeLabel.text = "";
 				
-				ftPtlPair = fpPairs[fType.name] as FeaturePortrayalPair;
+				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
 				balloonAttList = new ArrayList();
-				if (ftPtlPair != null) {
-					for each(attType in ftPtlPair.balloonsOnMap) {
+				if (ftPtlUnit != null) {
+					for each(attType in ftPtlUnit.infoPages) {
 						balloonAttList.addItem(attType);	
 					}
 				}
@@ -527,13 +537,13 @@
 				
 				attributeTypeLabel.text = attType.dataType;
 				
-				if (fpPairs[fType.name] == null) {
-					ftPtlPair = new FeaturePortrayalPair();
-					ftPtlPair.featureTypeID = fType.name;
-					fpPairs[fType.name] = ftPtlPair;
+				if (fpUnits[fType.name] == null) {
+					ftPtlUnit = new FeaturePortrayalUnit();
+					ftPtlUnit.featureTypeID = fType.name;
+					fpUnits[fType.name] = ftPtlUnit;
 				}
 				else {
-					ftPtlPair = fpPairs[fType.name];
+					ftPtlUnit = fpUnits[fType.name];
 				}
 				
 				if (balloonCheckBox.selected) {
@@ -549,7 +559,7 @@
 				}
 				thematicModifierDropDownList.prompt = "Select att";
 
-				var asPair:AttributeStylePair = ftPtlPair.generalModifiers[attType.name] as AttributeStylePair;
+				var asPair:AttributeStylePair = ftPtlUnit.generalModifiers[attType.name] as AttributeStylePair;
 					
 				symLabArray = new ArrayList();
 				symLabArray.addItem(asPair);				
@@ -560,7 +570,7 @@
 					balloonAttList = new ArrayList();
 				}
 				balloonAttList.addItem(attType);
-				ftPtlPair.balloonsOnMap[attType.name] = attType;
+				ftPtlUnit.infoPages[attType.name] = attType;
 			}
 			
 			protected function cancelBalloonButton_clickHandler(event:MouseEvent):void
@@ -568,7 +578,7 @@
 				var i:int = balloonList.selectedIndex;
 				if (i != -1) {
 					var attType:AttributeType = balloonAttList.removeItemAt(i) as AttributeType;
-					delete ftPtlPair.balloonsOnMap[attType.name];
+					delete ftPtlUnit.infoPages[attType.name];
 				}
 				if (balloonAttList.length == 0) balloonAttList = null;
 			}
@@ -582,15 +592,15 @@
 				
 				var fType:FeatureType = featureTypeArray.getItemAt(featureTypeDropDown.selectedIndex) as FeatureType;
 				
-				ftPtlPair = fpPairs[fType.name] as FeaturePortrayalPair;
-				if (ftPtlPair != null) {
-					thematicModifier = ftPtlPair.thematicModifier;
+				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
+				if (ftPtlUnit != null) {
+					thematicModifier = ftPtlUnit.thematicModifier;
 					thematicModifierTypeLabel.text = atType.dataType;
 					
 					if (atType.dataType == "Bool") {
 						thematicViewStack.selectedIndex = 0;
 						
-						if (thematicModifier.modifierType == "Bool") {
+						if (thematicModifier.attType == "Bool") {
 							if (thematicModifier.elements.length > 0) {
 								thematicViewStack.selectedIndex = 0;
 								booleanModifierArray = thematicModifier.elements;
@@ -601,7 +611,7 @@
 					else if (atType.dataType == "CharacterString") {
 						thematicViewStack.selectedIndex = 1;
 						
-						if (thematicModifier.modifierType == "CharacterString") {
+						if (thematicModifier.attType == "CharacterString") {
 							if (thematicModifier.elements.length > 0) {
 								qualitativeModifierArray = thematicModifier.elements;
 								return;
@@ -611,8 +621,8 @@
 					else if (atType.dataType == "Integer" || atType.dataType == "Real") {
 						thematicViewStack.selectedIndex = 2;
 						
-						if (thematicModifier.modifierType == "Integer" ||
-							thematicModifier.modifierType == "Real") {
+						if (thematicModifier.attType == "Integer" ||
+							thematicModifier.attType == "Real") {
 							if (thematicModifier.elements.length > 0) {
 								quantitativeModifierArray = thematicModifier.elements;
 								return;
@@ -622,8 +632,8 @@
 				}
 				
 				thematicModifier = new ThematicCondition();
-				thematicModifier.modifierName = atType.name;
-				thematicModifier.modifierType = atType.dataType;
+				thematicModifier.attName = atType.name;
+				thematicModifier.attType = atType.dataType;
 				
 				if (atType.dataType == "Bool") {
 					thematicViewStack.selectedIndex = 0;
@@ -672,7 +682,7 @@
 			
 			protected function assignThematicButton_clickHandler(event:MouseEvent):void
 			{
-				ftPtlPair.thematicModifier = thematicModifier;
+				ftPtlUnit.thematicModifier = thematicModifier;
 				
 				var i:int = symGrid.selectedIndex;
 				if (i == -1) {
@@ -805,9 +815,9 @@
 				stream.open(file, FileMode.WRITE);
 				portrayalSch = new PortrayalSchema();
 				portrayalSch.applicationSchema = applicationSchemaFile.name;
-				portrayalSch.symbolStyleSchema = symbolStyleSchemaFile.name;
-				portrayalSch.labelStyleSchema  = labelStyleSchemaFile.name;
-				portrayalSch.fpPairs		   = fpPairs;
+				portrayalSch.symbolStyleDictionary = symbolStyleDicFile.name;
+				portrayalSch.labelStyleDictionary  = labelStyleDicFile.name;
+				portrayalSch.fpUnits		   = fpUnits;
 				stream.writeObject(portrayalSch);
 				stream.close();
 			}
@@ -835,18 +845,18 @@
 				var stream:FileStream = new FileStream();
 				
 				applicationSchemaFile    = new File();
-				symbolStyleSchemaFile = new File();
-				labelStyleSchemaFile  = new File();
+				symbolStyleDicFile = new File();
+				labelStyleDicFile  = new File();
 				
 				try {
 					stream.open(file,FileMode.READ);
 					portrayalSch = stream.readObject();
 					
 					applicationSchemaFile.nativePath    = path + portrayalSch.applicationSchema;
-					symbolStyleSchemaFile.nativePath = path + portrayalSch.symbolStyleSchema;
-					labelStyleSchemaFile.nativePath  = path + portrayalSch.labelStyleSchema;
+					symbolStyleDicFile.nativePath = path + portrayalSch.symbolStyleDictionary;
+					labelStyleDicFile.nativePath  = path + portrayalSch.labelStyleDictionary;
 					
-					fpPairs = portrayalSch.fpPairs;
+					fpUnits = portrayalSch.fpUnits;
 					
 					//portrayals.setXML(portrayals.getXML());					stream.close();
 				} catch (error:IOError) {
@@ -854,16 +864,16 @@
 				}
 				
 				apsNameLabel.text = applicationSchemaFile.name;
-				symLabel.text = symbolStyleSchemaFile.name;
-				labelLabel.text = labelStyleSchemaFile.name;
+				symLabel.text = symbolStyleDicFile.name;
+				labelLabel.text = labelStyleDicFile.name;
 				
 				file = applicationSchemaFile;
 				this.openAps(null);
 				
-				file = symbolStyleSchemaFile;
+				file = symbolStyleDicFile;
 				this.openSym(null);
 				
-				file = labelStyleSchemaFile;
+				file = labelStyleDicFile;
 				this.openLabelStyle(null);
 			}
 			
@@ -902,10 +912,10 @@
 				var fid:int = featureTypeDropDown.selectedIndex
 				var fType:FeatureType = featureTypeArray.getItemAt(fid) as FeatureType;
 				
-				ftPtlPair = fpPairs[fType.name] as FeaturePortrayalPair;
-				if (ftPtlPair == null) {
-					ftPtlPair = new FeaturePortrayalPair();
-					ftPtlPair.featureTypeID = fType.name;
+				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
+				if (ftPtlUnit == null) {
+					ftPtlUnit = new FeaturePortrayalUnit();
+					ftPtlUnit.featureTypeID = fType.name;
 				}
 				
 				var aid:int = attributeNameDropDown.selectedIndex;
@@ -927,8 +937,8 @@
 					asPair.symLabType = "Label"; 
 				}
 				
-				ftPtlPair.generalModifiers[attType.name] = asPair;						
-				fpPairs[ftPtlPair.featureTypeID] = ftPtlPair;
+				ftPtlUnit.generalModifiers[attType.name] = asPair;						
+				fpUnits[ftPtlUnit.featureTypeID] = ftPtlUnit;
 				
 				symLabArray = new ArrayList();
 				symLabArray.addItem(asPair);				
@@ -941,37 +951,42 @@
 				
 				var aid:int = attributeNameDropDown.selectedIndex;
 				var attType:AttributeType = attributeNameArray.getItemAt(aid) as AttributeType;
-				ftPtlPair.generalModifiers[attType.name] = null;
+				ftPtlUnit.generalModifiers[attType.name] = null;
 			}
 			
 			// Text and instruction  Controls
 			protected function text_jp_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/jp/portrayalDesigner_jp.html");
+				var request:URLRequest = new URLRequest("documents/jp/portrayalSchemaDesigner_jp.html");
 				navigateToURL(request);
 			}
 			
 			protected function text_en_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/en/portrayalDesigner_en.html");
+				var request:URLRequest = new URLRequest("documents/en/portrayalSchemaDesigner_en.html");
 				navigateToURL(request);
 			}
 						
 		]]>
 	</fx:Script>
 	
-	<s:Image x="10" y="8" source="@Embed(source='images/pictRepresentation1.png')"/>
-	<s:Label  x="75" y="15" text="Portrayal Designer" fontSize="16"/>
-	<s:Label id="apsNameLabel" x="31" y="99" width="120" height="20" backgroundColor="#DADADA"
+	<s:Image x="12" y="7" source="@Embed(source='images/pictRepresentation1.png')"/>
+	<s:Label x="75" y="15" fontFamily="Arial" fontSize="16" text="Portrayal Schema Designer"/>
+	<s:Label id="apsNameLabel" x="31" y="98" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
-	<s:Button id="openAPSButton" x="33" y="72" width="55" label="open"
+	<s:Button id="openAPSButton" x="33" y="71" width="55" label="open"
 			  click="openAPSButton_clickHandler(event)"/>
-	<s:Label x="93" y="71" width="56" height="24" fontSize="10" text="Application Schema"/>
-	<s:Button id="openSymButton" x="161" y="72" width="55" label="open"
+	<s:Label x="93" y="70" width="56" height="24" fontSize="10" text="Application Schema"/>
+	<s:Button id="openSymButton" x="161" y="71" width="55" label="open"
 			  click="openSymButton_clickHandler(event)"/>
-	<s:Label x="220" y="72" width="62" height="21" fontSize="10" text="Symbol Style Schema"/>
-	<s:Label id="symLabel" x="159" y="99" width="120" height="20" backgroundColor="#DADADA"
+	<s:Label x="220" y="71" width="62" height="21" fontSize="10" text="Symbol Style Dictionary"/>
+	<s:Label id="symLabel" x="159" y="98" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
+	<s:Line x="-2" y="31" xFrom="100" xTo="500" yFrom="100" yTo="100">
+		<s:stroke>
+			<s:SolidColorStroke color="#ffffff" weight="1" />		
+		</s:stroke>
+	</s:Line> 
 	<s:DataGrid id="symGrid" x="30" y="472" width="210" height="165" fontSize="11" dataProvider="{symStyleArray}"
 				requestedRowCount="4" selectionChange="symGrid_selectionChangeHandler(event)">
 		<s:columns>
@@ -981,12 +996,12 @@
 			</s:ArrayList>
 		</s:columns>
 	</s:DataGrid>
-	<s:Label x="29" y="457" text="Symbol Style"/>
-	<s:Button id="openLabelButton" x="290" y="72" width="55" label="open"
+	<s:Label x="29" y="457" text="Symbol Styles"/>
+	<s:Button id="openLabelButton" x="290" y="71" width="55" label="open"
 			  click="openLabelButton_clickHandler(event)"/>
-	<s:Label id="labelLabel" x="288" y="99" width="120" height="20" backgroundColor="#DADADA"
+	<s:Label id="labelLabel" x="288" y="98" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
-	<s:Label x="351" y="72" width="56" height="21" fontSize="10" text="Label Style Schema"/>
+	<s:Label x="351" y="71" width="56" height="21" fontSize="10" text="Label Style Dictionary"/>
 	<s:DataGrid id="labelGrid" x="261" y="472" width="107" height="165" fontSize="11"
 			 	dataProvider="{labelStyleArray}"
 				requestedRowCount="4" selectionChange="labelGrid_selectionChangeHandler(event)">
@@ -996,19 +1011,19 @@
 			</s:ArrayList>
 		</s:columns>
 	</s:DataGrid>
-	<s:Label x="261" y="458" text="Label Style"/>
-	<mx:Image id="symbolImage" x="389" y="472" width="177" height="181"/>
+	<s:Label x="261" y="458" text="Label Styles"/>
+	<mx:Image id="symbolImage" x="389" y="472" width="180" height="180"/>
 	<s:Label x="392" y="457" text="Sample"/>
-	<s:DropDownList id="featureTypeDropDown" x="31" y="149" width="143"
+	<s:DropDownList id="featureTypeDropDown" x="31" y="158" width="143"
 					change="featureTypeDropDown_changeHandler(event)"
 					dataProvider="{featureTypeArray}" fontSize="11" labelField="name"
 					prompt="Select Type"></s:DropDownList>
-	<s:Label x="30" y="136" fontSize="10" text="Feature Types"/>
+	<s:Label x="30" y="145" fontSize="10" text="Feature Types"/>
 	
-	<s:TabBar id="tabBar" x="30" y="216" height="20" dataProvider="{myViewStack}"/>	
+	<s:TabBar id="tabBar" x="30" y="225" height="20" dataProvider="{myViewStack}"/>	
 	
 	<mx:ViewStack id="myViewStack" 
-				  borderStyle="solid" width="536" height="197" x="30" y="235" backgroundColor="#fefee5"> 
+				  borderStyle="solid" width="536" height="197" x="30" y="244" backgroundColor="#fefee5"> 
 		
 		<s:NavigatorContent id="thematicTab" label="thematic"> 
 			<!--
@@ -1017,7 +1032,7 @@
 			<mx:ViewStack id="thematicViewStack" 
 						  borderStyle="solid" x="11" y="53" width="514" height="132" backgroundColor="#ffffff">
 				<s:NavigatorContent id="boolStack" width="100%" height="100%" label="bool">
-					<s:DataGrid id="booleanModifierGrid" x="74" y="19" width="255" height="95" fontSize="11"
+					<s:DataGrid id="booleanModifierGrid" x="133" y="19" width="255" height="95" fontSize="11"
 								dataProvider="{booleanModifierArray}" requestedRowCount="4">
 						<s:columns>
 							<s:ArrayList>
@@ -1028,9 +1043,10 @@
 							</s:ArrayList>
 						</s:columns>
 					</s:DataGrid>
-					<s:Label x="40" y="51" fontWeight="normal" text="True"/>
-					<s:Label x="40" y="73" fontWeight="normal" text="False"/>
-					<s:Label x="40" y="96" text="Null"/>
+					<s:Label x="3" y="3" text="Data collection units" fontSize="11" />
+					<s:Label x="99" y="51" fontWeight="normal" text="True"/>
+					<s:Label x="99" y="73" fontWeight="normal" text="False"/>
+					<s:Label x="99" y="96" text="Null"/>
 				</s:NavigatorContent>
 				<s:NavigatorContent id="stringStack" width="100%" height="100%" label="characterString">
 					<s:DataGrid id="qualitativeModifierGrid" x="18" y="19" width="325" height="95"
@@ -1049,9 +1065,10 @@
 							</s:ArrayList>
 						</s:columns>
 					</s:DataGrid>
+					<s:Label x= "3" y="3" text="Data collection units" fontSize="11" />
 				</s:NavigatorContent>
 				<s:NavigatorContent id="numberStack" width="100%" height="100%" label="integer/real">
-					<s:DataGrid id="quantitativeModifierGrid" x="10" y="9" width="434" height="115" fontSize="11"
+					<s:DataGrid id="quantitativeModifierGrid" x="3" y="13" width="434" height="115" fontSize="11"
 								dataProvider="{quantitativeModifierArray}" requestedRowCount="4" editable="true">
 						<s:columns>
 							<s:ArrayList>
@@ -1062,8 +1079,9 @@
 							</s:ArrayList>
 						</s:columns>
 					</s:DataGrid>
-					<s:Button id="sortquantitativeModifierButton" x="452" y="9" width="50" height="20"
+					<s:Button id="sortquantitativeModifierButton" x="445" y="13" width="50" height="20"
 							  label="sort" click="sortQuantitativeModifierButton_clickHandler(event)"/>
+					<s:Label x="3" y="3" text="Data collection units" fontSize="11" />
 				</s:NavigatorContent>
 			</mx:ViewStack>
 			<s:Label x="13" y="22" text="Modifier"/>
@@ -1095,35 +1113,37 @@
 					</s:ArrayList>
 				</s:columns>
 			</s:DataGrid>
+			<s:Label x="140" y="52" width="165" height="27" fontSize="11"
+					 text="Symbol/label style &#xd;for the attribute modification"/>
 		</s:NavigatorContent>
 		
 	</mx:ViewStack>
-	<s:Label id="attributeTypeLabel" x="230" y="194" width="120" height="20"
+	<s:Label id="attributeTypeLabel" x="230" y="203" width="120" height="20"
 			 backgroundColor="#DADADA" fontSize="11" verticalAlign="middle"/>
-	<s:DropDownList id="attributeNameDropDown" x="201" y="168" width="149"
+	<s:DropDownList id="attributeNameDropDown" x="201" y="177" width="149"
 					prompt="Select Attribute"
 					change="attributeNameDropDown_changeHandler(event)"
 					dataProvider="{attributeNameArray}" fontSize="11" labelField="name"></s:DropDownList>
-	<s:Label x="201" y="137" fontSize="10" text="Attribute Name"/>
-	<s:Label x="201" y="198" fontSize="10" text="Type"/>
-	<s:Button id="saveButton" x="425" y="97" width="55" height="20" label="save"
+	<s:Label x="201" y="146" fontSize="10" text="Attribute Name"/>
+	<s:Label x="201" y="207" fontSize="10" text="Type"/>
+	<s:Button id="saveButton" x="425" y="96" width="55" height="20" label="save"
 			  click="saveButton_clickHandler(event)"/>
-	<s:Label id="dictionaryLabel" x="484" y="98" width="97" height="20" backgroundColor="#DADADA"
-			 verticalAlign="middle"/>
-	<s:Button id="openButton" x="425" y="72" width="55" height="20" label="open"
+	<s:Label id="dictionaryLabel" x="484" y="97" width="100" height="20" backgroundColor="#DADADA"
+			 fontSize="11" verticalAlign="middle" lineBreak="explicit" />
+	<s:Button id="openButton" x="425" y="71" width="55" height="20" label="open"
 			  click="openButton_clickHandler(event)"/>
-	<s:Label x="485" y="72" width="51" height="29" fontSize="10" text="Portrayal Schema"/>
+	<s:Label x="485" y="71" width="51" height="29" fontSize="10" text="Portrayal Schema"/>
 	
 	<s:Label x="507" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="548" y="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:List id="balloonList" x="380" y="148" width="120" height="79" 
+	<s:List id="balloonList" x="380" y="157" width="120" height="79" 
 			fontSize="10" dataProvider="{balloonAttList}" labelField="name">
 	</s:List>
-	<s:Label x="380" y="134" fontSize="10" text="Selected att. for balloons"/>
-	<s:CheckBox id="balloonCheckBox" x="202" y="149" label="for balloons" fontSize="10"/>
-	<s:Button id="cancelBalloonButton" x="505" y="207" width="60" height="20" label="cancel"
+	<s:Label x="380" y="143" fontSize="10" text="Selected att. for info. pages"/>
+	<s:CheckBox id="balloonCheckBox" x="202" y="158" label="for info. pages" fontSize="10"/>
+	<s:Button id="cancelBalloonButton" x="505" y="216" width="60" height="20" label="cancel"
 			  click="cancelBalloonButton_clickHandler(event)"/>
 
 

@@ -46,12 +46,13 @@ moveTo(750,20);
   3. 操作型から型名を取り出し，geoOperations. ＋ 操作クラス名を，操作クラス名とする．ここでgeoOperationsは，操作クラスが入るフォルダーである．<br />
   4. この操作クラスの名前をキーとして，flash.utilにあるにgetDefinitionByName関数を使って操作参照クラス classRefを取り出す．ちなみにclassRefは，操作の名前をキーにして操作を特定する object である．<br />
   5.1. 操作が距離や面積等，計測単位をもつ値を求める場合を想定し，スクリーン座標を地上の平面座標に変換する affine parametersを引数に入れる．そのとき，引数の型は &quot;affineParam&quot;であり，これをキーとする引数辞書argObjを作成する．<br/>
-  5.2. 地物の操作を実行する場合は，操作型から，使用する引数の組を取り出し，それを使って，地物インスタンスから，引数になる属性値を選択し，引数の型をキーとする引数辞書 argObj を作成する．<br />
+  5.2. 地物の操作を実行する場合は，操作型から，使用する引数の組を取り出し，それを使って，地物インスタンスから，引数になる属性値を選択し，引数の型をキーとする引数辞書 argObj を作成する．辞書とはこの場合辞書型 (Dictionary)をとるという意味であり，辞書型は一般に連想配列と言われる．<br />
 5.3. 関連の操作を実行する場合は，以下の手順で，from 地物.　to 地物，及び／又は関連インスタンスから，操作に使われる引数を取り出し，引数型の名前をキーとする引数辞書 argObj を作成する．</p>
 <p class="mainSentence">引数辞書 argObj の構造は以下のとおりである．<br />
   キー：引数型の名<br />
-  値：属性値の配列リスト（多重度がfalseの場合は，引数の要素は一つ，trueの場合は複数になる）<br />
+  値：属性値の配列リスト<br />
   属性値：任意の型をとる値</p>
+<p class="mainSentence">ここで，属性値自体が配列リストになることがある点に留意すべきである．これは，属性に多重度が設定された場合におきる．では，その属性値の配列リストとはどのようなものであろうか．地物は関連を通じて，別の，一つ以上のto地物のインスタンスの属性値を参照することができる．そしてその参照に多重度が設定されている場合がある．そのような時は，地物は属性値の配列リストを持ち，属性値も配列リストになることがある．gittok では，そのような状況を考えて，引数は配列リストの配列リスト，という構造にしている．</p>
 <p class="mainSentence">自分で操作クラスを作成する場合は，引数が上記のルールで与えられることを念頭において制作する．<br/>6. 操作参照クラス classRef にキーとなる操作名と，引数辞書を与えて，操作を実行させる．</p>
 <p class="mainSentence">戻り値は，多重度が複数に設定されている場合は，ArrayListになる．単数の場合でも，要素が一つだけのArrayListにする．</p>
 <p class="mainSentence">7.1. 戻り値が単純データ型をとる場合は，attValueList に加える．<br/>
@@ -78,22 +79,18 @@ moveTo(750,20);
  	 }<br />
 }</pre>
 <p><span class="secondHeader">操作の宣言</span></p>
-<p><span class="mainSentence">操作は，操作クラスに含まれるクラスメソッドである．gittokでは，スタティックな関数として宣言し，インスタンスを作らなくても実行できるようにする．例えば点群を引数にして重心を求める操作 (centerOfPoints) は，以下の様に表現できる．プログラムの大まかな構造（引数を受け取り，処理をおこない，戻り値を返す）をみてほしい．</span></p>
+<p><span class="mainSentence">操作は，操作クラスに含まれるクラスメソッドである．gittokでは，スタティックな関数として宣言し，インスタンスを作らなくても実行できるようにする．例えば点群を引数にして重心を求める操作 (centerOfPoints) は，以下の様に表現できる．プログラムの大まかな構造（引数を受け取り，処理をおこない，戻り値を返す）をみてほしい．ここで注意すべきは，この操作は，一つの地物インスタンスがもつ点群の重心を求めることを想定している，ということである．argObjの構造は，既に述べたように２重の配列リストにしなければいけない．そこで，この例では，２重にはするものの，pointValuesの最初の要素しか使わないようにしている．</span></p>
 <pre>package geoOperations
-  {
+{
   	import dataTypes.spatialGeometry.*;
   	import mx.collections.ArrayList;<br />
   	public class Center
   	{<br />
   		………………………………….<br />
-		public static function centerOfPoints(argObj:Object):SG_Point {<br />			var attValues:ArrayList = argObj[&quot;points&quot;] as ArrayList;
-			var m:int = attValues.length;<br />			var points:ArrayList = new ArrayList();<br />			for (var i:int = 0; i &lt; m; i++) {<br />				var attList:ArrayList = attValues.getItemAt(i) as ArrayList;<br />				points.addAll(attList);<br />			}<br />			
-			var wp:SG_Point = points.getItemAt(0) as SG_Point;<br />			var n:int = points.length;<br />
-			if (n == 0) return null;<br />			<br />			var x:Number = 0;<br />			var y:Number = 0;<br />			
-			var coord:Coordinate2;
-			for (i = 0; i &lt; n; i++) {<br />				wp = points.getItemAt(i) as SG_Point;<br />				coord = wp.position;<br />				x += coord.x;<br />				y += coord.y;<br />			}<br />			<br />			var p:SG_Point = new SG_Point;<br />			p.featureID = wp.featureID;<br />			p.attributeName = wp.attributeName;<br />			p.position.x = x/n;<br />			p.position.y = y/n;<br />			return p;<br />		}
- 		 …………………………………
-  }</pre>
+			public static function centerOfPoints(argObj:Object):SG_Point {<br />				var points:ArrayList = new ArrayList();<br />			<br />				var pointValues:ArrayList = argObj[&quot;points&quot;] as ArrayList;<br />				points.addAll(pointValues.getItemAt(0) as ArrayList);	<br />			<br />				var wp:SG_Point = points.getItemAt(0) as SG_Point;<br />			<br />				var m:int = points.length;<br />				if (m == 0) return null;<br />			<br />				var x:Number = 0;<br />				var y:Number = 0;<br />				var coord:Coordinate2;<br />				for (var i:int = 0; i &lt; m; i++) {<br />					wp = points.getItemAt(i) as SG_Point;<br />					coord = wp.position;<br />					x += coord.x;<br />					y += coord.y;<br />				}<br />			<br />				var p:SG_Point = new SG_Point;<br />				p.featureID = wp.featureID;<br />				p.attributeName = wp.attributeName;<br />				<br />				p.position.x = x/m;<br />				p.position.y = y/m;<br />				<br />				return p;<br />			}
+ 		 	…………………………………
+		}
+}</pre>
 
 <p><span class="secondHeader">地上座標への変換</span></p>
 <p class="mainSentence">戻り値が長さや面積など，計測単位を持つ場合は，以下に示すように，計算に入る前に，使われる座標値をスクリーン座標から平面座標に換算しておく必要がある．操作に渡される引数には，スクリーン座標を地上の平面座標に換算することを想定し，アフィン変換パラメータ &quot;affineParam&quot; が必ず含まれている．このパラメータを使って，// coordinate conversion from screen to groud以下の部分で，換算を行っている．この操作は曲面の外周を使った面積を求めるものだが，closedLS つまり曲面の外周の輪が，地上の平面座標に換算されている．なお，操作結果が座標由来の計測単位を持たない場合は，換算は不要である．</p>

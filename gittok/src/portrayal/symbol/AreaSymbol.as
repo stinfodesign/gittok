@@ -37,10 +37,12 @@ package portrayal.symbol
 			}
 			graphics.endFill();
 			
-			this.decodeRing(surface.exterior);
+			if (style.borderStyle != null) {
+				this.decodeRing(surface.exterior);
 			
-			for (i = 0; i < surface.interior.length; i++) {
-				this.decodeRing(surface.interior.getItemAt(i) as SG_Ring);
+				for (i = 0; i < surface.interior.length; i++) {
+					this.decodeRing(surface.interior.getItemAt(i) as SG_Ring);
+				}
 			}
 		}
 		

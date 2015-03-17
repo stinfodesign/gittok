@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300"
-		  backgroundColor="#faeed1"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="270" height="274"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
@@ -43,9 +43,10 @@
 	
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="Memos" fontSize="16"/>
-	<s:DropDownList id="memoList" x="78" y="46" width="254" height="20" 
+	<s:DropDownList id="memoList" x="66" y="65" width="196" height="20" 
 					dataProvider="{memoArray}" labelField="value"
 				    change="memoList_changeHandler(event)"></s:DropDownList>
-	<s:TextArea id="memoArea" x="78" y="84" width="254" editable="false"/>
+	<s:TextArea id="memoArea" x="7" y="90" width="254" editable="false"/>
+	<s:Label x="15" y="70" fontSize="11" text="Memo list"/>
 </s:Window>
   

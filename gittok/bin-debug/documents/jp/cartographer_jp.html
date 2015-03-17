@@ -3,45 +3,26 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Representation Editor</title>
-<style type="text/css">
-.mainSentence {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-}
-.FirstHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 20px;
-	font-style: normal;
-	font-weight: bold;
-}
-.secondHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 16px;
-	font-weight: bold;
-}
-.thirdHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-	font-weight:bold;
-}
-.mainSentence .thirdHeader .mainSentence .mainSentence {
-	font-weight: normal;
-	font-size:12px;
-}
-</style>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
-window.resizeTo(600,650);
+window.resizeTo(650,650);
 window.moveTo(750,20);
 </script>
 </head>
 
 <body>
 <p id="Top" class="FirstHeader">Cartographer<br/>
-  地図表現<span class="secondHeader"></span></p>
+  地図製作<span class="secondHeader"></span></p>
 <p class="secondHeader">はじめに</p>
-<p class="mainSentence">データと似た言葉に情報があります．データはある規則に従って作られた符号の集りです．これに対して情報は，受け手が意味を理解できるデータ，意味が付加されたデータのことを指します．データに意味を付加して情報にする行為を，gittokでは表現 (representation) と呼びます．地理データの表現には，文章，音声，表，そしてグラフなど，いろいろな手段がありますが，地理データに特有の表現法として地図があります．</p>
-<p class="secondHeader">地図デザイン</p>
-<p class="mainSentence">地図をデザインする人は，受け手が実世界の過去・現在・未来を想像し，考え，判断し，行動するということを考えなければいけません．人間はデータを見るのではなく，表現された地図を見ます．従って，情報としての地図の価値は，その元になるデータの品質のみならず，表現，つまり地図デザインの善し悪しで決まるといってもよいでしょう．では，地図表現の善し悪しは，どのように判断するのでしょうか．Judith A. Tyner (2010)は，地図制作を計画する人は，地図の明瞭さ，秩序，釣り合い，対比，統一感，調和を考えて計画すべきといっています．</p>
+<p class="mainSentence">この章では，地図作成のための技術とはどういうものか，そして地図製作者は何をするかを説明します．さて，その前に，空間データと地図について考えます．データと似た言葉に情報があります．データはある規則に従って作られた符号の集りです．これに対して情報は，受け手が意味を理解できるデータ，意味が付加されたデータのことを指します．データに意味を付加して情報にする行為を，gittokでは表現 (representation) と呼びます．空間データの表現には，文章，音声，表，そしてグラフなど，いろいろな手段がありますが，空間データの特有の表現法として地図があります．</p>
+<p class="mainSentence">ところで，Cartographerページは，地図を製作するために必要な５つのボタンを持っています．それはSymbol style design, Label style design, Portrayal schema design, Gazetteer design, そして Mappingです．これらについても言及しますが，詳細は，それぞれのページで解説します．</p>
+<p class="mainSentence">以後の解説を読む前に，講義用のスライドに目を通すことをおすすめします．</p>
+<p class="mainSentence">&nbsp;</p>
+<p id="slide2" class="secondHeader">講義用スライド</p>
+<p class="mainSentence"><a href="../../lectureNotes/jp_pdf/13jpRepresentation.pdf" target="_new">13 地図表現</a></p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">地図製作</p>
+<p class="mainSentence">地図を製作する人は，利用者は地図を見て自らの行動を決定するということを，肝に銘じるべきです．地図の価値は，その元になるデータの品質のみならず，デザインの善し悪しで決まるといってもよいでしょう．では，地図表現の善し悪しは，どのように判断するのでしょうか．Judith A. Tyner [Principles of Map Design, The Guilford Press, 2010, pp.18-23] は，地図制作を計画する人は，地図の明瞭さ，秩序，釣り合い，対比，統一感，そして調和を考えて計画すべきといっています．</p>
 <p class="mainSentence"><span class="thirdHeader">明瞭さ (Clarity)</span><br/>
 地図の目的が明確にわかり，重要な点が際立ち，メッセージとしないものは省くことによって，明瞭さが生じる．ただし，過度の強調は逆効果である．</p>
 <p class="mainSentence"><span class="thirdHeader">秩序 (Order) </span><br/>
@@ -62,35 +43,35 @@ window.moveTo(750,20);
 <p class="mainSentence"><span class="thirdHeader">統一感 (Unity)</span><br/>
 これは地図要素同士の相互関係を考慮すべきということである．文字を使うときは，例えば，背景の色や模様のことを考えなければいけないし，記号との対立なども考慮しなければいけない．</p>
 <p class="mainSentence"><span class="thirdHeader">調和 (Harmony)</span><br/>要素同士の関係，色の配色，パターンの組み合わせが目にやさしいか，文字フォントが別のフォントと相互補完しているか．地図全体が心地よく(pleasing)感じられるか．</p>
-<p class="mainSentence">gittokでは，地図表現のために記号と注記のデザインができるようにしています．また，地図制作の目的に応じて，キットに入っている地物の内，どの地物型が表現の対象となるか，また地物のどの属性を，どのように図示するかを決め，記号と注記の辞書としてそれらを保存し，描画スキーマに組み込むことで，使用することができます．異なる描画スキーマを使えば，同じ地理データを使いながら，異なる地図表現が可能になります．ただし，gittok には，紙の地図を出力する機能は，まだありません．今後の課題です．</p>
-<p class="mainSentence">Cartographer ページを理解するためには，事前に講義用スライドを見ておくとよいでしょう．</p>
-<p class="mainSentence">
-<a href="#slide">講義用スライド</a><br/>
-<a href="#screen">操作画面</a></p>
+<p class="mainSentence">Cartographerのページでは，地図表現のために記号スタイルと注記スタイルのデザインができるようにしています．記号／注記スタイルは，記号／注記を表示するための規則です．例えば，道路の形状は，地図上では，記号スタイルに沿って，記号として表現されます．また，その道路の名称は，名称を示す文字列を，注記スタイルに沿って，注記として表示されます．これを行うために，地図制作の目的に応じて，キットに入っている地物の内，どの地物型が表現の対象となるか，また地物のどの属性を，どのように図示するかを決め，記号スタイルと注記スタイルを指定し，描画スキーマに組み込みます．その描画スキーマを地理空間データに適用して，地図を描画します．異なる描画スキーマを使えば，同じ地理データを使いながら，異なる地図表現が可能になります．</p>
+<p class="mainSentence">以上のことは，Cartographer から，Symbol Style Designer，Label Style Designer，そしてPortrayal Schema Designerを呼び出して，描画スキーマを作り，Map Editor を呼び出して，地図を製作します．</p>
 <p class="mainSentence">&nbsp;</p>
-<p id="slide" class="FirstHeader">講義用スライド</p>
-<p class="mainSentence"><a href="../../lectureNotes/jp_pdf/13jpRepresentation.pdf" target="_new">13 地図表現</a></p>
-<p class="mainSentence">&nbsp;</p>
-<p id="screen" class="FirstHeader">操作画面</p>
-<p class="mainSentence"><img src="../figures/Cartographer.png" width="313" height="314" alt="Representation" /></p>
+<p class="secondHeader">地名索引</p>
+<p class="mainSentence">さて，地図帳の最後の方には大抵，地名索引があるのはご存知でしょうか．地物の識別子を一覧表から探すと，地図帳のページや，地図を区切るグリッドの記号などが示されています．それをたどっていけば，目的の地物を地図の上で見ることができます．Cartographer ページには，地名索引もしくは地名辞典と呼ばれるサービスを定義する Gazetteer Designerという機能があります．ここでは，ある地物を選択して，その地物がもつ名称など，地物識別の文字列属性と幾何属性の組みを作って，地名索引にします．これをMap Editor から呼び出して，識別子を指定すると，Mpe Editorは地図表示画面の中心に，指定した地物を平行移動させて，表示します．</p>
+<p class="mainSentence"> ところで，地名辞典の場合は，地名を探すと，その地域の特徴，歴史，人口，産業，そして自然環境など，対象地域に関する様々な情報を得ることができます．現在多くの国や地域で地名辞典 (geographic name dictionary) を公開しています．Gazetteer Designer は特に地名辞典を作るということは想定していませんが，検索した地物が地名辞典のように，様々な属性をもつ場合は，それらを呼び出してみることによって，ユーザは，地名辞典に類似したサービスをうけることができます．</p>
+<p class="mainSentence">なお，gittok には，紙の地図を出力する機能は，まだありません．今後の課題です．</p>
+<p class="FirstHeader">&nbsp;</p>
+<p id="slide" class="secondHeader">操作画面</p>
+<p class="mainSentence"><img src="../figures/Cartographer.png" alt="Representation" /></p>
 <p class="mainSentence">図1. Cartographer ページ</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="secondHeader">ボタン</p>
-<p class="mainSentence"><span class="thirdHeader">Symbol Design</span><br/>
-記号デザインのページを開きます．記号とは，表現規則に則って図示された，地図要素の表現のことです．このページでは，記号の表現規則をデザインします．</p>
-<p class="mainSentence"><span class="thirdHeader">Label Design</span><br/>
-注記デザインのページを開きます．注記とは，地図上におかれた物を説明する文字列のことです．例えば建物の上に，「朝日小学校」という注記があれば，読み手はその建物が何かが，分かるでしょう．</p>
-<p class="mainSentence"><span class="thirdHeader">Portrayal Design</span><br/>
-描画辞書デザインのページを開きます．描画辞書とは，どの地物型のどの属性をどのようなデザイン規則に従って図示するかを指定した，地物型及び属性とデザイン規則の対応表です．これがないと，地図を描画することはできません．</p>
-<p class="mainSentence"><span class="thirdHeader">Mapping</span><br/>
-地図編集のページを開きます．</p>
-<p class="mainSentence"><span class="thirdHeader">日本語</span><br />
+<p class="mainSentence"><span class="mainSentence"><strong>Symbol Style Design</strong></span><br/>
+記号デザインのページ (Symbol Style Designer) を開きます．記号とは，表現規則に則って図示された，地図要素の表現のことです．このページでは，記号の表現規則，つまり記号スタイルをデザインします．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Label Style Design</strong></span><br/>
+注記デザインのページ (Label Style Designer) を開きます．注記とは，地図上におかれた物を説明する文字列のことです．例えば建物の上に，「朝日小学校」という注記があれば，読み手はその建物が何かが，分かるでしょう．このページでは，注記の表現規則，つまり注記スタイルをデザインします．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Portrayal Schema Design</strong></span><br/>
+描画スキーマデザインのページ (Portrayal Schema Designer)を開きます．描画スキーマとは，どの地物型のどの属性をどのようなデザイン規則に従って図示するかを指定した，地物型及び属性とデザイン規則の対応表です．これがないと，地図を描画することはできません．描画スキーマには，地物がもつ様々な属性を選択して表示する対話型の地図を実現するために，地物のどの属性を表示できるようにするか，指定することができます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Mapping</strong></span><br/>
+地図編集のページ (Map Editor) を開きます．Kit と描画スキーマを呼び出すと，地図の本体が画面いっぱいに入るように表示されます．ここではさらに，タイトルや方位記号などを置いたり，注記の位置を調整したりして，対話型の地図を編集します．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />
 今あなたが読んでいるドキュメントが表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">English</span><br />
+<p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
   You can read the tutorial written in English.</p>
 <p class="mainSentence"></p>
-<p class="mainSentence"><span class="thirdHeader">参考文献</span><br/>
-Judith A. Tyner, Primciples of Map Design, The Guilford Press, 2010, pp.18-23</p>
+<p class="mainSentence"><span class="secondHeader">参考文献</span><br/>
+</p>
+<p class="mainSentence">Judith A. Tyner, Primciples of Map Design, The Guilford Press, 2010, pp.18-23</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="mainSentence"></p>

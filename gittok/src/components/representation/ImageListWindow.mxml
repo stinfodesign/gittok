@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="504" height="492"
-		  backgroundColor="#faeed1"
-		  creationComplete="initializeApp()">
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="464" height="454" backgroundColor="#c5c5c5"
+			   creationComplete="initializeApp()">
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
@@ -139,24 +139,28 @@
 		]]>
 	</fx:Script>
 	
-	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
-	<s:Label x="77" y="15" text="Images" fontSize="16"/>
-	<s:Panel id="imagePanel" title="Image Panel" width="450" height="360" x="27" y="76" 
-			 mouseDown="imagePanel_mouseDownHandler(event)" 
-			 mouseUp="imagePanel_mouseUpHandler(event)" 
-			 dropShadowVisible="false">
+	<s:Image x="14" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="81" y="15" text="Images" fontSize="16"/>
+	<s:Panel id="imagePanel" left="6" right="6" top="63" bottom="-2" chromeColor="#444444"
+			 color="#FFFFFF" dropShadowVisible="false"
+			 mouseDown="imagePanel_mouseDownHandler(event)"
+			 mouseUp="imagePanel_mouseUpHandler(event)" title="Image Panel">
 		<s:Group clipAndEnableScrolling="true" width="100%" height="100%" visible="true" id="imageBox">
 			<mx:Image id="imageView"/>
 		</s:Group>
-		<s:Button x="408" y="-26" label="-" color="#000000" cornerRadius="0" width="35"
-				  id="resetButton" click="resetButton_clickHandler(event)"/>
-		<s:Button x="369" y="-26" label="&lt;" width="35" color="#000000" cornerRadius="2" 
-			  id="largerButton" click="largerButton_clickHandler(event)"/>
-		<s:Button x="330" y="-26" label="&gt;" id="smallerButton" color="#000000" 
-			  cornerRadius="2" width="35" click="smallerButton_clickHandler(event)"/>
-		<s:Button x="291" y="-26" label="off" id="dragButton" color="#000000" width="35" 
-			  cornerRadius="2" click="dragButton_clickHandler(event)"/>
+		<s:Button id="resetButton" right="5" top="-26" width="35" label="-" chromeColor="#dadada"
+				  click="resetButton_clickHandler(event)" color="#000000" cornerRadius="0"/>
+		<s:Button id="largerButton" right="44" top="-26" width="35" label="&lt;"
+				  chromeColor="#dadada" click="largerButton_clickHandler(event)" color="#000000"
+				  cornerRadius="2"/>
+		<s:Button id="smallerButton" right="83" top="-26" width="35" label="&gt;"
+				  chromeColor="#dadada" click="smallerButton_clickHandler(event)" color="#000000"
+				  cornerRadius="2"/>
+		<s:Button id="dragButton" right="122" top="-26" width="35" label="off" chromeColor="#dadada"
+				  click="dragButton_clickHandler(event)" color="#000000" cornerRadius="2"/>
 	</s:Panel>
-	<s:DropDownList id="imageList" x="222" y="44" width="254" height="20" dataProvider="{imageArray}"
-					 labelField="value" change="imageList_changeHandler(event)"></s:DropDownList>
+	<s:DropDownList id="imageList" right="5" top="37" width="224" height="20"
+					change="imageList_changeHandler(event)" dataProvider="{imageArray}"
+					labelField="value"></s:DropDownList>
+	<s:Label right="180" top="25" fontSize="11" text="Image list"/>
 </s:Window>

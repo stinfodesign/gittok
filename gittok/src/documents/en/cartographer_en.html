@@ -3,34 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Representation Editor</title>
-<style type="text/css">
-.mainSentence {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-}
-.FirstHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 20px;
-	font-style: normal;
-	font-weight: bold;
-}
-.secondHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 16px;
-	font-weight: bold;
-}
-.thirdHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-	font-weight:bold;
-}
-.mainSentence .thirdHeader .mainSentence .mainSentence {
-	font-weight: normal;
-	font-size:12px;
-}
-</style>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
-window.resizeTo(600,650);
+window.resizeTo(650,650);
 window.moveTo(750,20);
 </script>
 </head>
@@ -39,10 +14,15 @@ window.moveTo(750,20);
 <p class="FirstHeader">Cartographer<br/>
 </p>
 <p class="secondHeader">Introduction</p>
-<p class="mainSentence">An action to provide information by processing given data is called representation. Documentation, Voice encoding, Tabulation, and drawing graphs are representation. And mapping is a typical representation go geospatial information. Cartography is a technology for map production. </p>
-<p><span class="secondHeader">Map Design</span></p>
-<p class="mainSentence">Cartographer should consider that map users imagine, predict,  determine and act by watching past, now and future drawn on the map. The value of map is evaluated not only the quality of data source but also the quality of design. According to Judith A. Tyner [Principles of Map Design, The Guilford Press, 2010, pp.18-23], any design, whether of maps or buildings, has certain goals: clarity, order, balance, contrast, unity, and harmony.
-</p>
+<p class="mainSentence">This chapter explains what is  cartography, and what  cartographers do. But beforehand, the difference between data and information is explained at first. Information is different from data .Data is a set of codes combined under the rules for coding. Meanwhile information is data with meaning that receivers can understand.Information is produced from data by a process, which is called representation. Documentation, Voice encoding, Tabulation, and drawing graphs are representation. And mapping is a typical representation to produce a geospatial information. Cartography is technology for map makers and science for reseachers to realize better representaion of real world phenomena. </p>
+<p class="mainSentence">Meanwhile, there are five buttons on the Caertograoher page; Symbol style design, Label style design, Portrayal schema design, and Mapping. The functions of these buttons will be explained in detail at the pages opened by clicking these buttons.</p>
+<p class="mainSentence">In order to understand the Cartographer page, it's a good idea to look at the lecture slides before reading this page.</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Lecture slide</p>
+<p class="mainSentence">13 Representation</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Map Design</p>
+<p class="mainSentence">Cartographers should consider that map users decide his/her action by watching a map. Value of a map is evaluated not only by  the quality of data source but also by the quality of design. Judith A. Tyner [Principles of Map Design, The Guilford Press, 2010, pp.18-23] stated that any design, whether of maps or buildings, has certain goals: clarity, order, balance, contrast, unity, and harmony. </p>
 <p class="mainSentence"><span class="thirdHeader">Clarity</span><br />
   Clarity involves examining the objectives of the map, emphasizing the important points, and eliminating anything that does not enhance the map message.</p>
 <p class="mainSentence"><span class="thirdHeader">Order</span><br />
@@ -66,9 +46,38 @@ window.moveTo(750,20);
   Unity refers to the interrelationships between map elements. Lettering is not chosen in isolation; it must be legible over any background colors and shades, must not conflict with chosen symbols, and must suit the topic of the map.</p>
 <p class="mainSentence"><span class="thirdHeader">Harmony</span><br />
   All of the elements (for example, color, pattern and font) on the map should work together. Overall map should have a pleasing appearance.</p>
-<p class="mainSentence">Cartographer page enables design of symbols and labels. And you can design portrayal dictionary for your own purpose by allocation of symbols and labels for representation of each feature and annotation.</p>
-<p class="mainSentence">to be continued</p>
+<p class="mainSentence">Cartographer page enables users to design symbol styles and label styles.Symbol/label style is a rule for drawing symbols and labels. For example, a shape of a road is drawn as a symbol. And its name is drawn as a label in compliance with a label style. A user can design portrayal schemata for his/her purposes by allocations of symbol styles and label styles for representations of feature geometries and feature attributes. Portrayal schema is used for a automatic transformation from a Kit into a map. A different map can be produced from the same Kit by assigning a different portrayal schema.</p>
+<p class="mainSentence">Map editing will be possible by opening a Kit and a portrayal schema, which was designed by adopting a symbol style dictionary and a label style dictionary designed with Symbol and Label style designers.</p>
 <p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Gazetteer</p>
+<p class="mainSentence">Do you know there are geographic index lists at the end of atlases?  The page and grid cell code in atlas is indicated and you can find the target object by using page number and grid cell code. Cartographer page includes 'Gazetteer Designer', which serves the function to create a geographic index list called a gazetteer. You can create a gazetteer by the selection of a combination of a place identifier and a geometric attribute included in one feature type.  The target feature instance is moved to the center of the screen by the selection of identifier shown on the geographic index list in the gazetteer. </p>
+<p class="mainSentence">Generally, a gazetteer also has a meaning of a geographic name dictionary. The users can get various information about the target place, for example, culture, history, population, industry, and natural environment. Today, geographic name dictionaries developed by many countries and regions are available on the web. The users can experience similar service on the gazetteer in gittok, if the feature has various attributes.</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Cartographer</p>
+<p class="mainSentence"><img src="../figures/Cartographer.png" alt="Representation" /></p>
+<p class="mainSentence">Figure 1. Cartographer page</p>
+<p class="secondHeader">Button</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Symbol Style Design</strong></span><br/>
+This button opens a page for symbol style design. A symbol is a graphic representation of a feature bythe geometric symbol in accordance with the symbol style. Symbol style deignser is used to design symbol styles.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Label Style Design</strong></span><br/>
+  This button opens a page for label style design. A label is a graphic representation of a feature by the text string in accordance with the labale style. Label style designer is used to design label styles.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Portrayal Schema Design</strong></span><br/>
+  This button opens a page for portrayal schema design. Portrayal schema is used for a automatic transformation from a Kit into a map. A different map can be produced from the same Kit by assigning a different portrayal schema.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Gazetteer Design</strong></span><br/>
+This button opens a page for gazetteer design. A gazetteer is a geographic inde. Th user can find a feature at the center of the creen, if he/she select a place identifier on the index list. The user can define and create gazetteer on Gazetteer designer page.</p>
+<span class="mainSentence"><strong>Mapping</strong></span><br/>
+<span class="mainSentence">This button opens a page for map editing. Map Editor page is used to create an interactive map by selecting a Kit, a portrayal schema and a gazetteer if required. The user also can design marginal information such as a title, a north arrow, and a scale-bar.</span>
+<p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />
+今あなたが読んでいるドキュメントが日本語で表示されます．<br />
+</p>
+<p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
+  You can read the tutorial written in English.</p>
+<p class="mainSentence"></p>
+<p class="mainSentence"><span class="secondHeader">References</span><br/>
+</p>
+<p class="mainSentence">Judith A. Tyner, Primciples of Map Design, The Guilford Press, 2010, pp.18-23</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence"></p>
 <p class="mainSentence"></p>
 <p class="mainSentence">&nbsp;</p>
 </body>

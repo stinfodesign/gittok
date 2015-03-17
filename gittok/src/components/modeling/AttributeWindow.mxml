@@ -4,7 +4,7 @@
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
 		  title="Attribute Type Designer" 
 		  width="482" height="472"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -56,6 +56,12 @@
 			
 			protected function addAttButton_clickHandler(event:MouseEvent):void
 			{
+				// Check attName
+				if (attName.text.search(" ") != -1) {
+					Alert.show('Do not insert space between words!', 'Alert', Alert.OK, this);
+					return;
+				}
+				
 				// Set parameters
 				attType = new AttributeType();
 				attType.derived = (isDerived.selected) ? "/" : "";
@@ -137,6 +143,12 @@
 
 			protected function updateButton_clickHandler(event:MouseEvent):void
 			{
+				// Check attName
+				if (attName.text.search(" ") != -1) {
+					Alert.show('Do not insert space between words!', 'Alert', Alert.OK, this);
+					return;
+				}
+
 				//Set parameters
 				attType.name = attName.text;
 				attType.dataType = selectedTypeLabel.text;

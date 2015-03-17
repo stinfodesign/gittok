@@ -3,7 +3,7 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
 		  width="610" height="730"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  xmlns:os="http://openscales.org"
 		  creationComplete="initializeApp()">
 	
@@ -762,7 +762,7 @@
 				navigateToURL(request);
 			}
 			
-			protected function fxMap_mouseMoveHandler(event:MouseEvent):void
+			protected function _mouseMoveHandler(event:MouseEvent):void
 			{
 				var str:String = " Lon:" + mousePos.longitude;
 				var lonLat:Location = new Location(Number(mousePos.longitude), Number(mousePos.latitude), "EPSG:900913");
@@ -772,7 +772,7 @@
 				var lonstr:String = numberFormatter.format(lonLat.lon);
 				var latstr:String = numberFormatter.format(lonLat.lat);
 				coordinateLabel.text = " Lon:" + lonstr + " Lat:" + latstr;
-				
+
 				var coor:Coordinate2 = new Coordinate2();
 				coor.x = lonLat.lat;
 				coor.y = lonLat.lon;
@@ -848,7 +848,7 @@
 				fxMap.map.resolution = new Resolution(reso, fxMap.map.projection);	
 			}
 			
-			protected function fxMap_mouseDownHandler(event:MouseEvent):void
+			protected function _mouseDownHandler(event:MouseEvent):void
 			{
 				// search metadata by the mouse position included in the geographic extent.
 				var lonLat:Location = new Location(Number(mousePos.longitude), Number(mousePos.latitude), "EPSG:900913");
@@ -880,11 +880,12 @@
 	<mx:Image x="10" y="4" source="images/pictManagement1.png"/>
 	<s:Label x="75" y="15" text="Manager" fontSize="16"/>
 	
-	<s:Panel id="mapPanel" left="25" top="335" right="25" bottom="25" title="Geographic Extent" dropShadowVisible="false">
+	<s:Panel id="mapPanel" left="25" top="335" right="25" bottom="25" title="Geographic Extent" 
+			 dropShadowVisible="false" chromeColor="#444444" color="#ffffff">
 		<os:Map id="fxMap" width="100%" height="100%"  maxExtent="-180,-90,180,90" center="139.73945, 35.701394" 
 				projection="EPSG:900913" addedToStage="onMapAddedToStage(event)"
-			    mouseMove="fxMap_mouseMoveHandler(event)"
-			    mouseDown="fxMap_mouseDownHandler(event)">
+			    mouseMove="_mouseMoveHandler(event)"
+			    mouseDown="_mouseDownHandler(event)">
 			<os:MousePosition id="mousePos" availableProjSrsList="EPSG:900913"
 					displayProjection="EPSG:900913" visible="false"/>
 			<os:TermsOfService right="10" bottom="10" label="OpenScales" url="http://openscales.org/index.html" />
@@ -898,7 +899,7 @@
 		</os:Map>
 		<s:Button id="mapButton" right="10" top="160" width="55" height="20" label="OSM"
 					  click="mapButton_clickHandler(event)"/>
-		<s:Label id="coordinateLabel" left="10" bottom="10" width="170" height="16"
+		<s:Label id="coordinateLabel" left="10" bottom="10" width="170" height="16" color="0x000000"
 				 backgroundColor="0xffffff" fontSize="11" verticalAlign="middle"/>
 		<s:VGroup top="10" right="20" horizontalAlign="center">
 			<s:Button id="zoomInButton" width="30" height="15" label="+" click="zoomInButton_clickHandler(event)"/>
@@ -929,7 +930,7 @@
 				<s:Button x="399" y="13" label="save" width="55" id="saveMetadataButton" click="saveMetadataButton_clickHandler(event)"/>
 				<s:Button x="340" y="13" label="open" width="55" id="openMetadataButton" click="openMetadataButton_clickHandler(event)"/>
 				<s:Label x="339" y="39" width="198" height="21" backgroundColor="#DADADA" id="mtdFileLabel" verticalAlign="middle"/>
-				<s:Label x="466" y="19" text="Metadata file"/>
+				<s:Label x="466" y="19" text="Metadata"/>
 				<s:Label x="466.75" y="81" text="Keyword"/>
 				<s:TextInput x="340" y="104" width="199" id="keywordInput"/>
 				<s:List id="keywordList" x="340" y="149" width="199" height="85"
@@ -953,7 +954,7 @@
 				<mx:DateField x="142" y="173" yearNavigationEnabled="true" id="pubBegin"/>
 				<mx:DateField x="248" y="173" yearNavigationEnabled="true" id="pubEnd"/>
 				<s:Button x="95" y="13" label="select" width="55" id="selectLibraryButton" click="selectLibraryButton_clickHandler(event)"/>
-				<s:Label x="155" y="20" text="library"/>
+				<s:Label x="155" y="20" text="Catalogue"/>
 				<s:Label x="91" y="40" width="141" height="21" id="libraryLabel" chromeColor="#CCCCCC" backgroundColor="#DADADA" verticalAlign="middle"/>
 				<s:List x="245" y="40" width="178" height="108" contentBackgroundColor="#DADADA" id="metadataList" dataProvider="{fileNameList}"></s:List>
 				<s:Label x="370" y="20" text="Metadata list"/>

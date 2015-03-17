@@ -7,6 +7,11 @@ package portrayal.symbol
 	
 	public class Triangle extends Sprite
 	{
+		/*
+		Triangle is used at Analyst page as from and to marks representing an association
+		between different features.
+		*/
+		
 		public function Triangle(_name:String, vertices:CoordinateArray, fillColor:uint)
 		{
 			super();

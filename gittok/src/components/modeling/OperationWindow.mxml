@@ -4,7 +4,7 @@
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
 		  title="Operation Type Designer"
 		  width="575" height="682"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>

@@ -4,7 +4,7 @@
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
 		  title="Address Editor"
 		  width="354" height="372"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 
 	<fx:Declarations>
@@ -48,7 +48,7 @@
 			public function displayAttributeValue(_address:Address):void {
 				address = _address;
 				zipInput.text = _address.zipCode;
-				addressInput.text = _address.element;
+				addressInput.text = _address.location;
 				countryLabel.text = _address.country;
 			}
 			

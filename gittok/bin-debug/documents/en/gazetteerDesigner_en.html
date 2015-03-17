@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>無題ドキュメント</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<p class="FirstHeader">Gazetteer Designer</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">Most atlases and travel guide books have geographic index at the end of them. The page and location of geographic object can be found by a combination of the name and the index code. Such a combination is called geographic identifier. Geographic index is a set of geographic identifiers. Gazetteer is a similar concept of geographic index . Gazetteer also means geographic name dictionary to explain the geographic objects in the target area. Gazetteer works as a discrete spatial reference system. Spatial referencing by geographic identifier is introduced in the lecture slide ’09 Reference systems’.</p>
+<p class="mainSentence">Gazetteer designer enables to design gazetteer by assigning geographical name and geometry as attributes of a feature. The students can find a feature on the map by the selection of geographic name listed in the gazetteer.</p>
+<p class="secondHeader">Gazetteer Schema</p>
+<p class="mainSentence">Gezetteer schema is a formal model of gazetteer. It consists of GazetteerType class and GazetteerItem class. </p>
+<p class="FirstHeader"><img src="../figures/GazetteerSchema.png" width="300" height="291" alt="gazetteerSchema" /></p>
+<p class="mainSentence">Figure 1. Structure of gazetteer</p>
+<p class="thirdHeader">CLASSES</p>
+<p class="mainSentence"><strong>GazetteerType</strong><br />
+  This is a header of gazetteer. It has four attributes. KitURL is a resource location of the kit. FeatureType is a type of feature defined in the application scehma. LocationType is a feature attribute of geographic name. PositionType is a geometric attriute of the feature.</p>
+<p class="mainSentence"><strong>GazetteerItem</strong><br />
+This is an index of a feature instance. geoName is a geographic id (name, textual identifier, etc.) of the feature, and position is a center coordinate of the geometric attribute.</p>
+<p class="thirdHeader">ROLL NAMES</p>
+<p class="mainSentence"><strong>gazetteerItemList</strong><br />
+A list of gazetteer items. this is the geographic index.</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Gazetteer Designer</p>
+<p class="mainSentence"><img src="../figures/GazetteerDesigner.png" width="360" height="488" alt="gazetteerDesigner" /></p>
+<p class="mainSentence">Figure 2. Gazetteer designer page</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><strong>Kit </strong><br />
+  A name of the target kit file for the geospatial index.</p>
+<p class="mainSentence"><strong>Gazetteer</strong><br />
+  A file name of the gazetteer.</p>
+<p class="mainSentence"><strong>FeatureTypes</strong><br />
+  A name of the feature type selected on the drop down list.</p>
+<p class="mainSentence"><strong>Attributes</strong><br />
+  An attribute list of the selected feature type.</p>
+<p class="mainSentence"><strong>Geographic name</strong><br />
+  Selected feature identifier is displayed in this field.</p>
+<p class="mainSentence"><strong>Position</strong><br />
+  Selected geometry is displayed in this field. </p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><strong>open (kit)</strong><br />
+  open a kit to create a gazetteer.</p>
+<p class="mainSentence"><strong>open (gazetteer)</strong><br />
+  open a gazetteer already created.</p>
+<p class="mainSentence"><strong>save (gazetteer)</strong><br />
+  save a created gazetteer.</p>
+<p class="mainSentence"><strong>geographic name</strong><br />
+  Before the selection of geographic name on the list of attributes, click this radio button.</p>
+<p class="mainSentence"><strong>Position</strong><br />
+  Before the selection of position on the list of attributes, click this radio button.</p>
+<p class="mainSentence"><strong>日本語</strong><br />
+  今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><strong>English</strong><br />
+  You can read the tutorial written in English.</p>
+<p class="thirdHeader">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+</body>
+</html>

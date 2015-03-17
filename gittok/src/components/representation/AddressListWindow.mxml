@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="272"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 
 	<fx:Declarations>
@@ -28,9 +28,9 @@
 				if (addressArray.length > 0) {
 					var address:Address = addressArray.getItemAt(0) as Address;
 					zipCodeLabel.text = address.zipCode;
-					addressArea.text = address.element;
+					addressArea.text = address.location;
 					countryLabel.text = address.country;
-					addressList.prompt = address.element;
+					addressList.prompt = address.location;
 					addressList.selectedIndex = 0;
 				}
 			}			
@@ -42,8 +42,20 @@
 				
 				var address:Address = addressArray.getItemAt(addressIndex) as Address;
 				zipCodeLabel.text = address.zipCode;
-				addressArea.text = address.element;
+				addressArea.text = address.location;
 				countryLabel.text = address.country;
+			}
+			
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/addressViewer_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/addressViewer_en.html");
+				navigateToURL(request);
 			}
 			
 		]]>
@@ -51,16 +63,22 @@
 	
 	<s:Image x="10" y="6" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="75" y="15" text="Addresses" fontSize="16"/>
+	<s:Label right="58" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
 	<s:DropDownList id="addressList" x="112" y="51" width="254" height="20"
 				 dataProvider="{addressArray}" labelField="element"
 				 change="addressList_changeHandler(event)"></s:DropDownList>
-	<s:Label x="56" y="94" text="zip-code"/>
-	<s:Label x="56" y="119" text="address"/>
-	<s:Label x="56" y="195" text="country"/>
+	<s:Label x="54" y="94" text="zip-code"/>
+	<s:Label x="57" y="119" text="address"/>
+	<s:Label x="60" y="195" text="country"/>
 	<s:Label id="zipCodeLabel" x="112" y="89" width="100" height="20" backgroundColor="#DADADA"
 			 verticalAlign="middle"/>
 	<s:TextArea id="addressArea" x="112" y="117" width="252" height="67" borderVisible="false"
 				contentBackgroundColor="#DADADA" editable="false" verticalAlign="top"/>
-	<s:Label id="countryLabel" x="112" y="191" width="100" height="20" backgroundColor="#DADADA"/>
+	<s:Label id="countryLabel" x="112" y="191" width="100" height="20" 
+			 verticalAlign="middle" backgroundColor="#DADADA"/>
+	<s:Label x="85" y="54" text="list"/>
 
 </s:Window>

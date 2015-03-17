@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="637" height="638" minWidth="637" minHeight="638" 
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -27,8 +27,6 @@
 			
 			import math.*;
 			
-			import message.InfoWindow;
-			
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
 			import mx.controls.Menu;
@@ -39,8 +37,6 @@
 			import portrayal.symbolStyle.*;
 			
 			import spark.events.IndexChangeEvent;
-			
-			protected var info:InfoWindow;
 			
 			public var kit:Kit;
 			public var kitURL:String;
@@ -1487,8 +1483,7 @@
 			public function showAssociation(association:Association):void
 			{
 				if (association.relateFrom.length == 0 && association.relateTo.length == 0) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Select at least from or to before.", false);
+					Alert.show("Alert", "Select at least from or to before.", 4, this);
 				    return;
 				}
 				
@@ -1605,11 +1600,11 @@
 				<s:Label x="104" y="38" text="Control Point ID"/>
 				<s:Rect x="369" y="9" width="120" height="60">
 					<s:fill>
-						<s:SolidColor color="0x888888"/>
+						<s:SolidColor color="#dadada"/>
 					</s:fill>
 				</s:Rect>
 				<s:TextInput x="193" y="31" width="76" id="controlIDInput"/>
-				<s:Button x="373" y="15" label="get parameters »" id="getParamButton" 
+				<s:Button x="373" y="15" label="get parameters »" id="getParamButton" chromeColor="#dadada" 
 						  click="getParamButton_clickHandler(event)" enabled="{getParamEnable}"/>
 				<s:Button id="qualityButton" x="373" y="42" width="111" label=" show quality »"
 						  click="qualityButton_clickHandler(event)"/>
@@ -1618,19 +1613,18 @@
 		</s:NavigatorContent> 		
 	</mx:ViewStack> 	
 	
-
-	<s:Panel id="geometryPanel" left="21" right="112" top="168" bottom="38" dropShadowVisible="false"
-			 title="Geometry Editing Panel">
-		<s:Button x="460" y="-26" label="-" color="#000000" cornerRadius="0" width="35" 
-				  id="resetButton" click="resetButton_clickHandler(event)"/>
-		<s:Button x="422" y="-26" label="&lt;" width="35" color="#000000" cornerRadius="0" 
-				  id="largerButton" click="largerButton_clickHandler(event)"/>
-		<s:Button x="384" y="-26" label="&gt;" id="smallerButton" color="#000000" 
-				  cornerRadius="0" width="35" click="smallerButton_clickHandler(event)"/>
-		<s:Button x="346" y="-26" label="off" id="dragButton" color="#000000" width="35" 
-				  cornerRadius="2" click="dragButton_clickHandler(event)"/>
+	<s:Panel id="geometryPanel" left="21" right="112" top="168" bottom="38" chromeColor="#444444"
+			 dropShadowVisible="false" title="Geometry Editing Panel" color="#ffffff">
+		<s:Button id="resetButton" x="460" y="-26" width="35" height="20" label="-"
+				  click="resetButton_clickHandler(event)" chromeColor="#dadada" color="#000000" cornerRadius="2"/>
+		<s:Button id="largerButton" x="422" y="-26" width="35" height="20" label="&lt;"
+				  click="largerButton_clickHandler(event)" chromeColor="#dadada" color="#000000" cornerRadius="2"/>
+		<s:Button id="smallerButton" x="384" y="-26" width="35" height="20" label="&gt;"
+				  click="smallerButton_clickHandler(event)" chromeColor="#dadada" color="#000000" cornerRadius="2"/>
+		<s:Button id="dragButton" x="346" y="-26" width="35" height="20" label="off"
+				  click="dragButton_clickHandler(event)" chromeColor="#dadada" color="#000000" cornerRadius="2"/>
 		<s:HSlider x="264" y="-20" width="68" id="alphaSlider" minimum="0" maximum="1" stepSize="0.05" value="1" 
-				   change="alphaSlider_changeHandler(event)" chromeColor="#494848"/>
+				   change="alphaSlider_changeHandler(event)" chromeColor="#dadada"/>
 		<s:Group clipAndEnableScrolling="true" width="100%" height="100%" visible="true" id="geometryBox" 
 				 mouseDown="geometryPanel_mouseDownHandler(event)" 
 				 mouseMove="geometryPanel_mouseMoveHandler(event)"
@@ -1642,8 +1636,7 @@
 				<mx:Image id="annotationLayer" alpha="1.0" />
 			</s:Group>
 		</s:Group>
-	</s:Panel>
-	
+	</s:Panel>	
 
 	<s:Group x="532" y="167" width="92" height="104" right="15" top="167">
 		<s:Rect x="0.5" y="0.5" width="100%" height="100%">

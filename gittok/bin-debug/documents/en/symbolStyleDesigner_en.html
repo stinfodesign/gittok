@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Symbol Designer</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+window.resizeTo(700,650);
+window.moveTo(750,20);
+</script>
+</head>
+
+
+<body>
+<p class="FirstHeader">Symbol Style Designer</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">Map symbol is a graphic representation of a feature on a map. A symbol is designed in accordance with a symbol style, and it is classified into point, line and area. A symbol style is a rule to specify graphic attributes of a symbol, and to indicate association with other symbols, which are parts of the symbol. The symbol style schema defines the types of symbol styles. This page explains what is the Symbol Style Schema, how to create symbols on a map according to the symbol schema, and how to use Symbol Style Designer. </p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Symbol style schema</p>
+<p class="mainSentence"><img src="../figures/SymbolStyleSchema.png" width="650" height="411" alt="SYmbolStyleSchema" /></p>
+<p class="mainSentence">Figure 1. Symbol style schema used by gittok</p>
+<p class="thirdHeader">CLASS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>SymbolStyleDictionary</strong></span><br />
+  Symbol style dictionary is a class to represent  collections of point, line and area symbol styles. It has a name of the dictionary (name) as its attribute, and association to pointSymStyles, lineSymStyles, and areaSymStyles. an instance of this type is the symbol style dictionary.</p>
+<p class="mainSentence"> <span class="mainSentence"><strong>SymbolStyle</strong></span><br />
+This class is the root class of symbol styles. This abstract class has a name as its attribute. This class is associated by pointSymbolStyle. It means that a pointSymbolStyle has other symbol style classes as parts.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>LineSymbolStyle</strong></span><br />
+This class defines attributes of a line. They are color, thickness, transparency (alpha), edge shape (caps), vertex shape (joints), solid part length of a dashed line (dash), interval part length of a dashed line (gap). Dash and gap are optional.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>AreaSymbolStyle</strong></span><br />
+This class defines attributes of an area. They are filling color (color) and transparency (alpha), The boundar style is defined by a line symbol style.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>PointSymbolStyle</strong></span><br />
+This class defines a style of a point symbol by coordinate arrays (elements) corresponding with line and area symbol styles. A coordinate array corresponding to an area symbol style shall be closed. Its interior is filled by the area symbol style. According to the Figure 1, point symbol style may have associations with other symbol styles. Actually, associations with line and area symbol styles are possible. However, it is impossible to associate with other point symbol style now. </p>
+<p class="mainSentence"><span class="mainSentence"><strong>CircleSymbolStyle</strong></span><br />
+This class defines a circle as a sub-class of AreaSymbolStyle. There is no special attribute, but a style of coordinate array is different from area symbols. This is explained in detail at the next section (Symbol Schema).</p>
+<p class="thirdHeader">ROLL NAME</p>
+<p class="mainSentence"><strong>pointSymbolStyles</strong><br />
+A collection of point symbol styles.</p>
+<p class="mainSentence"><strong>lineSymbolStyles</strong><br />
+A collection of line symbol styles.</p>
+<p class="mainSentence"><strong>areaSymbolStyles</strong><br />
+A collection of area symbol styles.</p>
+<p class="mainSentence"><strong>borderStyle</strong><br />
+a line symbol style representing a border of the area.</p>
+<p class="mainSentence"><strong>styles</strong><br /> 
+  Symbol styles used by the point symbol style. 
+Point symbol style may have associations with other symbol styles. Actually, associations with line and area symbol styles are possible. However, it is impossible to associate with other point symbol style now. </p>
+<p class="mainSentence"></p>
+<p class="secondHeader">Symbol creation</p>
+<p class="mainSentence">A symbol is created  from a geometric attribute of a feature in a kit in compliance with the corresponding symbol style. For example, in case a geometric attribute is a point, the symbol is created according to the point symbol style at a position of the point. The symbol is instantiated in compliance with the symbol schema. </p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Symbol schema</p>
+<p class="mainSentence">The symbol schema specifies rules for map drawing by symbols in accordance with the symbol styles. Relationship between symbol style schema and symbol schema is similar to the relationship between GFM and Instance Model. Symbol Style Schema is a meta-model and Synbol Schema is a model of symbol instances.</p>
+<p class="mainSentence"><img src="../figures/SymbolSchema.png" width="650" height="245" alt="SymbolSchema" /></p>
+<p class="mainSentence">Figure 2. Symbol Schema used by gittok</p>
+<p class="thirdHeader">CLASS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Sprite</strong></span><br />
+This class is provided by ActionScript V3 used for the coding of gittok. It may have more than one child graphic objects and its graphic instance can be searched by a mouse on the screen. There are explanations on a web-site of Adobe and related text books. All symbols defined in gittok are defined as sub-classes of Sprite.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>LineSymbol</strong></span><br />
+This class defines a line symbol. It has a coordinate array that is modified by a line symbol style. Gittok portrays a line symbol as a sprite on the screen using these data.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>AreaSymbol</strong></span><br />
+This class defines an area symbol, which has a closed coordinate array and a style for graphic representation. Gittok portrays an area symbol as a sprite on the screen using these data.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>PointSymbol</strong></span><br />
+This class defines a point symbol, which has a coordinate of a point and a style for graphic representation. Gittok portrays a point symbol as a sprite on the screen using these data.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Circle</strong></span><br />
+This class defines a circle by a center coordinate, a radius of a circle, and a style for graphic representation. A point position is used as a center position on the screen. The radius is calculated bythe first coordinate and the next coordinate in the coordinate array stored in the point symbol style. It means a circle is used as a point modifier.</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Symbol style designer</p>
+<p class="mainSentence">See the top of Figure 2 shown below．</p>
+<p class="thirdHeader">TEXT FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>symbol style schema</strong></span><br />
+A file name of the symbol style schema is displayed at this field when the schema is opened or saved. </p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>open</strong></span><br />
+  The symbol style schema is opened.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>save</strong></span><br />
+  The symbol style schema is saved.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />
+  今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
+  You can read the tutorial written in English</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Line style stack</p>
+<p class="secondHeader"><span class="mainSentence"><img src="../figures/SymbolStyleDesigner_Line.png" width="458" height="516" alt="SYmbolStyleDesigner_Line" /></span></p>
+<p class="mainSentence">Figure 2. Screen for the line style design</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>name (editable)</strong></span><br />
+  A name of the line style.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>thickness (editable)</strong></span><br />
+  Weight of the line.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>dash (editable)</strong></span><br />
+  Solid part length of the dashed line, </p>
+<p class="mainSentence"><span class="mainSentence"><strong>gap (editable)</strong></span><br />
+  Interval part length of the dashed line.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>line</strong></span><br />
+  A list of the created line style names.</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>show</strong></span><br />
+  The design the line style is shown at under of this button.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>select</strong></span><br />
+  Color selector is appeared by this button. Color of the line style is shown when the selector is closed. </p>
+<p class="mainSentence"><img src="../figures/ColorSelector.png" width="300" height="209" alt="ColorSelector" /></p>
+<p class="mainSentence">Figure 3. Page for the color selection</p>
+<p class="mainSentence"><span class="mainSentence"><strong>caps</strong></span><br />
+  A shape of the line edge can be selected.</p>
+<p class="mainSentence"><img src="../figures/Line_caps.png" width="340" height="72" alt="Line Caps" /></p>
+<p class="mainSentence"><span class="mainSentence"><strong>joints</strong></span><br />
+  A shape of the vertices of the line can be selected.</p>
+<p class="mainSentence"><img src="../figures/Line_joints.png" width="290" height="109" alt="Line Joints" /></p>
+<p class="mainSentence"><span class="mainSentence"><strong>add</strong></span><br />
+  The line style is added.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>edit</strong></span><br />
+  The line style selected on the list can be edited.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>update</strong></span><br />
+  The edited line style is updated.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>delete</strong></span><br />
+  The line style selected on the list can be deleted.</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Area style stack</p>
+<p class="secondHeader"><span class="mainSentence"><img src="../figures/SymbolStyleDesigner_Area.png" width="474" height="540" alt="SymbolDesigner_Area" /></span></p>
+<p class="mainSentence">Figure 4. Screen for the area style design</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>name (editable)</strong></span><br />
+A name of the symbol is put in this filed.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>color</strong></span><br />
+  Color selector is appeared by this button. Color of the area is filled when the selector is closed. </p>
+<p class="mainSentence"><span class="mainSentence"><strong>line</strong></span><br />
+  A list of the line symbol names, which are used for the boundary of an area. If this is not selected, the area style without boundary will be created.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>area</strong></span><br />
+  A list of created area symbol styles are shown. You shall select one of areas before editing, updating and deleting.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>design</strong></span><br />
+  A sample of an area is displayed by pushing 'show' button.</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>show</strong></span><br />
+The design the area symbol is shown at under of this button.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>select</strong></span><br />
+  Color selector is appeared by this button. Color of the area is filled when the selector is closed. </p>
+<p class="mainSentence"><span class="mainSentence"><strong>add</strong></span><br />
+  The area symbol is added.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>edit</strong></span><br />
+The area symbol selected on the list can be edited.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>update</strong></span><br />
+  The edited area symbol is updated.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>delete</strong></span><br />
+  The area symbol selected on the list can be deleted.</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Point style stack</p>
+<p class="mainSentence"><span class="secondHeader"><img src="../figures/SymbolStyleDesigner_Point.png" width="458" height="516" alt="SymbolDesigner_Point" /></span></p>
+<p class="mainSentence">Figure 5.  Screen for the area style design</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>name (editable)</strong></span><br />
+A name of the symbol is put in this filed.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>mode</strong></span><br />
+The word  in this field is 'digitize' means that the digitization is possible in the Edit panel. Meanwhile 'search' means that geometric element in the Edit panel is possible. The mode is changed by clicking 'break' button as the end of each operation.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>size (editable)</strong></span><br />
+Size of a symbol on the screen is assigned in this field. Default size is 100 pixels. width and height are equal.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Edit Panel (editable)</strong></span><br />
+  This panel is used for editing a point symbols. The procedure is as follows.<br />
+  1. The list of styles is appeared, if the geometry for input is selected from radio buttons (line, area, or circle). If the style is circle, the a area style list is appeared.<br />
+  2. Select the style of a geometry from the list.<br />
+3. Click the cursor sequentially to digitize a geometric shape. In case of a circle, click the center position, and then click the boundary of a circle. Push 'break' button to indicate the end of digitizing of one geometry. </p>
+<p class="mainSentence">if you do not like the digitized geometry, you can eliminate it by clicking at the line (if it is a circle, then click at the boundary for elimination). Then you will see the line become thicker. Finally, push 'delete' button. You will see that the geometry is eliminated from the panel. </p>
+<p class="mainSentence"><span class="mainSentence"><strong>line style</strong></span><br />
+This list shows the names of line symbol styles.This list appeares if 'line' radio button is selected.(This list is hidden from Figure 5.)</p>
+<p class="mainSentence"><span class="mainSentence"><strong>area style</strong></span><br />
+This list shows th names of area symbol styles. This list appeares if 'area' or 'circle' radio button is selected.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>point</strong></span><br />
+This list shows th names of poiint symbol styles. Select a name if it will be edited or eliminated before click 'edit' or 'delete' button.</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>line</strong></span><br />
+The list of line styles is appeared by clicking this radio button. The digitizing of a line (polyline) is possible by the selection of the style.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>area</strong></span><br />
+The list of area styles is appeared by clicking this radio button. The digitizing of an area is possible by the selection of the style.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>circle</strong></span><br />
+The list of area styles is appeared by clicking this radio button. The digitizing of a circle is posible by the selection of the style. </p>
+<p class="mainSentence"><span class="mainSentence"><strong>break</strong></span><br />
+  Clicking this button declares that one geometry digitizing is finished. <br />
+</p>
+<p class="mainSentence"><span class="mainSentence"><strong>search</strong></span><br />
+Click this button to change from digitize mode to search mode.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>delete</strong></span><br />
+Click this button to eliminate a selected geometry.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>clear all</strong></span><br />
+Click this button to eliminate all geometries.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>add</strong></span><br />
+Click this button to add a symbol style in the list of point symbol styles.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>edit</strong></span><br />
+Click this button for editing the selected style.</p>
+<p class="mainSentence"><span class="mainSentence"><strong>update</strong></span><br />
+Click this button to update the selected style. This style should be the result of editing.</p>
+<p class="mainSentence"><strong>delete</strong><br />
+Click this button to eleiminate the selected point symbol style.</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+</body>
+</html>

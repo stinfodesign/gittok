@@ -62,8 +62,8 @@ package instanceModel
 		public var associationList:Dictionary;
 		
 		private var xml:XML;
-		
 		public var kitURL:String;
+		
 		public var applicationSchema:ApplicationSchema;
 		
 
@@ -433,12 +433,12 @@ package instanceModel
 			str += '</ringList>';
 			
 			str += '<addressList>';
-			for each(var addrsObj:* in this.addressList) {
+			for each(var addrsObj:Address in this.addressList) {
 				var addrs:Address = new Address();
 				
 				if (addrsObj is Object) {
 					addrs.country = addrsObj["country"];
-					addrs.element = addrsObj["element"];
+					addrs.location = addrsObj["location"];
 					addrs.id = addrsObj["id"];
 					addrs.zipCode = addrsObj["zipCode"];
 				}
@@ -473,71 +473,6 @@ package instanceModel
 			
 		}
 		
-		/*
-		private function constructConcreteTypes():void {
-			//Initialize concrete (non abstract) types
-			concreteTypes = new ArrayList();
-			for each(var ftType:FeatureType in applicationSchema.featureTypes) {				
-				if (!ftType.isAbstract) 
-					concreteTypes.addItem(ftType);
-			}
-			
-			//Inherit properties from parent types, if required.
-			var n:int = concreteTypes.length;
-			for (var i:int = 0; i < n; i++) {
-				atts 	= new ArrayList();
-				opts 	= new ArrayList();
-				concreteType = concreteTypes.getItemAt(i) as FeatureType;
-				if (!concreteType.isAbstract) {
-					// collect attrubute and association types
-					atts.addAll(concreteType.attributeTypes);
-					opts.addAll(concreteType.operationTypes);
-					if (concreteType.parent != null) inheritProperties(concreteType.parent);
-					concreteType = concreteTypes.getItemAt(i) as FeatureType;
-					concreteType.attributeTypes = atts;
-					concreteType.operationTypes = opts;
-				}
-			}
-						
-		}
-		
-		// Recursive operation to inherit properties
-		protected function inheritProperties(fType:FeatureType):void {
-			var m:int = fType.attributeTypes.length;
-			var n:int = atts.length;
-			var watts:ArrayList = new ArrayList();
-			for (var i:int = 0; i < m; i++) {
-				var wattf:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
-				var flag:Boolean = false;
-				for (var j:int = 0; j < n; j++) {
-					var watt:AttributeType = atts.getItemAt(j) as AttributeType;
-					if (watt.name == wattf.name) flag = true;
-				}
-				if (!flag) watts.addItem(wattf);
-			}
-			atts.addAll(watts);
-			
-			m = fType.operationTypes.length;
-			n = opts.length;
-			var wopts:ArrayList = new ArrayList();
-			for (i = 0; i < m; i++) {
-				var woptf:OperationType = fType.operationTypes.getItemAt(i) as OperationType;
-				flag = false;
-				for (j = 0; j < n; j++) {
-					var wopt:OperationType = opts.getItemAt(j) as OperationType;
-					if (wopt.name == woptf.name) flag = true;
-				}
-				if (!flag) wopts.addItem(woptf);
-			}
-			
-			opts.addAll(wopts);
-			
-			if (fType.parent != null) {
-				inheritProperties(fType.parent);
-			}
-		}
-
-		*/
 		
 		public function setXML(_xml:XML):void {
 			xml = _xml;

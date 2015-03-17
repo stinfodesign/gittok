@@ -3,7 +3,7 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   width="386" height="388" title="Title Editor"
-			   backgroundColor="#faeed1"
+			   backgroundColor="#c5c5c5"
 			   creationComplete="initializeApp()">
 	<fx:Script>
 		<![CDATA[
@@ -20,6 +20,7 @@
 			
 			private var selectedColor:uint = 0x000000;
 			private var selectedAlpha:Number = 1;
+			private var defaultFontNo:int = -1;
 			
 			[Bindable]
 			private var fontArray:ArrayList;
@@ -30,9 +31,15 @@
 				
 				fontArray = new ArrayList();
 				fonts.sortOn("fontName", Array.CASEINSENSITIVE);
+				var defaultFontObj:Object = new Object();
+				
 				for(var j:int=0; j < fonts.length; j++){
 					fontArray.addItem(fonts[j]);
+					if (fonts[j].fontName == "Arial") defaultFontNo = j; 
 				}
+				
+				fontDropDown.selectedIndex = defaultFontNo;
+
 			}
 			
 			protected function setButton_clickHandler(event:MouseEvent):void
@@ -54,7 +61,7 @@
 					mapSubtitle.size  = parseInt(subtitleFontSizeInput.text);
 					mapSubtitle.bold  = subtitleWeight.selected;
 					mapSubtitle.color = selectedColor;
-				
+					
 					setButtonFlag = true;
 				}
 			}

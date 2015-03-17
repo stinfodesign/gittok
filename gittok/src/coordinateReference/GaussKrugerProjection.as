@@ -16,7 +16,7 @@ package coordinateReference
 		
 		public function getXML():XML {
 			var str:String = '<GaussKrugerProjection';
-			str += '" scaleFactor="' + this.scaleFactor;
+			str += ' scaleFactor="' + this.scaleFactor;
 			str += '" falseEasting="' + this.falseEasting;
 			str += '" falseNorthing="' + this.falseNorthing + '">';
 			str += '<origin>';

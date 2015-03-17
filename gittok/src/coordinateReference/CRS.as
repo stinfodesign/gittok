@@ -21,12 +21,12 @@ package coordinateReference
 			str += '<datum>'
 			str += datum.getXML().toXMLString();
 			str += '</datum>';
-			str += '<cs>';
-			str += cs.getXML().toXMLString();
-			str += '</cs>';
 			str += '<vDatum>';
 			str += vDatum.getXML().toXMLString();
 			str += '</vDatum>';
+			str += '<cs>';
+			str += cs.getXML().toXMLString();
+			str += '</cs>';
 			str += '</CRS>';
 			
 			return XML(str);

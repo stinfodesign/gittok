@@ -3,7 +3,7 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="700" height="608"
 		  creationComplete="initializeApp()"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  title="Analyst">
 	
 	<s:layout>
@@ -27,8 +27,6 @@
 			import instanceModel.*;
 			
 			import math.*;
-			
-			import message.InfoWindow;
 			
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
@@ -71,8 +69,6 @@
 			private var feature:Feature;
 			private var association:Association;			
 			private var associationType:AssociationType = new AssociationType();
-			
-			protected var info:message.InfoWindow;
 			
 			[Bindable]
 			private var concreteTypes:ArrayList = new ArrayList();
@@ -1074,7 +1070,8 @@
 				if (tabBar.selectedIndex == 0) { 
 					// feature operation
 					var wFeatureSet:FeatureSet = featureSetArray[faTypeName] as FeatureSet;
-					this.displayFeature(wFeatureSet.features[attValue.featureID] as Feature);
+					var wftr:Feature = wFeatureSet.features[attValue.featureID] as Feature;
+					if (wftr != null) this.displayFeature(wftr);
 				}
 				else {		
 					// association operation
@@ -1084,7 +1081,8 @@
 						return;
 					}
 					wFeatureSet = featureSetArray[faTypeName] as FeatureSet;
-					this.displayFeature(wFeatureSet.features[attValue.featureID] as Feature);
+					wftr = wFeatureSet.features[attValue.featureID] as Feature;
+					if (wftr != null) this.displayFeature(wftr);
 				}
 			}
 			
@@ -1097,54 +1095,57 @@
 				for (var i:int = 0; i < attTypes.length; i++) {
 					var attType:AttributeType = attTypes.getItemAt(i) as AttributeType;
 					var dt:String = attType.dataType;
+
 					if (dt == "SG_Point" || dt == "SG_Curve" || dt == "SG_Surface" || dt == "SG_Complex") {
-						var attArray:ArrayList = ftr.attributes[attType.name];
-						var att:SG_Object = attArray.getItemAt(0) as SG_Object;
+						var attArray:ArrayList = ftr.attributes[attType.name] as ArrayList;
+						if (attArray != null) {
+							var att:SG_Object = attArray.getItemAt(0) as SG_Object;
 				
-						if (dt == "SG_Point") {
-							point = att as SG_Point;
-							position = point.position;
-						}
+							if (dt == "SG_Point") {
+								point = att as SG_Point;
+								position = point.position;
+							}
 				
-						if (dt == "SG_Curve") {
-							curve = att as SG_Curve;
-							var attList:ArrayList = new ArrayList();
-							attList.addItem(curve);
-							var attValues:ArrayList = new ArrayList();
-							attValues.addItem(attList);
-							var argObj:Object = new Object();
-							argObj["curve"] = attValues;
+							if (dt == "SG_Curve") {
+								curve = att as SG_Curve;
+								var attList:ArrayList = new ArrayList();
+								attList.addItem(curve);
+								var attValues:ArrayList = new ArrayList();
+								attValues.addItem(attList);
+								var argObj:Object = new Object();
+								argObj["curve"] = attValues;
 					
-							position = geoOperations.Center.centerLayingOnCurve(argObj).position;
-						}
+								position = geoOperations.Center.centerLayingOnCurve(argObj).position;
+							}
 				
-						if (dt == "SG_Surface") {
-							surface = att as SG_Surface;
-							attList = new ArrayList();
-							attList.addItem(surface);
-							attValues = new ArrayList();
-							attValues.addItem(attList);
-							argObj = new Object();
-							argObj["surface"] = attValues;
+							if (dt == "SG_Surface") {
+								surface = att as SG_Surface;
+								attList = new ArrayList();
+								attList.addItem(surface);
+								attValues = new ArrayList();
+								attValues.addItem(attList);
+								argObj = new Object();
+								argObj["surface"] = attValues;
 					
-							position = geoOperations.Center.centerOfMIC(argObj).position;
-						}
+								position = geoOperations.Center.centerOfMIC(argObj).position;
+							}
 				
-						if (dt == "SG_Complex") {
-							complex = att as SG_Complex;
-							attList = new ArrayList();
-							attList.addItem(complex);
-							attValues = new ArrayList();
-							attValues.addItem(attList);
-							argObj = new Object();
-							argObj["complex"] = attValues;
+							if (dt == "SG_Complex") {
+								complex = att as SG_Complex;
+								attList = new ArrayList();
+								attList.addItem(complex);
+								attValues = new ArrayList();
+								attValues.addItem(attList);
+								argObj = new Object();
+								argObj["complex"] = attValues;
 					
-							position = geoOperations.Center.centerOfComplex(argObj).position;
-						}
+								position = geoOperations.Center.centerOfComplex(argObj).position;
+							}
 						
-						var p:SG_Point = new SG_Point();
-						p.position = position;
-						points.addItem(p);
+							var p:SG_Point = new SG_Point();
+							p.position = position;
+							points.addItem(p);
+						}
 					}
 				}
 				
@@ -1360,9 +1361,9 @@
 	<s:Label x="161" y="95" text="Kit"/>
 	<s:Label x="39" y="117" width="157" height="20" verticalAlign="middle" backgroundColor="#DADADA" id="kitNameLabel"/>
 
-	<s:Panel id="geometryPanel" x="37" y="216" width="434" height="347" title="Instance view panel"
-			 dropShadowVisible="false">
-		<s:Group clipAndEnableScrolling="true" width="432" height="314" visible="true" id="geometryBox" x="0" y="0"
+	<s:Panel id="geometryPanel" left="37" right="227" top="216" bottom="12" chromeColor="#444444"
+			 color="#ffffff" dropShadowVisible="false" title="Geometry view panel">
+		<s:Group clipAndEnableScrolling="true" width="100%" height="100%" visible="true" id="geometryBox" x="0" y="0"
 				 mouseDown="geometryPanel_mouseDownHandler(event)"
 				 mouseUp="geometryPanel_mouseUpHandler(event)">
 			<s:Group id="geometrySubBox">
@@ -1371,21 +1372,27 @@
 				<mx:Image id="annotationLayer" alpha="1.0" />
 			</s:Group>
 		</s:Group>
-		<s:Button x="391" y="-26" label="-" width="35" id="resetButton" click="resetButton_clickHandler(event)"/>
-		<s:Button x="353" y="-26" label="&lt;" width="35" id="largerButton" click="largerButton_clickHandler(event)"/>
-		<s:Button x="315" y="-26" label="&gt;" id="smallerButton" width="35" click="smallerButton_clickHandler(event)"/>
-		<s:Button x="277" y="-26" label="off" id="dragButton" width="35" click="dragButton_clickHandler(event)"/>
-		<s:HSlider x="195" y="-20" width="68" id="alphaSlider" minimum="0" maximum="1" stepSize="0.05" value="1" 
-				   change="alphaSlider_changeHandler(event)" chromeColor="#494848"/>
+		<s:Button id="resetButton" right="6" top="-26" width="35" height="20" label="-"
+				  chromeColor="#dadada" click="resetButton_clickHandler(event)" color="#000000"/>
+		<s:Button id="largerButton" right="44" top="-26" width="35" height="20" label="&lt;"
+				  chromeColor="#dadada" click="largerButton_clickHandler(event)" color="#000000"/>
+		<s:Button id="smallerButton" right="82" top="-26" width="35" height="20" label="&gt;"
+				  chromeColor="#dadada" click="smallerButton_clickHandler(event)" color="#000000"/>
+		<s:Button id="dragButton" right="120" top="-26" width="35" height="20" label="off"
+				  chromeColor="#ffffff" click="dragButton_clickHandler(event)" color="#000000"/>
+		<s:HSlider id="alphaSlider" right="169" top="-20" width="68"
+				   change="alphaSlider_changeHandler(event)" chromeColor="#dadada" maximum="1"
+				   minimum="0" stepSize="0.05" value="1"/>
 	</s:Panel>
 	
-	<s:TabBar id="tabBar" dataProvider="{myViewStack}" x="250" y="17" height="20"  change="tabBar_changeHandler(event)"/>
+	<s:TabBar id="tabBar" right="295" top="17" height="20" change="tabBar_changeHandler(event)"
+			  dataProvider="{myViewStack}"/>
 	
-	<mx:ViewStack id="myViewStack" 
-				  borderStyle="solid" width="432" height="150" x="250" y="37" backgroundColor="#fefee5"> 
+	<mx:ViewStack id="myViewStack" right="16" top="37" width="432" height="150"
+				  backgroundColor="#fefee5" borderStyle="solid"> 
 		
 		<s:NavigatorContent id="featureTab" label="Feature"> 
-			<s:Group width="100%" height="100%" id="featureDef" x="2" y="0">
+			<s:Group id="featureDef" right="0" top="0" width="100%" height="100%">
 				<s:Label x="32" y="19" text="Feature type list"/>
 				<s:Label x="184" y="20" text="Instance ID"/>
 				<s:DropDownList x="32" y="34" width="136" id="featureTypeList" prompt="Feature types" 
@@ -1396,7 +1403,7 @@
 		</s:NavigatorContent>
 		
 		<s:NavigatorContent id="associationTab" label="Association" > 
-			<s:Group width="100%" height="100%" id="associationDef" x="0" y="0">
+			<s:Group id="associationDef" right="0" top="0" width="100%" height="100%">
 				<s:Label x="31" y="9" text="Association type list"/>
 				<s:DropDownList x="30" y="25" width="136" id="associationTypeList" prompt="Association types" 
 								dataProvider="{concreteAssociationTypes}" labelField="name" change="associationTypeList_changeHandler(event)"></s:DropDownList>
@@ -1418,14 +1425,15 @@
 		
 	</mx:ViewStack>
 	
-	<mx:DataGrid id="operationList" x="483" y="243" width="200" height="108" verticalAlign="middle">
+	<mx:DataGrid id="operationList" right="15" top="243" width="200" height="108"
+				 verticalAlign="middle">
 		<mx:columns>
 			<mx:DataGridColumn width="120" dataField="name" headerText="name"/>
 			<mx:DataGridColumn width="80" dataField="returnType" headerText="return type"/>
 		</mx:columns>
 	</mx:DataGrid>
 	
-	<mx:DataGrid id="attributeValueList" x="483" y="406" width="200" height="124"
+	<mx:DataGrid id="attributeValueList" right="15" top="406" width="200" height="124"
 				 click="attributeValueList_clickHandler(event)" dataProvider="{attValueList}"
 				 paddingTop="2" verticalAlign="middle">
 		<mx:columns>
@@ -1433,20 +1441,21 @@
 			<mx:DataGridColumn headerText="value" dataField="value" width="130"/>
 		</mx:columns>
 	</mx:DataGrid>
-	<s:Label x="484" y="388" text="Return attribute value"/>
+	<s:Label right="99" top="388" text="Return attribute value"/>
 
-	<s:Button x="483" y="216" label="execute" id="executeButton" width="75" click="executeButton_clickHandler(event)"/>
-	<s:Label x="564" y="221" text="Operation"/>
+	<s:Button id="executeButton" right="140" top="216" width="75" label="execute"
+			  click="executeButton_clickHandler(event)"/>
+	<s:Label right="81" top="221" text="Operation"/>
 	<s:Group x="38" y="195">
 		<s:RadioButton x="0" y="0" label="SG_Point" id="pointRadio" fontSize="11" groupName="geomGroup"/>
 		<s:RadioButton x="80" y="0" label="SG_Curve" id="curveRadio" fontSize="11" groupName="geomGroup"/>
 		<s:RadioButton x="165" y="0" label="SG_Surface" id="surfaceRadio" fontSize="11" groupName="geomGroup"/>
 	</s:Group>
-	<s:Label x="607" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
-			 buttonMode="true" click="text_jp_clickHandler(event)"/>
-	<s:Label x="648" y="12" text="English" color="#969696"
-			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:Label x="583" y="545" text="unit"/>
-	<s:Label id="unitLabel" x="617" y="540" width="65" height="20" backgroundColor="#DADADA"
+	<s:Label right="58" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
+	<s:Label right="95" top="545" text="unit"/>
+	<s:Label id="unitLabel" right="16" top="540" width="65" height="20" backgroundColor="#DADADA"
 			 verticalAlign="middle"/>
 </s:Window>

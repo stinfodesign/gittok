@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="474" height="518"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="458" height="494"
 		  title="Symbol Designer"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -27,6 +27,7 @@
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
 			import mx.core.mx_internal;
+			import mx.events.CloseEvent;
 			import mx.events.ColorPickerEvent;
 			
 			import portrayal.symbol.*;
@@ -45,6 +46,7 @@
 			private var pStyle:PointSymbolStyle;
 			private var lStyle:LineSymbolStyle;
 			private var aStyle:AreaSymbolStyle;
+			private var cStyle:CircleSymbolStyle;
 			
 			public  var symbolStyles:SymbolStyleDictionary = new SymbolStyleDictionary();
 			
@@ -95,9 +97,6 @@
 				registerClassAlias("portrayal.symbol.AreaSymbol", AreaSymbol);
 				registerClassAlias("portrayal.symbol.LineSymbol", LineSymbol);
 				registerClassAlias("portrayal.symbol.PointSymbol", PointSymbol);
-				registerClassAlias("portrayal.symbol.Triangle", Triangle);
-				registerClassAlias("portrayal.symbol.Cross", Cross);
-
 				
 				// Basic Types
 				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
@@ -407,8 +406,8 @@
 				sampleAreaView.graphics.endFill();
 				
 				//show the border
-				var lss:LineSymbol = sampleAreaView.getChildByName("sampleLine") as LineSymbol;
-				if (lss != null) sampleAreaView.removeChild(lss);
+				var ls:LineSymbol = sampleAreaView.getChildByName("sampleLine") as LineSymbol;
+				if (ls != null) sampleAreaView.removeChild(ls);
 				
 				var index:int = lineSymGrid4Area.selectedIndex;
 				if (index < 0) return;
@@ -432,8 +431,7 @@
 				lObj.style = borderStyle;
 				border.name = "sampleLine";
 				border.decode(lObj);
-				sampleAreaView.addChild(border);					
-				
+				sampleAreaView.addChild(border);
 			}
 			
 			protected function addAreaSymbolButton_clickHandler(event:MouseEvent):void 
@@ -443,15 +441,45 @@
 					return;
 				}
 
+				if (lineSymGrid4Area.selectedIndex == -1) {
+					Alert.yesLabel = "yes";
+					Alert.noLabel = "no";
+					Alert.show("No border line is selected. Ok?", "Warning", 
+						Alert.YES|Alert.NO, this, withoutBorder_ClickHandler);
+					return;
+				}
+				
+				// with border
 				aStyle = new AreaSymbolStyle();
 				aStyle.name = areaSymName.text;
 				areaColor.color = aStyle.color = selectedAreaColor;
 				areaColor.alpha = aStyle.alpha = selectedAreaAlpha;
-				if (lineSymGrid4Area.selectedIndex == -1) {
-					Alert.show("Select border line style.", "Error", 4, this);
-					return;
-				}
+				
 				aStyle.borderStyle = lineSymArray.getItemAt(lineSymGrid4Area.selectedIndex) as LineSymbolStyle;
+				areaSymArray.addItem(aStyle);
+				symbolStyles.areaSymStyles[aStyle.name] = aStyle;
+				
+				//clear items
+				areaSymName.text = "";
+				lineSymGrid4Area.selectedIndex = -1;
+				
+				var border:LineSymbol = sampleAreaView.getChildByName("sampleLine") as LineSymbol;
+				if (border != null) sampleAreaView.removeChild(border);
+				
+				sampleAreaView.graphics.clear();
+								
+			}
+			
+			private function withoutBorder_ClickHandler(evnt:CloseEvent):void {
+				if (evnt.detail == Alert.NO) return;
+				
+				//without border
+				aStyle = new AreaSymbolStyle();
+				aStyle.name = areaSymName.text;
+				areaColor.color = aStyle.color = selectedAreaColor;
+				areaColor.alpha = aStyle.alpha = selectedAreaAlpha;
+				
+				aStyle.borderStyle = null;
 				areaSymArray.addItem(aStyle);
 				symbolStyles.areaSymStyles[aStyle.name] = aStyle;
 				
@@ -476,15 +504,14 @@
 				areaColor.alpha = selectedAreaAlpha = aStyle.alpha;
 				
 				var lineIndex:int = lineSymArray.getItemIndex(aStyle.borderStyle);
+								
+				areaSymName.text = aStyle.name;
 				
 				if (lineIndex == -1) {
-					Alert.show("Select symbol style before.", "Error", 4, this);
 					return;
 				}
 				
 				lineSymGrid4Area.selectedIndex = lineIndex;
-								
-				areaSymName.text = aStyle.name;
 				
 				var borderStyle:LineSymbolStyle = aStyle.borderStyle;
 				var borderName:String = borderStyle.name;
@@ -521,21 +548,43 @@
 					aStyle.borderStyle = lineSymArray.getItemAt(selected) as LineSymbolStyle;
 				}
 				else {
-					Alert.show("You need to select line style as the border!", "Error", Alert.OK, this);
-					return;					
+					Alert.yesLabel = "yes";
+					Alert.noLabel = "no";
+					Alert.show("No border line is selected. Ok?", "Warning", 
+						Alert.YES|Alert.NO, this, withoutBorderUpdate_ClickHandler);
 				}
+				
 				areaSymArray.setItemAt(aStyle, index);
 				symbolStyles.areaSymStyles[aStyle.name] = aStyle;
 				
 				//clear items
 				areaSymName.text = "";
-				lineSymGrid4Area.selectedItem = null;
+				lineSymGrid4Area.selectedIndex = -1;
 				var m:int = sampleAreaView.numChildren;
 				for (var i:int = 0; i < m; i++) {
 					sampleAreaView.removeChildAt(0);
 				}
 				sampleAreaView.graphics.clear();
 
+			}
+			
+			private function withoutBorderUpdate_ClickHandler(evnt:CloseEvent): void {
+				if (evnt.detail == Alert.NO) return;
+				
+				var index:int = areaSymArray.getItemIndex(aStyle);
+				
+				aStyle.borderStyle = null;
+				areaSymArray.setItemAt(aStyle, index);
+				symbolStyles.areaSymStyles[aStyle.name] = aStyle;
+				
+				//clear items
+				areaSymName.text = "";
+				lineSymGrid4Area.selectedIndex = -1;
+				var m:int = sampleAreaView.numChildren;
+				for (var i:int = 0; i < m; i++) {
+					sampleAreaView.removeChildAt(0);
+				}
+				sampleAreaView.graphics.clear();
 			}
 			
 			protected function deleteAreaSymbolButton_clickHandler(event:MouseEvent):void 
@@ -693,11 +742,13 @@
 						elements.addItem(coords);
 						
 						var cStyle:CircleSymbolStyle = new CircleSymbolStyle();
+						
 						cStyle.alpha = aStyle.alpha;
 						cStyle.borderStyle = aStyle.borderStyle;
 						cStyle.color = aStyle.color;
 						cStyle.id = aStyle.id;
 						cStyle.name = aStyle.name;
+						
 						styles.addItem(cStyle);
 						
 						startFlag = true;
@@ -1128,6 +1179,14 @@
 				
 				colorSelector = null;
 			}
+			
+			protected function lineSymGrid4Area_clickHandler(event:MouseEvent):void
+			{
+				if (lineSymGrid4Area.selectedIndex != -1) 
+					lineSymGrid4Area.selectedIndex = -1;
+					
+			}
+			
 		]]>
 	</fx:Script>
 
@@ -1140,13 +1199,13 @@
 	<mx:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')"/>
 	<s:Label x="75" y="15" text="Symbol Style Designer" fontSize="16"/>
 
-	<s:TabBar dataProvider="{myViewStack}" x="37" y="93" height="20" /> 
+	<s:TabBar dataProvider="{myViewStack}" x="29" y="91" height="20" /> 
 	
 	<mx:ViewStack id="myViewStack" 
-				  borderStyle="solid" width="400" height="347" x="37" y="112" backgroundColor="#ffffff"> 
+				  borderStyle="solid" width="400" height="330" x="29" y="110" backgroundColor="#fefee5"> 
 				
 		<s:NavigatorContent id="lineTab" label="line"> 
-			<s:Group width="100%" height="100%" id="lStyleDef">
+			<s:Group id="lStyleDef" x="0" y="0" width="100%" height="100%">
 				<s:Label x="26" y="60" text="color"/>
 				<s:Label x="26" y="100" text="thickness"/>
 				<s:Label x="26" y="137" text="caps"/>
@@ -1209,7 +1268,8 @@
 						<mx:DataGridColumn headerText="area" dataField="name"/>
 					</mx:columns>
 				</mx:DataGrid>	
-				<mx:DataGrid x="106" y="135" id="lineSymGrid4Area" width="101" height="130" dataProvider="{lineSymArray}">
+				<mx:DataGrid x="106" y="135" id="lineSymGrid4Area" width="101" height="130" 
+							 dataProvider="{lineSymArray}" click="lineSymGrid4Area_clickHandler(event)">
 					<mx:columns>
 						<mx:DataGridColumn headerText="line" dataField="name"/>
 					</mx:columns>
@@ -1255,7 +1315,9 @@
 				<s:Button x="219" y="162" label="clear all" width="68" height="20" id="clearButton" click="clearButton_clickHandler(event)"/>
 				<s:Label x="11" y="20" text="name" fontSize="12"/>
 				<s:TextInput x="46" y="15" width="100" id="pointSymName" borderVisible="true"/>
-				<s:Panel x="10" y="86" width="200" height="232" id="pointPanel" title="Edit Panel" click="pointPanel_clickHandler(event)" dropShadowVisible="false">
+				<s:Panel x="10" y="86" width="200" height="232" id="pointPanel" title="Edit Panel" 
+						 click="pointPanel_clickHandler(event)" dropShadowVisible="false"
+						 color="#ffffff" chromeColor="#444444">
 					<mx:Image id="GridImage" source="@Embed(source='images/grid.png')"  width="200" height="200" x="-1" y="0"/>
 					<mx:Image id="samplePointView" width="200" height="200" x="-1" y="0"/>
 					
@@ -1281,19 +1343,18 @@
 				<s:Label x="10" y="56" text="mode"/>
 			</s:Group>
 		</s:NavigatorContent> 
-
-
 	</mx:ViewStack> 
+	
 	<s:Label x="349" y="41" text="symbol style &#xd;schema"/>
-	<s:Label x="287" y="72" id="symbolStylesLabel" backgroundColor="#DADADA" width="130" height="20" 
+	<s:Label x="287" y="72" id="symbolStylesLabel" backgroundColor="#DADADA" width="140" height="20" 
 			 verticalAlign="middle"/>
 	<s:Button x="287" y="20" label="open" width="55" id="openSymbolStylesButton" 
 			  click="openSymbolStylesButton_clickHandler(event)" color="{chrColor}" chromeColor="{chromeColor}"/>
 	<s:Button x="287" y="46" label="save" width="55" id="saveSymbolStylesButton" 
 			  click="saveSymbolStylesButton_clickHandler(event)" color="{chrColor}" chromeColor="{chromeColor}"/>
-	<s:Label x="379" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+	<s:Label x="364" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
-	<s:Label x="420" y="12" text="English" color="#969696"
+	<s:Label x="405" y="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
 
 </s:Window>

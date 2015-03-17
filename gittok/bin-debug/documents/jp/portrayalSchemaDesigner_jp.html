@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Portrayal Designer</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+window.resizeTo(650,650);
+window.moveTo(750,20);
+</script>
+</head>
+
+<body>
+<p class="FirstHeader">Portrayal Schema Designer<br/>
+  描画スキーマのデザイン</p>
+<p class="mainSentence">地図を描くためには，記号と注記のスタイルを地物の属性と関連づける必要があります．この関連付けが行われると，属性値を地図上でどのようなスタイルで表現したら良いか，gittok が判断し，地図を描画することができます．Portrayal Schema Designer は，地物の属性と，記号やラベルのスタイルの関連付けを行い，描画スキーマを出力するためにあります．</p>
+<p class="mainSentence">この作業を行うには，利用者は事前に描画スキーマについて理解すべきです．以下，描画スタイルスキーマの説明を行い，次にPortrayal Designerの操作法を解説します．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">描画スキーマ</p>
+<p class="mainSentence">描画スキーマとは，地図を描画するに当って，使用する応用スキーマ，記号スタイルスキーマと注記スタイルスキーマを使用して，地物ごとに，描画する属性とそのスタイルをしめすスキーマのことです．描画スキーマを作るためのめたモデルが下に示す一般描画モデルです．描画スキーマと一般描画モデルの関係は，応用スキーマに対する一般地物モデルの関係に似ています．</p>
+<p class="mainSentence"><img src="../figures/GPM.png" width="650" height="523" alt="GPM" /></p>
+<p class="mainSentence">図１．gittok の一般描画モデル</p>
+<p class="thirdHeader">CLASS</p>
+<p class="mainSentence"><strong>PortrayalSchema</strong><br />
+  描画スタイルスキーマ全体の最上位クラスです．使用する応用スキーマ (applicationSchema)，記号スタイルスキーマ (symbolStyleSchema) と注記スタイルスキーマ (labelStyleSchema) を示し，地物型と描画スタイルの対を保存する辞書 (fpPairs) をもちます．</p>
+<p class="mainSentence"><strong>FeaturePortrayalPair</strong><br />
+地物型のIDと，それに対応する主題整飾子 (thematicModifier) または一般整飾子 (generalModifier) を示すクラスです．ここで整飾子 (modifier) とは，地物属性を修飾して記号に変更させる情報をさします．</p>
+<p class="mainSentence"><strong>AttributeStylePair</strong><br />
+属性・スタイル対 (AttributeStylePair) は，地物属性と，それに対応する記号／注記の対であり，地物属性をどのように描画するかを決めるためのクラスです．属性の名前 (attName)，属性のデータ型 (attType)，そしてそれに対する記号又は注記スタイルの名前 (symLabName)，記号か注記かの区別を示すデータ (symLabType)をもちます．</p>
+<p class="mainSentence"><strong>ThematicCondition</strong><br />
+主題条件 (ThematicCondition)は，主題図を描画するために使われる情報です．主題整飾子．主題整飾子になる地物属性の名前 (attName) とそのデータ型 (attType) を属性としてもちます．ここで主題図とは，一定のテーマに絞って作成された地図のことですが，gittok では，主題属性の値をグラフィック表現する地図をさします．具体的には主題属性がブール値をとる場合，それはtrue の場合と， false の場合で，proxy幾何属性の表現を変えます．属性の型が文字列の場合は，その値ごとに，異なる表現をします．さらに，属性の型が数字の場合は，複数の区間を設定して，区間ごとにことなる表現ができるようにします．</p>
+<p class="mainSentence"><strong>Modifier</strong><br />
+これは具体的には，ブール値（BooleanModifier），文字列 (QaulitativeModifier) または数字の区間 (QuantitativeModifier) のどれかになります．修飾属性が一定の値または区間にはいるとき，どの記号（symName、symType）で表現するか，が示されます．</p>
+<p class="mainSentence"><strong>BooleanModifier</strong><br />
+ブール値とそれをグラフィックに表現する記号の名前と型をもつ，ブール値用の整飾子．</p>
+<p class="mainSentence"><strong>QualitativeModifier</strong><br />
+文字列とそれをグラフィックに表現する記号の名前と型をもつ，文字列用の整飾子．</p>
+<p class="mainSentence"><strong>QuantitativeModifier</strong><br />
+最小値 (lowerValue)と最大値 (upperValue)を示して，その範囲に値が入ったときに，グラフィックに表現する記号の名前と型をもつ，数値用の整飾子．</p>
+<p class="mainSentence"> <strong>gfm:AttributeType</strong><br />
+  マルチメディアな属性のための情報ページで表現する地物属性の型．<br />
+</p>
+<p class="thirdHeader">ROLL NAME</p>
+<p class="mainSentence"><strong>fpUnits</strong><br />
+地物を視覚化する地物描画ユニットの集まり．</p>
+<p class="mainSentence"><strong>generalModifiers</strong><br />
+  一般図用の，記号による地物表現を行うために指定される，一般整飾子の集まり．</p>
+<p class="mainSentence"><strong>thematicModifier</strong><br />
+主題図用の，記号による段彩を行うために指定される，主題整飾子．</p>
+<p class="mainSentence"><strong>infoPages</strong><br />
+対話型地図用に，情報ページとして表示する属性型の集まり．属性型には，属性の名前やデータ型の指定などがあるので，どの属性をどの情報ページで表示すればよいかが分かります．</p>
+<p class="mainSentence"><strong>elements</strong><br />
+主題図の断裁のランクごとに指定される整飾子 (modifier) の集まり．</p>
+<p class="mainSentence">&nbsp; </p>
+<p class="secondHeader">Portrayal Schema Designer</p>
+<p class="thirdHeader">ファイルのオープンとセーブ</p>
+<p class="mainSentence">下の図２を参照してください．</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Application Schema</strong><br />
+</span>キットが使用している応用スキーマのファイル名が表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Symbol Style Dictionary</strong></span><br />
+描画に使用する記号スタイルスキーマのファイル名が表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Label Style Dictionary</strong></span><br/>
+  描画に使用する注記スタイルスキーマのファイル名が表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Portrayal Schema</strong></span><br/>
+描画辞書属性と記号または注記スタイルとの関連が全て割り当てられると，それを描画スキーマとしてセーブします．また，描画スキーマを編集するときは，オープンしますが，これらの操作を行うと，ここに描画スキーマの名前が表示されます．</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>open (Application Schema)</strong></span><br/>
+応用スキーマをオープンします．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>open (SymbolStyle Schema)</strong></span><br/>
+記号スタイルスキーマをオープンします．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>open (Label Style Schema)</strong></span><br/>
+注記スタイルスキーマをオープンします．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>open (Portrayal Schema)</strong></span><br/>
+描画スキーマをオープンします．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>save (Portrayal Schema)</strong></span><br/>
+描画スキーマをセーブします．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />
+今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
+You can read the tutorial written in English.</p>
+<p class="mainSentence"></p>
+<p class="thirdHeader">一般図用の整飾</p>
+<p class="mainSentence">一般図は，Slocum et al. (2005 ) では，以下のように説明されています．</p>
+<p class="mainSentence">General-reference maps are used to emphasize the location of spatial phenomena.</p>
+<p class="mainSentence">つまり，一般図は地球上に起きている空間的な現象に着目して表現する地図を指します．つまり，どこに何があるかを示す一般的な用途に使われる地図です．代表的なものに，国土地理院が提供している国土基本図などがあります．</p>
+<p class="mainSentence">下に示す画面は，描画スキーマの設計をおこなうための画面ですが，中程にあるtabで，general が選択されているので，これは，一般図用の整飾を行う画面ということになります．ここでは，地物の幾何属性に対して，どのような記号スタイルを対応させるか，また文字列属性に対して，どのような注記スタイルを対応せるかを，指定します．</p>
+<p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_general.png" width="600" height="722" alt="psDesigner_general" /></p>
+<p class="mainSentence">図２．Portrayal Schema Designer (general) の操作画面</p>
+<p class="thirdHeader">&nbsp;</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><strong>Feature Types (編集可能）</strong><br/>
+  どの地物を整飾の対象とするか選択するための地物一覧が表示されます．</p>
+<p class="mainSentence"><strong>Attribute Name（編集可能）</strong><br/>
+  選択した地物のどの属性を整飾するか選択すると，その属性の名前が表示されます．</p>
+<p class="mainSentence"><strong>Type</strong><br/>
+  選択された属性の型が表示されます．</p>
+<p class="mainSentence"><strong>Symbol/label style for the attribute modification</strong><br />
+下にある Symbol Stye リスト，または Label Style リストで，地物属性を整飾するスタイルを選択し，assign ボタンを押すと，それが表示される．</p>
+<p class="mainSentence"><strong>Symbol styles</strong><br />
+記号スタイル辞書に含まれているスタイルの一覧です．スタイルを選択すると，サンプルが右に示されます．</p>
+<p class="mainSentence"><strong>Label styles</strong><br />
+注記スタイル辞書に含まれているスタイルの一覧です．スタイルを選択すると，サンプルが右に示されます．</p>
+<p class="mainSentence"><strong>Sample</strong><br />
+  選択された記号または注記スタイルのサンプルを表示します．<br />
+</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><strong>general</strong><br />
+この tab を選択すると，一般図用の整飾が可能になります．</p>
+<p class="mainSentence"><strong>assign</strong><br />
+下のリストで選択されているスタイルを，地物属性を整飾するスタイルとして指定します．</p>
+<p class="mainSentence"><strong>clear</strong><br />
+指定されているスタイルを解除します．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="thirdHeader">主題図用の整飾</p>
+<p class="mainSentence">主題図は，Slocum et al. (2005 ) では，以下のように説明されています．<br />
+</p>
+<p class="mainSentence">Thematic maps (or statistical maps) are used to emphasize the spatial pattern of one or more geographic attributes (or variables), such as population density, familiy income, and daily temparature maximums.</p>
+<p class="mainSentence">つまり，主題図（統計図）とは，人口密度，家族の収入，そして毎日の最高気温など，地理的な属性の空間パターンに焦点をあてて表示する地図です．gittok では，主題図は，ある地物の任意の属性に着目して，その属性の値に応じた記号スタイルで表示を行う地図を指します．</p>
+<p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_thematic.png" width="600" height="722" alt="PSDeginer_thematic" /></p>
+<p class="mainSentence">図３．Portrayal Schema Designer (thematic) の操作画面</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><strong>Feature Types (編集可能)</strong><br/>
+どの地物を整飾の対象とするか選択するための地物一覧が表示されます．</p>
+<p class="mainSentence"><strong>Attribute Name (編集可能)</strong><br/>
+  主題を表示する幾何属性を選択すると，その属性の名前が表示されます．</p>
+<p class="mainSentence"><strong>Type（幾何属性）</strong><br/>
+  選択された幾何属性の型が表示されます．</p>
+<p class="mainSentence"><strong>Modifier (編集可能)</strong><br />
+幾何属性を整飾するために使用する主題属性を指定すると，その名前が表示されます．</p>
+<p class="mainSentence"><strong>Type (主題属性)</strong><br />
+主題属性の型が表示されます．</p>
+<p class="mainSentence"><strong>Data collection units (編集可能)</strong><br />
+主題属性が数値の場合は，値を取りうる区間を幾つかのデータ集合単位に分けて，その単位に入る値をもつ地物はその単位にアサインされたエリア記号で塗られます．例えば，人口０人から５０人の間の値をとる場所は，上図のサンプル欄に示された色で塗られます．データ集合単位の設定法は，まず，最小値と最大値をキーインします．次にSymbol Styleリストから，対応するエリア記号を選びます．そしてassign ボタンを押せば，データ集合単位が一つ定義されたことになります．これを単位の数だけ繰り返します．</p>
+<p class="mainSentence">主題属性が文字列の場合は，まずvalue 欄に文字列をキーインします．次に，その文字列が現れたときに領域を塗りつぶすエリア記号を選択し，assign ボタンを押します．これを全ての文字列分，繰り返します．</p>
+<p class="mainSentence">主題属性がブール値の場合は，true, false, そして，値を持たない場合 (null) それぞれについて，エリア記号をアサインします．</p>
+<p class="mainSentence"><strong>Symbol style</strong><br />
+記号スタイル辞書に含まれているスタイルの一覧です．スタイルを選択すると，サンプルが右に示されます．</p>
+<p class="mainSentence"><strong>Label style</strong><br />
+  注記スタイル辞書に含まれているスタイルの一覧です．スタイルを選択すると，サンプルが右に示されます．</p>
+<p class="mainSentence"><strong>Sample</strong><br />
+選択された記号または注記スタイルのサンプルを表示します．</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><strong>thematic</strong><br />
+この tab を選択すると，主題図用の整飾が可能になります．</p>
+<p class="mainSentence"><strong>assign</strong><br />
+  下のリストで選択されているスタイルを，地物属性を整飾するスタイルとして指定します．</p>
+<p class="mainSentence"><strong>clear</strong><br />
+  指定されているスタイルを解除します．</p>
+<p class="thirdHeader">&nbsp;</p>
+<p class="thirdHeader">情報ページni</p>
+<p class="thirdHeader">情報ページとして表示される主題属性の指定</p>
+<p class="mainSentence">地図は主に幾何属性や文字列属性の表示を行うためにある．しかし，地物は画像や動画など，マルチメディアな属性ももつので，gittokでは，その特性に合わせた表示を行う情報ページを用意している．描画スキーマでは，情報ページに表示される属性の指定を行う．</p>
+<p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_infoPage.png" width="570" height="136" alt="infoPage" /></p>
+<p class="mainSentence">Figure 4.情報ページ表示のための主題属性指定</p>
+<p class="mainSentence">情報ページでの属性表示は，地物を指定し，情報ページへの表示をチェックし，主題属性を選択することによって可能になる．主題属性を指定するとその属性が一覧表示される，</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><strong>Feature Types (編集可能)</strong><br/>
+どの地物を情報ページ表示の対象とするか選択するための地物一覧が表示されます．</p>
+<p class="mainSentence"><strong>Attribute Name (編集可能)</strong><br/>
+  主題属性を選択すると，その属性の名前が表示されます．</p>
+<p class="mainSentence"><strong>Selected att. for info.pages<br />
+  </strong>選択された主題属性の名前が一覧表示されます．<strong><br />
+</strong></p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><strong>for info.pages</strong><br />
+このチェックボックスをチェックすると，以後，選択される属性は情報ページに表示する属性になります．</p>
+<p class="mainSentence"><strong>cancel</strong><br />
+情報ページによる表示を解除するときは，一覧表示されている属性を選択してから，このボタンを押します．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">参考文献</p>
+<p class="mainSentence">Slocum, T. A., McMaster, R. B., Kessler, F. C,. Howard, H. H,  (2003). Thematic Cartography and Geographic Visualization. Pearson Education, Inc., p.2</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+</body>
+</html>

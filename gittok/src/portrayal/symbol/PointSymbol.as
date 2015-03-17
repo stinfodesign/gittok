@@ -109,7 +109,7 @@ package portrayal.symbol
 			} 
 			var size:Number = style.size;
 			
-			this.scaleX = size / 200;
+			this.scaleX = size / 200.0;
 			this.scaleY = this.scaleX;
 			this.x = _x - size * 0.5;
 			this.y = _y - size * 0.5;

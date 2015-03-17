@@ -158,52 +158,6 @@ package geoOperations
 					}
 				}
 			}
-			/*
-			// create the curve array
-			var wcs:ArrayList = new ArrayList();
-			var p0:SG_Point = wps.getItemAt(0) as SG_Point;
-			var p1:SG_Point;
-			for (i = 1; i < n; i++) {
-				p1 = wps.getItemAt(i) as SG_Point;	
-				var cv:SG_Curve = new SG_Curve();
-				cv.start = p0;
-				cv.end = p1;
-				p0.goOut.addItem(cv);
-				p1.getIn.addItem(cv);
-				wcs.addItem(cv);
-				p0 = p1;
-			}
-			
-			// create the exterior ring
-			var wocs:ArrayList = new ArrayList();
-			var rng:SG_Ring = new SG_Ring();
-			var ocv:SG_OrientableCurve;
-			for (i = 0; i < (n - 1); i++) {
-				ocv = new SG_OrientableCurve();
-				ocv.orientation = true;
-				ocv.original = wcs.getItemAt(i) as SG_Curve;
-				wocs.addItem(ocv);
-				rng.element.addItem(ocv);
-			}
-			var wrngs:ArrayList = new ArrayList();
-			wrngs.addItem(rng);
-			
-			// create convex hull
-			var wsf:SG_Surface = new SG_Surface();
-			wsf.exterior = rng;
-			var wss:ArrayList = new ArrayList();
-			wss.addItem(wsf);
-			
-			var convexHull:SG_Complex = new SG_Complex();
-			convexHull.pointSet = wps;
-			convexHull.curveSet = wcs;
-			convexHull.surfaceSet = wss;
-			
-			convexHull.orientableCurveSet = wocs;
-			convexHull.ringSet = wrngs;
-			
-			return convexHull;
-			*/
 			
 			var coords:CoordinateArray = new CoordinateArray();
 			for (i = 1; i < n - 1; i++) {

@@ -17,17 +17,20 @@ package geoOperations
 		// center of gravity (centroid)
 		
 		public static function centerOfPoints(argObj:Object):SG_Point {
-			var points:ArrayList = argObj["points"] as ArrayList;
-
+			var points:ArrayList = new ArrayList();
+			
+			var pointValues:ArrayList = argObj["points"] as ArrayList;
+			points.addAll(pointValues);	
+			
 			var wp:SG_Point = points.getItemAt(0) as SG_Point;
 			
-			var n:int = points.length;
-			if (n == 0) return null;
+			var m:int = points.length;
+			if (m == 0) return null;
 			
 			var x:Number = 0;
 			var y:Number = 0;
 			var coord:Coordinate2;
-			for (var i:int = 0; i < n; i++) {
+			for (var i:int = 0; i < m; i++) {
 				wp = points.getItemAt(i) as SG_Point;
 				coord = wp.position;
 				x += coord.x;
@@ -38,8 +41,8 @@ package geoOperations
 			p.featureID = wp.featureID;
 			p.attributeName = wp.attributeName;
 			
-			p.position.x = x/n;
-			p.position.y = y/n;
+			p.position.x = x/m;
+			p.position.y = y/m;
 			
 			return p;
 		}

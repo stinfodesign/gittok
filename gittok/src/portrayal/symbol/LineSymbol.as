@@ -58,7 +58,7 @@ package portrayal.symbol
 				coord = coord2;
 			}
 			
-			name = curve.id.toString();	
+			//name = curve.id.toString();	
 		}
 		
 		private function drawDashLine(crd0:Coordinate2, crd1:Coordinate2, dashlen:Number, gaplen:Number):void {

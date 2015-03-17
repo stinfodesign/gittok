@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="348" height="388"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	
 	<fx:Script>
@@ -11,7 +11,7 @@
 			public var imageSource:String;
 			
 			protected function initializeApp():void {
-				
+
 			}
 			
 			protected function northArrowTile_clickHandler(event:MouseEvent):void

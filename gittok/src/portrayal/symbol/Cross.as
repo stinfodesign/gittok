@@ -6,6 +6,10 @@ package portrayal.symbol
 	
 	public class Cross extends Sprite
 	{
+		/*
+		This class is uesd at GeometryWindow as a marker of the mouse cursor.
+		*/
+		
 		public var center:Coordinate2;
 		public var size:Number;
 		public var color:uint;
@@ -33,9 +37,5 @@ package portrayal.symbol
 			
 			this.name = "cross";
 		}
-		
-		
-		
-		
 	}
 }

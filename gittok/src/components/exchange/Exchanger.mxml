@@ -3,7 +3,7 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="360" height="490"
 		  title="Exchanger"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -34,7 +34,7 @@
 			import mx.controls.Alert;
 			
 			import portrayal.labelStyle.*;
-			import portrayal.portrayalStyle.*;
+			import portrayal.gpm.*;
 			import portrayal.symbolStyle.*;
 			
 			private var suffix:String;
@@ -123,7 +123,7 @@
 				
 				// Portrayal Dictionary
 				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);								
-				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalPair", FeaturePortrayalPair);								
+				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);								
 				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
 				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);
 				registerClassAlias("portrayal.portrayalStyle.ThematicCondition", ThematicCondition);

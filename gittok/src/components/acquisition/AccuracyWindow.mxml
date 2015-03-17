@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   backgroundColor="#faeed1"
+			   backgroundColor="#c5c5c5"
 			   width="368" height="454" creationComplete="initializeApp()" fontSize="12">
 	<s:layout>
 		<s:BasicLayout/>

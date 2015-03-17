@@ -4,7 +4,7 @@
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
 		  title="Editor"
 		  width="524" height="628"
-		  creationComplete="initializeApp()" backgroundColor="#faeed1">
+		  creationComplete="initializeApp()" backgroundColor="#c5c5c5">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
@@ -29,10 +29,9 @@
 			
 			import math.*;
 			
-			import message.InfoWindow;
-			
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
+			import mx.controls.Alert;
 			import mx.core.mx_internal;
 			import mx.events.AIREvent;
 			import mx.events.CloseEvent;
@@ -42,8 +41,6 @@
 			import portrayal.symbolStyle.*;
 			
 			import spark.events.IndexChangeEvent;
-			
-			protected var info:InfoWindow = new InfoWindow();
 			
 			private var kitFile:File;
 			private var kitStream:FileStream;
@@ -202,19 +199,18 @@
 			public function openSchemaButton_clickHandler(event:MouseEvent):void
 			{
 				if (kit != null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Do you realy call Application Schema?", true);
-					info.addEventListener(MouseEvent.CLICK, openAlertClickHandler);
+					Alert.yesLabel = "yes";
+					Alert.noLabel = "no";
+					Alert.show("Alert", "Do you realy call Application Schema?", 
+						Alert.YES|Alert.NO, this, openAlertClickHandler);
 				}
 				else {
 					openApplicationSchema();
 				}
 			}
 			
-			private function openAlertClickHandler(event:Event):void {
-				if (info.button == "YES") openApplicationSchema();
-				info.close();
-				info = null;
+			private function openAlertClickHandler(event:CloseEvent):void {
+				if (event.detail == Alert.YES) openApplicationSchema();
 			}
 			
 			private function openApplicationSchema():void {
@@ -227,7 +223,7 @@
 					trace(error.message);
 				}
 			}
-			
+						
 			private function callAppStream(event:Event):void {
 				
 				kit = new Kit();
@@ -290,8 +286,7 @@
 					kitFile.browseForOpen("Open kit file    [キャンセル:CANCEL  選択:SELECT]", [filter]);
 
 				} catch (error:IOError) {
-					info = new InfoWindow();
-					info.initInfo("Alert", error.message, false);
+					Alert.show("Alert", error.message, 4, this);
 				}
 			}
 			
@@ -367,8 +362,8 @@
 					kitFile.addEventListener(Event.SELECT, saveKit);
 					kitFile.browseForSave("Save kit file    [キャンセル:CANCEL  保存:SAVE]");		
 				} catch (error:IOError) {
-					info = new InfoWindow();
-					info.initInfo("Alert", error.message, false);				} 
+					Alert.show("Alert", error.message, 4, this);
+				} 
 			}
 			
 			private function saveKit(event:Event):void {	
@@ -438,8 +433,7 @@
 			{
 				var asTypeIndex:int = associationTypeList.selectedIndex;
 				if (asTypeIndex == -1) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Select association type.", false);
+					Alert.show("Alert", "Select association type.", 4, this);
 					return;					
 				}
 				associationType = associationTypes.getItemAt(asTypeIndex) as AssociationType;
@@ -490,8 +484,7 @@
 			{
 				// if this button is pushed without type selection ...
 				if (concreteType == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Select feature type before add instance.", false);
+					Alert.show("Alert", "Select feature type before add instance.", 4, this);
 					return;
 				}
 				
@@ -527,8 +520,7 @@
 			protected function deleteInstanceButton_clickHandler(event:MouseEvent):void
 			{
 				if (instanceIDList.selectedIndex == -1) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Select instance ID before delete.", false);
+					Alert.show("Alert", "Select instance ID before delete.", 4, this);
 					return;
 				}
 				
@@ -538,8 +530,7 @@
 				f = featureSet.features[idForDelete] as Feature;
 				
 				if (f == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Select instance ID before delete.", false);
+					Alert.show("Alert", "Select instance ID before delete.", 4, this);
 					return;
 				}
 				
@@ -547,9 +538,10 @@
 				for (var i:int = 0; i < fType.links.length; i++) {
 					var assoType:AssociationType = fType.links.getItemAt(i) as AssociationType;
 					if (assoType.style == "composite") {
-						info = new InfoWindow();
-						info.initInfo("Alert", "Feature associates with other feature as composite. Are you share?", true);
-						info.addEventListener(MouseEvent.CLICK, yesOrNoDelete);
+						Alert.yesLabel = "yes";
+						Alert.noLabel = "no";
+						Alert.show("Alert", "Feature associates with other feature as composite. Are you share?",
+							Alert.YES|Alert.NO, this, yesOrNoDelete);
 					}
 				}
 				
@@ -559,8 +551,8 @@
 				instanceIDList.prompt = "";
 			}
 			
-			private function yesOrNoDelete(event:MouseEvent):void {
-				if (info.button == "YES") {
+			private function yesOrNoDelete(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
 					this.deleteFeature(f);
 				
 					idList.removeItem(idForDelete);
@@ -568,14 +560,12 @@
 				
 					attValueList = new ArrayList();
 				}
-				info.close();
 			}
 			
 			private function deleteFeature(f:Feature):void {
 				// The feature cannot be removed as long as it is linked by other features, 
 				if (f.connectedBy.length > 0) {
- 					info = new InfoWindow();
-					info.initInfo("Alert", "This feature cannot be removed, because it is connected by another feature.", false);
+					Alert.show("Alert", "This feature cannot be removed, because it is connected by another feature.", 4, this);
 					return;										
 				}
 				
@@ -765,8 +755,7 @@
 				kit = geometryWindow.kit;
 				
 				if (kit.affineParam == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Geometry entry is not completed.", false);
+					Alert.show("Alert", "Geometry entry is not completed.", 4, this);
 					kit = new Kit();
 					kit.applicationSchemaURL = appSchemaLabel.text
 				}
@@ -815,14 +804,12 @@
 			protected function addValueButton_clickHandler(event:MouseEvent):void
 			{
 				if (feature == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Select feature instance before adding attributes.", false); 
+					Alert.show("Alert", "Select feature instance before adding attributes.", 4, this); 
 					return;
 				}
 				
 				if (attributeGrid.selectedItem == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Select attribute before adding value.", false);
+					Alert.show("Alert", "Select attribute before adding value.", 4, this);
 					return;					
 				}
 
@@ -839,8 +826,7 @@
 				if (attValueList == null) attValueList = new ArrayList();
 				
 				if ((attType.multiplicity == false) && (attValueList.length  > 0)) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Attribute value must be one", false);
+					Alert.show("Alert", "Attribute value must be one", 4, this);
 					return;
 				}
 				
@@ -848,14 +834,12 @@
 				
 				if (tp.substring(0, 3) == "SG_") {
 					if (geometryWindow == null) {
-						info = new InfoWindow();
-						info.initInfo("Alert", "No geometry is selected.", false);
+						Alert.show("Alert", "No geometry is selected.", 4, this);
 						return;												
 					}
 					
 					if (geometryWindow.searchedGM == null) {
-						info = new InfoWindow();
-						info.initInfo("Alert", "Select geometry before.", false);
+						Alert.show("Alert", "Select geometry before.", 4, this);
 						return;						
 					}
 					var str:String = getQualifiedClassName(geometryWindow.searchedGM);
@@ -865,8 +849,7 @@
 				
 					if (tp == "SG_Point") {
 						if (tp != geomTp) {
-							info = new InfoWindow();
-							info.initInfo("Alert", "Geometry type is different!", false);
+							Alert.show("Alert", "Geometry type is different!", 4, this);
 							return;						
 						}
 						
@@ -878,8 +861,7 @@
 				
 					if (tp == "SG_Curve") {
 						if (tp != geomTp) {
-							info = new InfoWindow();
-							info.initInfo("Alert", "Geometry type is different!", false);
+							Alert.show("Alert", "Geometry type is different!", 4, this);
 							return;						
 						}
 					
@@ -891,8 +873,7 @@
 				
 					if (tp == "SG_Surface") {
 						if (tp != geomTp) {
-							info = new InfoWindow();
-							info.initInfo("Alert", "Geometry type is different!", false);
+							Alert.show("Alert", "Geometry type is different!", 4, this);
 							return;						
 						}
 					
@@ -905,13 +886,12 @@
 
 				if (tp == "Address") {
 					if (addressWindow == null || addressWindow.address == null) {
-						info = new InfoWindow();
-						info.initInfo("Alert", "No address is entered!", false);
+						Alert.show("Alert", "No address is entered!", 4, this);
 						return;						
 					}
 
 					addressWindow.address.zipCode = addressWindow.zipInput.text;
-					addressWindow.address.element = addressWindow.addressInput.text;
+					addressWindow.address.location = addressWindow.addressInput.text;
 					addressWindow.address.country = addressWindow.countryLabel.text;
 					
 					var ad:Address = addressWindow.address;
@@ -923,8 +903,7 @@
 				if (tp == "CharacterString") {
 					var cs:CharacterString = new CharacterString();
 					if (valueInput.text == "") {
-						info = new InfoWindow();
-						info.initInfo("Alert", "Input text before.", false);
+						Alert.show("Alert", "Input text before.", 4, this);
 						return;						
 					}
 					cs.value = valueInput.text;
@@ -938,8 +917,7 @@
 				if (tp == "Memo") {
 					var mm:Memo = new Memo();
 					if (memoWindow == null || memoWindow.memoArea.text == "") {
-						info = new InfoWindow();
-						info.initInfo("Alert", "No memo is entered.", false);
+						Alert.show("Alert", "No memo is entered.", 4, this);
 						return;						
 					}
 					
@@ -956,8 +934,7 @@
 				if (tp == "Real") {
 					var rl:Real = new Real();
 					if (valueInput.text == "") {
-						info = new InfoWindow();
-						info.initInfo("Alert", "Input value before.", false);
+						Alert.show("Alert", "Input value before.", 4, this);
 						return;						
 					}					
 					rl.value = parseFloat(valueInput.text);
@@ -971,8 +948,7 @@
 				if (tp == "Integer") {
 					var inte:Integer = new Integer();
 					if (valueInput.text == "") {
-						info = new InfoWindow();
-						info.initInfo("Alert", "Input value before.", false);
+						Alert.show("Alert", "Input value before.", 4, this);
 						return;						
 					}					
 					inte.value = parseInt(valueInput.text);
@@ -986,8 +962,7 @@
 				if (tp == "Bool") {
 					var bl:Bool = new Bool();
 					if (valueInput.text == "") {
-						info = new InfoWindow();
-						info.initInfo("Alert", "Input value before.", false);
+						Alert.show("Alert", "Input value before.", 4, this);
 						return;						
 					}					
 					if (valueInput.text == "true") 
@@ -995,8 +970,7 @@
 					else if (valueInput.text == "false") 
 						bl.value = false;
 					else {
-						info = new InfoWindow();
-						info.initInfo("Alert", "Value must be true or false.", false);
+						Alert.show("Alert", "Value must be true or false.", 4, this);
 						return;
 					}
 					bl.featureID = feature.id;
@@ -1010,8 +984,7 @@
 					var iml:ImageURL = new ImageURL();
 					
 					if (imageWindow == null || imageWindow.imageFile == null) {
-						info = new InfoWindow();
-						info.initInfo("Alert", "No image is selected.", false);
+						Alert.show("Alert", "No image is selected.", 4, this);
 						return;
 					}
 
@@ -1024,8 +997,7 @@
 					var vdl:VideoURL = new VideoURL();
 					
 					if (videoWindow == null || videoWindow.videoFile == null) {
-						info = new InfoWindow();
-						info.initInfo("Alert", "No video is selected.", false);
+						Alert.show("Alert", "No video is selected.", 4, this);
 						return;
 					}
 
@@ -1038,8 +1010,7 @@
 					var snd:SoundURL = new SoundURL();
 					
 					if (soundWindow == null || soundWindow.soundFile == null) {
-						info = new InfoWindow();
-						info.initInfo("Alert", "No sound is selected.", false);
+						Alert.show("Alert", "No sound is selected.", 4, this);
 						return;
 					}
 					
@@ -1052,8 +1023,7 @@
 					var url:URL = new URL();
 					
 					if (urlWindow == null || urlWindow.urlInput.text == "") {
-						info = new InfoWindow();
-						info.initInfo("Alert", "No url is selected.", false);
+						Alert.show("Alert", "No url is selected.", 4, this);
 						return;
 					}
 
@@ -1167,14 +1137,12 @@
 			protected function deleteValueButton_clickHandler(event:MouseEvent):void
 			{
 				if (attValueList == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "No attribute.", false);
+					Alert.show("Alert", "No attribute.", 4, this);
 					return;
 				}
 				
 				if (valueGrid.selectedItem == null || valueGrid.selectedIndex == -1) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "No row in value grid is selected.", false);
+					Alert.show("Alert", "No row in value grid is selected.", 4, this);
 					return;
 				}
 				
@@ -1214,8 +1182,7 @@
 			protected function addAssoIDButton_clickHandler(event:MouseEvent):void
 			{				
 				if (associationType == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Select association type before.", false);
+					Alert.show("Alert", "Select association type before.", 4, this);
 					return;
 				}
 				
@@ -1251,14 +1218,12 @@
 			protected function deleteAssoIDButton_clickHandler(event:MouseEvent):void
 			{
 				if (assIdList.length == 0 ) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "There is no instances.", false);
+					Alert.show("Alert", "There is no instances.", 4, this);
 					return;
 				}
 				
 				if (associationIDList.selectedIndex == -1) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "No instance is selected.", false);
+					Alert.show("Alert", "No instance is selected.", 4, this);
 					return;
 				}
 				
@@ -1314,12 +1279,10 @@
 
 			protected function cancelFromToButton_clickHandler(event:MouseEvent):void
 			{
-				var info:InfoWindow = new InfoWindow();
-				
 				if (fromRadio.selected) {
 					var ff:Feature = fromIDList.selectedItem as Feature;
 					if (ff == null) {
-						info.initInfo('Alert', 'Select "from" feature on the list before.', false);	
+						Alert.show('Alert', 'Select "from" feature on the list before.', 4, this);	
 					}
 					fromFeatures.removeItem(ff);
 				}
@@ -1327,7 +1290,7 @@
 				if (toRadio.selected) {
 					var tf:Feature = toIDList.selectedItem as Feature;
 					if (tf == null) {
-						info.initInfo('Alert', 'Select "to" feature on the list before.', false);	
+						Alert.show('Alert', 'Select "to" feature on the list before.', 4, this);	
 					}
 					toFeatures.removeItem(tf);
 				}
@@ -1341,8 +1304,7 @@
 				assoAttValueList = association.attributes[attType.name] as ArrayList;
 				}
 				else {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Add association instance before.", false);
+					Alert.show("Alert", "Add association instance before.", 4, this);
 					return;
 				}
 			}
@@ -1350,8 +1312,7 @@
 			protected function assoAddValueButton_clickHandler(event:MouseEvent):void
 			{
 				if (association == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Select association instance before adding attributes.", false);
+					Alert.show("Alert", "Select association instance before adding attributes.", 4, this);
 					return;
 				}
 				
@@ -1361,8 +1322,7 @@
 				if (assoAttValueList == null) assoAttValueList = new ArrayList();
 				
 				if ((attType.multiplicity == false) && (assoAttValueList.length  > 0)) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Attribute value must be one", false);
+					Alert.show("Alert", "Attribute value must be one", 4, this);
 					return;
 				}
 				
@@ -1370,8 +1330,7 @@
 				
 				if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
 					if (geometryWindow.searchedGM == null) {
-						info = new InfoWindow();
-						info.initInfo("Alert", "Geometry is not selected!", false);
+						Alert.show("Alert", "Geometry is not selected!", 4, this);
 						return;
 					}
 					assoAttValueList.addItem(geometryWindow.searchedGM.id);
@@ -1389,8 +1348,7 @@
 				if (tp == "Memo") {
 					var mm:Memo = new Memo();
 					if (memoWindow == null || memoWindow.memoArea.text == "") {
-						info = new InfoWindow();
-						info.initInfo("Alert", "No memo is entered.", false);
+						Alert.show("Alert", "No memo is entered.", 4, this);
 						return;						
 					}
 					
@@ -1423,8 +1381,7 @@
 					else if (assoValueInput.text == "false") 
 						bs.value = false;
 					else {
-						info = new InfoWindow();
-						info.initInfo("Alert", "Value must be true or false.", false);
+						Alert.show("Alert", "Value must be true or false.", 4, this);
 						return;
 					}
 					assoAttValueList.addItem(bs);
@@ -1473,14 +1430,12 @@
 			protected function assoDeleteValueButton_clickHandler(event:MouseEvent):void
 			{
 				if (assoAttValueList == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "No attribute.", false);
+					Alert.show("Alert", "No attribute.", 4, this);
 					return;
 				}
 				
 				if (assoValueGrid.selectedItem == null) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "No row is selected.", false);
+					Alert.show("Alert", "No row is selected.", 4, this);
 					return;
 				}
 				
@@ -1513,8 +1468,7 @@
 			protected function showAssoButton_clickHandler(event:MouseEvent):void
 			{
 				if (association.relateFrom.length == 0 && association.relateTo.length == 0) {
-					info = new InfoWindow()
-					info.initInfo("Alert", "Set from and to feature before showing association.", false);
+					Alert.show("Alert", "Set from and to feature before showing association.", 4, this);
 					return;
 				}
 					
@@ -1592,8 +1546,7 @@
 			protected function fromRadio_clickHandler(event:MouseEvent):void
 			{
 				if (associationIDList.selectedIndex == -1) {
-					info = new InfoWindow()
-					info.initInfo("Alert", "Select or add association instance before.", false);
+					Alert.show("Alert", "Select or add association instance before.", 4, this);
 					fromRadio.selected = false;
 					return;						
 				}
@@ -1662,8 +1615,7 @@
 				
 				var crp:String = associationType.correspondence;
 				if ((crp == "1:1" || crp == "1:n") && fromFeatures.length == 1) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "From-feature shall be one.", false);
+					Alert.show("Alert", "From-feature shall be one.", 4, this);
 					return;
 				}
 				
@@ -1690,8 +1642,7 @@
 				if (geom != null) {
 					if (geom.featureID != "") {
 						if (association == null) {
-							info = new InfoWindow();
-							info.initInfo("Alert", "Add association before.", false);
+							Alert.show("Alert", "Add association before.", 4, this);
 							return;
 						}
 						var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;						
@@ -1708,8 +1659,8 @@
 						association.relateFrom = fromFeatures;
 					}
 					else {
-						info = new InfoWindow();
-						info.initInfo("Alert", "selected geometry is not an attribute of the from feature.", false);
+
+						Alert.show("Alert", "selected geometry is not an attribute of the from feature.", 4, this);
 						return;
 					}
 				}
@@ -1718,8 +1669,7 @@
 			protected function toRadio_clickHandler(event:MouseEvent):void
 			{
 				if (associationIDList.selectedIndex == -1) {
-					info = new InfoWindow()
-					info.initInfo("Alert", "Select or add association instance before.", false);
+					Alert.show("Alert", "Select or add association instance before.", 4, this);
 					toRadio.selected = false;
 					return;						
 				}
@@ -1788,8 +1738,7 @@
 				
 				var crp:String = associationType.correspondence;
 				if ((crp == "1:1" || crp == "m:1") && toFeatures.length == 1) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "To-feature shall be one.", false);
+					Alert.show("Alert", "To-feature shall be one.", 4, this);
 					return;
 				}
 
@@ -1829,8 +1778,7 @@
 						association.relateTo = toFeatures;
 					}
 					else {
-						info = new InfoWindow();
-						info.initInfo("Alert", "selected geometry is not an attribute of the to feature.", false);
+						Alert.show("Alert", "selected geometry is not an attribute of the to feature.", 4, this);
 						return;
 					}
 				}
@@ -1911,8 +1859,7 @@
 					kitFile.browseForOpen("Open kit file    [キャンセル:CANCEL  選択:SELECT]", [filter]);
 					
 				} catch (error:IOError) {
-					info = new InfoWindow();
-					info.initInfo("Alert", error.message, false);
+					Alert.show("Alert", error.message, 4, this);
 				}
 				
 			}
@@ -1945,14 +1892,12 @@
 				}
 				
 				if (kit.applicationSchemaURL != mkit.applicationSchemaURL) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Different application schema", false);
+					Alert.show("Alert", "Different application schema", 4, this);
 					return;
 				}
 				
 				if (kit.crsURL != mkit.crsURL) {
-					info = new InfoWindow();
-					info.initInfo("Alert", "Different CRS", false);
+					Alert.show("Alert", "Different CRS", 4, this);
 					return;
 				}
 				

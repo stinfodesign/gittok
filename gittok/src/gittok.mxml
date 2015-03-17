@@ -58,9 +58,9 @@
 			protected function modelingLabel_clickHandler(event:MouseEvent):void
 			{
 				appModeller = new Modeller();
-				appModeller.open();
 				appModeller.title = "gittok >";
 				appModeller.addEventListener(Event.CLOSE, appModellerClose);
+				appModeller.open();	
 			}
 			
 			protected function appModellerClose(event:Event):void {
@@ -158,7 +158,9 @@
 				if (repOperationWindow.symbolDesigner 		!= null) repOperationWindow.symbolDesigner.close(); 
 				if (repOperationWindow.labelDesigner		!= null) repOperationWindow.labelDesigner.close();				
 				if (repOperationWindow.portrayalDesigner 	!= null) repOperationWindow.portrayalDesigner.close();
+				if (repOperationWindow.gazetteerDesigner	!= null) repOperationWindow.gazetteerDesigner.close();
 				if (repOperationWindow.mapEditor		 	!= null) repOperationWindow.mapEditor.close();
+				
 								
 				repOperationWindow = null;
 				representation0.visible = true;
@@ -346,15 +348,16 @@
 			 click="representationLabel_clickHandler(event)"
 			 mouseOver="representationMouseOver(event)"
 			 mouseOut="representationMouseOut(event)"/>
-	<s:Label x="106" y="152" text="Real World" fontSize="14" fontStyle="italic" fontWeight="bold" color="#5A5A5A"/>
-	<s:Label x="322" y="309" text="Action" width="46" height="10" fontSize="12" color="#5A5A5A"/>
-	
-	<s:Label x="40" y="283" text="Modeling" color="#646464"/>
-	<s:Label x="196" y="283" text="Acquisition" color="#646464"/>
-	<s:Label x="41" y="402" text="Analysis" color="#646464"/>
-	<s:Label x="189" y="394" text="Management" color="#646464"/>
-	<s:Label x="37" y="519" text="Exchange" color="#646464"/>
-	<s:Label x="183" y="518" text="Representation" color="#646464"/>
+	<s:Label x="106" y="152" text="Real World" fontSize="14" fontStyle="italic" fontWeight="bold" color="#646464"/>
+	<s:Label x="317" y="307" text="Action" fontFamily="Arial" fontStyle="italic" color="#646464"/>
+	<s:Label x="40" y="283" color="#646464" fontFamily="Arial" fontStyle="italic" text="Modeling"/>
+	<s:Label x="196" y="283" color="#646464" fontFamily="Arial" fontStyle="italic" text="Acquisition"/>
+	<s:Label x="41" y="402" color="#646464" fontFamily="Arial" fontStyle="italic" text="Analysis"/>
+	<s:Label x="189" y="394" color="#646464" fontFamily="Arial" fontStyle="italic" text="Management"/>
+	<s:Label x="37" y="519" color="#646464" fontFamily="Arial" fontStyle="italic" text="Exchange"/>
+	<s:Label x="183" y="518" color="#646464" fontFamily="Arial" fontStyle="italic"
+			 text="Representation"/>
+
 	
 	<s:Label right="55" top="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>

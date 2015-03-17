@@ -3,11 +3,12 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="608" height="716"
 		  title="Map Editor"
-		  backgroundColor="#faeed1"
+		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 
 	<fx:Script>
 		<![CDATA[
+			
 			import com.google.maps.Map;
 			
 			import dataTypes.place.*;
@@ -27,6 +28,8 @@
 			
 			import instanceModel.*;
 			
+			import locationReference.*;
+			
 			import math.*;
 			
 			import mx.collections.ArrayList;
@@ -34,10 +37,10 @@
 			import mx.controls.Image;
 			import mx.utils.object_proxy;
 			
+			import portrayal.gpm.*;
 			import portrayal.label.Label;
 			import portrayal.labelStyle.*;
 			import portrayal.map.*;
-			import portrayal.portrayalStyle.*;
 			import portrayal.symbol.*;
 			import portrayal.symbolStyle.*;
 			
@@ -50,6 +53,8 @@
 			public var kit:Kit;
 			protected var kitURL:String;
 			protected var kitFileName:String;
+			protected var kitCenter:Coordinate2;
+			protected var kitExtent:Coordinate2;
 			protected var applicationSchema:ApplicationSchema;
 			
 			private var concreteTypes:ArrayList;
@@ -64,7 +69,7 @@
 			private var labels:LabelStyleDictionary;
 			private var portrayals:PortrayalSchema;
 			private var featurePortrayalPairDic:Dictionary = new Dictionary();
-			private var ftPtlPair:FeaturePortrayalPair = new FeaturePortrayalPair();
+			private var ftPtlPair:FeaturePortrayalUnit = new FeaturePortrayalUnit();
 			
 			private var curve:SG_Curve;
 			private var surface:SG_Surface;
@@ -96,16 +101,25 @@
 			private var selectedFeature:Feature;
 			private var selectedAttArray:ArrayList;
 			
-			//attribute list windows
-			protected var memoListWindow:MemoListWindow;
-			protected var urlListWindow:UrlListWindow;
-			protected var imageListWindow:ImageListWindow;
-			protected var videoListWindow:VideoListWindow;
-			protected var soundListWindow:SoundListWindow;
-			protected var addressListWindow:AddressListWindow;
+			// attribute list windows
+			public var memoListWindow:MemoListWindow;
+			public var urlListWindow:UrlListWindow;
+			public var imageListWindow:ImageListWindow;
+			public var videoListWindow:VideoListWindow;
+			public var soundListWindow:SoundListWindow;
+			public var addressListWindow:AddressListWindow;
 
 			// define marginal parameters
 			protected  var colorSelector:ColorSelector;
+			
+			// Gazetteer
+			private var gazette:GazetteerType;
+			public var gazetteerWindow:GazetteerWindow;
+			private var oldOrigin:Coordinate2 = new Coordinate2();
+			
+			// Dragging
+			private var dragged:Boolean = false;
+			private var jumped:Boolean = false;
 			
 			[Bindable]
 			protected var mapBackground:uint;
@@ -174,7 +188,7 @@
 				
 				// Portrayal Schema
 				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);								
-				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalPair", FeaturePortrayalPair);								
+				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);								
 				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
 				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);
 				registerClassAlias("portrayal.portrayalStyle.ThematicCondition", ThematicCondition);
@@ -215,6 +229,10 @@
 				
 				// Affine
 				registerClassAlias("math.AffineParam", AffineParam);
+				
+				// Gazetteer
+				registerClassAlias("locationReference.GazetteItem", GazetteItem);
+				registerClassAlias("locationReference.Gazetteer", GazetteerType);
 				
 				scaleSpace.visible  = false;
 				
@@ -382,32 +400,44 @@
 			
 			private function resetView():void {
 				var ctr:Coordinate2 = new Coordinate2();
-				var mapWidth:Number  = mappingBox.width;
-				var mapHeight:Number = mappingBox.height;
-				ctr.x = mapWidth  * 0.5;
-				ctr.y = mapHeight * 0.5;
+				mappingBox.width  = mappingMainBox.width;
+				mappingBox.height = mappingMainBox.height;
+				ctr.x = mappingBox.width  * 0.5;
+				ctr.y = mappingBox.height * 0.5;
 				
 				// Get extent and scale on the screen
 				var extent:SG_Rectangle = kit.getGeographicExtent();
 				var horizon:Number  = extent.upperRight.x - extent.lowerLeft.x;
 				var vertical:Number = extent.upperRight.y - extent.lowerLeft.y;
 				
+				kitExtent = new Coordinate2();
+				kitExtent.x = horizon;
+				kitExtent.y = vertical;
+				
 				var kitSize:Number = (horizon > vertical) ? horizon : vertical;
-				var mapSize:Number = (mapWidth > mapHeight) ? mapWidth : mapHeight;
+				var mapSize:Number = (mappingBox.width > mappingBox.height) ? mappingBox.width : mappingBox.height;
 				
 				scale = mapSize / kitSize;
 				
-				var kitCenter:Coordinate2 = kit.getCenter();
-				kitCenter.x *= scale;
-				kitCenter.y *= scale;
+				kitExtent.x = kitExtent.x * scale;
+				kitExtent.y = kitExtent.y * scale;
+				
+				kitCenter = kit.getCenter();
+				
+				var center:Coordinate2 = new Coordinate2();
+				center.x = kitCenter.x * scale;
+				center.y = kitCenter.y * scale;
 
 				drawingSpace.scaleX = drawingSpace.scaleY = scale;
 				
 				drawingSpace.width  = mappingBox.width;
 				drawingSpace.height = mappingBox.height;
+								
+				drawingSpace.x = ctr.x - center.x;
+				drawingSpace.y = ctr.y - center.y;		
 				
-				drawingSpace.x = mappingBox.x - kitCenter.x + ctr.x;
-				drawingSpace.y = mappingBox.y - kitCenter.y + ctr.y;				
+				oldOrigin.x = drawingSpace.x;
+				oldOrigin.y = drawingSpace.y;
 
 				//Draw a map scale
 				barScale = new BarScale();
@@ -433,31 +463,34 @@
 				portrayalSchemaLabel.text = portrayalSchemaFile.name;
 				stream = new FileStream();
 				var appSchemaFile:File    = new File();
-				var symbolSchemaFile:File = new File();
-				var labelSchemaFile:File  = new File();
+				var symbolStyleDicFile:File = new File();
+				var labelStyleDicFile:File  = new File();
 				
 				try {
 					stream.open(portrayalSchemaFile,FileMode.READ);
 					portrayals = stream.readObject() as PortrayalSchema;
 					appSchemaFile.nativePath    = path + portrayals.applicationSchema;
-					symbolSchemaFile.nativePath = path + portrayals.symbolStyleSchema;
-					labelSchemaFile.nativePath  = path + portrayals.labelStyleSchema;				
-					featurePortrayalPairDic = portrayals.fpPairs;
+					symbolStyleDicFile.nativePath = path + portrayals.symbolStyleDictionary;
+					labelStyleDicFile.nativePath  = path + portrayals.labelStyleDictionary;				
+					featurePortrayalPairDic = portrayals.fpUnits;
 					stream.close();
 					
-					stream.open(symbolSchemaFile, FileMode.READ);
+					stream.open(symbolStyleDicFile, FileMode.READ);
 					syms = stream.readObject();		// symbol schema				
 					stream.close();
 					
-					stream.open(labelSchemaFile, FileMode.READ);
+					stream.open(labelStyleDicFile, FileMode.READ);
 					labels = stream.readObject();	// label schema
 					stream.close();				
 				} catch (error:IOError) {
 					trace(error.message);
 				}
+				
+				drawMap();
 			}
 			
-			protected function drawMapButton_clickHandler(event:MouseEvent):void
+			protected function drawMap():void 
+			//protected function drawMapButton_clickHandler(event:MouseEvent):void
 			{
 				if (kit == null || portrayals == null) return;
 				
@@ -470,7 +503,7 @@
 				for (j = 0; j < num; j++) symbolSpace.removeChildAt(0);
 				
 				// re-open portrayalSchema file for acceptance of new portrayals
-				this.openPortrayalFiles(null);
+				//this.openPortrayalFiles(null);
 				
 				//Set feature instance
 				featureSetArray = kit.featureSetArray;
@@ -481,11 +514,11 @@
 				thematicProvider = new ArrayList();
 				
 				for each(featureSet in featureSetArray) {
-					ftPtlPair = featurePortrayalPairDic[featureSet.typeID] as FeaturePortrayalPair;
+					ftPtlPair = featurePortrayalPairDic[featureSet.typeID] as FeaturePortrayalUnit;
 					if (ftPtlPair != null) {
 						var thematicModifier:ThematicCondition = ftPtlPair.thematicModifier;
 						
-						if (thematicModifier.modifierName != "") {
+						if (thematicModifier.attName != "") {
 							// set Legend on the map
 							this.makeLegend(thematicModifier);
 						}
@@ -508,8 +541,8 @@
 									/* thematic mapping
 									*/							
 									if (thematicModifier != null) {
-										var attArray:ArrayList = attributes[thematicModifier.modifierName] as ArrayList;
-										var modifierType:String = thematicModifier.modifierType;
+										var attArray:ArrayList = attributes[thematicModifier.attName] as ArrayList;
+										var modifierType:String = thematicModifier.attType;
 										if (modifierType == "Bool") {
 											if (attArray == null) {
 												var bm:BooleanModifier = thematicModifier.elements.getItemAt(2) as BooleanModifier;
@@ -623,10 +656,10 @@
 			
 			protected function makeLegend(thematicModifier:ThematicCondition):void {
 				// legend setting
-				var mType:String = thematicModifier.modifierType;
+				var mType:String = thematicModifier.attType;
 				
 				legend = new MapLegend();
-				legend.setTitle(thematicModifier.modifierName);
+				legend.setTitle(thematicModifier.attName);
 				var element:Object;
 				if (mType == "Bool") {					
 					for (var j:int = 0; j < 3; j++) {
@@ -762,8 +795,7 @@
 			{
 				if (kit == null) {
 					if (map == null) return;
-				}
-				
+				}				
 				var beta:Number = 1.05;
 				
 				scale *= beta;
@@ -776,8 +808,19 @@
 				var center:Coordinate2 = new Coordinate2();
 				center.x = mappingBox.width * 0.5;
 				center.y = mappingBox.height * 0.5;
-				drawingSpace.x = center.x - (center.x - drawingSpace.x) * beta;
-				drawingSpace.y = center.y - (center.y - drawingSpace.y) * beta;
+				
+				if (dragged || jumped) {
+					oldOrigin.x = drawingSpace.x;
+					oldOrigin.y = drawingSpace.y;
+					if (dragged) dragged = false;
+					if (jumped) jumped = false;
+				}
+				
+				drawingSpace.x = center.x - (center.x - oldOrigin.x) * beta;
+				drawingSpace.y = center.y - (center.y - oldOrigin.y) * beta;
+				
+				oldOrigin.x = drawingSpace.x;
+				oldOrigin.y = drawingSpace.y;
 				
 				drawingSpace.scaleX = drawingSpace.scaleY = scale;
 				
@@ -801,10 +844,26 @@
 				var center:Coordinate2 = new Coordinate2();
 				center.x = mappingBox.width * 0.5;
 				center.y = mappingBox.height * 0.5;
-				drawingSpace.x = center.x - (center.x - drawingSpace.x) / beta;
-				drawingSpace.y = center.y - (center.y - drawingSpace.y) / beta;
+				
+				if (dragged || jumped) {
+					oldOrigin.x = drawingSpace.x;
+					oldOrigin.y = drawingSpace.y;
+					if (dragged) dragged = false;
+					if (jumped) jumped = false;
+				}
+				
+				drawingSpace.x = center.x - (center.x - oldOrigin.x) / beta;
+				drawingSpace.y = center.y - (center.y - oldOrigin.y) / beta;
+				
+				oldOrigin.x = drawingSpace.x;
+				oldOrigin.y = drawingSpace.y;
 				
 				drawingSpace.scaleX = drawingSpace.scaleY = scale;
+				
+				var dsc:Coordinate2 = new Coordinate2();
+				dsc.x = drawingSpace.width  * 0.5 + drawingSpace.x;
+				dsc.y = drawingSpace.height * 0.5 + drawingSpace.y;
+				
 			}
 			
 			private function resetButton_clickHandler(event:MouseEvent):void
@@ -831,11 +890,11 @@
 				}
 				
 				for each(featureSet in featureSetArray) {
-					ftPtlPair = featurePortrayalPairDic[featureSet.typeID] as FeaturePortrayalPair;
+					ftPtlPair = featurePortrayalPairDic[featureSet.typeID] as FeaturePortrayalUnit;
 					if (ftPtlPair != null) {
 						var thematicModifier:ThematicCondition = ftPtlPair.thematicModifier;
 						
-						if (thematicModifier.modifierName != "") {
+						if (thematicModifier.attName != "") {
 							// set Legend on the map
 							this.makeLegend(thematicModifier);
 						}
@@ -858,8 +917,8 @@
 									/* thematic mapping
 									*/							
 									if (thematicModifier != null) {
-										var attArray:ArrayList = attributes[thematicModifier.modifierName] as ArrayList;
-										var modifierType:String = thematicModifier.modifierType;
+										var attArray:ArrayList = attributes[thematicModifier.attName] as ArrayList;
+										var modifierType:String = thematicModifier.attType;
 										if (modifierType == "Bool") {
 											if (attArray == null) {
 												var bm:BooleanModifier = thematicModifier.elements.getItemAt(2) as BooleanModifier;
@@ -969,17 +1028,6 @@
 					}
 				}
 			}
-						
-			private function scalingAtCenter(s:Number, center:Coordinate2):void 
-			{
-				var shift:Coordinate2 = new Coordinate2();
-				shift.x = mappingBox.width * 0.5;
-				shift.y = mappingBox.height * 0.5;
-				
-				kit.planeCoordinateTransfer(s, center, shift);
-				
-				featureSetArray = kit.featureSetArray;
-			}
 			
 			private function dragButton_clickHandler(event:MouseEvent):void
 			{				
@@ -999,6 +1047,8 @@
 				if (dragFlag) {	
 					drawingSpace.stopDrag();
 					Mouse.cursor = "arrow";
+					dragged = true;
+					
 				}
 				
 
@@ -1094,7 +1144,6 @@
 						var attTypeName:String = multimediaType[pictNo];
 						var attName:String = "";
 						var fType:FeatureType = kit.applicationSchema.featureTypes[selectedFeature.typeName] as FeatureType;
-						trace(fType.name);
 						var attTypes:ArrayList = fType.attributeTypes;
 						for (i = 0; i < attTypes.length; i++) {
 							var attType:AttributeType = attTypes.getItemAt(i) as AttributeType;
@@ -1188,6 +1237,7 @@
 			}
 			
 			protected function videoListWindowClose(event:Event):void {
+				videoListWindow.videoView.stop();
 				videoListWindow = null;
 			}
 			
@@ -1494,6 +1544,9 @@
 				drawingSpace.height = map.height;
 				drawingSpace.scaleX = drawingSpace.scaleY = map.scale;
 				
+				oldOrigin.x = drawingSpace.x;
+				oldOrigin.y = drawingSpace.y;
+				
 				mapBackground = map.backgroundColor;
 				mapBackgroundAlpha = map.backgroundColorAlpha;
 				
@@ -1721,6 +1774,71 @@
 			}
 			
 			
+			protected function openGazetteerButton_clickHandler(event:MouseEvent):void
+			{
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Gazetteer", "*.gaz");
+					file.addEventListener(Event.SELECT, openGazetteer);
+					file.browseForOpen("Open Gazetteer", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+			}
+			
+			private function openGazetteer(event:Event):void {
+				gazette = new GazetteerType();
+				stream = new FileStream();
+				try {
+					stream.open(file,FileMode.READ);
+					gazette = stream.readObject();
+					stream.close();					
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+				
+				gazetteerLabel.text = file.name;
+				
+				gazetteerWindow = new GazetteerWindow();
+
+				gazetteerWindow.title = "MapEditor >";
+				gazetteerWindow.gazetteer = gazette;
+				gazetteerWindow.open();	
+				gazetteerWindow.addEventListener(Event.CLOSING, gazetteerClose);
+				gazetteerWindow.addEventListener(MouseEvent.CLICK, jumpToPosition);
+			}
+			
+			private function gazetteerClose(event:Event):void {
+				gazetteerWindow = null;
+				gazetteerLabel.text = "";
+				gazette = null;
+			}
+			
+			private function jumpToPosition(event:Event):void {
+				var gazetteItem:GazetteItem = gazetteerWindow.gazetteItem as GazetteItem;
+				var pos:Coordinate2 = gazetteItem.position;
+								
+				drawingSpace.x = oldOrigin.x + (kitCenter.x - pos.x) * scale;
+				drawingSpace.y = oldOrigin.y + (kitCenter.y - pos.y) * scale;
+				
+				var dpos:Coordinate2 = new Coordinate2();
+				dpos.x = (drawingSpace.x + pos.x * scale) - mappingBox.width  * 0.5;
+				dpos.y = (drawingSpace.y + pos.y * scale) - mappingBox.height * 0.5;
+				
+				drawingSpace.x = drawingSpace.x - dpos.x;
+				drawingSpace.y = drawingSpace.y - dpos.y;
+				
+				jumped = true;
+				
+			}
+			
+			public function closeMapEditor(): void {
+				if (titleEditor != null) titleEditor.close();
+				if (northArrowSelector != null) northArrowSelector.close();
+				if (gazetteerWindow != null) gazetteerWindow.close();
+				if (colorSelector != null) colorSelector.close();
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -1730,37 +1848,34 @@
 	<s:Image x="15" y="7" source="@Embed(source='images/pictRepresentation1.png')"/>
 	<s:Label x="82" y="13" fontFamily="Arial" fontSize="16" text="Map Editor"/>
 	
-	<s:Button id="openKitButton" x="93" y="48" width="50" height="20" label="open"
+	<s:Button id="openKitButton" x="80" y="60" width="50" height="20" label="open"
 			  click="openKitButton_clickHandler(event)"/>
-	<s:Label x="149" y="55" width="27" height="10" fontSize="11" text="Kit"/>
-	<s:Label id="kitNameLabel" x="91" y="74" width="110" height="20" backgroundColor="#DADADA"
+	<s:Label x="136" y="67" width="27" height="10" fontSize="11" text="Kit"/>
+	<s:Label id="kitNameLabel" x="78" y="88" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
-	<s:Button id="openportrayalSchemaButton" x="218" y="48" width="50" height="20" label="open"
+	<s:Button id="openportrayalSchemaButton" x="205" y="60" width="50" height="20" label="open"
 			  click="openportrayalSchemaButton_clickHandler(event)"/>
-	<s:Label x="273" y="47" width="48" height="29" fontSize="11" text="Portrayal Schema"/>
-	<s:Label id="portrayalSchemaLabel" x="216" y="74" width="114" height="20" backgroundColor="#DADADA"
+	<s:Label x="260" y="59" width="69" height="30" fontSize="11" text="Portrayal Schema "/>
+	<s:Label id="portrayalSchemaLabel" x="206" y="88" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
-	<s:Button id="drawMapButton" x="346" y="48" width="50" height="45" label="draw"
-			  click="drawMapButton_clickHandler(event)"/>
-	<s:Label x="401" y="67" fontSize="11" text="Map"/>
 	
-	<s:Panel id="mappingPanel" x="76" y="114" width="500" height="533" dropShadowVisible="false"
-			 fontSize="14" title="Map">
-		<s:Button id="resetButton" x="454" y="-27" width="35" height="20" label="-"
+	<s:Panel id="mappingPanel" left="76" right="30" top="116" bottom="34"
+			 chromeColor="#444444" dropShadowVisible="false" fontSize="14" title="Map" color="#ffffff">
+		<s:Button id="resetButton" y="-26" right="5" width="35" height="20" label="-"
 				  click="resetButton_clickHandler(event)" color="#000000" cornerRadius="2"
-				  fontSize="12"/>
-		<s:Button id="largerButton" x="416" y="-27" width="35" height="20" label="&lt;"
+				  fontSize="12" chromeColor="#dadada"/>
+		<s:Button id="largerButton" y="-26" right="43" width="35" height="20" label="&lt;"
 				  click="largerButton_clickHandler(event)" color="#000000" cornerRadius="2"
-				  fontSize="12"/>
-		<s:Button id="smallerButton" x="378" y="-27" width="35" height="20" label="&gt;"
+				  fontSize="12" chromeColor="#dadada"/>
+		<s:Button id="smallerButton" y="-26" right="81" width="35" height="20" label="&gt;"
 				  click="smallerButton_clickHandler(event)" color="#000000" cornerRadius="2"
-				  fontSize="12"/>
-		<s:Button id="dragButton" x="340" y="-27" width="35" height="20" label="off"
+				  fontSize="12" chromeColor="#dadada"/>
+		<s:Button id="dragButton" y="-26" right="119" width="35" height="20" label="off"
 				  click="dragButton_clickHandler(event)" color="#000000" cornerRadius="2"
-				  fontSize="12"/>
-		<s:DropDownList id="moveMarginalDropDown" x="107" y="-27" width="100" height="20"
+				  fontSize="12" chromeColor="#dadada"/>
+		<s:DropDownList id="moveMarginalDropDown" y="-27" right="274" width="98" height="20"
 						change="moveMarginalDropDown_changeHandler(event)" fontSize="12"
-						labelField="item" prompt="select item">
+						labelField="item" prompt="annotation" color="#000000" chromeColor="#dadada">
 			<s:dataProvider>
 				<s:ArrayList>
 					<fx:Object item="title"/>
@@ -1772,70 +1887,73 @@
 				</s:ArrayList>
 			</s:dataProvider>
 		</s:DropDownList>
-		<s:Label x="74" y="-21" fontSize="12" text="Move"/>
-		<s:CheckBox id="viewAttCheckBox" x="230" y="-26" label="View attributes"
-					click="viewAttCheckBox_clickHandler(event)" fontSize="12"/>
-
-	</s:Panel>	
+		<s:Label y="-20" right="377" fontSize="11" text="Move"/>
+		<s:CheckBox id="viewAttCheckBox" y="-26" right="168" label="View attributes"
+					click="viewAttCheckBox_clickHandler(event)" fontSize="11" chromeColor="#dadada"/>
 	
-	<s:Group id="mappingMainBox" clipAndEnableScrolling="true" width="500" height="500" visible="true" x="76" y="147" 
+		<s:Group id="mappingMainBox" clipAndEnableScrolling="true" width="100%" height="100%" visible="true" x="0" y="0" 
 			 mouseDown="mappingMainBox_mouseDownHandler(event)"
 			 mouseUp="mappingMainBox_mouseUpHandler(event)"
 			 mouseMove="mappingMainBox_mouseMoveHandler(event)">
 		
-		<s:Rect x="0" y="0" width="100%" height="100%" >
-			<s:fill>
-				<s:SolidColor color="{mapBackground}"/>
-			</s:fill>
-		</s:Rect>
+			<s:Rect x="0" y="0" width="100%" height="100%" >
+				<s:fill>
+					<s:SolidColor color="{mapBackground}"/>
+				</s:fill>
+			</s:Rect>
 	
-		<s:Group id="mappingBox" x="0" y="0" width="100%" height="100%">
-			<s:Group id="drawingSpace" x="0" y="0" width="100%" height="100%">
-				<s:SpriteVisualElement id="symbolSpace" x="0" y="0"/>
-				<s:SpriteVisualElement id="labelSpace"  x="0" y="0"/>
-				<s:Group id="pictBox" x="0" y="0" visible="false">
-					<s:Image id="memoButton"  source="images/MultimediaPict/memoPict.png" x="0" y="0"/>
-					<s:Image id="urlButton"   source="images/MultimediaPict/urlPict.png" x="18" y="0"/>
-					<s:Image id="imageButton" source="images/MultimediaPict/imagePict.png" x="36" y="0"/>	
-					<s:Image id="videoButton" source="images/MultimediaPict/videoPict.png" x="0" y="18"/>
-					<s:Image id="soundButton" source="images/MultimediaPict/soundPict.png" x="18" y="18"/>
-					<s:Image id="addressButton" source="images/MultimediaPict/addressPict.png" x="36" y="18"/>
-				</s:Group> 
+			<s:Group id="mappingBox" x="0" y="0" width="100%" height="100%">
+				<s:Group id="drawingSpace" x="0" y="0" width="100%" height="100%">
+					<s:SpriteVisualElement id="symbolSpace" x="0" y="0"/>
+					<s:SpriteVisualElement id="labelSpace"  x="0" y="0"/>
+					<s:Group id="pictBox" x="0" y="0" visible="false">
+						<s:Image id="memoButton"  source="images/MultimediaPict/memoPict.png" x="0" y="0"/>
+						<s:Image id="urlButton"   source="images/MultimediaPict/urlPict.png" x="18" y="0"/>
+						<s:Image id="imageButton" source="images/MultimediaPict/imagePict.png" x="36" y="0"/>	
+						<s:Image id="videoButton" source="images/MultimediaPict/videoPict.png" x="0" y="18"/>
+						<s:Image id="soundButton" source="images/MultimediaPict/soundPict.png" x="18" y="18"/>
+						<s:Image id="addressButton" source="images/MultimediaPict/addressPict.png" x="36" y="18"/>
+					</s:Group> 
+				</s:Group>
+	
+				<s:Group id="marginalSpace" x="0" y="0" width="100%" height="100%">
+					<s:SpriteVisualElement id="titleSpace" x="10" y="10"/>
+					<s:SpriteVisualElement id="subtitleSpace" x="10" y="60"/>
+					<s:SpriteVisualElement id="legendSpace" x="10" y="300"/>
+					<s:SpriteVisualElement id="scaleSpace" x="0" y="0"/>
+					<s:Image id="northArrowImage" x="400" y="10" source="{arrowSource}" />
+				</s:Group>				
 			</s:Group>
+		</s:Group>		
+	</s:Panel>		
 	
-			<s:Group id="marginalSpace" x="0" y="0" width="100%" height="100%">
-				<s:SpriteVisualElement id="titleSpace" x="10" y="10"/>
-				<s:SpriteVisualElement id="subtitleSpace" x="10" y="60"/>
-				<s:SpriteVisualElement id="legendSpace" x="10" y="300"/>
-				<s:SpriteVisualElement id="scaleSpace" x="0" y="0"/>
-				<s:Image id="northArrowImage" x="400" y="10" source="{arrowSource}" />
-			</s:Group>				
-		</s:Group>
-		
-	</s:Group>
-	
-	<s:Label x="515" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
-			 buttonMode="true" click="text_jp_clickHandler(event)"/>
-	<s:Label x="556" y="12" text="English" color="#969696"
-			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:Rect x="460" y="30" width="116" height="80" >
+	<s:Label right="58" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
+	<s:Rect y="28" right="30" width="116" height="80">
 		<s:fill>
-			<s:SolidColor color="0x888888"/>
+			<s:SolidColor color="0xdadada"/>
 		</s:fill>
 	</s:Rect>
-	<s:Button id="titleButton" x="466" y="35" width="103" height="20" label="title / subtitle »"
+	<s:Button id="titleButton" y="33" right="37" width="103" height="20" label="title / subtitle »"
 			  click="titleButton_clickHandler(event)"/>
-	<s:Button id="northArrowButton" x="466" y="60" width="103" height="20" label="north arrow »"
+	<s:Button id="northArrowButton" y="58" right="37" width="103" height="20" label="north arrow »"
 			  click="northArrowButton_clickHandler(event)"/>
-	<s:Button id="openMapButton" x="318" y="654" width="50" height="20" label="open"
+	<s:Button id="openMapButton" right="236" bottom="9" width="50" height="20" label="open"
 			  click="openMapButton_clickHandler(event)"/>
-	<s:Button id="saveMapButton" x="376" y="654" width="50" height="20" label="save"
+	<s:Button id="saveMapButton" right="178" bottom="9" width="50" height="20" label="save"
 			  click="saveMapButton_clickHandler(event)"/>
-	<s:Label id="mapFileLabel" x="465" y="654" width="110" height="20" backgroundColor="#DADADA"
-			 verticalAlign="middle"/>
-	<s:Label x="433" y="659" text="Map"/>
-	<s:Button id="setBackground" x="466" y="85" width="103" height="20" label="background »"
+	<s:Label id="mapFileLabel" right="30" bottom="9" width="110" height="20"
+			 backgroundColor="#DADADA" verticalAlign="middle"/>
+	<s:Label right="148" bottom="12" text="Map"/>
+	<s:Button id="setBackground" y="83" right="37" width="103" height="20" label="background »"
 			  click="setBackground_clickHandler(event)"/>
-	<s:Label x="435" y="39" fontSize="11" text="Set"/>
+	<s:Label y="38" right="150" fontSize="11" text="Set"/>
+	<s:Button id="openGazetteerButton" x="335" y="60" width="55" height="20" label="open"
+			  click="openGazetteerButton_clickHandler(event)"/>
+	<s:Label x="395" y="66.5" fontSize="11" text="Gazetteer"/>
+	<s:Label id="gazetteerLabel" x="334" y="88" width="120" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
 	
 </s:Window>

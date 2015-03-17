@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="480" height="434"
-		  backgroundColor="#feeed1" 
+		  backgroundColor="#c5c5c5" 
 		  title="Label Designer" 
 		  creationComplete="initializeApp()">
 	<s:layout>
@@ -309,7 +309,7 @@
 		</fx:Declarations>
 		<s:Image x="10" y="10" source="@Embed(source='images/pictRepresentation1.png')"/>
 		<s:Label x="75" y="15" text="Label Style Designer" fontSize="16"/>
-		<s:Label x="353" y="39" text="label style &#xd;schema"/>
+		<s:Label x="353" y="39" text="label style &#xd;dictionary"/>
 		<s:Label x="292" y="69" id="labelStylesLabel" backgroundColor="#DADADA" width="135" height="20" 
 				 verticalAlign="middle"/>
 		<s:Button x="293" y="17" label="open" width="55" id="openLabelStylesButton" 

@@ -6,7 +6,7 @@ package portrayal.map
 	
 	import mx.collections.ArrayList;
 	
-	import portrayal.portrayalStyle.PortrayalSchema;
+	import portrayal.gpm.PortrayalSchema;
 	
 	public class Map
 	{
