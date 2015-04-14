@@ -14,13 +14,14 @@ window.moveTo(750,20);
 <p class="FirstHeader">Portrayal Schema Designer
 </p>
 <p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Introduction</p>
 <p class="mainSentence">The relationship between symbol or label style and an attribute of a feature is required to draw a graphic object on a map. Such a relationship is registered in a portrayal schema and it enables automatical drawing of maps by gittok. The users can design portrayal schema by using Portrayal Schema Designer. </p>
 <p class="mainSentence">The user should understand about portrayal schema  beforehand. This page explains what is a portrayal schema , and how to use Portrayal Schema Designer. </p>
 <p class="secondHeader">Portrayal Schema</p>
 <p class="mainSentence">Portrayal schema is a schema to specify a collection of relationships between drawing styles and feature attributes.The class diagram below is a structure of portrayal schema that is called General Portrayal Model (GPM) in gittok. The relationship between portrayal schema and GPM is similar to the relatioship between application schema and GFM. </p>
 <p class="mainSentence"><img src="../figures/GPM.png" width="650" height="523" alt="GPM" /></p>
 <p class="mainSentence">Figure 1. Class diagram of General Portrayal Model (GPM).</p>
-<p class="thirdHeader">CLASS</p>
+<p class="thirdHeader">CLASSES</p>
 <p class="mainSentence"><strong>PortrayalSchema</strong><br />
   This class is the root class of the portrayal schema.This class has names of application schema, symbol style dictionary, and label style dictionary. This class also has an association to a collection of feature portrayal pairs, which roll name is fpPairs.</p>
 <p class="mainSentence"><strong>FeaturePortrayalPair</strong><br />
@@ -48,6 +49,7 @@ A feature attribute type for representation on the information page.</p>
   A collection of thematic modifiers specifying  the visualization of ranks by symbols for choropleth mapping.</p>
 <p class="mainSentence"><strong>infoPages</strong><br />
   A collection of attribute types for visualization of information pages. Attribute name and type indicate which information page is visualized.</p>
+<p class="secondHeader">&nbsp;</p>
 <p class="secondHeader">Portrayal Schema Designer</p>
 <p class="thirdHeader">Open and save of portrayal schema files.</p>
 <p class="mainSentence">See Figure 2.</p>
@@ -125,7 +127,6 @@ The application schema is opened.</p>
   The style selected in the symbol or label style lists is signed as a modifier of the attribute．</p>
 <p class="mainSentence"><strong>clear</strong><br />
   The style assigned as a modifier is released.</p>
-<p class="thirdHeader">&nbsp;</p>
 <p class="thirdHeader">Selection of thematic attributes shown on the information pages</p>
 <p class="mainSentence">Map is mainly a graphic representation of geometric attributes and text string attributes of features.  However, gittok provides pages to show multimedia information, because features have multimedia attributes such as image and movie. Gittok enables the selection of attributes that are presented on the appropriate information pages according to their characteristics. </p>
 <p class="mainSentence">Thematic attribute is shown on the information page is possible by selection of a feature, check 'for info. page' button, and selection of a thematic attribute by the dropdown list. Selected thematic attributes are added in the list at the right hand side.</p>

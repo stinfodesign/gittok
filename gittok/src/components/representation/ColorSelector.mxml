@@ -70,7 +70,7 @@
 				color = uint(((r * 256) + g) * 256 + b);
 				colorGroup.graphics.clear();
 				colorGroup.graphics.beginFill(color, cAlpha);
-				colorGroup.graphics.drawRect(0, 0, 90, 100);
+				colorGroup.graphics.drawRect(0, 0, 90, 120);
 				colorGroup.graphics.endFill();
 			}
 			
@@ -102,6 +102,19 @@
 				drawColorBox();
 			}
 			
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/colorSelector_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/colorSelector_en.html");
+				navigateToURL(request);
+			}
+
+			
 		]]>
 	</fx:Script>
 	
@@ -110,6 +123,11 @@
 	</fx:Declarations>
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="Color Selector" fontSize="16"/>
+	<s:Label right="58" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
+
 	<s:Label x="80" y="60" text="Red"/>
 	<s:Label x="80" y="96" text="Green"/>
 	<s:Label x="80" y="130" text="Blue"/>
@@ -132,4 +150,9 @@
 			   maximum="1" stepSize="0.01" value="1"/>
 	<s:TextInput id="alphaValue" x="170" y="176" width="30" height="15"
 				 change="alphaValue_changeHandler(event)" fontSize="11" text="1"/>
+	<s:Label x="139" y="75" fontSize="10" text="value"/>
+	<s:Label x="139" y="110" fontSize="10" text="value"/>
+	<s:Label x="139" y="145" fontSize="10" text="value"/>
+	<s:Label x="139" y="178" fontSize="10" text="value"/>
+	<s:Label x="260" y="38" text="Color"/>
 </s:Window>

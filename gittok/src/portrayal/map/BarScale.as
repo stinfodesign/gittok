@@ -20,17 +20,17 @@ package portrayal.map
 		public function drawScale(affineParam:AffineParam, scaleValue:Number):void
 		{
 			/*
-			Get and draw the map scale
+			Get and draw a bar-scale
 			*/
 			
-			// Get a size on the ground (gSize) that is equivalent to 100 pixels on the screen. 
+			// Get a size on the ground (gSize) that is equivalent to 200 pixels on the scaled screen. 
 			var coor0:Coordinate2 = new Coordinate2();
 			coor0.x = 0;
 			coor0.y = 0;
 			coor0 = math.Affine.conversion(coor0, affineParam.coefficient);
 			
 			var coor1:Coordinate2 = new Coordinate2();
-			coor1.x = 100;
+			coor1.x = 200 / scaleValue;		//This division is important.
 			coor1.y = 0;
 			coor1 = math.Affine.conversion(coor1, affineParam.coefficient);
 			
@@ -38,33 +38,44 @@ package portrayal.map
 			
 			// Get a round figure of gSize
 			var digit:int = int(Math.log(gSize) * Math.LOG10E);
-			gSize = int(gSize / Math.pow(10, digit) + 0.5); // number of the highest digit
-			if (gSize < 4) gSize = 1;
-			if (gSize >= 4 && gSize < 7) gSize = 5;
-			if (gSize >= 7) gSize = 10;
+			var hDigit:int = int(gSize / Math.pow(10, digit)); // number of the highest digit
+
+			gSize = hDigit * Math.pow(10, digit);
 			
-			gSize = gSize * Math.pow(10, digit);
-			
-			// Get a size of the scale  (scaleSize) on the map
+			// Get a size of the bar-scale  (scaleSize)
 			coor1.x = 0 + coor0.x;
 			coor1.y = gSize + coor0.y;
 			coor1 = math.Affine.inverseConversion(coor1, affineParam.coefficient);
 			
 			var scaleSize:Number = coor1.x * scaleValue;
 			
-			// Draw a scale line
+			// Draw the bar-scale
 			this.graphics.lineStyle(1.0, 0, 0.7);
-			this.graphics.moveTo(150, 455);
-			this.graphics.lineTo(150, 460);
-			this.graphics.lineTo(150 + scaleSize, 460);
-			this.graphics.lineTo(150 + scaleSize, 455);
+			this.graphics.moveTo(50, 460);
+			this.graphics.lineTo(50 + scaleSize, 460);
+			this.graphics.lineTo(50 + scaleSize, 455);
+			var dx:Number = scaleSize / hDigit;
+			for (var i:int = 0; i < hDigit * 10; i++) {
+				var xDash:Number = i * dx / 10.0;
+				this.graphics.moveTo(50 + xDash, 460);
+				if (i % 2 == 0) 
+					this.graphics.lineTo(50 + xDash, 458);				
+				if (i % 10 == 0) 
+					this.graphics.lineTo(50 + xDash, 455);
+			}
 
 			// Get and draw a label on the scale
-			var valueText:String = "" + int(gSize + 0.5) + "m";
+			var svalue:int = int(gSize + 0.5);
+			var valueText:String;
+			valueText = "" + svalue + "m";
+			if (svalue >= 1000) {
+				svalue /= 1000;
+				valueText = "" + svalue + "km";
+			}			
 			
 			var scalePos:Coordinate2 = new Coordinate2();
-			scalePos.x = 150 + scaleSize * 0.5;
-			scalePos.y = 455;
+			scalePos.x = 25;
+			scalePos.y = 462;
 			
 			var scaleStyle:LabelStyle = new LabelStyle();
 			with (scaleStyle) {

@@ -18,7 +18,7 @@
 			import mx.collections.ArrayList;
 			import mx.managers.PopUpManager;
 			
-			private var appModeller:Modeller;
+			private var appModeller:Modeler;
 			private var manWindow:Manager;
 			private var repOperationWindow:Cartographer;
 			private var editor:Editor;
@@ -57,7 +57,7 @@
 			// Modeling Label Controls
 			protected function modelingLabel_clickHandler(event:MouseEvent):void
 			{
-				appModeller = new Modeller();
+				appModeller = new Modeler();
 				appModeller.title = "gittok >";
 				appModeller.addEventListener(Event.CLOSE, appModellerClose);
 				appModeller.open();	
@@ -94,6 +94,7 @@
 				if (editor.memoWindow     != null) editor.memoWindow.close();
 				if (editor.fromListWindow != null) editor.fromListWindow.close();
 				if (editor.toListWindow	  != null) editor.toListWindow.close();
+				
 				
 				editor = null;
 				acquisition0.visible = true;

@@ -35,7 +35,6 @@
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
 			import mx.controls.Image;
-			import mx.utils.object_proxy;
 			
 			import portrayal.gpm.*;
 			import portrayal.label.Label;
@@ -102,19 +101,19 @@
 			private var selectedAttArray:ArrayList;
 			
 			// attribute list windows
-			public var memoListWindow:MemoListWindow;
-			public var urlListWindow:UrlListWindow;
-			public var imageListWindow:ImageListWindow;
-			public var videoListWindow:VideoListWindow;
-			public var soundListWindow:SoundListWindow;
-			public var addressListWindow:AddressListWindow;
+			public var memoListWindow:MemoViewer;
+			public var urlListWindow:WebsiteViewer;
+			public var imageListWindow:ImageViewer;
+			public var videoListWindow:VideoViewer;
+			public var soundListWindow:SoundListener;
+			public var addressListWindow:AddressViewer;
 
 			// define marginal parameters
 			protected  var colorSelector:ColorSelector;
 			
 			// Gazetteer
 			private var gazette:GazetteerType;
-			public var gazetteerWindow:GazetteerWindow;
+			public var gazetteerWindow:GazetteerViewer;
 			private var oldOrigin:Coordinate2 = new Coordinate2();
 			
 			// Dragging
@@ -1152,7 +1151,7 @@
 						
 						if (pictNo == 0 && attName != "") {
 							if (memoListWindow == null) {
-								memoListWindow = new MemoListWindow();
+								memoListWindow = new MemoViewer();
 							}
 							memoListWindow.open();
 							memoListWindow.title = "MapEditor >";
@@ -1162,7 +1161,7 @@
 						
 						if (pictNo == 1 && attName != "") {
 							if (urlListWindow == null) {
-								urlListWindow = new UrlListWindow();
+								urlListWindow = new WebsiteViewer();
 							}
 							urlListWindow.open();
 							urlListWindow.title = "MapEditor >";
@@ -1172,7 +1171,7 @@
 						
 						if (pictNo == 2 && attName != "") {
 							if (imageListWindow == null) {
-								imageListWindow = new ImageListWindow();
+								imageListWindow = new ImageViewer();
 							}
 							imageListWindow.open();
 							imageListWindow.title = "MapEditor >";
@@ -1183,7 +1182,7 @@
 						
 						if (pictNo == 3 && attName != "") {
 							if (videoListWindow == null) {
-								videoListWindow = new VideoListWindow();
+								videoListWindow = new VideoViewer();
 							}
 							videoListWindow.open();
 							videoListWindow.title = "MapEditor >";
@@ -1194,7 +1193,7 @@
 						
 						if (pictNo == 4 && attName != "") {
 							if (soundListWindow == null) {
-								soundListWindow = new SoundListWindow();
+								soundListWindow = new SoundListener();
 							}
 							soundListWindow.open();
 							soundListWindow.title = "MapEditor >";
@@ -1206,7 +1205,7 @@
 					
 					if (pictNo == 5 && attName != "") {
 						if (addressListWindow == null) {
-							addressListWindow = new AddressListWindow();
+							addressListWindow = new AddressViewer();
 						}
 						
 						addressListWindow.open();
@@ -1799,7 +1798,7 @@
 				
 				gazetteerLabel.text = file.name;
 				
-				gazetteerWindow = new GazetteerWindow();
+				gazetteerWindow = new GazetteerViewer();
 
 				gazetteerWindow.title = "MapEditor >";
 				gazetteerWindow.gazetteer = gazette;
@@ -1816,6 +1815,8 @@
 			
 			private function jumpToPosition(event:Event):void {
 				var gazetteItem:GazetteItem = gazetteerWindow.gazetteItem as GazetteItem;
+				if (gazetteItem == null) return;
+				
 				var pos:Coordinate2 = gazetteItem.position;
 								
 				drawingSpace.x = oldOrigin.x + (kitCenter.x - pos.x) * scale;

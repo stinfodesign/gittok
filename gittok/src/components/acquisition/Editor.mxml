@@ -71,6 +71,7 @@
 			public var addressWindow:AddressWindow;
 			public var memoWindow:MemoWindow;
 			public var crsEditor:CRSEditor;
+			
 			public var fromListWindow:ListWindow;
 			public var toListWindow:ListWindow;
 			
@@ -82,7 +83,7 @@
 			public var kit:Kit;
 			
 			[Bindable]
-			protected var attributeTList:ArrayList 	= new ArrayList();
+			protected var attributeTypeList:ArrayList 	= new ArrayList();
 			
 			[Bindable]
 			protected var assoAttributeList:ArrayList = new ArrayList();
@@ -401,9 +402,7 @@
 							
 				Mouse.cursor = "arrow";
 			}
-			
-			
-			
+						
 			protected function featureTypeList_changeHandler(event:IndexChangeEvent):void
 			{
 				concreteType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
@@ -426,9 +425,9 @@
 				attValueList = new ArrayList();
 				
 				//show attribute type list on "attributeGrid"
-				attributeTList = concreteType.attributeTypes;
+				attributeTypeList = concreteType.attributeTypes;
 			}
-						
+								
 			protected function associationTypeList_changeHandler(event:IndexChangeEvent):void
 			{
 				var asTypeIndex:int = associationTypeList.selectedIndex;
@@ -725,28 +724,7 @@
 			
 			protected function geometryWindowCheckFeature(event:MouseEvent):void {
 				var geom:SG_Primitive = geometryWindow.searchedGM;
-				if (geom != null) {
-					if (geom.featureID != "") {
-						var m:int = idList.length;
-						for (var i:int = 0; i < m; i++) {
-							var fid:String = idList.getItemAt(i) as String;
-							if (geom.featureID == fid) {
-								instanceIDList.selectedItem = geom.featureID.toString();
-								instanceIDList.prompt = geom.featureID.toString();
-								feature = featureSet.features[geom.featureID] as Feature;
-								//clear attribute value list on "valueGrid"
-								
-								attValueList = null;								
-								return;
-							}
-						}
-					}
-					
-					instanceIDList.selectedIndex = -1;
-					instanceIDList.prompt = "";
-					feature = null;
-					attValueList = null;
-				}
+
 			}
 			
 			protected function geometryWindowClose(event:Event):void {
@@ -922,6 +900,10 @@
 					}
 					
 					mm.value = memoWindow.memoArea.text;
+					if (mm.value.search("\"") > -1) {
+						Alert.show("Alert", "Double quotation is not allowed.", 4, this);
+						return;
+					}
 					mm.featureID = feature.id;
 					attValueList.addItem(mm);
 					
@@ -1426,7 +1408,6 @@
 
 			}
 
-
 			protected function assoDeleteValueButton_clickHandler(event:MouseEvent):void
 			{
 				if (assoAttValueList == null) {
@@ -1463,7 +1444,6 @@
 				}
 
 			}
-
 
 			protected function showAssoButton_clickHandler(event:MouseEvent):void
 			{
@@ -1521,11 +1501,20 @@
 					
 					showAssoButton.label = "clear";
 				}
-				else {
+				else { //clear
 					if (fAttType.dataType.search("SG_") > -1 || tAttType.dataType.search("SG_") > -1) {
 						if (geometryWindow != null)
 							geometryWindow.clearAnnotationLayer();
 					}
+					
+					if (fromListWindow != null) {
+						fromListWindow.selectedList.removeAll();
+					}
+					
+					if (toListWindow != null) {
+						toListWindow.selectedList.removeAll();
+					}
+					
 					showAssoButton.label = "show";	
 				}
 			}
@@ -1593,6 +1582,7 @@
 				var pxType:AttributeType = fType.getAttributeTypeByName(fType.proxyName);
 				if (fromListWindow == null) fromListWindow = new ListWindow();
 				fromListWindow.open();
+				
 				fromListWindow.addEventListener(MouseEvent.CLICK, getFromSelectedIndex);
 				fromListWindow.addEventListener(Event.CLOSE, fromListWindowClosed);
 				
@@ -1623,7 +1613,7 @@
 				var d:CharacterString = fromListWindow.dataList.getItemAt(fromListWindow.selectedIndex) as CharacterString;
 				var f:Feature = fSet.features[d.featureID];
 				if (fromFeatures.getItemIndex(f) != -1) {
-					fromListWindow.attributeList.selectedIndex = -1;
+					fromListWindow.proxyValueList.selectedIndex = -1;
 					fromListWindow.selectedItemList.selectedIndex = -1;
 					return;
 				}
@@ -1714,8 +1704,9 @@
 				var fType:FeatureType = associationType.to;
 				var pxType:AttributeType = fType.getAttributeTypeByName(fType.proxyName);
 				if (toListWindow == null) toListWindow = new ListWindow();
-				toListWindow = new ListWindow();
+				//toListWindow = new ListWindow();
 				toListWindow.open();
+
 				toListWindow.addEventListener(MouseEvent.CLICK, getToSelectedIndex);
 				toListWindow.addEventListener(Event.CLOSE, toListWindowClosed);
 				
@@ -1746,7 +1737,7 @@
 				var d:CharacterString = toListWindow.dataList.getItemAt(toListWindow.selectedIndex) as CharacterString;
 				var f:Feature = fSet.features[d.featureID];
 				if (toFeatures.getItemIndex(f) != -1) {
-					toListWindow.attributeList.selectedIndex = -1;
+					toListWindow.proxyValueList.selectedIndex = -1;
 					toListWindow.selectedItemList.selectedIndex = -1;
 					return;
 				}
@@ -1827,7 +1818,7 @@
 				if (attType.dataType == "CharacterString") {
 					var catt:CharacterString = att as CharacterString;
 					if (fromListWindow != null) {
-						fromListWindow.attributeList.selectedItem = catt;
+						fromListWindow.proxyValueList.selectedItem = catt;
 					}
 				}
 			}
@@ -1843,11 +1834,10 @@
 				if (attType.dataType == "CharacterString") {
 					var catt:CharacterString = att as CharacterString;
 					if (toListWindow != null) {
-						toListWindow.attributeList.selectedItem = catt;
+						toListWindow.proxyValueList.selectedItem = catt;
 					}
 				}
 			}
-
 			
 			protected function mergeKitButton_clickHandler(event:MouseEvent):void
 			{
@@ -1991,10 +1981,10 @@
 					kit.addressList[mad.id] = mad;
 				}
 			}
-			
-			
+		
 		]]>
 	</fx:Script>
+	
 	<fx:Declarations>
 		<s:RadioButtonGroup id="fromToGroup"/>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
@@ -2026,7 +2016,7 @@
 								skinClass="spark.skins.spark.DropDownListSkin"></s:DropDownList>
 				<mx:DataGrid id="attributeGrid" x="10" y="168" width="300" height="170"
 							 click="attributeGrid_clickHandler(event)"
-							 dataProvider="{attributeTList}" editable="false"
+							 dataProvider="{attributeTypeList}" editable="false"
 							 variableRowHeight="true">
 					<mx:columns>
 						<mx:DataGridColumn headerText="dr" dataField="derived" width="25"/>
@@ -2053,7 +2043,7 @@
 				</mx:DataGrid>
 				<s:Button id="addValueButton" x="317" y="346" width="55" height="20" label="add"
 						  click="addValueButton_clickHandler(event)"/>
-				<s:Button id="deleteValueButton" x="379" y="346" width="55" height="20"
+				<s:Button id="deleteValueButton" x="376" y="346" width="55" height="20"
 						  label="delete" click="deleteValueButton_clickHandler(event)"/>
 				<s:TextInput id="valueInput" x="319" y="120" width="158" height="20"/>
 				<s:Label x="282" y="126" text="Value"/>
@@ -2061,7 +2051,7 @@
 				<s:Label x="15" y="154" text="AttributeType List »"/>
 				<s:Label x="319" y="154" text="Attribute ID Value List »"/>
 				<s:Label x="205" y="70" text="Instance ID"/>
-				<s:Label x="416" y="374" text="Attribute"/>
+				<s:Label x="434" y="351" text="Attribute"/>
 			</s:Group>
 		</s:NavigatorContent>
 		

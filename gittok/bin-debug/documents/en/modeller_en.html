@@ -3,44 +3,54 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Application Schema Modeler</title>
-<style type="text/css">
-.mainSentence {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-}
-.FirstHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 20px;
-	font-style: normal;
-	font-weight: bold;
-}
-.secondHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 16px;
-	font-weight: bold;
-}
-.thirdHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-	font-weight:bold;
-}
-
-</style>
-<script language="javascript">
-resizeTo(600,650);
-moveTo(750,20);
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+window.resizeTo(600,650);
+window.moveTo(750,20);
 </script>
 </head>
 
 <body>
-<p class="FirstHeader">Application Schema Designer</p>
+<p class="FirstHeader">Modeler</p>
 <p class="secondHeader">Introduction</p>
-<p class="mainSentence">You will design an application schema on this page. Application schema is a formal description of the model conceptualizing real world phenomena included in the universe of discourse which is the target of your research or mission. Figure 1 is an example of simple application schema. It expresses that &quot;River&quot; has its name, shape and administrator as attributes, and you can get depth of river if you input the position.</p>
+<p class="mainSentence">This page enables the users to desgin application schemata. Application schema is a formal description of the model that conceptualize real world phenomena included in the universe of discourse as the scope of your research or mission. Figure 1 is an example of a simple application schema. It expresses that &quot;Buildingr&quot; has its name, ower's name, shape as attributes, and you can get area of the buikding by getArea operartion.</p>
 <p class="mainSentence"><img src="../figures/simpleClassDiagram.png" width="193" height="131" alt="classDiagram" /></p>
 <p class="mainSentence"><strong>Figure 1.</strong> An example of simple application schema written by UML</p>
-<p class="mainSentence">You need to know the rules of formal description of a model. Gittok uses the graphic language called UML (Unified Modeling Language) for the formal description. Usually &quot;language&quot; is used for the description of text. In case of graphic language, diagram is used to make communication with others.<br />
-  UML is widely used in the scene of information system development today as the schema language for object oriented modeling. We also describe the rules how to define application schema. In other words, we use UML to describe the schema for application schemas.<br />
-  You should know at least how to describe &quot;class diagram&quot;. You will see many UML class diagrams in gittok. These diagrams are written using UML Editor called ArgoUML. You can easily design your schema with this free software. It is rather old, because  the UML versions 1.4 and the latest version is Version 2. However the rules for class diagram is almost the same. Off course, you can use other UML tools. And you can get and read UML text books and tips on the web.</p>
-<p class="mainSentence">to be continued.</p>
+<p class="mainSentence"> Gittok uses the graphic language called UML (Unified Modeling Language) for formal descriptions of models. Usually &quot;language&quot; is used for the description of text. In case of graphic language, diagram is used to make communication with others.<br />
+  UML is widely used to develop information systems today as the schema language for object oriented modeling. We also describe the rules how to define application schema. In other words, we use UML to describe application schemas.<br />
+  You should know at least how to describe &quot;class diagram&quot;. You will see many UML class diagrams in gittok. These diagrams are written using UML Editor called ArgoUML. You can easily design your schema with this free software.However it is rather old, because  the version of UML supported by ArgoUML is 1.4 and the latest version is Version 2. However the rules for class diagram is almost the same. Off course, you can use other UML tools. And you can get and read UML text books and tips on the web.</p>
+<p class="secondHeader">General Feature Model</p>
+<p class="mainSentence">An abstraction of real world phenomena is called a feature. For example, natural phenomena such as typhoon and tsunami, artificial structures such as building and road, and imaginal objects such as national border and land use regulation are described as features.  Feature can be viewed from two different aspects. One is a type (or class), the other is an instance. For example, the proposition &quot;That is a bridge&quot; declares the thing as its type. While, &quot;That is Rainbow Bridge&quot; describes a thing as an individual, in other words, an instance of the type. General Feature Model (GFM) is a set of rules to describe feature types and their relationships. The rules <span class="mainSentence">how to describe instances are explained at the page of Editor.</span></p>
+<p class="mainSentence">UML does not specify rules for features as it is a general purpose modeling language. GFM specifies a rules to describe class diagrams for features and their relationships under UML rules using UML notation. It is called an application schema. GFM is a model of the description for application schemas. UML is a model of GFM. Thus, UML is a meta-model of application schemas.</p>
+<p class="mainSentence"><img src="../figures/GeneralFeatureModel.png" width="690" height="559" alt="GFM" /></p>
+<p class="mainSentence">Figure 2. Structure of GFM represented by UML used in gittok</p>
+<p class="secondHeader">ApplicationSchema</p>
+<p class="mainSentence">The class called ApplicationSchema in Figure 2 shows the rules for description of application schemas. It means that the instance class of the meta-class ApplicationSchema is an application schema. An application schema consists of more than one feature classes and more than zero relationships between feature classes.</p>
+<p class="mainSentence">Geographic Information System (GIS) conventionally uses analysis operations applying attributes of features to get knowledge to solve the problems. Operations and attributes are properties of a feature. We think feature with attributes and operations is the fundamental element to recognize phenomena in the world. For example, Aristotle explained the recognition of phenomena as follows.</p>
+<p class="mainSentence">Phenomena in the real world can be recognized as individual or concept. An individual is a subject of a proposition (idea, estimation, …)  and a concept is a predicate. For example, Socrates is a subject and human being is a predicate in the proposition &quot;Socrates is a human being.&quot; Aristotle called indivisual and predicate by the terms &quot;primary substance&quot; and &quot;secoundary substance&quot;. While a predicate is not only scondary substance but also quantity or qualification or a relative or where or when or being in a position or having or doing or being affected. To give a rough idea, ideas of substance are man, horse; of quantity: four foot, five foot; of qualification; white, grammatical; of a relative: double, half, larger; of where: in the Lyceum, in the market-place; of when: yesterday, last year; of being in a position: is-lying, is-sitting; of having: has-shoes-on, has-armour-on; of doing: cutting, burning; of being-affected: being-cut, being-burnt. (Aritotle, Categories, 1b25 - 2a4).</p>
+<p class="mainSentence">Both doing and being affected are operations. Having is association between other objects. quantity, qualification,being in a position, when and where are attributes. Secondary substance is a parent concept. The relationship between primary substance and secondary substance is an inheritance. Consequently, it can be said that Aristotle's theory is the underlying concepts of GFM.</p>
+<p class="thirdHeader">Attributes</p>
+<p class="mainSentence"><strong>name</strong><br />
+A name of application schema.</p>
+<p class="thirdHeader">Associations</p>
+<p class="mainSentence"><strong>featureTypes</strong><br />
+An applicaion schema may have more than one feature types.</p>
+<p class="mainSentence"><strong>associationTypes</strong><br />
+An application schema may have more than zero association types.</p>
+<p class="secondHeader">FeatureType</p>
+<p class="mainSentence">FeatureType class represents rules to describe feature type as instance of FeatureType. The name of a feature type shall be unique in an application schema. The first letter of the name of feature type shall be upper-case. While the first letter of names of properties shall be lower-case to ease to distinguish feature types and properties. </p>
+<p class="thirdHeader">Attributes</p>
+<p class="mainSentence"><strong>isAbstract</strong><br />
+  A feature type is abstract or concrete. Abstract type can not produce instances. For example, boundaries of cities, land uses, and vegetations are all &quot;boundaries&quot;. However boundary is an abstract concept and you cannot see it. This is the reason we separate types abstract and concrete. Concrete types inherit the properties of their parental concepts. If a feature type is abstract, the value will be &quot;true&quot;, otherwise &quot;false&quot;.</p>
+<p class="mainSentence"><strong>name</strong><br />
+  A name of the feature type.</p>
+<p class="mainSentence"><strong>definition</strong><br />
+  A definition of the feature type. It should be described to explain meaning of this type in the application schema (universe of discource).</p>
+<p class="mainSentence"><span class="thirdHeader">Associations</span></p>
+<p class="mainSentence"><strong>parent</strong><br />
+A feature type may inherit properties of a parental type as mentioned above. While a parent is inherited by children. Such relationship is called inheritance. The association between parent and children is a self association, because it is an association between feature types. In case of gittok, multiple inheritance is not allowed to keep the structure as simple as possible. </p>
+<p class="mainSentence"><strong>children</strong><br />
+Feature types inherit properties of a parent type are child types.</p>
+<p class="mainSentence">proxy</p>
 </body>
 </html>

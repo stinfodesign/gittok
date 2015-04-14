@@ -826,7 +826,7 @@
 			{
 				try {
 					file = new File();
-					var filter:FileFilter = new FileFilter("Portrayal Dictionary", "*.psc");
+					var filter:FileFilter = new FileFilter("Portrayal Schema", "*.psc");
 					file.addEventListener(Event.SELECT, openFile);
 					file.browseForOpen("Open file  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {

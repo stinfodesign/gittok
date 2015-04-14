@@ -14,8 +14,10 @@ window.moveTo(750,20);
 <p class="FirstHeader">Gazetteer Designer<br/>
   地名索引</p>
 <p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">はじめに</p>
 <p class="mainSentence">地図帳やガイドブックの巻末には大抵地名索引があります．地名や有名な施設の名前と，それが示されているページ，さらにはその場所を示すセルの位置 (A-3など)が一覧表の形で示されています．この 地名索引は英語で geographic index などと言いますが，gazetteerとも言います．地名辞典も，英語ではgazetteer や geographic name dictionary といいます．似た言葉として gazztte がありますが，こちらは新聞や雑誌のことをさします．しかし両者ともに，どこに何が起きているかを知らせてくれる機能をもっています．ところで，地球上の位置を示す指標を地理識別子といいます．広い意味では座標も地理識別子ですが，一般的には地名や地番など，その場所を一意に識別する符号を指します．しかし例えば「加山さんの家」といっても，親しい人にしかその場所をイメージしてもらえないので，より共通的な識別子と組み合わせで地理識別子とするといいでしょう．このような，地理識別子を集めた索引（または辞典）のことをGazetteerと呼びます．座標参照系は，連続的な数字を指標を使うので，連続的な空間参照系といえます．一方，Gazetteerは，地名や住所などの符号による空間参照の仕組みなので，離散的な空間参照系といえます．地理識別子による空間参照については，講義用スライド「09 参照系」も参考にしてください．</p>
 <p class="mainSentence">さて，Gezetteer Designer では，地物の属性になっている名前や住所などと，同じ地物の幾何属性を選択して，その中心位置をもとめ，地名索引を出力することができます．この地名索引は，MapEditor で作成された地図上で使用されます．</p>
+<p class="secondHeader">&nbsp;</p>
 <p class="secondHeader">地名索引スキーマ</p>
 <p class="mainSentence">地名索引スキーマは，二つのクラスからなります．GazetteerType は，地名索引を定義するクラスです．GazetteerItem は，地物を示す名前 (geoName) と対応する座標 (position) の組み合わせです．このアイテムの集まりはgazetteerItemList と呼ばれます．</p>
 <p class="mainSentence"><img src="../figures/GazetteerSchema.png" width="300" height="291" alt="gazetteerSchema" /></p>
@@ -29,10 +31,10 @@ window.moveTo(750,20);
 <p class="mainSentence"><strong>gazetteerItemList</strong><br />
 地名索引アイテムの集まり．これが地名索引(geographic  index) の本体を構成する．</p>
 <p class="mainSentence">&nbsp;</p>
-<p class="secondHeader">操作画面</p>
+<p class="secondHeader">Gazetteer designer</p>
 <p class="mainSentence"><img src="../figures/GazetteerDesigner.png" width="360" height="488" alt="PortrayalDesigner" /></p>
 <p class="mainSentence">図２．Gazetteer Designer の操作画面</p>
-<p class="secondHeader">表示欄</p>
+<p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Kit</strong></span><br/>
 地名索引の対象になるキットのファイル名が表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Gazetteer</strong></span><br/>
@@ -45,7 +47,7 @@ Kitに含まれる地物の型名が示されますので，ユーザは索引�
 地物を指し示す名前が表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Position</strong></span><br/>
 地物の位置を示す属性の名前が表示されます．</p>
-<p class="secondHeader">ボタン</p>
+<p class="thirdHeader">BUTTONS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>open (Kit)</strong></span><br/>
 Kit をオープンします．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>open (Gazetteer)</strong></span><br/>

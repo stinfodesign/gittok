@@ -271,7 +271,7 @@
 	<s:Label x="326" y="100" id="appSchemaName" backgroundColor="#D7D7D7" width="119" height="16" verticalAlign="middle"/>
 	<s:Label x="332" y="55" text="application schema"/>
 	<s:Label x="75" y="16" fontFamily="Arial" fontSize="16" fontWeight="normal"
-			 text="Modeller"/>
+			 text="Modeler"/>
 
 	
 

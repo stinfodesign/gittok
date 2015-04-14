@@ -29,7 +29,10 @@
 			import locationReference.GazetteItem;
 			import locationReference.GazetteerType;
 			
+			import gfm.*;
 			import math.*;
+			
+			import instanceModel.*;
 			
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
@@ -422,7 +425,7 @@
 			
 			protected function text_en_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/en/cartographer_en.html");
+				var request:URLRequest = new URLRequest("documents/en/gazetteerDesigner_en.html");
 				navigateToURL(request);
 			}
 
@@ -431,6 +434,12 @@
 	
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="Gazetteer Designer" fontSize="16"/>
+	
+	<s:Label x="261" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="302" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	
 	<s:Button id="openAPSButton" x="33" y="74" width="55" label="open"
 			  click="openKitButton_clickHandler(event)"/>	
 	<s:Label x="93" y="81" width="26" height="11" fontSize="12" text="Kit"/>
@@ -469,11 +478,5 @@
 	<s:Label x="257" y="82" text="Gazetteer"/>
 	<s:Label id="gazetteerLabel" x="194" y="99" width="139" height="20" backgroundColor="#DADADA"
 			 verticalAlign="middle"/>
-	<s:Label x="266" y="8" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
-			 buttonMode="true" click="text_jp_clickHandler(event)"/>
-	<s:Label x="307" y="10" text="English" color="#969696"
-			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:Button id="openGazetteButton" x="194" y="50" width="55" height="20" label="open"
-			  click="openGazetteButton_clickHandler(event)"/>
 	
 </s:Window>

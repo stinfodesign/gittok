@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="313" height="264"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="313" height="338"
 		  title="Cartographer"
 		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
@@ -19,6 +19,8 @@
 			public var portrayalDesigner:PortrayalDesigner;
 			public var gazetteerDesigner:GazetteerDesigner;
 			public var mapEditor:MapEditor;
+			public var listDesigner:ListDesigner;
+			public var listViewer:ListViewer;
 						
 			protected function initializeApp():void {
 				this.move(300, 400);
@@ -81,6 +83,19 @@
 				if (mapEditor.addressListWindow != null) 	mapEditor.addressListWindow.close();
 			}
 			
+			protected function ListDesignButton_clickHandler(event:MouseEvent):void
+			{
+				listDesigner = new ListDesigner();
+				
+				listDesigner.open();
+				listDesigner.title = "Cartographer >";
+				listDesigner.addEventListener(Event.CLOSING, listClose);
+			}
+			
+			private function listClose(event:Event):void {
+				
+			}
+			
 			// Text and instruction  Controls
 			protected function text_jp_clickHandler(event:MouseEvent):void
 			{
@@ -95,6 +110,22 @@
 			}
 			
 
+			protected function listingButton_clickHandler(event:MouseEvent):void
+			{
+				if (listViewer == null) {
+					listViewer = new ListViewer();
+					listViewer.open();
+					listViewer.title = "Cartographer >";
+					listViewer.addEventListener(Event.CLOSING, listViewerClose);
+					
+				}
+				
+			}
+			
+			protected function listViewerClose(event:Event):void {
+				
+			}
+			
 		]]>
 	</fx:Script>
 
@@ -117,4 +148,8 @@
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="261" y="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:Button id="ListDesignButton" x="25" y="248" width="164" height="25" label="List Schema Design"
+			  click="ListDesignButton_clickHandler(event)"/>
+	<s:Button id="listingButton" x="204" y="252" width="91" label="Listing"
+			  click="listingButton_clickHandler(event)"/>
 </s:Window>

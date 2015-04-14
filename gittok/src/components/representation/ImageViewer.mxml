@@ -134,13 +134,29 @@
 				//put imageView inside center of the panel
 				resetView();
 			}
-
+			
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/imageViewer_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/imageViewer_en.html");
+				navigateToURL(request);
+			}
 			
 		]]>
 	</fx:Script>
 	
 	<s:Image x="14" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="81" y="15" text="Images" fontSize="16"/>
+	<s:Label right="58" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
+
 	<s:Panel id="imagePanel" left="6" right="6" top="63" bottom="-2" chromeColor="#444444"
 			 color="#FFFFFF" dropShadowVisible="false"
 			 mouseDown="imagePanel_mouseDownHandler(event)"
@@ -162,5 +178,5 @@
 	<s:DropDownList id="imageList" right="5" top="37" width="224" height="20"
 					change="imageList_changeHandler(event)" dataProvider="{imageArray}"
 					labelField="value"></s:DropDownList>
-	<s:Label right="180" top="25" fontSize="11" text="Image list"/>
+	<s:Label right="234" top="43" fontSize="11" text="List"/>
 </s:Window>

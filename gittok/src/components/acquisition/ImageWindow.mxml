@@ -98,7 +98,8 @@
 					img.load(imageFile.url);
 					imageList.addItem(img);
 				}
-			}			
+			}
+			
 			private function onResize(event:Event):void {
 				// This means that image loading was completed and the image was resized, then				
 				//put imageView inside center of the panel
@@ -238,8 +239,6 @@
 					imageFilePath = imageFile.url;
 				}
 			}
-			
-
 			
 		]]>
 	</fx:Script>

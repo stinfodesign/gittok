@@ -14,12 +14,13 @@ window.moveTo(750,20);
 <body>
 <p class="FirstHeader">Symbol Style Designer</p>
 <p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Introduction</p>
 <p class="mainSentence">Map symbol is a graphic representation of a feature on a map. A symbol is designed in accordance with a symbol style, and it is classified into point, line and area. A symbol style is a rule to specify graphic attributes of a symbol, and to indicate association with other symbols, which are parts of the symbol. The symbol style schema defines the types of symbol styles. This page explains what is the Symbol Style Schema, how to create symbols on a map according to the symbol schema, and how to use Symbol Style Designer. </p>
 <p class="mainSentence">&nbsp;</p>
 <p class="secondHeader">Symbol style schema</p>
 <p class="mainSentence"><img src="../figures/SymbolStyleSchema.png" width="650" height="411" alt="SYmbolStyleSchema" /></p>
 <p class="mainSentence">Figure 1. Symbol style schema used by gittok</p>
-<p class="thirdHeader">CLASS</p>
+<p class="thirdHeader">CLASSES</p>
 <p class="mainSentence"><span class="mainSentence"><strong>SymbolStyleDictionary</strong></span><br />
   Symbol style dictionary is a class to represent  collections of point, line and area symbol styles. It has a name of the dictionary (name) as its attribute, and association to pointSymStyles, lineSymStyles, and areaSymStyles. an instance of this type is the symbol style dictionary.</p>
 <p class="mainSentence"> <span class="mainSentence"><strong>SymbolStyle</strong></span><br />
@@ -32,7 +33,7 @@ This class defines attributes of an area. They are filling color (color) and tra
 This class defines a style of a point symbol by coordinate arrays (elements) corresponding with line and area symbol styles. A coordinate array corresponding to an area symbol style shall be closed. Its interior is filled by the area symbol style. According to the Figure 1, point symbol style may have associations with other symbol styles. Actually, associations with line and area symbol styles are possible. However, it is impossible to associate with other point symbol style now. </p>
 <p class="mainSentence"><span class="mainSentence"><strong>CircleSymbolStyle</strong></span><br />
 This class defines a circle as a sub-class of AreaSymbolStyle. There is no special attribute, but a style of coordinate array is different from area symbols. This is explained in detail at the next section (Symbol Schema).</p>
-<p class="thirdHeader">ROLL NAME</p>
+<p class="thirdHeader">ROLL NAMES</p>
 <p class="mainSentence"><strong>pointSymbolStyles</strong><br />
 A collection of point symbol styles.</p>
 <p class="mainSentence"><strong>lineSymbolStyles</strong><br />
@@ -52,7 +53,7 @@ Point symbol style may have associations with other symbol styles. Actually, ass
 <p class="mainSentence">The symbol schema specifies rules for map drawing by symbols in accordance with the symbol styles. Relationship between symbol style schema and symbol schema is similar to the relationship between GFM and Instance Model. Symbol Style Schema is a meta-model and Synbol Schema is a model of symbol instances.</p>
 <p class="mainSentence"><img src="../figures/SymbolSchema.png" width="650" height="245" alt="SymbolSchema" /></p>
 <p class="mainSentence">Figure 2. Symbol Schema used by gittok</p>
-<p class="thirdHeader">CLASS</p>
+<p class="thirdHeader">CLASSES</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Sprite</strong></span><br />
 This class is provided by ActionScript V3 used for the coding of gittok. It may have more than one child graphic objects and its graphic instance can be searched by a mouse on the screen. There are explanations on a web-site of Adobe and related text books. All symbols defined in gittok are defined as sub-classes of Sprite.</p>
 <p class="mainSentence"><span class="mainSentence"><strong>LineSymbol</strong></span><br />
@@ -66,7 +67,7 @@ This class defines a circle by a center coordinate, a radius of a circle, and a 
 <p class="mainSentence">&nbsp;</p>
 <p class="secondHeader">Symbol style designer</p>
 <p class="mainSentence">See the top of Figure 2 shown below．</p>
-<p class="thirdHeader">TEXT FIELDS</p>
+<p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>symbol style schema</strong></span><br />
 A file name of the symbol style schema is displayed at this field when the schema is opened or saved. </p>
 <p class="thirdHeader">BUTTONS</p>

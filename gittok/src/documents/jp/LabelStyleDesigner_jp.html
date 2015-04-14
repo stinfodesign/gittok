@@ -14,6 +14,8 @@ window.moveTo(750,20);
 <p class="FirstHeader">Label Style Designer<br/>
   注記スタイルのデザイン
 </p>
+<p class="secondHeader">&nbsp;</p>
+<p class="secondHeader">はじめに</p>
 <p class="mainSentence">注記とは、地図上に図形で表示されている地物が何かを示す文字列のことで，英語では label とか annotation といい，地図上に注記を置くことを labelingといいます．注記を置くときは，対象となる地物との位置関係，他の注記との位置関係，そして注記となる文字列のサイズ，色，書体などに気をつけるべきです．</p>
 <p class="mainSentence">現在 gittok では，注記の位置は，とりあえず自動的に決められてしまい，後で移動することができますが，注記スタイルとしては，自由になるのはサイズ，色，及びフォントなどです．また，地物の種類，等級などによって，異なるラベリングをしないと，地物の種類を見分けることができなくなります．等級の上のものはサイズを大きくする，同じ種類のものはフォントや色を同じにする．でききるだけ色の種類は少なくすると同時に，地物の色より明度を下げるなど，注記と地物の区別が容易にできるようにするといった配慮が求められます．</p>
 <p class="mainSentence">ここでは，注記スタイルスキーマについて説明し，次にこのページの操作方法を解説します．</p>
@@ -21,20 +23,21 @@ window.moveTo(750,20);
 <p class="secondHeader">注記スタイルスキーマ</p>
 <p class="mainSentence"><img src="../figures/LabelStyleSchema.png" width="335" height="144" alt="labelStyleSchema" /></p>
 <p class="mainSentence">図１．注記スタイルスキーマのクラス図</p>
-<p class="thirdHeader">CLASS</p>
+<p class="thirdHeader">CLASSES</p>
 <p class="mainSentence"><strong>LabelStyleDictionary</strong><br />
 注記スタイル辞書は，注記スタイルが従うべき規則です．名前 (name) をもつと同時に，複数の注記スタイルと関連 (labelStyles)します．</p>
 <p class="mainSentence"><strong>LabelStyle</strong><br />
 注記スタイルは，その識別子 (id) ，名前 (name)，フォントの種類 (font) ，フォントのサイズ (fontSize)，色 (color)，太字かどうか (bold)，そして，文字列の参照位置 (reference)をもちます．この中で，参照位置とは，注記の文字列のどの場所に原点が来るかを示す番号です．例えば，左下を参照位置にしたい場合は，番号は6です．</p>
 <p class="mainSentence"><img src="../figures/LabelReference.png" width="333" height="78" alt="LabelReference" /></p>
 <p class="mainSentence">図２．注記の参照位置</p>
-<p class="thirdHeader">ROLL NAME</p>
+<p class="thirdHeader">ROLL NAMES</p>
 <p class="mainSentence"><strong>labelStyles</strong><br />
 注記スタイル辞書が保持する注記スタイルの集まり．</p>
-<p class="secondHeader">操作画面</p>
+<p class="secondHeader">&nbsp;</p>
+<p class="secondHeader">Label style designer</p>
 <p class="mainSentence"><img src="../figures/LabelStyleDesigner.png" width="480" height="456" alt="LabelDesigner" /></p>
 <p class="mainSentence">図３．Label Designerの操作画面</p>
-<p class="thirdHeader">表示欄</p>
+<p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>label style dictionary</strong></span><br/>
 注記スタイル辞書をオープンしたりセーブすると，そのファイル名が表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>name（編集可能）</strong></span><br/>
@@ -47,7 +50,7 @@ window.moveTo(750,20);
 字の太さ（普通又は太字）を指定できます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>label</strong></span><br/>
 定義された注記スタイルの一覧が表示されます．</p>
-<p class="thirdHeader">ボタン</p>
+<p class="thirdHeader">BUTTONS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>open</strong></span><br/>
 注記スタイルスキーマのファイルをオープンします．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>save</strong></span><br/>

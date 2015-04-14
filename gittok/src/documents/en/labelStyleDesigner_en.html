@@ -13,6 +13,7 @@ window.moveTo(750,20);
 <body>
 <p class="FirstHeader">Label Style Designer</p>
 <p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Introduction</p>
 <p class="mainSentence">A label put on maps is defined as a phrase or name applied to a feature for its classification. A label should be put so as to be clear which feature is annotated. Its font, size, and color should also be selected carefully. For example , the label size of important features are bigger than others. </p>
 <p class="mainSentence"> It is possible to give information to users about features, if labels are designed by classes and grades of features. A label of a feature with higher grade should be bigger than others. Too many colors prevents user’s understanding. And the position should be near from the feature so as to be clear which feature is labeled. Initially, gittok automatically put labels at the center of features. However, you can shift them to the positions you like. </p>
 <p class="mainSentence">At this page, label style schema is explained, and then method of label style design is introduced.</p>
@@ -21,14 +22,14 @@ window.moveTo(750,20);
 <p class="secondHeader">&nbsp;</p>
 <p class="mainSentence"><img src="../figures/LabelStyleSchema.png" width="335" height="144" alt="labelStyleSchema" /></p>
 <p class="mainSentence">Figure 1. Class diagram of label style schema </p>
-<p class="thirdHeader">CLASS</p>
+<p class="thirdHeader">CLASSES</p>
 <p class="mainSentence"><strong>LabelStyleDictionary</strong><br />
   This is a collection of label styles. It has a name ,and it associates to more than one label styles.</p>
 <p class="mainSentence"><strong>LabelStyle</strong><br />
 This is a class of label styles, and it has identifier (id), name, font type(font), font size (fontSize), color, weight (bold or regular), transparencey (alpha) and reference position (reference) as attributes. The reference position is an origin point of the label (Figure 2). If you want to put reference position at the lower left corner of the label, number of the reference position is 6.</p>
 <p class="thirdHeader"><img src="../figures/LabelReference.png" width="333" height="78" alt="LabelReference" /></p>
 <p class="mainSentence">Figure 2. Reference position of a label</p>
-<p class="thirdHeader"><strong>ROLL NAME</strong></p>
+<p class="thirdHeader"><strong>ROLL NAMES</strong></p>
 <p class="mainSentence"><strong>labelStyles</strong><br />
   A collection of label styles stored in the label style dictionary.</p>
 <p class="mainSentence">&nbsp;</p>
@@ -64,9 +65,5 @@ The label style is added.</p>
 <p class="mainSentence"><strong>delete</strong><br />
   Thelabel style selected on the list can be deleted.</p>
 <p class="mainSentence"></p>
-<p class="mainSentence">&nbsp;</p>
-<p class="mainSentence">&nbsp;</p>
-<p class="mainSentence">&nbsp;</p>
-<p class="mainSentence">&nbsp;</p>
 </body>
 </html>

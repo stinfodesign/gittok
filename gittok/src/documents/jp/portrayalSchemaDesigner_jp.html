@@ -13,6 +13,8 @@ window.moveTo(750,20);
 <body>
 <p class="FirstHeader">Portrayal Schema Designer<br/>
   描画スキーマのデザイン</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">はじめに</p>
 <p class="mainSentence">地図を描くためには，記号と注記のスタイルを地物の属性と関連づける必要があります．この関連付けが行われると，属性値を地図上でどのようなスタイルで表現したら良いか，gittok が判断し，地図を描画することができます．Portrayal Schema Designer は，地物の属性と，記号やラベルのスタイルの関連付けを行い，描画スキーマを出力するためにあります．</p>
 <p class="mainSentence">この作業を行うには，利用者は事前に描画スキーマについて理解すべきです．以下，描画スタイルスキーマの説明を行い，次にPortrayal Designerの操作法を解説します．</p>
 <p class="mainSentence">&nbsp;</p>
@@ -20,7 +22,7 @@ window.moveTo(750,20);
 <p class="mainSentence">描画スキーマとは，地図を描画するに当って，使用する応用スキーマ，記号スタイルスキーマと注記スタイルスキーマを使用して，地物ごとに，描画する属性とそのスタイルをしめすスキーマのことです．描画スキーマを作るためのめたモデルが下に示す一般描画モデルです．描画スキーマと一般描画モデルの関係は，応用スキーマに対する一般地物モデルの関係に似ています．</p>
 <p class="mainSentence"><img src="../figures/GPM.png" width="650" height="523" alt="GPM" /></p>
 <p class="mainSentence">図１．gittok の一般描画モデル</p>
-<p class="thirdHeader">CLASS</p>
+<p class="thirdHeader">CLASSES</p>
 <p class="mainSentence"><strong>PortrayalSchema</strong><br />
   描画スタイルスキーマ全体の最上位クラスです．使用する応用スキーマ (applicationSchema)，記号スタイルスキーマ (symbolStyleSchema) と注記スタイルスキーマ (labelStyleSchema) を示し，地物型と描画スタイルの対を保存する辞書 (fpPairs) をもちます．</p>
 <p class="mainSentence"><strong>FeaturePortrayalPair</strong><br />
@@ -40,7 +42,7 @@ window.moveTo(750,20);
 <p class="mainSentence"> <strong>gfm:AttributeType</strong><br />
   マルチメディアな属性のための情報ページで表現する地物属性の型．<br />
 </p>
-<p class="thirdHeader">ROLL NAME</p>
+<p class="thirdHeader">ROLL NAMES</p>
 <p class="mainSentence"><strong>fpUnits</strong><br />
 地物を視覚化する地物描画ユニットの集まり．</p>
 <p class="mainSentence"><strong>generalModifiers</strong><br />
@@ -148,7 +150,6 @@ You can read the tutorial written in English.</p>
 <p class="mainSentence"><strong>clear</strong><br />
   指定されているスタイルを解除します．</p>
 <p class="thirdHeader">&nbsp;</p>
-<p class="thirdHeader">情報ページni</p>
 <p class="thirdHeader">情報ページとして表示される主題属性の指定</p>
 <p class="mainSentence">地図は主に幾何属性や文字列属性の表示を行うためにある．しかし，地物は画像や動画など，マルチメディアな属性ももつので，gittokでは，その特性に合わせた表示を行う情報ページを用意している．描画スキーマでは，情報ページに表示される属性の指定を行う．</p>
 <p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_infoPage.png" width="570" height="136" alt="infoPage" /></p>

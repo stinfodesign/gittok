@@ -42,13 +42,32 @@
 				gazetteItem = gazetteer.gazetteItemList.getItemAt(index) as GazetteItem;
 			}
 			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/gazetteerViewer_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/gazetteerViewer_en.html");
+				navigateToURL(request);
+			}
+
+			
 		]]>
 	</fx:Script>
 	
 	<s:Image x="15" y="7" source="@Embed(source='images/pictRepresentation1.png')"/>
 	<s:Label x="82" y="13" fontFamily="Arial" fontSize="16" text="Gazetteer"/>
+	<s:Label x="220" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="261" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+
 	<s:List id="locList" x="36" y="93" width="238" height="173" dataProvider="{geoNameList}" 
 			click="locList_clickHandler(event)"></s:List>
-	<s:Label x="36" y="75" text="Geographic identifier"/>
+	<s:Label x="36" y="75" text="Geospatial identifiers"/>
 
 </s:Window>

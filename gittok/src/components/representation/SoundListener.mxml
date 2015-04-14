@@ -96,22 +96,40 @@
 				sndChannel.soundTransform = new SoundTransform(volume);
 			}
 			
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/soundListener_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/soundListener_en.html");
+				navigateToURL(request);
+			}
+
+			
 		]]>
 	</fx:Script>
 	<s:Image x="10" y="6" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="75" y="15" text="Sounds" fontSize="16"/>
-	<s:Button id="playSoundButton" x="109" y="109" width="54" label="play"
+	<s:Label right="58" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
+	<s:Button id="playSoundButton" x="114" y="109" width="54" label="play"
 			  click="playSoundButton_clickHandler(event)"/>
-	<s:Button id="stopSoundButton" x="233" y="109" width="54" label="stop"
+	<s:Button id="stopSoundButton" x="238" y="109" width="54" label="stop"
 			  click="stopSoundButton_clickHandler(event)"/>
-	<s:Button id="pauseSoundButton" x="171" y="109" width="54" label="pause"
+	<s:Button id="pauseSoundButton" x="176" y="109" width="54" label="pause"
 			  click="pauseSoundButton_clickHandler(event)"/>
-	<s:HSlider id="volumeSlider" x="166" y="157" width="67"
+	<s:HSlider id="volumeSlider" x="171" y="157" width="67"
 			   change="volumeSlider_changeHandler(event)" maximum="1.0" stepSize="0.01" value="0.5"/>
-	<s:Label x="182" y="142" fontSize="10" text="Volume"/>
-	<s:DropDownList id="soundList" x="71" y="73" width="254" height="20"
+	<s:Label x="187" y="142" fontSize="10" text="Volume"/>
+	<s:DropDownList id="soundList" x="76" y="73" width="254" height="20"
 				    change="soundList_changeHandler(event)"	
 					dataProvider="{soundArray}" labelField="value"></s:DropDownList>
+	<s:Label x="49" y="80" text="List"/>
 
 	
 </s:Window>

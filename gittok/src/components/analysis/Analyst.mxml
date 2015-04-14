@@ -879,9 +879,16 @@
 				
 				for (var i:int = 0; i < valueObjects.length; i++) {				
 					var vobj:* = valueObjects.getItemAt(i);
+					var vID:String = vobj.featureID;
 					
 					if (fa == "f") {
-						ftr = features.getItemAt(i) as Feature;
+						for (var j:int = 0; j < features.length; j++) {
+							var wftr:Feature = features.getItemAt(j) as Feature;
+							if (wftr.id == vID) {
+								ftr = wftr;
+								break;
+							}
+						}
 					}
 					
 					if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
@@ -917,7 +924,7 @@
 							var r:SG_Ring = s.exterior;
 							kit.ringList[r.id] = r;
 							var oc:SG_OrientableCurve;
-							for (var j:int = 0; j < r.elements.length; j++) {
+							for (j = 0; j < r.elements.length; j++) {
 								oc = r.elements.getItemAt(j) as SG_OrientableCurve;
 								kit.orientableCurveList[oc.id] = oc;
 								c = oc.original;

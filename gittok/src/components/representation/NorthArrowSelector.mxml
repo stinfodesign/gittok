@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="348" height="388"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="348" height="400"
 		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	
 	<fx:Script>
 		<![CDATA[
-			
+			import flash.filesystem.*;
+
 			public var imageSource:String;
-			
+						
 			protected function initializeApp():void {
 
 			}
@@ -24,29 +25,48 @@
 				var imageNo:int = 3 * j + i;
 				imageSource = "images/northArrow/type" + imageNo + ".png";
 			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/northArrowSelector_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/northArrowSelector_en.html");
+				navigateToURL(request);
+			}
+						
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
-	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Image x="12" y="6" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="North Arrow Selector" fontSize="16"/>
 	
-	<s:Rect x="36" y="74" width="272" height="256">
+	<s:Label x="254" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="295" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	
+	<s:Rect x="36" y="91" width="272" height="256">
 		<s:fill>
 			<s:SolidColor color="0xffffff"/>
 		</s:fill>
 	</s:Rect>
 	
-	<s:TileGroup id="northArrowTile" x="42" y="80" 
+	<s:TileGroup id="northArrowTile" x="42" y="98" 
 				 columnWidth="80" rowHeight="80" width="260" height="245" 
 				 click="northArrowTile_clickHandler(event)">
 		<s:Image source="images/northArrow/type0.png"/>
 		<s:Image source="images/northArrow/type1.png"/>
 		<s:Image source="images/northArrow/type2.png"/>
+		<s:Image source="images/northArrow/type3.png"/>
+		<s:Image source="images/northArrow/type4.png"/>		
 	</s:TileGroup>	
-
-	
-
+	<s:Label x="36" y="75" text="North arrows"/>
 </s:Window>

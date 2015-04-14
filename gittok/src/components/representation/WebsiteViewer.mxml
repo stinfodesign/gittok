@@ -39,11 +39,28 @@
 				
 				navigateToURL (new URLRequest(url.value));
 			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/websiteViewer_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/webSiteViewer_en.html");
+				navigateToURL(request);
+			}
 						
 		]]>
 	</fx:Script>
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
-	<s:Label x="77" y="15" text="URLs" fontSize="16"/>
+	<s:Label x="77" y="15" fontSize="16" text="Websites"/>
+	<s:Label right="58" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
 	<s:DropDownList id="urlList" x="73" y="65" width="205" height="20" 
 					dataProvider="{urlArray}" labelField="value"
 					change="urlList_changeHandler(event)">

@@ -14,12 +14,13 @@ window.moveTo(750,20);
 <span class="FirstHeader">Symbol Style Designer<br/>
 記号スタイルのデザイン</span>
 <p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">はじめに</p>
 <p class="mainSentence">記号とは，地図を図示するときに使用される，実世界の地物のグラフィック表現のことです．記号は，個別の記号をデザインするための記号スタイルに準拠して作成します．地図は２次元の平面なので，記号は，点，線，面に分類できます．記号スタイルは，点，線，面それぞれがどのような表示用の属性をもつか，また，他のどの記号を部分品として含むかを示します．その記号スタイルは，記号スタイルスキーマに沿って定義されます．全ての記号スタイルは，記号スタイルスキーマの規則に準拠します．ここでは，まず gittk の記号スタイルスキーマについて説明し，次に記号スタイルに従って地図上に置かれる記号の生成と記号スキーマについて解説し，最後に操作画面とそれぞれの操作法を示します．</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="secondHeader">記号スタイルスキーマ</p>
 <p><img src="../figures/SymbolStyleSchema.png" width="650" height="411" alt="SYmbolStyleSchema" /></p>
 <p class="mainSentence">図１．gittok の記号スタイルスキーマ</p>
-<p class="thirdHeader">CLASS</p>
+<p class="thirdHeader">CLASSES</p>
 <p class="mainSentence"><span class="mainSentence"><strong>SymbolStyleDictionary</strong></span><br/>
   記号スタイル辞書は，点，線そして面を表現する記号スタイルの集りです．名前 (name) をもつとともに，点，線，そして面の記号スタイルの集りであるpointSymStyle, lineSymStyle, areaSymStyleを持ちます．Symbol Style Disgnerは，この辞書を生成（インスタンス化）するためにあります．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>SymbolStyle</strong></span><br/>
@@ -32,7 +33,7 @@ window.moveTo(750,20);
 点記号スタイルは，それぞれが線，面の記号定義に対応づけられる，複数の座標列 (elements) で構成されます．面記号の定義と対応する座標列は，最後の点は始点に結ばれ，内部は面記号の定義に従って塗りつぶされます．なお，このクラス図では，点記号スタイルは，styles を通じて，他の点記号スタイルを参照できますが，gittokでは現状，それはできません．線記号スタイル，面記号スタイルへの参照は可能です．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>CircleSymbolStyle</strong></span><br />
 円記号スタイルは，面記号スタイルのサブクラスですが，独自の属性はもちません．</p>
-<p class="thirdHeader">ROLL NAME</p>
+<p class="thirdHeader">ROLL NAMES</p>
 <p class="mainSentence"><strong>pointSymbolStyles</strong><br /> 
 点記号スタイルの集まり．</p>
 <p class="mainSentence"><strong>lineSymbolStyles</strong><br />
@@ -79,10 +80,10 @@ window.moveTo(750,20);
 <p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
 You can read the tutorial written in English</p>
 <p class="FirstHeader">&nbsp;</p>
-<p class="FirstHeader">Line style stack</p>
+<p class="secondHeader">Line style stack</p>
 <p class="mainSentence"><img src="../figures/SymbolStyleDesigner_Line.png" width="458" height="516" alt="SYmbolStyleDesigner_Line" /></p>
 <p class="mainSentence">図２．線記号スタイルデザインのための画面</p>
-<p class="secondHeader">表示欄</p>
+<p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>name (編集可能)</strong></span><br/>
 線記号の名前を記入します．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>thickness (編集可能)</strong></span><br/>
@@ -95,7 +96,7 @@ You can read the tutorial written in English</p>
 <p class="mainSentence"><span class="mainSentence"><strong>line</strong></span><br/>
 登録された線記号の一覧です．</p>
 <p class="mainSentence">design</p>
-<p class="secondHeader">ボタン</p>
+<p class="thirdHeader">BUTTONS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>show</strong></span><br/>
 線記号のデザインが確認できます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>color</strong></span><br/>
@@ -117,10 +118,10 @@ Color selector が表示され，色を指定して，page を閉じると，線
 <p class="mainSentence"><span class="mainSentence"><strong>delete</strong></span><br/>
 一覧から線記号を削除します．</p>
 <p class="mainSentence">&nbsp;</p>
-<p class="FirstHeader">Area style stack</p>
+<p class="secondHeader">Area style stack</p>
 <p class="mainSentence"><img src="../figures/SymbolStyleDesigner_Area.png" width="474" height="540" alt="SymbolDesigner_Area" /></p>
 <p class="mainSentence">図４．面記号スタイルデザインのための画面</p>
-<p class="secondHeader">表示欄</p>
+<p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>name (編集可能)</strong></span><br/>
 面記号スタイルの名前を記入します．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>color</strong></span><br/>
@@ -131,7 +132,7 @@ Color selector （図３参照）が表示され，色を指定して，page を
 登録された面記号スタイルの名前が一覧表示されます．編集，更新，削除するときは，この一覧の中から面記号スタイルを選択します．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>design</strong></span><br/>
 show ボタンを押すと，編集された面記号スタイルが下にテスト表示されます．</p>
-<p class="secondHeader">ボタン</p>
+<p class="thirdHeader">BUTTONS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>select</strong></span><br/>
 面の色を指定する Color Selector をオープンします．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>add</strong></span><br/>
@@ -145,10 +146,10 @@ area 一覧に登録されている面記号スタイルを削除します．</p
 <p class="mainSentence"><span class="mainSentence"><strong>show</strong></span><br/>
 このボタンを押すと，編集した面記号スタイルをテスト表示します．</p>
 <p class="mainSentence">&nbsp;</p>
-<p class="FirstHeader">Point style stack</p>
+<p class="secondHeader">Point style stack</p>
 <p class="secondHeader"><img src="../figures/SymbolStyleDesigner_Point.png" width="458" height="516" alt="SymbolDesigner_Point" /></p>
 <p class="mainSentence">図５．点記号スタイルデザインのための画面</p>
-<p class="secondHeader">表示欄</p>
+<p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>name（編集可能）</strong></span><br/>
 ポイントシンボルの名前をここに記入します．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>mode</strong></span><br/>
@@ -163,7 +164,7 @@ area 一覧に登録されている面記号スタイルを削除します．</p
 デジタイズする面又は円のスタイルの一覧が表示されます．上の図では見えないですが，ラジオボタンでareaまたはcircleを選択すると，一覧が現れます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>point</strong></span><br/>
 点記号スタイルの名前の一覧がここに表示されます．編集したり，削除したりするときは，事前にこの中から該当するものを選択してきます．</p>
-<p class="secondHeader">ボタン</p>
+<p class="thirdHeader">BUTTONS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>line</strong></span><br/>
 このラジオボタンを押すと，右側に線記号スタイルの一覧が現れます．その中から適当なものを選ぶと，そのスタイルで線（折れ線）のデジタイズができます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>area</strong></span><br/>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="366"
+		  title="Cartographer &gt;&gt;" backgroundColor="#c5c5c5"
+		  creationComplete="initializeApp()">
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			/*
+			List Viewer is still under development!!!!!!!!!
+			*/
+			import spark.components.CheckBox;
+			
+			protected var cbox:CheckBox;
+			
+			protected function initializeApp():void {
+				cbox = new CheckBox();
+				addElement(cbox);
+				cbox.move(300,400);
+				cbox.label = "test";
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="77" y="15" text="List Viewer" fontSize="16"/>
+	<s:Label x="16" y="79" text="Feature type"/>
+	<s:Label id="featureTypeLabel" x="92" y="72" width="120" height="20" backgroundColor="#DADADA"/>
+	<s:Label x="53" y="106" text="Proxy"/>
+	<s:Label id="proxyTypeLabel" x="92" y="100" width="120" height="20" backgroundColor="#DADADA"/>
+	<s:Label x="16" y="131" text="Proxy values"/>
+	<s:List x="91" y="128" width="120" height="173" borderVisible="false"
+			contentBackgroundColor="#DADADA"></s:List>
+	<s:Label x="231" y="104" text="Attributes"/>
+
+</s:Window>

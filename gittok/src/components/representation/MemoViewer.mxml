@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="270" height="274"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="270" height="312"
 		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
@@ -38,15 +38,35 @@
 				memoArea.text = memo.value;
 			}
 			
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/memoViewer_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/memoViewer_en.html");
+				navigateToURL(request);
+			}
+
+			
 		]]>
 	</fx:Script>
 	
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="Memos" fontSize="16"/>
+	
+	<s:Label right="55" top="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label right="10" top="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+
 	<s:DropDownList id="memoList" x="66" y="65" width="196" height="20" 
 					dataProvider="{memoArray}" labelField="value"
 				    change="memoList_changeHandler(event)"></s:DropDownList>
-	<s:TextArea id="memoArea" x="7" y="90" width="254" editable="false"/>
-	<s:Label x="15" y="70" fontSize="11" text="Memo list"/>
+	<s:TextArea id="memoArea" x="7" y="119" width="254" editable="false"/>
+	<s:Label x="44" y="72" fontSize="11" text="List"/>
+	<s:Label x="9" y="103" text="Memo"/>
 </s:Window>
   

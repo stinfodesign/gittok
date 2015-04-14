@@ -84,6 +84,19 @@
 				colorSelector = null;
 			}
 			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/titleEditor_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/titleEditor_en.html");
+				navigateToURL(request);
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -92,6 +105,10 @@
 	</fx:Declarations>
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="Title Editor" fontSize="16"/>
+	<s:Label x="292" y="8" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="333" y="10" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
 	
 	<s:Rect id="backRect" x="280" y="29" width="74" height="92">
 		<s:fill>
