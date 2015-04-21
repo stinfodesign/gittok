@@ -21,12 +21,20 @@
 			
 			protected function initializeApp():void {
 				this.move(300, 400);
-				if (memoArray == null) return;
+				setMemoArray();
+			}
+			
+			public function setMemoArray():void {
+				if (memoArray == null) {
+					memoList.prompt = "";
+					memoArea.text = "";
+					return;
+				}
 				if (memoArray.length > 0) {
 					var memo:Memo = memoArray.getItemAt(0) as Memo;
 					memoList.prompt = memo.value;
 					memoArea.text = memo.value;
-				}
+				}				
 			}
 			
 			protected function memoList_changeHandler(event:IndexChangeEvent):void

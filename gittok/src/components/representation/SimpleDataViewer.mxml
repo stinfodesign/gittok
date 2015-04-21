@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="294" height="274"
+		  backgroundColor="#c5c5c5"
+		  creationComplete="initializeApp()">
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import dataTypes.place.*;
+			import dataTypes.simpleDataTypes.*;
+			import dataTypes.spatialGeometry.*;
+			
+			import flash.filesystem.*;
+			
+			import gfm.*;
+			
+			import instanceModel.*;
+			
+			import math.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			
+			[Bindable]
+			public var simpleDataArray:ArrayList;
+			
+			protected function initializeApp():void {
+				move(500,400);
+			}			
+			
+		]]>
+	</fx:Script>
+	
+	<s:Image x="14" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="81" y="15" text="Simple data" fontSize="16"/>
+	<s:List id="simpleDataList" x="30" y="88" width="232" height="128" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{simpleDataArray}" labelField="value"></s:List>
+	<s:Label id="attributeTypeLabel" x="32" y="66" width="232" height="20" verticalAlign="middle"/>
+</s:Window>

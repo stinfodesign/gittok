@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="366"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="300" height="424"
 		  title="Cartographer &gt;&gt;" backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
@@ -9,32 +9,334 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
-			/*
-			List Viewer is still under development!!!!!!!!!
-			*/
-			import spark.components.CheckBox;
+			import components.acquisition.ImageWindow;
 			
-			protected var cbox:CheckBox;
+			import dataTypes.place.*;
+			import dataTypes.simpleDataTypes.*;
+			import dataTypes.spatialGeometry.*;
 			
+			import flash.filesystem.*;
+			
+			import gfm.*;
+			
+			import instanceModel.*;
+			
+			import math.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			
+			import portrayal.list.ListSchema;
+			
+			import spark.events.IndexChangeEvent;
+			
+			protected var kit:Kit;			
+			protected var kitURL:String;
+			protected var listSchema:ListSchema;
+			protected var featureType:FeatureType;
+			protected var proxyType:AttributeType;
+			protected var featureArray:ArrayList;
+			protected var selectedFeature:Feature;
+			
+			public var imageViewer:ImageViewer;
+			public var simpleDataViewer:SimpleDataViewer;
+			public var memoViewer:MemoViewer;
+			public var addressViewer:AddressViewer;
+			public var webSiteViewer:WebsiteViewer;
+			
+			[Bindable]
+			protected var selectedAttributeList:ArrayList;
+			
+			private var file:File;
+			private var stream:FileStream;
+			
+			[Bindable]
+			protected var proxyValueArray:ArrayList;
+						
 			protected function initializeApp():void {
-				cbox = new CheckBox();
-				addElement(cbox);
-				cbox.move(300,400);
-				cbox.label = "test";
+				move(400,400);
+				
+				// Basic Types
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
+				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
+				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
+				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				
+				// Location
+				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
+				registerClassAlias("dataTypes.place.URL", URL);
+				registerClassAlias("dataTypes.place.VideoURL", VideoURL);
+				registerClassAlias("dataTypes.place.SoundURL", SoundURL);
+				registerClassAlias("dataTypes.place.Address", Address);
+				
+				// General Feature Model
+				registerClassAlias("gfm.AttributeType", AttributeType);
+				registerClassAlias("gfm.OperationType", OperationType);
+				registerClassAlias("gfm.FeatureType", FeatureType);
+				registerClassAlias("gfm.AssociationType", AssociationType);
+				registerClassAlias("gfm.ApplicationSchema", ApplicationSchema);	
+				registerClassAlias("gfm.ArgAttPair", ArgAttPair);
+				
+				// Instance Model
+				registerClassAlias("instanceModel.Kit", Kit);
+				registerClassAlias("instanceModel.FeatureSet", FeatureSet);
+				registerClassAlias("instanceModel.Feature", Feature);
+				registerClassAlias("instanceModel.Association", Association);
+				registerClassAlias("instanceModel.AssociationSet", AssociationSet);
+				
+				
+				// Geometry
+				registerClassAlias("dataTypes.spatialGeometry.SG_Point", SG_Point);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Surface", SG_Surface);
+				registerClassAlias("dataTypes.spatialGeometry.SG_OrientableCurve", SG_OrientableCurve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Primitive", SG_Primitive);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Rectangle", SG_Rectangle);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Ring", SG_Ring);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
+				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
+				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
+				
+				// Affine
+				registerClassAlias("math.AffineParam", AffineParam);
+				
+				//List Schema
+				registerClassAlias("portrayalSchema.list.ListSchema", ListSchema);	
+
+				
+								
 			}
+			
+			protected function attributeList_clickHandler(event:MouseEvent):void {
+				var fid:int = proxyValueList.selectedIndex;
+				selectedFeature = featureArray.getItemAt(fid) as Feature;
+
+				var aid:int = attributeList.selectedIndex;
+				var atType:AttributeType = selectedAttributeList.getItemAt(aid) as AttributeType;
+				var daType:String = atType.dataType;
+				
+				if (daType == "ImageURL") {
+					if (imageViewer == null) {
+						imageViewer = new ImageViewer();
+						imageViewer.open();
+						imageViewer.title = "ListViewer >";
+						imageViewer.kitURL = kitURL;					
+						imageViewer.addEventListener(Event.CLOSE, imageViewerClose);
+					}
+					
+					imageViewer.imageArray = selectedFeature.attributes[atType.name] as ArrayList;
+					imageViewer.setImageArray();
+				}
+				
+				if (daType == "CharacterString" || daType == "Real" || 
+					daType == "Integer" || daType == "Bool") {
+					if (simpleDataViewer == null) {
+						simpleDataViewer = new SimpleDataViewer();
+					}
+					simpleDataViewer.open();
+					simpleDataViewer.title = "ListViewer >";
+					simpleDataViewer.attributeTypeLabel.text = atType.name;
+					simpleDataViewer.simpleDataArray = selectedFeature.attributes[atType.name] as ArrayList;
+					simpleDataViewer.addEventListener(Event.CLOSE, simpleDataViewerClose);
+				}
+				
+				if (daType == "Memo") {
+					if (memoViewer == null) {
+						memoViewer = new MemoViewer();
+						memoViewer.open();
+						memoViewer.title = "ListViewer >";
+						memoViewer.addEventListener(Event.CLOSE, memoViewerClose);
+					}
+					memoViewer.memoArray = selectedFeature.attributes[atType.name] as ArrayList;
+					memoViewer.setMemoArray();
+				}
+				
+				if (daType == "Address") {
+					if (addressViewer == null) {
+						addressViewer = new AddressViewer();
+						addressViewer.open();		
+						addressViewer.title = "ListViewer >";
+						addressViewer.addEventListener(Event.CLOSE, addressViewerClose);
+					}
+					addressViewer.addressArray = selectedFeature.attributes[atType.name] as ArrayList;
+					addressViewer.setAddressArray();
+				}
+				
+				if (daType == "URL") {
+					if (webSiteViewer == null) {
+						webSiteViewer = new WebsiteViewer();
+						webSiteViewer.open();
+						webSiteViewer.title = "ListViewer >";
+						webSiteViewer.addEventListener(Event.CLOSE, webSiteViewerClose);
+					}
+					webSiteViewer.urlArray = selectedFeature.attributes[atType.name] as ArrayList;
+					webSiteViewer.setUrlArray();
+				} 
+			} 
+			
+			protected function imageViewerClose(event:Event):void {
+				imageViewer = null;	
+			}
+			
+			protected function simpleDataViewerClose(event:Event):void {
+				simpleDataViewer = null;
+			}
+			
+			protected function memoViewerClose(event:Event):void {
+				memoViewer = null;
+			}
+			
+			protected function addressViewerClose(event:Event):void {
+				addressViewer = null;
+			}
+			
+			protected function webSiteViewerClose(event:Event):void {
+				webSiteViewer = null;
+			}
+			
+			//Open Kit 			
+			public function openKitButton_clickHandler(event:MouseEvent):void
+			{
+				// Open kit
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
+					file.addEventListener(Event.SELECT, openKit);
+					file.browseForOpen("Open kit file", [filter]);
+					
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				}
+			}
+			
+			public function openKit(event:Event):void {
+				this.setKitOpened();
+			}
+			
+			public function setKitOpened():void {
+				stream = new FileStream();
+				try {
+					stream.open(file, FileMode.READ);
+					kit = stream.readObject() as Kit;
+					stream.close();
+				} catch(e:IOError) {
+					trace("kit open error:" + e);
+				}
+				
+				kitLabel.text = file.name;
+								
+				//Open application schema
+				var pathURL:String = file.url;
+				var pathArray:Array = pathURL.split("/");
+				kitURL = "";
+				for (var i:int = 0; i < pathArray.length - 1; i++) {
+					kitURL += pathArray[i] + "/";
+				}
+				
+				kit.applicationSchema = openApplicationSchema(kitURL, kit.applicationSchemaURL);
+			}
+
+			private function openApplicationSchema(_kitURL:String, _appURL:String):ApplicationSchema {
+				var appStream:FileStream = new FileStream();
+				var appSchema:ApplicationSchema;
+				var apsURL:String = _kitURL + _appURL;
+				file = new File();
+				file.url = apsURL;
+				try {
+					appStream.open(file, FileMode.READ);
+					appSchema = appStream.readObject();
+					appStream.close();
+				} catch(e:IOError) {
+					trace("application schema open error:" + e);
+				}
+				
+				// make concrete types
+				var fTypes:Dictionary = new Dictionary();
+				var concreteTypes:ArrayList = appSchema.constructConcreteTypes();
+				var cType:FeatureType;
+				for (var i:int = 0; i < concreteTypes.length; i++) {
+					cType = concreteTypes.getItemAt(i) as FeatureType;
+					fTypes[cType.name] = cType;
+				}
+				appSchema.featureTypes = fTypes;
+				
+				return appSchema;
+				
+			}
+			
+			protected function openListSchemaButton_clickHandler(event:MouseEvent):void
+			{
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("List Schema", "*.lsc");
+					file.addEventListener(Event.SELECT, openListSchema);
+					file.browseForOpen("Open file  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+			}
+			
+			private function openListSchema(event:Event):void {
+				listSchemaLabel.text = file.name;
+				var stream:FileStream = new FileStream();
+				
+				try {
+					stream.open(file,FileMode.READ);
+					listSchema = stream.readObject();					
+				} catch (error:IOError) {
+					trace(error.message);
+				}
+				
+				featureType = listSchema.featureType;
+				featureTypeLabel.text = featureType.name;
+				
+				proxyType = featureType.getAttributeTypeByName(featureType.proxyName);
+				proxyTypeLabel.text = proxyType.name;
+				
+				selectedAttributeList = listSchema.selectedAttributeTypes;
+				
+				var featureSet:FeatureSet = kit.featureSetArray[featureType.name] as FeatureSet;
+				proxyValueArray = new ArrayList();
+				featureArray = new ArrayList();
+				for each (var feature:Feature in featureSet.features) {
+					var attList:ArrayList = feature.attributes[proxyType.name] as ArrayList;
+					proxyValueArray.addItem(attList.getItemAt(0) as CharacterString);
+					featureArray.addItem(feature);
+				}
+				trace("feature array");
+			}		
 			
 		]]>
 	</fx:Script>
 	
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="List Viewer" fontSize="16"/>
-	<s:Label x="16" y="79" text="Feature type"/>
-	<s:Label id="featureTypeLabel" x="92" y="72" width="120" height="20" backgroundColor="#DADADA"/>
-	<s:Label x="53" y="106" text="Proxy"/>
-	<s:Label id="proxyTypeLabel" x="92" y="100" width="120" height="20" backgroundColor="#DADADA"/>
-	<s:Label x="16" y="131" text="Proxy values"/>
-	<s:List x="91" y="128" width="120" height="173" borderVisible="false"
-			contentBackgroundColor="#DADADA"></s:List>
-	<s:Label x="231" y="104" text="Attributes"/>
+	<s:Label x="27" y="118" text="Feature type"/>
+	<s:Label id="featureTypeLabel" x="27" y="133" width="120" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
+	<s:Label x="155" y="121" text="Proxy"/>
+	<s:Label id="proxyTypeLabel" x="155" y="135" width="120" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
+	<s:Label x="28" y="182" text="Proxy value list"/>
+	<s:List id="proxyValueList" x="26" y="196" width="120" height="173" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{proxyValueArray}" labelField="value"></s:List>
+	<s:Label x="158" y="181" text="Attributes"/>
+	<s:List id="attributeList" x="156" y="196" width="119" height="173" borderVisible="false"
+			click="attributeList_clickHandler(event)"
+			contentBackgroundColor="#DADADA"
+		    dataProvider="{selectedAttributeList}" labelField="name"></s:List>
+	<s:Label id="kitLabel" x="27" y="88" width="120" height="20" backgroundColor="#DADADA" lineBreak="explicit"
+			 verticalAlign="middle"/>
+	<s:Label x="87" y="68" text="Kit"/>
+	<s:Label x="215" y="69" text="List schema"/>
+	<s:Label id="listSchemaLabel" x="155" y="89" width="120" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle" lineBreak="explicit"/>
+	<s:Button id="openKitButton" x="27" y="63" width="55" height="20" label="open"
+			  click="openKitButton_clickHandler(event)"/>
+	<s:Button id="openListSchemaButton" x="155" y="64" width="55" height="20" label="open"
+			  click="openListSchemaButton_clickHandler(event)"/>
 
 </s:Window>

@@ -207,7 +207,7 @@
 				
 				stream.open(file, FileMode.WRITE);
 				listSchema = new ListSchema(); 
-				listSchema.applicationSchema = applicationSchemaFile.name;
+				listSchema.applicationSchemaURL = applicationSchemaFile.name;
 				listSchema.featureType = featureType;
 				listSchema.selectedAttributeTypes = attributeTypes4List;
 				stream.writeObject(listSchema);
@@ -242,7 +242,7 @@
 					stream.open(file,FileMode.READ);
 					listSchema = stream.readObject();
 					
-					applicationSchemaFile.nativePath    = path + listSchema.applicationSchema;
+					applicationSchemaFile.nativePath    = path + listSchema.applicationSchemaURL;
 					
 				} catch (error:IOError) {
 					trace(error.message);

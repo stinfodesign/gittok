@@ -47,6 +47,7 @@ package geoOperations
 			if (area < 0) area = -area;
 			
 			var ans:Real = new Real();
+			ans.featureID = srf.featureID;
 			ans.value = area;
 			return ans;
 		}

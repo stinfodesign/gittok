@@ -22,7 +22,11 @@
 			public var imageArray:ArrayList;
 						
 			protected function initializeApp():void {
-				this.move(300, 400);
+				this.move(500, 400);
+				setImageArray();
+			}
+			
+			public function setImageArray():void {
 				if (imageArray == null) return;
 				if (imageArray.length > 0) {
 					var imageFilePath:Object = imageArray.getItemAt(0) as Object;
@@ -32,7 +36,7 @@
 					imageView.addEventListener(Event.RESIZE, onResize);	
 					imageList.prompt = imageFilePath.value;
 					imageList.selectedIndex = 0;
-				}
+				}				
 			}
 
 			protected function imagePanel_mouseDownHandler(event:MouseEvent):void

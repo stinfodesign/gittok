@@ -666,6 +666,10 @@
 				
 				var attList:ArrayList;
 				
+				var selfFeature:Feature;
+				var toFeature:Feature;
+				var fromFeature:Feature;
+				
 				if (tabBar.selectedIndex == 0) {	//feature
 					if (instanceIDList.selectedIndex == -1) {
 						Alert.show("Select an instance before.", "Error", 4, this);
@@ -675,7 +679,7 @@
 					var selfType:FeatureType = featureTypeList.selectedItem as FeatureType;
 					var selfSet:FeatureSet = featureSetArray[selfType.name] as FeatureSet;
 					
-					var selfFeature:Feature = selfSet.features[instanceIDList.selectedItem] as Feature;
+					selfFeature = selfSet.features[instanceIDList.selectedItem] as Feature;
 					
 					for (var i:int = 0; i < operationType.arguments.length; i++) {
 						attValues = new ArrayList();
@@ -691,9 +695,10 @@
 						else { // toFeature
 							var toFType:FeatureType = argAttPair.targetType;
 							var toFSet:FeatureSet = featureSetArray[toFType.name] as FeatureSet;
-							for each(var toFeature:Feature in toFSet.features) {	// a feature may associate with more than one other features
-								if (toFeature.typeName == toFType.name) {
-									attList = toFeature.attributes[attName];	// arraylist of attribute values
+							for each(var toF:Feature in toFSet.features) {	// a feature may associate with more than one other features
+								if (toF.typeName == toFType.name) {
+									attList = toF.attributes[attName];	// arraylist of attribute values
+									toFeature = toF;
 								}
 								if (attList == null) {
 									return;	
@@ -719,7 +724,7 @@
 						if (argAttPair.fromTo == "from") {
 							// in case "from"
 							for (var j:int = 0; j < fromInstanceArray.length; j++) {
-								var fromFeature:Feature = fromInstanceArray.getItemAt(j) as Feature;
+								fromFeature = fromInstanceArray.getItemAt(j) as Feature;
 								attList = fromFeature.attributes[attName] as ArrayList;
 								if (attList == null) {
 									alertStr = "Attribute " + association.typeName + "." + attName+ " is null."
@@ -782,7 +787,12 @@
 					
 					var fType:FeatureType = applicationSchema.featureTypes[feature.typeName] as FeatureType;					
 					if (operationType.returnFATypeName == fType.name) {
-						// atribute in a feature itself 
+						// atribute in a feature itself
+						for (var k:int = 0; k < attValueList.length; k++) {
+							var att:* = attValueList.getItemAt(k);
+							att.featureID = feature.id;
+							attValueList.setItemAt(att, k);
+						}
 						feature.attributes[operationType.returnAttributeName] = attValueList;
 						
 					}
@@ -791,7 +801,9 @@
 						i = 0;
 						for each(wf in featureSet.features) {
 							attList = new ArrayList();
-							attList.addItem(attValueList.getItemAt(i));
+							att = attValueList.getItemAt(i);
+							att.featureID = wf.id;
+							attList.addItem(att);
 							wf.attributes[operationType.returnAttributeName] = attList;
 							kit.featureList[wf.id] = wf;
 							i += 1;
@@ -815,6 +827,9 @@
 						for (i = 0; i < association.relateFrom.length; i++) {
 							wf = association.relateFrom.getItemAt(i) as Feature;
 							attList = new ArrayList();
+							att = attValueList.getItemAt(i);
+							att.featureID = wf.id;
+							attList.addItem(att);
 							attList.addItem(attValueList.getItemAt(i));
 							wf.attributes[operationType.returnAttributeName] = attList;
 							kit.featureList[wf.id] = wf;
@@ -832,6 +847,9 @@
 						for (i = 0; i < association.relateTo.length; i++) {
 							wf = association.relateTo.getItemAt(i) as Feature;
 							attList = new ArrayList();
+							att = attValueList.getItemAt(i);
+							att.featureID = wf.id;
+							attList.addItem(att);
 							attList.addItem(attValueList.getItemAt(i));
 							wf.attributes[operationType.returnAttributeName] = attList;
 							kit.featureList[wf.id] = wf;
@@ -845,7 +863,10 @@
 					else if (assoType.name == operationType.returnFATypeName) {
 						// return value to "self" as an association
 						attValueList = this.setAttValueList("a", valueObject, null, association);
-						
+						/*
+						ATtribute instance has featureID but not associationID
+						Application should be reconsidered when to get association from its attribute.
+						*/
 						association.attributes[operationType.returnAttributeName] = attValueList;
 						for (i = 0; i < assoType.attributeTypes.length; i++) {
 							attType = assoType.attributeTypes.getItemAt(i) as AttributeType;
@@ -860,7 +881,7 @@
 				resetDrawing();
 				
 			}
-			
+						
 			protected function setAttValueList(fa:String, valueObject:*, 
 											   features:ArrayList, association:Association = null):ArrayList {
 				var valueObjects:ArrayList = new ArrayList();
@@ -882,6 +903,7 @@
 					var vID:String = vobj.featureID;
 					
 					if (fa == "f") {
+						
 						for (var j:int = 0; j < features.length; j++) {
 							var wftr:Feature = features.getItemAt(j) as Feature;
 							if (wftr.id == vID) {
@@ -889,7 +911,9 @@
 								break;
 							}
 						}
+						
 					}
+					
 					
 					if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
 						var geom:SG_Primitive = vobj as SG_Primitive;

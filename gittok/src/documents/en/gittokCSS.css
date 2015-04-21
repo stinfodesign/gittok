@@ -1,6 +1,8 @@
 @charset "UTF-8";
 /* CSS Document */
-
+p {
+	line-height:180%
+}
 .mainSentence {
 	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
 	font-size: 12px;
