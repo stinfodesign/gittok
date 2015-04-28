@@ -52,7 +52,8 @@ window.moveTo(750,20);
 <p class="mainSentence"><strong>featureTypes</strong><br />
 応用スキーマは一つ以上の地物型をもつ．</p>
 <p class="mainSentence"><strong>associationTypes</strong><br />
-応用スキーマは複数の地物関連型をもつことがある．Phenomena in the real world can be recognized as individual or concept. An individual is a subject of a proposition (idea, estimation, …)  and a concept is a predicate. For example, Socrates is a subject and human being is a predicate in the proposition &quot;Socrates is a human being.&quot; Aristotle called indivisual and predicate by the terms &quot;primary substance&quot; and &quot;secoundary substance&quot;. While a predicate is not only scondary substance but also quantity or qualification or a relative or where or when or being in a position or having or doing or being affected. To give a rough idea, ideas of substance are man, horse; of quantity: four foot, five foot; of qualification; white, grammatical; of a relative: double, half, larger; of where: in the Lyceum, in the market-place; of when: yesterday, last year; of being in a position: is-lying, is-sitting; of having: has-shoes-on, has-armour-on; of doing: cutting, burning; of being-affected: being-cut, being-burnt. (Aritotle, Categories, 1b25 - 2a4).</p>
+応用スキーマは複数の地物関連型をもつことがある．</p>
+<p class="mainSentence">Phenomena in the real world can be recognized as individual or concept. An individual is a subject of a proposition (idea, estimation, …)  and a concept is a predicate. For example, Socrates is a subject and human being is a predicate in the proposition &quot;Socrates is a human being.&quot; Aristotle called indivisual and predicate by the terms &quot;primary substance&quot; and &quot;secoundary substance&quot;. While a predicate is not only scondary substance but also quantity or qualification or a relative or where or when or being in a position or having or doing or being affected. To give a rough idea, ideas of substance are man, horse; of quantity: four foot, five foot; of qualification; white, grammatical; of a relative: double, half, larger; of where: in the Lyceum, in the market-place; of when: yesterday, last year; of being in a position: is-lying, is-sitting; of having: has-shoes-on, has-armour-on; of doing: cutting, burning; of being-affected: being-cut, being-burnt. (Aritotle, Categories, 1b25 - 2a4).</p>
 <p class="mainSentence">Both doing and being affected are operations. Having is association between other objects. quantity, qualification,being in a position, when and where are attributes. Secondary substance is a parent concept. The relationship between primary substance and secondary substance is an inheritance. Consequently, </p>
 <p class="mainSentence"></p>
 <p id="FEA" class="secondHeader">地物型 (FeatureType)</p>
@@ -122,12 +123,12 @@ window.moveTo(750,20);
 <p class="mainSentence"><span class="mainSentence"><strong>unit</strong></span><br />
 属性値が計量単位をもつ場合は，任意の文字列で指定します．gittok では，計算にあたり，単位のチェックはしませんので，気をつけてください．</p>
 <p class="mainSentence">ところで，属性のデータ型は，以下に示す空間属性型，時間属性型，場所属性型及び主題属性型に分類できます．</p>
-<p class="mainSentence">空間属性型 (Spatial attribute type) ：空間的な性質（位置，形状）．２次元の幾何空間では，点 (SG_Point)，曲線 (SG_Curve) 及び曲面 (SG_Surface) などの型がこれにあたります．ここでSG_という接頭辞は空間の幾何 (Spatial Geometry) という意味です．</p>
-<p class="mainSentence">時間属性型 (Temporal attribute type) ：時間的な性質（時点，継続期間）．１次元の時間幾何空間では，瞬間 (TG_Instance), 期間 (TG_Period)がこれにあたります．<strong>現状，gittok では，時間属性を利用することはできません．</strong></p>
-<p class="mainSentence">場所属性型 (Place attribute type) ：空間属性も時間属性も，ある空間の中を占める場所を示しますが，間接的に場所を示すのがこの属性です．住所，郵便番号，地番のような地理的な場所を示す情報は地理識別子 (geographic identifier) と呼ばれます．また，URLのように，仮想的な空間の場所を示す情報も，場所属性として扱います．gittokでは，場所属性として，住所 (address)，WebサイトのURL，画像URL (ImageLocation)，映像URL (VideoLoation)，音声URL (SoundLocation)を利用できるようにしています．実世界の中の場所や仮想世界の中の場所を合わせて，Placeと呼びますが，gittok では，実空間及び仮想空間中の場所をあわせて Place 属性と呼びます．ちなみにISO/TC 211が制定している ISO 19155: 2012 - Place identifier (PI) architectureでもplace を&quot;identifiable part of any space&quot;と定義しています．</p>
-<p class="mainSentence">主題属性型 (Thematic attribute type) ：主題とは，情報の意図，題目を端的に示す言葉を指しますが，ここではその地物を端的に示す言葉という意味でとらえます．空間，時間，場所以外の，その地物を端的に示す属性は主題属性と呼ばれ，名前，サイズ，色，材質など，論議領域によって，様々な属性が考えられます．</p>
+<p class="mainSentence">空間属性型 (Spatial data type) ：空間的な性質（位置，形状）．２次元の幾何空間では，点 (SG_Point)，曲線 (SG_Curve) 及び曲面 (SG_Surface) などの型がこれにあたります．ここでSG_という接頭辞は空間の幾何 (Spatial Geometry) という意味です．</p>
+<p class="mainSentence">時間属性型 (Temporal data type) ：時間的な性質（時点，継続期間）．１次元の時間幾何空間では，瞬間 (TG_Instance), 期間 (TG_Period)がこれにあたります．<strong>現状，gittok では，時間属性を利用することはできません．</strong></p>
+<p class="mainSentence">場所属性型 (Place data type) ：空間属性も時間属性も，ある空間の中を占める場所を示しますが，間接的に場所を示すのがこの属性です．住所，郵便番号，地番のような地理的な場所を示す情報は地理識別子 (geographic identifier) と呼ばれます．また，URLのように，仮想的な空間の場所を示す情報も，場所属性として扱います．gittokでは，場所属性として，住所 (address)，WebサイトのURL，画像URL (ImageLocation)，映像URL (VideoLoation)，音声URL (SoundLocation)を利用できるようにしています．実世界の中の場所や仮想世界の中の場所を合わせて，Placeと呼びますが，gittok では，実空間及び仮想空間中の場所をあわせて Place 属性と呼びます．ちなみにISO/TC 211が制定している ISO 19155: 2012 - Place identifier (PI) architectureでもplace を&quot;identifiable part of any space&quot;と定義しています．</p>
+<p class="mainSentence">主題属性型 (Thematic data type) ：主題とは，情報の意図，題目を端的に示す言葉を指しますが，ここではその地物を端的に示す言葉という意味でとらえます．空間，時間，場所以外の，その地物を端的に示す属性は主題属性と呼ばれ，名前，サイズ，色，材質など，論議領域によって，様々な属性が考えられます．</p>
 <p class="mainSentence">ここで紹介した様々な属性については，Attribute Type Designer の項で、より詳細な解説を行います．</p>
-<p id="OPE" class="secondHeader">操作型 (OperationType)</p>
+<p id="OPE" class="mainSentence">操作型 (OperationType)</p>
 <p class="mainSentence">操作 (operation) は，on demand な属性とも考えられます．例えば，建物の形を示す多角形を与えられて，その建物の面積を返すとか，ネットワーク，出発点，目的地を与えられて，最短経路を示す曲線を返すとか，ある地域を指定して，その地域と最も類似の特性をもつ地域を返すとか，様々な操作が考えられます．これらの操作に地球上の位置が関係する場合は，空間解析 (Spatial Analysis) ともいわれます．操作は，その名前，入力される引数 (argument) 及び戻り値の型 (returnType) などで定義されます．また，戻り値が入る属性を指定することができますが，このような属性は派生属性と呼ばれます．</p>
 <p class="mainSentence">操作を実行するプログラムは，必要に応じて様々な地物の操作として共有できるとよいでしょう．そこで，あらかじめ操作を実行するためのプログラムを作成しておき，その引数と戻り値が，地物型がもつどの属性に対応するかを選択することによって，実際の操作が実行できるようにすると便利です．gittok では，操作に ArgAttPair を参照し，そこに，あらかじめ決められた操作の引数 (argumentType)と，地物の属性 (attributeType)との対を定義しておくようにします．</p>
 <p class="mainSentence"><span class="thirdHeader">属性</span><br/>
@@ -143,7 +144,7 @@ window.moveTo(750,20);
 操作の結果がもつデータ型です．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>returnAttributeName</strong></span><br />
 操作の結果を収納する属性の名前です．この属性は上記のreturnTypeを型としなければいけません．</p>
-<p class="mainSentence">操作が実行され，戻り値が得られると，gittok はreturnFATypeID を使って，応用スキーマから戻り値が入る地物型または関連型の定義を得ます．そして，returnAttributeType を見て，データ型が一致することを確認した上で，returnAttributeName が示す変数に，戻り値を確認します．</p>
+<p class="mainSentence">操作が実行され，戻り値が得られると，gittok はreturnFATypeID を使って，応用スキーマから戻り値が入る地物型または関連型の定義を得ます．そして，returnAttributeType を見て，データ型が一致することを確認した上で，returnAttributeName が示す変数に，戻り値を格納します．</p>
 <p class="mainSentence"><span class="thirdHeader">関連</span><br/>
 </p>
 <p class="mainSentence"><strong>arguments</strong><span class="thirdHeader"><br />

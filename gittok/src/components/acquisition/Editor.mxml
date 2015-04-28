@@ -723,8 +723,11 @@
 			}
 			
 			protected function geometryWindowCheckFeature(event:MouseEvent):void {
-				var geom:SG_Primitive = geometryWindow.searchedGM;
-
+				if (geometryWindow.searchedGM != null) {
+					var id:String = geometryWindow.searchedGM.featureID;
+					feature = featureSet.features[id] as Feature;
+					instanceIDList.selectedIndex = idList.getItemIndex(id);
+				}
 			}
 			
 			protected function geometryWindowClose(event:Event):void {
