@@ -227,7 +227,14 @@
 						
 			private function callAppStream(event:Event):void {
 				
-				kit = new Kit();
+				if(kit == null) kit = new Kit();
+				/* 
+				   There is the case kit is not null, 
+				   because the name of application schema is not correct
+				   but the conceptual model is the same.
+				   It may happen when the member of the group dieigitzes 
+				   a part of whole area.
+				*/
 				var pathURL:String = apsFile.url;
 				var pathArray:Array = pathURL.split("/");
 				kitURL = "";
@@ -732,15 +739,17 @@
 			
 			protected function geometryWindowClose(event:Event):void {
 				// Collect newest geometries
-				
-				kit = geometryWindow.kit;
-				
-				if (kit.affineParam == null) {
-					Alert.show("Alert", "Geometry entry is not completed.", 4, this);
-					kit = new Kit();
-					kit.applicationSchemaURL = appSchemaLabel.text
-				}
-
+				/*
+				if (geometryWindow != null) {
+					kit = geometryWindow.kit;
+					if (kit.affineParam == null) {
+						Alert.show("Alert", "Geometry entry is not completed.", 4, this);
+						kit = new Kit();
+						kit.applicationSchemaURL = appSchemaLabel.text
+					}
+					geometryWindow = null;
+				}				
+				*/
 				geometryWindow = null;
 				Mouse.cursor = "arrow";
 			}
@@ -1604,7 +1613,7 @@
 			}
 			
 			protected function getFromSelectedIndex(event:Event):void {
-				if (fromListWindow.selectedIndex == -1) return;
+				if (fromListWindow.proxyValueList.selectedIndex == -1) return;
 				
 				var crp:String = associationType.correspondence;
 				if ((crp == "1:1" || crp == "1:n") && fromFeatures.length == 1) {
@@ -1613,7 +1622,7 @@
 				}
 				
 				var fSet:FeatureSet = kit.featureSetArray[associationType.from.name] as FeatureSet;
-				var d:CharacterString = fromListWindow.dataList.getItemAt(fromListWindow.selectedIndex) as CharacterString;
+				var d:CharacterString = fromListWindow.dataList.getItemAt(fromListWindow.proxyValueList.selectedIndex) as CharacterString;
 				var f:Feature = fSet.features[d.featureID];
 				if (fromFeatures.getItemIndex(f) != -1) {
 					fromListWindow.proxyValueList.selectedIndex = -1;
@@ -1983,6 +1992,45 @@
 				for each (var mad:Address in mkit.addressList) {
 					kit.addressList[mad.id] = mad;
 				}
+				
+				if (tabBar.selectedIndex == 0) {
+					// feature
+					concreteType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
+					featureSet = kit.featureSetArray[concreteType.name] as FeatureSet;
+
+					if (featureSet != null) {
+						if (idList == null) idList = new ArrayList();	// idList is a dataprovider for instanceIDList
+						var features:Dictionary = featureSet.features;
+						var m:int = 0;
+						for each (var feature:Feature in features) {
+							idList.addItem(feature.id);	
+							m++;
+						}
+					}
+				}
+				else {
+					// association
+					associationType = associationTypes.getItemAt(associationTypeList.selectedIndex) as AssociationType;
+					associationSet = kit.associationSetArray[associationType.name] as AssociationSet;
+					
+					if (associationSet != null) {
+						if (assIdList == null) assIdList = new ArrayList();
+						var associations:Dictionary = associationSet.associations;
+						m = 0;
+						for each (var association:Association in associations) {
+							assIdList.addItem(association.id);
+							m++;	
+						}
+					}
+				}
+				
+				if (geometryWindow != null) {
+					kit = geometryWindow.kit;
+					
+					Mouse.cursor = "arrow";
+					geometryWindow.close();
+				}
+				
 			}
 		
 		]]>

@@ -1182,6 +1182,7 @@
 			
 			protected function lineSymGrid4Area_clickHandler(event:MouseEvent):void
 			{
+				return;
 				if (lineSymGrid4Area.selectedIndex != -1) 
 					lineSymGrid4Area.selectedIndex = -1;
 					

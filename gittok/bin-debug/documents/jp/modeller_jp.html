@@ -128,7 +128,7 @@ window.moveTo(750,20);
 <p class="mainSentence">場所属性型 (Place data type) ：空間属性も時間属性も，ある空間の中を占める場所を示しますが，間接的に場所を示すのがこの属性です．住所，郵便番号，地番のような地理的な場所を示す情報は地理識別子 (geographic identifier) と呼ばれます．また，URLのように，仮想的な空間の場所を示す情報も，場所属性として扱います．gittokでは，場所属性として，住所 (address)，WebサイトのURL，画像URL (ImageLocation)，映像URL (VideoLoation)，音声URL (SoundLocation)を利用できるようにしています．実世界の中の場所や仮想世界の中の場所を合わせて，Placeと呼びますが，gittok では，実空間及び仮想空間中の場所をあわせて Place 属性と呼びます．ちなみにISO/TC 211が制定している ISO 19155: 2012 - Place identifier (PI) architectureでもplace を&quot;identifiable part of any space&quot;と定義しています．</p>
 <p class="mainSentence">主題属性型 (Thematic data type) ：主題とは，情報の意図，題目を端的に示す言葉を指しますが，ここではその地物を端的に示す言葉という意味でとらえます．空間，時間，場所以外の，その地物を端的に示す属性は主題属性と呼ばれ，名前，サイズ，色，材質など，論議領域によって，様々な属性が考えられます．</p>
 <p class="mainSentence">ここで紹介した様々な属性については，Attribute Type Designer の項で、より詳細な解説を行います．</p>
-<p id="OPE" class="mainSentence">操作型 (OperationType)</p>
+<p id="OPE" class="mainSentence"><span class="secondHeader">操作型 (OperationType)</span></p>
 <p class="mainSentence">操作 (operation) は，on demand な属性とも考えられます．例えば，建物の形を示す多角形を与えられて，その建物の面積を返すとか，ネットワーク，出発点，目的地を与えられて，最短経路を示す曲線を返すとか，ある地域を指定して，その地域と最も類似の特性をもつ地域を返すとか，様々な操作が考えられます．これらの操作に地球上の位置が関係する場合は，空間解析 (Spatial Analysis) ともいわれます．操作は，その名前，入力される引数 (argument) 及び戻り値の型 (returnType) などで定義されます．また，戻り値が入る属性を指定することができますが，このような属性は派生属性と呼ばれます．</p>
 <p class="mainSentence">操作を実行するプログラムは，必要に応じて様々な地物の操作として共有できるとよいでしょう．そこで，あらかじめ操作を実行するためのプログラムを作成しておき，その引数と戻り値が，地物型がもつどの属性に対応するかを選択することによって，実際の操作が実行できるようにすると便利です．gittok では，操作に ArgAttPair を参照し，そこに，あらかじめ決められた操作の引数 (argumentType)と，地物の属性 (attributeType)との対を定義しておくようにします．</p>
 <p class="mainSentence"><span class="thirdHeader">属性</span><br/>
@@ -138,13 +138,13 @@ window.moveTo(750,20);
 </p>
 <p class="mainSentence"><span class="mainSentence"><strong>name</strong></span><br />
 操作の名前です．</p>
-<p class="mainSentence"><span class="mainSentence"><strong>returnFATypeID</strong></span> <br />
-戻り値が所属する地物または関連の型のIDです．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>returnFATypeName</strong></span> <br />
+戻り値が所属する地物または関連の型の名前です．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>returnAttributeType</strong></span><br />
 操作の結果がもつデータ型です．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>returnAttributeName</strong></span><br />
 操作の結果を収納する属性の名前です．この属性は上記のreturnTypeを型としなければいけません．</p>
-<p class="mainSentence">操作が実行され，戻り値が得られると，gittok はreturnFATypeID を使って，応用スキーマから戻り値が入る地物型または関連型の定義を得ます．そして，returnAttributeType を見て，データ型が一致することを確認した上で，returnAttributeName が示す変数に，戻り値を格納します．</p>
+<p class="mainSentence">操作が実行され，戻り値が得られると，gittok はreturnFATypeName を使って，応用スキーマから戻り値が入る地物型または関連型の定義を得ます．そして，returnAttributeType を見て，データ型が一致することを確認した上で，returnAttributeName が示す変数に，戻り値を格納します．</p>
 <p class="mainSentence"><span class="thirdHeader">関連</span><br/>
 </p>
 <p class="mainSentence"><strong>arguments</strong><span class="thirdHeader"><br />
@@ -155,17 +155,19 @@ window.moveTo(750,20);
 </p>
 <p class="mainSentence"><span class="mainSentence"><strong>fromTo</strong></span> <br />
 この属性は，引数と対応する地物属性が，自身が含まれる地物ないし関連に含まれる場合は&quot;self&quot;，関連の操作の場合は，from地物に含まれる場合は &quot;from&quot;，to地物に含まれる場合は &quot;to&quot; になります．</p>
+<p class="mainSentence"> <span class="mainSentence"><strong>targetType</strong></span><br />
+  この引数と属性の対を作成するにあたり，実際の値をもってくる地物の型をここに記録しておきます．</p>
 <p class="mainSentence"><span class="thirdHeader">関連</span><br/>
 </p>
 <p class="mainSentence"><span class="mainSentence"><strong>argumentType</strong></span><br />
 操作の引数は名前，データ型，多重度及び単位で定義できますので，それ自体が属性型をとります．この関連は，引数を定義する属性型への関連です．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>attributeType</strong></span><br />
 引数に対応する，地物又は関連の属性を示す属性型への関連です．</p>
-<p class="mainSentence">引数に対応する属性は，引数を含む地物（関連）のものか，from側の地物のものか，to側の地物のものかが分かるようにしておきます．例えば，建物と，その前面にある道路上にある街路灯までの距離をもとめる，という操作を distanceStoP という関連型がもっているとします．このとき，この操作は，建物の形状 (from) と街路灯の位置 (to) を引数にして，長さを求め，それを関連の属性としての「距離」とするでしょう．</p>
+<p class="mainSentence">引数に対応する属性は，引数を含む地物（関連）のものか，from側の地物のものか，to側の地物のものかが分かるようにしておきます．例えば，建物と，近くにある川岸までの距離をもとめる，という操作を distanceStoP という関連型がもっているとします．このとき，この操作は，建物の形状 (from) と川岸の形状 (to) を引数にして，長さを求め，それを関連の属性としての「距離」とするでしょう．</p>
 <p class="mainSentence">操作の種類や空間解析については Analyst ページで、より詳細の説明を行います．</p>
 <p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p class="secondHeader">Modeler ページ の操作</p>
+<p class="secondHeader">Modeler ページ </p>
 <p><img src="../figures/Modeler.png" width="469" height="292" alt="modeler" /></p>
 <p class="mainSentence">図３．Modeler ページの操作画面</p>
 <p class="mainSentence">上に示した図3は，GFMの中心となる地物型及び関連型，言い換えれば，地物及び関連を定義する上でのルールの骨子を示しています．地物型は親子の継承関係をもつことができ，親がある場合は一つに限るけれど，子となる地物型は複数あってもよいことが，地物型の自己関連によって，示されています．また，地物型は関連型を通じて別の地物型と関連の関係をもつことができます．そのことは，linksとlinkedByという役割で明示されています．一方関連型は，一つの地物型から (from) 別の一つの地物型に (to)関連することを示すことができます．</p>

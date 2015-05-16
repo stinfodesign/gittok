@@ -764,10 +764,7 @@
 				
 				// for coordinate conversion from screen to plane
 				argObj["affineParam"] = kit.affineParam;
-				
-				// target feature or association id and attribute name
-				
-				
+								
 				/* 
 				EXECUTE THE OPERATION!!!
 				*/
@@ -778,11 +775,8 @@
 				attValueList = new ArrayList();
 				
 				if (tabBar.selectedIndex == 0) {	//feature	
-					var wFeatureSet:FeatureSet = featureSetArray[operationType.returnFATypeName] as FeatureSet;
 					var fList:ArrayList = new ArrayList();
-					for each(var wf:Feature in wFeatureSet.features) {
-						fList.addItem(wf);	
-					}
+					fList.addItem(feature);
 					attValueList = this.setAttValueList("f", valueObject, fList);
 					
 					var fType:FeatureType = applicationSchema.featureTypes[feature.typeName] as FeatureType;					
@@ -799,7 +793,7 @@
 					else {
 						// attribute in from or to-features
 						i = 0;
-						for each(wf in featureSet.features) {
+						for each(var wf:Feature in featureSet.features) {
 							attList = new ArrayList();
 							att = attValueList.getItemAt(i);
 							att.featureID = wf.id;
@@ -850,7 +844,6 @@
 							att = attValueList.getItemAt(i);
 							att.featureID = wf.id;
 							attList.addItem(att);
-							attList.addItem(attValueList.getItemAt(i));
 							wf.attributes[operationType.returnAttributeName] = attList;
 							kit.featureList[wf.id] = wf;
 						}
@@ -861,12 +854,7 @@
 
 					}
 					else if (assoType.name == operationType.returnFATypeName) {
-						// return value to "self" as an association
 						attValueList = this.setAttValueList("a", valueObject, null, association);
-						/*
-						ATtribute instance has featureID but not associationID
-						Application should be reconsidered when to get association from its attribute.
-						*/
 						association.attributes[operationType.returnAttributeName] = attValueList;
 						for (i = 0; i < assoType.attributeTypes.length; i++) {
 							attType = assoType.attributeTypes.getItemAt(i) as AttributeType;
@@ -878,12 +866,14 @@
 				}
 												
 				// Reset graphics 
-				resetDrawing();
-				
+				resetDrawing();	
 			}
 						
 			protected function setAttValueList(fa:String, valueObject:*, 
 											   features:ArrayList, association:Association = null):ArrayList {
+				/*
+				Return value should be an attribute of one feature or one association.
+				*/
 				var valueObjects:ArrayList = new ArrayList();
 				var attValueList:ArrayList = new ArrayList();
 				
@@ -903,7 +893,7 @@
 					var vID:String = vobj.featureID;
 					
 					if (fa == "f") {
-						
+						/*	
 						for (var j:int = 0; j < features.length; j++) {
 							var wftr:Feature = features.getItemAt(j) as Feature;
 							if (wftr.id == vID) {
@@ -911,7 +901,8 @@
 								break;
 							}
 						}
-						
+						*/
+						ftr = features.getItemAt(0) as Feature;
 					}
 					
 					
@@ -948,7 +939,7 @@
 							var r:SG_Ring = s.exterior;
 							kit.ringList[r.id] = r;
 							var oc:SG_OrientableCurve;
-							for (j = 0; j < r.elements.length; j++) {
+							for (var j:int = 0; j < r.elements.length; j++) {
 								oc = r.elements.getItemAt(j) as SG_OrientableCurve;
 								kit.orientableCurveList[oc.id] = oc;
 								c = oc.original;

@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>無題ドキュメント</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<p class="FirstHeader">Feature Type Designer</p>
+<p class="mainSentence">Designing method of feature types is introduced in this page. As already mentioned at Modeler page, feature type may define more thane attribute types and operation types as its properties. A feature type may inherit properties of a parent feature type. And a feature type associates with other feature types through association types. For example, an association from &quot;Road&quot; to &quot;Bridge&quot; may be represented by &quot;RtoB&quot; association. Road links RtoB as a from-feature type, and  Bridge is linked by RtoB as a to-feature type.</p>
+<p class="mainSentence">A feature type is an abstract type or a concrete type. Abstract type can not create instances. While, concrete type may create instances. For example, in the land-use planning, zoning is used to lead better environment. In Japan, zone types for land-use planning in a city are separated into home district, business district,  and industry district. These districts inherit properties of &quot;use district&quot;. Use district has attributes for the land use restriction such as classification of building built in the district, building height restriction, plot (floor-space) ratio, building-to-land ratio and so on. These attributes are inherited by home, business and industry districts.</p>
+<p class="mainSentence">An abstract type cannot be a child of a concrete type as it is not concrete.</p>
+<p class="mainSentence">Feature type designer is used to define and edit the definition of feature types. Attribute types are defined by Attribute Type Designer page and operation types are defined by Operation Type Designer. They can be called from Feature Type Designer. </p>
+<p class="secondHeader">Feature Type Designer</p>
+<p class="secondHeader"><img src="../figures/FeatureTypeDesigner.png" alt="featureTypeDesigner" width="537" height="661" align="FeatureTypeModeler"/></p>
+<p class="mainSentence">Figure 1. Page for feature type designing</p>
+<p class="thirdHeader">Fields</p>
+<p class="mainSentence"><strong>Feature Type (editable)</strong><br />
+  Feature type name is keyed-in. The first letter shall be uppercase (e.g., Building). If the name is a combination of words, the first character shall be uppercase and words are connected (e.g., CityBoundary). A name of feature types shall be unique.</p>
+<p class="mainSentence"><strong>definition (editable)</strong><br />
+  A definition of the feature type is described here.</p>
+<p class="mainSentence"><strong>attributes</strong><br />
+  Declared attribute types are listed here. The declaration is performed in Attribute Type Designer page.</p>
+<p class="mainSentence"><strong>inherited attributes</strong><br />
+  Attribute types inherited from the parent type is listed here.</p>
+<p class="mainSentence"><strong>operations</strong><br />
+  Declared operation types are listed here. The declaration is performed in Operation Type Designer page.</p>
+<p class="mainSentence"><strong>inherited operations</strong><br />
+  Operation types inherited from the parent type is listed here.</p>
+<p class="mainSentence"><strong>proxy</strong><br />
+  The name of proxy type is shown here. The concrete feature type has a proxy. Currently, gittok allows geometry or character string may be a proxy.</p>
+<p class="mainSentence"><strong>links</strong><br />
+  the list of association types the feature type links is listed here. The feature type becomes a from-feature type.</p>
+<p class="mainSentence"><strong>inherited linkes</strong><br />
+  Inherited association types the feature type links are listed here. </p>
+<p class="mainSentence"><strong>linkedBy</strong><br />
+  the list of association types the feature type being linked by is listed here. The feature type becomes a to-feature type.</p>
+<p class="mainSentence"><strong>inherited linkedBy</strong><br />
+  Inherited association types the feature type being linked by are listed here. </p>
+<p class="mainSentence"><strong>feature types</strong><br />
+  Declared feature types is listed here.</p>
+<p class="mainSentence"><strong>parent</strong><br />
+  The name of parent type is shown here by clicking &quot;as parent&quot; button after the selection of the feature type on &quot;feature types&quot; list.</p>
+<p class="mainSentence"><strong>children</strong><br />
+  Child feature types if the feature type is a parent are listed here.</p>
+<p class="thirdHeader">Button</p>
+<p class="mainSentence"><strong>isAbstract</strong><br />
+  The feature type becomes &quot;abstract&quot; by clicking the check box. </p>
+<p class="mainSentence"><strong>add</strong><br />
+  The declared feature type is added by clicking this button.</p>
+<p class="mainSentence"><strong>edit</strong><br />
+  The feature type can be edited by clicking thiss button after the selection of a feature type.</p>
+<p class="mainSentence"><strong>update</strong><br />
+  The feature type is replaced by the edited type by clicking this button.</p>
+<p class="mainSentence"><strong>delete</strong><br />
+  The feature type selected on the list is deleted by clicking this button. The deletion is impossible, if the feature type has child types.</p>
+<p class="mainSentence"><strong>asParent</strong><br />
+  the selected feature type become a parent type of the feature type edited now by clicking this button.</p>
+<p class="mainSentence"><strong>cancel</strong><br />
+  The parent type is canceled by clicking this button.</p>
+<p class="mainSentence"><strong>clear</strong><br />
+  All parameters of the feature type currently edited eliminated by clicking this button. The new definition become possible by clearing parameters.</p>
+<p class="mainSentence"><strong>edit attributes</strong><br />
+  Attribute type declaration become possible on Attribute Type Designer by clicking this button.</p>
+<p class="mainSentence"><strong>edit operations</strong><br />
+  Operation type declaration become possible on Operation Type Designer by clicking this button.</p>
+<p class="mainSentence"><strong>日本語</strong><br />
+  今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><strong>English</strong><br />
+  You can read the tutorial written in English.</p>
+<p class="mainSentence">&nbsp;</p>
+</body>
+</html>

@@ -13,17 +13,17 @@ window.moveTo(750,20);
 <body>
 <p class="FirstHeader">Modeler</p>
 <p class="secondHeader">Introduction</p>
-<p class="mainSentence">This page enables the users to desgin application schemata. Application schema is a formal description of the model that conceptualize real world phenomena included in the universe of discourse as the scope of your research or mission. Figure 1 is an example of a simple application schema. It expresses that &quot;Buildingr&quot; has its name, ower's name, shape as attributes, and you can get area of the buikding by getArea operartion.</p>
+<p class="mainSentence">This page enables the users to desgin application schemata. Application schema is a formal description of the model that conceptualize real world phenomena included in the universe of discourse defined as the scope of your research or mission. Figure 1 is an example of a simple application schema. It expresses that &quot;Buildingr&quot; has its name, ower's name, shape as attributes, and it is possible to get the area of the buikding by getArea operartion.</p>
 <p class="mainSentence"><img src="../figures/simpleClassDiagram.png" width="193" height="131" alt="classDiagram" /></p>
 <p class="mainSentence"><strong>Figure 1.</strong> An example of simple application schema written by UML</p>
-<p class="mainSentence"> Gittok uses the graphic language called UML (Unified Modeling Language) for formal descriptions of models. Usually &quot;language&quot; is used for the description of text. In case of graphic language, diagram is used to make communication with others.<br />
-  UML is widely used to develop information systems today as the schema language for object oriented modeling. We also describe the rules how to define application schema. In other words, we use UML to describe application schemas.<br />
-  You should know at least how to describe &quot;class diagram&quot;. You will see many UML class diagrams in gittok. These diagrams are written using UML Editor called ArgoUML. You can easily design your schema with this free software.However it is rather old, because  the version of UML supported by ArgoUML is 1.4 and the latest version is Version 2. However the rules for class diagram is almost the same. Off course, you can use other UML tools. And you can get and read UML text books and tips on the web.</p>
+<p class="mainSentence"> Gittok uses a conceptual schema language called UML (Unified Modeling Language) for the formal models. Usually &quot;language&quot; is used for the text description. In case of UML, diagram is used to make communication with others.<br />
+  UML is widely used to develop information systems today as the schema language for the object oriented modeling. We also describe the rules how to define application schema. In other words, we use UML to describe application schemata.<br />
+  You should study  how to describe &quot;class diagram&quot; such as the diagram in Modeler page. You will see many UML class diagrams in gittok. These diagrams are written using the free UML Editor called ArgoUML. You can easily design your schema with this free software.However it is rather old, because  the version of UML supported by ArgoUML is 1.4 and the latest version is Version 2. However the rules for class diagram is almost the same. Off course, you can use other UML tools. And you can get and read UML text books and many tips on the web.</p>
 <p class="secondHeader">General Feature Model</p>
-<p class="mainSentence">An abstraction of real world phenomena is called a feature. For example, natural phenomena such as typhoon and tsunami, artificial structures such as building and road, and imaginal objects such as national border and land use regulation are described as features.  Feature can be viewed from two different aspects. One is a type (or class), the other is an instance. For example, the proposition &quot;That is a bridge&quot; declares the thing as its type. While, &quot;That is Rainbow Bridge&quot; describes a thing as an individual, in other words, an instance of the type. General Feature Model (GFM) is a set of rules to describe feature types and their relationships. The rules <span class="mainSentence">how to describe instances are explained at the page of Editor.</span></p>
-<p class="mainSentence">UML does not specify rules for features as it is a general purpose modeling language. GFM specifies a rules to describe class diagrams for features and their relationships under UML rules using UML notation. It is called an application schema. GFM is a model of the description for application schemas. UML is a model of GFM. Thus, UML is a meta-model of application schemas.</p>
+<p class="mainSentence">An abstraction of real world phenomena is called a feature. For example, natural phenomena such as typhoon and tsunami, artificial structures such as building and road, and imaginal objects such as national border and land use regulation are all  features.  Feature can be viewed from two different aspects. One is a type (or class), the other is an instance. For example, the proposition &quot;That is a bridge&quot; declares the thing as its type. While, &quot;That is Rainbow Bridge&quot; describes a thing as an individual, in other words, an instance of the type. General Feature Model (GFM) is a set of rules to describe feature types and their relationships. The rules <span class="mainSentence">how to describe instances are explained at Editor page.</span></p>
+<p class="mainSentence">UML does not specify rules for features or real world phenomena, because it is a general purpose language. GFM specifies a rules to describe class diagrams for features and their relationships called application schema under UML rules. GFM is a model of the description for application schemata. UML is a model of GFM. Thus, UML is a meta-model of application schemata.</p>
 <p class="mainSentence"><img src="../figures/GeneralFeatureModel.png" width="690" height="559" alt="GFM" /></p>
-<p class="mainSentence">Figure 2. Structure of GFM represented by UML used in gittok</p>
+<p class="mainSentence">Figure 2. Structure of GFM used in gittok represented by UML </p>
 <p class="secondHeader">ApplicationSchema</p>
 <p class="mainSentence">The class called ApplicationSchema in Figure 2 shows the rules for description of application schemas. It means that the instance class of the meta-class ApplicationSchema is an application schema. An application schema consists of more than one feature classes and more than zero relationships between feature classes.</p>
 <p class="mainSentence">Geographic Information System (GIS) conventionally uses analysis operations applying attributes of features to get knowledge to solve the problems. Operations and attributes are properties of a feature. We think feature with attributes and operations is the fundamental element to recognize phenomena in the world. For example, Aristotle explained the recognition of phenomena as follows.</p>
@@ -116,15 +116,55 @@ Operation is an action to produce information from feature attributes as input (
   A name of type (class) which comprises the operation.</p>
 <p class="mainSentence"><strong>name</strong><br />
   a name of the operation.</p>
-<p class="mainSentence"><strong>returnFATypeID</strong><br />
-  Id of a feature type or an association type having the attribute type in which the return value is stored.</p>
+<p class="mainSentence"><strong>returnFATypeName</strong><br />
+  A nameof a feature type or an association type including the attribute type in which the return value is stored.</p>
 <p class="mainSentence"><strong>returnAttributeName</strong><br />
   The name of an attribute type which value is a result of the operation. The data type of this attribute type shall be same as the return value type of the operation.</p>
+<p class="mainSentence"><strong>returnAttributeType</strong><br />
+An data type of the derived attribute in which the return value is stored.</p>
 <p class="mainSentence">Gittok gets the definition of the feature type or the association type which includes the derived attribute. The definition can be obtained from the application schema. Gittok stores the return value in the derived attribute which name is the value of returnAttributeName after confirmation of correspondence of the data type. </p>
 <p class="thirdHeader">Associations</p>
 <p class="mainSentence"><strong>arguments</strong><br />
-  combination of input value types and corresponding feature attributes .</p>
+  combination of input value types and corresponding feature attributes.</p>
+<p class="mainSentence"><span class="secondHeader">ArgAttPair</span></p>
+<p class="mainSentence">ArgAttPair is a combination of a feature attribute type and corresponding argument type of the operation.</p>
+<p class="mainSentence"><span class="thirdHeader">Attributes</span></p>
+<p class="mainSentence"><strong>fromTo</strong><br />
+  If the value of this attribute is &quot;self&quot;, then the attribute type corresponding to the argument is defined in the  same feature type or association type.<br />
+  If the value of this attribute is &quot;from&quot;, then the attribute type corresponding to the argument is defined in  the feature type as from-type of the association.<br />
+  f the value of this attribute is &quot;to&quot;, then the attribute type corresponding to the argument is defined in  the feature type as to-type of the association.</p>
+<p class="mainSentence"><strong>targetType</strong><br />
+  feature type including the attribute type corresponding to the argument type.</p>
+<p class="mainSentence"><span class="thirdHeader">Associations</span></p>
+<p class="mainSentence"><strong>argumentType</strong><br />
+  This is a roll name of AtrributeType working as an argument type. Argument of the operation is defined by name, data type, multiplicity and unit. It is same as attribute type of feature or association.</p>
+<p class="mainSentence"><strong>attributeType</strong><br />
+  This is a roll name of AttributeType working as an attribute type including in the feature or association.</p>
+<p class="mainSentence">An attribute corresponding to the argument shall be defined so as to be clear it is a part of from-feature, to-feature, or a feature including this attribute. For example, to get a distance from one building to the river, the operation to obtain distance from surface to curve called getDistanceStoC. could be used. In this case, getDistanceStoC is included in the association from Building to River. The operation and return value &quot;distance&quot; are included in the association. An argument of the surface corresponds with the shape of building, while the curve corresponds with the shape of riverbank. </p>
+<p class="mainSentence">The variation of operation provided by gittok and spatial analysis is introduced in Analyst page.</p>
 <p class="mainSentence">&nbsp;</p>
+<p class="mainSentence"><span class="FirstHeader">Modeler page</span></p>
+<p class="mainSentence"><img src="../figures/Modeler.png" width="469" height="292" alt="modeler" /></p>
+<p class="mainSentence">Figure 3. Main page for application schema definition</p>
+<p class="mainSentence">Figure 3 shows the framework of rules for feature type and association type definitions in UML. Feature type may relate with a parent feature type and child feature types. Feature type may links association types and feature type may be linked by association types. Association type connects from-feature type and to-feature type. </p>
+<p class="mainSentence">For example, road and building are artifacts. They inherit properties of artifact. Artifact is a parent of road and building. There are many buildings at the road side. Therefore, a road instance associates with multiple building instances by association called RtoB for instance. </p>
+<p class="mainSentence">As already mentioned, feature types and association types may have attributes and operations as their properties. By clicking cursor on the box of FeatureType and AssociationType in Modeler, pages to define feature types and association types are opened. You can define types with attributes and operations. </p>
+<p class="mainSentence"><span class="thirdHeader">FIELDS</span></p>
+<p class="mainSentence"><strong>application schema</strong><br />
+  The name application schema is shown in this box after save or open the schema.</p>
+<p class="mainSentence"><span class="thirdHeader">BUTTONS</span></p>
+<p class="mainSentence"><strong>FeatureType</strong><br />
+  By clicking cursor, Feature Type Modeler is opened.</p>
+<p class="mainSentence"><strong>AssociationType</strong><br />
+  By clicking cursor, Association Type Modeler is opened.</p>
+<p class="mainSentence"><strong>open</strong><br />
+  select and open an application schema file (.aps).</p>
+<p class="mainSentence"><span class="strongMainSentence">save</span><br />
+  select and save application schema in the persistent memory being outside of gittok.</p>
+<p class="mainSentence"><span class="strongMainSentence">日本語</span><br />
+  今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><span class="strongMainSentence">English</span><br />
+  You can read the tutorial written in English.</p>
 <p class="mainSentence">&nbsp;</p>
 </body>
 </html>

@@ -622,7 +622,7 @@
 	<s:Label x="409" y="95" color="#000000" text="links"/>
 	<s:Label x="18" y="260" color="#000000" text="linkedBy"/>
 	<s:Label x="17" y="495" text="children"/>
-	<s:Label x="75" y="16" text="Feature Type" fontSize="16"/>
+	<s:Label x="75" y="16" text="Feature Type Designer" fontSize="16"/>
 	<s:Label x="381" y="474" text="feature types"/>
 	<s:Label x="18" y="349" color="#000000" text="inherited linkedBy"/>
 	<s:Label x="409" y="182" color="#000000" text="inherited links"/>

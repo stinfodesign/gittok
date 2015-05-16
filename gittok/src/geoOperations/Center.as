@@ -300,7 +300,7 @@ package geoOperations
 		}
 		
 		public static function locateFacility(argObj:Object): SG_Point {
-			// facility location applying weighted mean
+			// facility locating by applying weighted mean
 			var attValues:ArrayList = argObj["surfaces"] as ArrayList;
 			var surfaces:ArrayList = new ArrayList();
 			var m:int = attValues.length;
@@ -317,6 +317,14 @@ package geoOperations
 				stories.addAll(attList);
 			}
 			
+			attValues = argObj["dayNightPopulationRatio"] as ArrayList;
+			var dnpRatios:ArrayList = new ArrayList();
+			m = attValues.length;
+			for (i = 0; i < m; i++) {
+				attList = attValues.getItemAt(i) as ArrayList;
+				dnpRatios.addAll(attList);
+			}
+			
 			m = surfaces.length;
 			var sumNumeratorX:Number  = 0;
 			var sumNumeratorY:Number  = 0;
@@ -327,8 +335,11 @@ package geoOperations
 				var exterior:SG_Ring = s.exterior;
 				var polygon:CoordinateArray = exterior.coordinateSequence();
 				// storey (story in Am) is defined as a level of building.
+				
 				var storey:Integer = stories.getItemAt(i) as Integer;
-				var area:Number   = math.Area.getSimpleArea(polygon) * storey.value;
+				var dnpRatio:Real = dnpRatios.getItemAt(i) as Real;
+				var area:Number   = math.Area.getSimpleArea(polygon) * storey.value * dnpRatio.value;
+				
 				var weight:Number = area;
 				var weight2:Number = weight * weight;
 				

@@ -398,7 +398,7 @@
 		<fx:XML id="dataTypeMenu" source="texts/dataTypes.xml"/>
 	</fx:Declarations>
 	
-	<s:Label x="75" y="16" text="Association Type" fontSize="16"/>	
+	<s:Label x="75" y="16" text="Association Type Designer" fontSize="16"/>	
 	<s:Label x="498" y="5" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="539" y="7" text="English" color="#969696"

@@ -20,6 +20,6 @@
 				<node label="Memo"/>
 			</node>
 			<node label="others">
-				<node label="void"/>
+				<node label="any"/>
 			</node>
 </dataTypes>

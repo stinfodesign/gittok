@@ -507,7 +507,7 @@
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
 
 	<mx:Image x="10" y="10" source="@Embed('images/pictModeling1.png')" width="60" height="60"/>
-	<s:Label x="75" y="16" text="Operation Type" fontSize="16"/>
+	<s:Label x="75" y="16" text="Operation Type Designer" fontSize="16"/>
 
 	<s:Label x="40" y="298" text="selected operations" width="109" height="15" verticalAlign="middle"/>
 	<mx:DataGrid x="40" y="317" width="188" id="operationGrid" contentBackgroundColor="#DADADA" 

@@ -194,7 +194,7 @@
 	<fx:Declarations>
 		
 	</fx:Declarations>
-	<s:Label x="75" y="16" text="Attribute Type" fontSize="16"/>
+	<s:Label x="75" y="16" text="Attribute Type Designer" fontSize="16"/>
 	
 	<s:Label x="381" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
