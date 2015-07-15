@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Association Type Designer</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+<script language="javascript">
+resizeTo(600,600);
+</script>
+</head>
+
+<body class="mainSentence">
+<p class="FirstHeader">Association Type Designer<br />関連型の設計</p>
+<p>地物同士の関係はさまざまです．例えば，距離，包含といった，空間属性の幾何学的な関係があります．また，先と後を示す時間順序関係も考えられます．これらは地物の属性同士の関係です．一方，地物のレベルでは，継承の関係のように，もっているプロパティの継承をともなう，親子の関係があります．</p>
+<p>Association Type Designer は，継承 (inheritance) 以外の関係である「関連 (association)」を設計するためにあります．例えば，会社と従業員の関係は，雇用契約をかわしていると発生する関連です．製品全体と部品の関係は，設計図などで，その部品が製品に組み込まれると発生す関連です。前面道路と路側にある建物の関連は，建物にいる人が，直接的に道路にアクセスしていると生まれる関連です．</p>
+<p>地物関連の設計では，どの地物からどの地物に関連するか，を考えて，それを定義づけることを行います．gittok GFM によれば，前者は from地物，後者は to地物といいます．これらの地物は，関連を通じて役割をもちます．例えば，建物という地物型は，学校という地物型との関連において，校舎という役割をもつことになるでしょう．逆に，建物に関連する学校は，使用者という役割をもつかもしれません．</p>
+<p>関連は，それ自体が地物として働くことがあります．例えばBuildingToRoadという関連型が，道路と建物の距離を求める操作をもっていてもいいでしょう．関連と言っても，実世界で起きる現象である限り，地物と見なしてもよいので，関連型は地物型と継承の関係をもちます．従って，関連型はより抽象度の高い地物型や関連型のプロパティを継承することがありえます．例えば道路は，建物だけではなく，様々な地物（橋，トンネル，公園，・・・）と関連するでしょう．これらの関連の総称として，「道路と施設の関連」という関連が定義されるとすれば，BuildingToRoad は，その下位型になります．ただし，gittok では，応用スキーマの構造が複雑化しないように，関連同士の継承関係は認めていません．</p>
+<p>さて，from地物とto地物の間には，from 地物が消滅すると，全ての to 地物も消滅する，強い関係が考えられます．このような関連は合成 (composite)といわれます．例えば，建物を取り壊してしまえば，普通はその中にあった部屋も廊下も階段も，消滅してしまいます．そのとき，建物と，部屋，廊下，そして階段の関係は合成関係といえます．gittok では，関連を composite にするときは，関連先の地物が，他の地物の関連先になっていないことが，条件になります．関連先はあくまでも，関連元を構成する部品なので，他から参照されることはありません．ところで，UMLを知っている方は，aggregateという関連もあるのではないかという質問があるかもしれません．この関連は，全体と部分の関連であって，全体が消滅しても部分が残る場合を指すと言われています．gittokでは，これは普通の関連とほとんど変わらないと考え，あえてaggregateは設けていません．</p>
+<p class="secondHeader">Association Type Designer の操作画面</p>
+<p><img src="../figures/AssociationTypeDesigner.png" width="588" height="525" alt="AssociationTypeDesigner" /></p>
+<p>図１．Association Type Designerの操作画面</p>
+<p class="thirdHeader">FIELDS</p>
+<p><span class="mainSentence"><strong>feature types（選択可能）</strong></span><br />
+Feature Type Designerで定義した地物型の一覧が，ここに表示されます．関連元 (from)，関連先 (to)を指定するときに，この一覧から地物型を選択します．</p>
+<p><span class="mainSentence"><strong>from</strong></span><br />
+関連元になる地物型の名称が，ここに表示されます．</p>
+<p><span class="mainSentence"><strong>to</strong></span><br />
+関連先になる地物型の名称が，ここに表示されます．</p>
+<p><span class="mainSentence"><strong>association type（編集可能）</strong></span><br />
+新たに関連型を定義するときは，名称をここにキーインして，指定します．また，編集中の関連型の名称がここに表示されます．</p>
+<p><span class="mainSentence"><strong>definition（編集可能）</strong></span><br/>
+関連型の定義をここに記入します．</p>
+<p><span class="mainSentence"><strong>attributes</strong></span><br />
+編集中の関連型がもつ属性の型名が，この一覧に表示されます．</p>
+<p><span class="mainSentence"><strong>operations</strong></span><br />
+編集中の関連型がもつ操作の名称が，この一覧に表示されます．</p>
+<p><span class="mainSentence"><strong>role（編集可能）</strong></span><br />
+編集中の関連先地物の役割名が，ここに表示されます．新たに役割名を与えるときは，名称をここにキーインして，指定します．</p>
+<p><span class="mainSentence"><strong>association types (選択可能）</strong></span><br />
+編集し，登録された関連型の一覧が，ここに表示されます．</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>from</strong></span><br />
+Feature Type欄で地物型を選択した後，このボタンを押すと，関連元の地物型として，from欄にこの地物型が登録されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>to</strong></span><br />
+  Feature Type欄で地物型を選択した後，このボタンを押すと，関連先の地物型として，to欄にこの地物型が登録されます.<br />
+</p>
+<p class="mainSentence"><span class="mainSentence"><strong>editAttributes</strong></span><br />
+  このボタンを押すと，Attribute Type Designer が表示され，属性型の宣言が可能になります.  <br />
+</p>
+<p class="mainSentence"><span class="mainSentence"><strong>editOperations</strong></span><br />
+このボタンを押すと，Operation Type Designer が表示され，操作型の宣言が可能になります．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>associate/composite</strong></span><br />
+ここでは，関連先の地物との関連の種類を選択します．associate は普通の関連，compositeは合成になります．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>multiplicity</strong></span><br />
+もし関連先の地物インスタンスが複数になることを許すときは，このボタンをチェックします．</p>
+<p><span class="mainSentence"><strong>add</strong></span><br />
+現在編集している関連型が，association types欄に追加登録されます．既に登録されている関連型と同じ名前のものは，追加できません．</p>
+<p class="mainSentence"><strong>edit</strong><span class="thirdHeader"><br />
+</span>
+assoication type欄で選択されている関連型を編集できるようにします．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>update</strong></span><br />
+現在編集されている関連型を更新登録します．追加登録の場合は，addを押して下さい．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>delete</strong></span><br />
+association type欄で選択されている関連型が削除されます． </p>
+<p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />
+今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
+  You can read the tutorial written in English.</p>
+</body>
+</html>
