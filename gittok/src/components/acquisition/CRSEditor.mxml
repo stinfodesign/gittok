@@ -182,13 +182,13 @@
 			
 			protected function text_en_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/en/crsManager_en.html");
+				var request:URLRequest = new URLRequest("documents/en/crsEditor_en.html");
 				navigateToURL(request);
 			}
 
 		]]>
 	</fx:Script>
-	<mx:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="60" height="60"/>
+	<s:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="60" height="60"/>
 	<s:Label x="78" y="17" text="CRS Editor" fontSize="16"/>
 	
 	<s:Rect x="246" y="57" width="120" height="89">
@@ -253,10 +253,10 @@
 	<s:Label x="175" y="266" fontSize="9" text="decimal degree"/>
 	<s:Label x="185" y="582" fontSize="9" text="decimal degree"/>
 	<s:Label x="185" y="608" fontSize="9" text="decimal degree"/>
-	<s:Label x="307" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
-			 buttonMode="true" click="text_jp_clickHandler(event)"/>
-	<s:Label x="348" y="12" text="English" color="#969696"
-			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:Label id="text_jp" x="307" y="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label id="text_en" x="348" y="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
 	<s:Label x="312" y="71" text="CRS file" color="#ffffff"/>
 	<s:Label x="175" y="217" fontSize="9" text="meter"/>
 	<s:Label x="185" y="635" fontSize="9" text="meter"/>

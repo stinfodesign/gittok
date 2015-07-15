@@ -40,7 +40,7 @@
 			}
 		]]>
 	</fx:Script>
-	<mx:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
+	<s:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
 	<s:TextInput id="urlInput" x="83" y="59" width="357"/>
 	<s:Label x="83" y="47" text="URL"/>
 	<s:Button id="browseButton" x="371" y="88" label="browse"

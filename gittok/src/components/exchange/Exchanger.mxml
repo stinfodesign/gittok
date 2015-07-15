@@ -542,7 +542,7 @@
 		<s:RadioButtonGroup id="EDButtonGroup"/>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
-	<mx:Image x="10" y="10" source="@Embed('images/pictExchange1.png')"/>
+	<s:Image x="10" y="10" source="@Embed('images/pictExchange1.png')"/>
 	<s:Label x="75" y="15" text="Exchanger" fontSize="16"/>
 	<s:RadioButton x="59" y="118" id="apsRadio" label="Application Schema (.aps)" groupName="ExchangeButtonGroup"/>
 	<s:RadioButton x="59" y="223" id="symRadio" label="Symbol Style Dictionary (.sym)" groupName="ExchangeButtonGroup"/>

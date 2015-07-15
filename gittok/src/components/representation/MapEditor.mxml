@@ -447,6 +447,11 @@
 			
 			protected function openportrayalSchemaButton_clickHandler(event:MouseEvent):void
 			{
+				if (kit == null) {
+					Alert.show("Open kit before portrayal schema.", "Alert", 4, this);
+					return;					
+				}
+				
 				try {
 					portrayalSchemaFile = new File();
 					var filter:FileFilter = new FileFilter("Portrayal Schema", "*.psc");
@@ -458,6 +463,7 @@
 			}
 			
 			private function openPortrayalFiles(event:Event):void {
+				
 				var path:String = portrayalSchemaFile.nativePath.replace(portrayalSchemaFile.name, "");
 				portrayalSchemaLabel.text = portrayalSchemaFile.name;
 				stream = new FileStream();
@@ -613,8 +619,8 @@
 													var lower:Number = Number(nm.lowerValue);
 													var upper:Number = Number(nm.upperValue);
 											 		if (lower <= attNumber && attNumber < upper) {
-														m = primitiveList.length;
-														for (j = 0; j < m; j++) {
+														trace(attNumber);
+														for (j = 0; j < primitiveList.length; j++) {
 															refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
 															this.drawSymbol(nm.symName, refGeom);
 														}
@@ -1775,6 +1781,11 @@
 			
 			protected function openGazetteerButton_clickHandler(event:MouseEvent):void
 			{
+				if (kit == null) {
+					Alert.show("Open kit before gazetteer.", "Alert", 4, this);
+					return;
+				}
+				
 				try {
 					file = new File();
 					var filter:FileFilter = new FileFilter("Gazetteer", "*.gaz");

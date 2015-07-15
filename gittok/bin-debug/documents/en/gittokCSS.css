@@ -18,20 +18,20 @@ p {
 
 .FirstHeader {
 	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 24px;
+	font-size: 28px;
 	font-style: normal;
-	font-weight: bold;
+	font-weight: normal;
 	color:#44a;
 }
 .secondHeader {
 	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 18px;
-	font-weight: bold;
+	font-size: 20px;
+	font-weight: normal;
 	color:#44a;
 }
 .thirdHeader {
 	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 14px;
-	font-weight:bold;
+	font-size: 15px;
+	font-weight:normal;
 	color:#44a;
 }

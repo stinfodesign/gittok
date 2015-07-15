@@ -46,7 +46,7 @@
 			private var kitStream:FileStream;
 			private var apsFile:File;
 			private var apsStream:FileStream = new FileStream();
-
+			
 			private var applicationSchema:ApplicationSchema = new ApplicationSchema();
 			
 			protected var atts:ArrayList;	// attributeTypes, variable using for recursive process	
@@ -151,7 +151,7 @@
 				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
 				registerClassAlias("dataTypes.place.VideoURL", VideoURL);
 				registerClassAlias("dataTypes.place.SoundURL", SoundURL);
-			
+				
 				// General Feature Model
 				registerClassAlias("gfm.AttributeType", AttributeType);
 				registerClassAlias("gfm.OperationType", OperationType);
@@ -169,7 +169,7 @@
 				
 				// File
 				registerClassAlias("flash.filesystem.File", File);
-							
+				
 				// Symbol styles
 				registerClassAlias("symbolStyle.PointSymbolStyle", PointSymbolStyle);
 				registerClassAlias("symbolStyle.LineSymbolStyle", LineSymbolStyle);
@@ -190,7 +190,7 @@
 				registerClassAlias("coordinateReference.GaussKrugerProjection", GaussKrugerProjection);
 				registerClassAlias("coordinateReference.PSOrigin", IdentifiedCoordinate);
 				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);		
-							
+				
 			}
 			
 			/*
@@ -224,16 +224,16 @@
 					trace(error.message);
 				}
 			}
-						
+			
 			private function callAppStream(event:Event):void {
 				
 				if(kit == null) kit = new Kit();
 				/* 
-				   There is the case kit is not null, 
-				   because the name of application schema is not correct
-				   but the conceptual model is the same.
-				   It may happen when the member of the group dieigitzes 
-				   a part of whole area.
+				There is the case kit is not null, 
+				because the name of application schema is not correct
+				but the conceptual model is the same.
+				It may happen when the member of the group dieigitzes 
+				a part of whole area.
 				*/
 				var pathURL:String = apsFile.url;
 				var pathArray:Array = pathURL.split("/");
@@ -277,7 +277,7 @@
 					associationTypes.addItem(assType);
 				}				
 			}
-
+			
 			/*
 			Open and save Kit -------------
 			*/
@@ -292,7 +292,7 @@
 					var filter:FileFilter = new FileFilter("Kit File", "*.kit");
 					kitFile.addEventListener(Event.SELECT, openKit);
 					kitFile.browseForOpen("Open kit file    [キャンセル:CANCEL  選択:SELECT]", [filter]);
-
+					
 				} catch (error:IOError) {
 					Alert.show("Alert", error.message, 4, this);
 				}
@@ -375,7 +375,7 @@
 			}
 			
 			private function saveKit(event:Event):void {	
-
+				
 				if (geometryWindow != null) {
 					kit = geometryWindow.kit;
 				}
@@ -393,12 +393,12 @@
 					
 					kitStream = new FileStream();
 					kitStream.open(kitFile, FileMode.WRITE);
-				
+					
 					kit.kitURL = kitURL;
 					kit.applicationSchema = applicationSchema;
 					//var kitXML:XML = kit.getXML();
 					//kit.setXML(kitXML);
-				
+					
 					kitStream.writeObject(kit);
 					kitStream.close();
 				} catch (e:IOError) {
@@ -406,10 +406,10 @@
 				}
 				
 				kitName.text = kitFile.name;
-							
+				
 				Mouse.cursor = "arrow";
 			}
-						
+			
 			protected function featureTypeList_changeHandler(event:IndexChangeEvent):void
 			{
 				concreteType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
@@ -434,7 +434,7 @@
 				//show attribute type list on "attributeGrid"
 				attributeTypeList = concreteType.attributeTypes;
 			}
-								
+			
 			protected function associationTypeList_changeHandler(event:IndexChangeEvent):void
 			{
 				var asTypeIndex:int = associationTypeList.selectedIndex;
@@ -456,7 +456,7 @@
 					associationSet.associations = new Dictionary();
 					associationSet.typeID = associationType.name;
 					associationSetArray[associationType.name] = associationSet;
-
+					
 				}
 				else {
 					assIdList = new ArrayList();
@@ -483,7 +483,7 @@
 				assoStyleLabel.text			= associationType.style;
 				
 				assoAttributeList = associationType.attributeTypes;
-
+				
 			}
 			
 			protected function addInstButton_clickHandler(event:MouseEvent):void
@@ -497,7 +497,7 @@
 				// feature definition
 				feature = new Feature();
 				feature.typeName = concreteType.name;
-
+				
 				kit.featureList[feature.id] = feature;
 				
 				if (featureSet == null) {
@@ -507,7 +507,7 @@
 				}
 				
 				featureSet.features[feature.id] = feature;
-
+				
 				idList.addItem(feature.id);
 				instanceIDList.selectedItem = feature.id;
 				
@@ -532,7 +532,7 @@
 				
 				
 				idForDelete = instanceIDList.selectedItem as String;
-								
+				
 				f = featureSet.features[idForDelete] as Feature;
 				
 				if (f == null) {
@@ -560,10 +560,10 @@
 			private function yesOrNoDelete(event:CloseEvent):void {
 				if (event.detail == Alert.YES) {
 					this.deleteFeature(f);
-				
+					
 					idList.removeItem(idForDelete);
 					instanceIDList.prompt = "";
-				
+					
 					attValueList = new ArrayList();
 				}
 			}
@@ -607,8 +607,8 @@
 				}
 				
 				/* If the feature links to other features by association, associations are removed.
-				   however if association style is "composite", 
-				   not only association but also associated features are removed recursively.
+				however if association style is "composite", 
+				not only association but also associated features are removed recursively.
 				*/
 				
 				var m:int = f.connects.length;
@@ -633,7 +633,7 @@
 				delete kit.featureList[f.id];
 				
 			}
-		
+			
 			
 			protected function attributeGrid_clickHandler(event:MouseEvent):void
 			{
@@ -647,7 +647,7 @@
 				if (feature != null) {
 					attValueList = feature.attributes[attType.name] as ArrayList;					
 				}
-										
+				
 				if (tp.search("SG_") > -1) {
 					if (geometryWindow == null) {
 						this.openGeometryWindow();
@@ -696,7 +696,7 @@
 						urlWindow.addEventListener(Event.CLOSE, urlWindowClose);
 					}
 				}
-
+				
 				if (tp == "Address") {
 					//Address
 					if (addressWindow == null) {
@@ -732,8 +732,13 @@
 			protected function geometryWindowCheckFeature(event:MouseEvent):void {
 				if (geometryWindow.searchedGM != null) {
 					var id:String = geometryWindow.searchedGM.featureID;
-					feature = featureSet.features[id] as Feature;
-					instanceIDList.selectedIndex = idList.getItemIndex(id);
+					if (id != "") {
+						feature = featureSet.features[id] as Feature;
+						instanceIDList.selectedIndex = idList.getItemIndex(id);
+					}
+					else {
+						instanceIDList.selectedIndex = -1;
+					}
 				}
 			}
 			
@@ -741,13 +746,13 @@
 				// Collect newest geometries
 				/*
 				if (geometryWindow != null) {
-					kit = geometryWindow.kit;
-					if (kit.affineParam == null) {
-						Alert.show("Alert", "Geometry entry is not completed.", 4, this);
-						kit = new Kit();
-						kit.applicationSchemaURL = appSchemaLabel.text
-					}
-					geometryWindow = null;
+				kit = geometryWindow.kit;
+				if (kit.affineParam == null) {
+				Alert.show("Alert", "Geometry entry is not completed.", 4, this);
+				kit = new Kit();
+				kit.applicationSchemaURL = appSchemaLabel.text
+				}
+				geometryWindow = null;
 				}				
 				*/
 				geometryWindow = null;
@@ -756,7 +761,7 @@
 			
 			protected function imageWindowClose(event:Event):void {
 				imageWindow = null;
-
+				
 			}
 			
 			protected function videoWindowClose(event:Event):void {
@@ -767,7 +772,7 @@
 			
 			protected function soundWindowClose(event:Event):void {
 				if (soundWindow.sndChannel != null) 
-						soundWindow.sndChannel.stop();
+					soundWindow.sndChannel.stop();
 				soundWindow = null;
 			}
 			
@@ -785,7 +790,7 @@
 			protected function memoWindowClose(event:Event):void {
 				memoWindow = null;
 			}
-
+			
 			/*
 			Add, Search and Delete an attribute value
 			*/
@@ -802,13 +807,13 @@
 					Alert.show("Alert", "Select attribute before adding value.", 4, this);
 					return;					
 				}
-
+				
 				var attType:AttributeType = attributeGrid.selectedItem as AttributeType;
 				/*
 				if (attType.derived == "/") {
-					info = new InfoWindow();
-					info.initInfo("Alert", "You cannot add attribute value as this is derived.", false);
-					return;
+				info = new InfoWindow();
+				info.initInfo("Alert", "You cannot add attribute value as this is derived.", false);
+				return;
 				}
 				*/
 				
@@ -835,8 +840,8 @@
 					var str:String = getQualifiedClassName(geometryWindow.searchedGM);
 					var strArray:Array = str.split("::");
 					var geomTp:String = strArray[1];
-				
-				
+					
+					
 					if (tp == "SG_Point") {
 						if (tp != geomTp) {
 							Alert.show("Alert", "Geometry type is different!", 4, this);
@@ -848,38 +853,38 @@
 						attValueList.addItem(geometryWindow.searchedGM);
 						feature.attributes[attType.name] = attValueList;
 					}
-				
+					
 					if (tp == "SG_Curve") {
 						if (tp != geomTp) {
 							Alert.show("Alert", "Geometry type is different!", 4, this);
 							return;						
 						}
-					
+						
 						geometryWindow.searchedGM.featureID = feature.id;
 						geometryWindow.searchedGM.attributeName = attType.name;
 						attValueList.addItem(geometryWindow.searchedGM);
 						feature.attributes[attType.name] = attValueList;
 					}
-				
+					
 					if (tp == "SG_Surface") {
 						if (tp != geomTp) {
 							Alert.show("Alert", "Geometry type is different!", 4, this);
 							return;						
 						}
-					
+						
 						geometryWindow.searchedGM.featureID = feature.id;
 						geometryWindow.searchedGM.attributeName = attType.name;
 						attValueList.addItem(geometryWindow.searchedGM);
 						feature.attributes[attType.name] = attValueList;
 					}
 				}
-
+				
 				if (tp == "Address") {
 					if (addressWindow == null || addressWindow.address == null) {
 						Alert.show("Alert", "No address is entered!", 4, this);
 						return;						
 					}
-
+					
 					addressWindow.address.zipCode = addressWindow.zipInput.text;
 					addressWindow.address.location = addressWindow.addressInput.text;
 					addressWindow.address.country = addressWindow.countryLabel.text;
@@ -898,7 +903,7 @@
 					}
 					cs.value = valueInput.text;
 					cs.featureID = feature.id;
-
+					
 					attValueList.addItem(cs);
 					valueInput.text = "";
 					feature.attributes[attType.name] = attValueList;
@@ -933,7 +938,7 @@
 					}					
 					rl.value = parseFloat(valueInput.text);
 					rl.featureID = feature.id;
-
+					
 					attValueList.addItem(rl);
 					valueInput.text = "";
 					feature.attributes[attType.name] = attValueList;					
@@ -947,7 +952,7 @@
 					}					
 					inte.value = parseInt(valueInput.text);
 					inte.featureID = feature.id;
-
+					
 					attValueList.addItem(inte);
 					valueInput.text = "";
 					feature.attributes[attType.name] = attValueList;					
@@ -968,7 +973,7 @@
 						return;
 					}
 					bl.featureID = feature.id;
-
+					
 					attValueList.addItem(bl);
 					valueInput.text = "";
 					feature.attributes[attType.name] = attValueList;										
@@ -981,7 +986,7 @@
 						Alert.show("Alert", "No image is selected.", 4, this);
 						return;
 					}
-
+					
 					iml.value = "images/" + imageWindow.imageFile.name;
 					attValueList.addItem(iml);
 					feature.attributes[attType.name] = attValueList;					
@@ -994,7 +999,7 @@
 						Alert.show("Alert", "No video is selected.", 4, this);
 						return;
 					}
-
+					
 					vdl.value = "videos/" + videoWindow.videoFile.name;
 					attValueList.addItem(vdl);
 					feature.attributes[attType.name] = attValueList;					
@@ -1020,14 +1025,14 @@
 						Alert.show("Alert", "No url is selected.", 4, this);
 						return;
 					}
-
+					
 					url.value = urlWindow.urlInput.text;
 					attValueList.addItem(url);
 					feature.attributes[attType.name] = attValueList;					
 				}
 				
 			}
-
+			
 			// search
 			protected function valueGrid_clickHandler(event:MouseEvent):void
 			{
@@ -1046,7 +1051,7 @@
 					
 					var primi:SG_Primitive = attValueList.getItemAt(i) as SG_Primitive;
 					
-  					geometryWindow.displaySGPrimitive("circle", primi);	
+					geometryWindow.displaySGPrimitive("circle", primi);	
 				}
 				
 				if (tp == "ImageURL") {
@@ -1106,7 +1111,7 @@
 					if (addressWindow == null) {
 						addressWindow = new AddressWindow();
 					}
-
+					
 					addressWindow.open();
 					addressWindow.title = "Editor >";
 					addressWindow.address = valueGrid.selectedItem as Address;
@@ -1126,7 +1131,7 @@
 					memoWindow.addEventListener(Event.CLOSE, memoWindowClose);
 				}
 			}
-
+			
 			// delete
 			protected function deleteValueButton_clickHandler(event:MouseEvent):void
 			{
@@ -1172,7 +1177,7 @@
 					attValueList.removeItemAt(valueGrid.selectedIndex);
 				}
 			}
-
+			
 			protected function addAssoIDButton_clickHandler(event:MouseEvent):void
 			{				
 				if (associationType == null) {
@@ -1192,12 +1197,12 @@
 				/*
 				var fSet:FeatureSet = featureSetArray[associationType.from.name] as FeatureSet;
 				for each (var f:Feature in fSet.features) {
-					fromFeatures.addItem(f);	
+				fromFeatures.addItem(f);	
 				}
-
+				
 				fSet = featureSetArray[associationType.to.name] as FeatureSet;
 				for each (f in fSet.features) {
-					toFeatures.addItem(f);	
+				toFeatures.addItem(f);	
 				}
 				*/
 				
@@ -1208,7 +1213,7 @@
 				associationIDList.prompt = association.id;
 				associationIDList.selectedItem = association.id;
 			}
-						
+			
 			protected function deleteAssoIDButton_clickHandler(event:MouseEvent):void
 			{
 				if (assIdList.length == 0 ) {
@@ -1252,12 +1257,12 @@
 				associationIDList.prompt = "";
 				
 			}
-
+			
 			protected function associationIDList_changeHandler(event:IndexChangeEvent):void
 			{				
 				// Initialize association instance view
 				association = associationSet.associations[associationIDList.selectedItem] as Association;
-
+				
 				//show attribute type list on "attributeGrid"
 				var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;
 				assoAttributeList = assoType.attributeTypes;
@@ -1268,9 +1273,9 @@
 				// show from and to instance lists
 				fromFeatures = association.relateFrom;
 				toFeatures   = association.relateTo;
-			
+				
 			}
-
+			
 			protected function cancelFromToButton_clickHandler(event:MouseEvent):void
 			{
 				if (fromRadio.selected) {
@@ -1290,12 +1295,12 @@
 				}
 				if (geometryWindow != null) geometryWindow.clearAnnotationLayer();
 			}
-
+			
 			protected function assoAttributeGrid_clickHandler(event:MouseEvent):void
 			{
 				var attType:AttributeType = assoAttributeList.getItemAt(assoAttributeGrid.selectedIndex) as AttributeType;
 				if (association != null) {
-				assoAttValueList = association.attributes[attType.name] as ArrayList;
+					assoAttValueList = association.attributes[attType.name] as ArrayList;
 				}
 				else {
 					Alert.show("Alert", "Add association instance before.", 4, this);
@@ -1311,7 +1316,7 @@
 				}
 				
 				var attType:AttributeType = assoAttributeGrid.selectedItem as AttributeType;
-							
+				
 				assoAttValueList = association.attributes[attType.name] as ArrayList;
 				if (assoAttValueList == null) assoAttValueList = new ArrayList();
 				
@@ -1410,16 +1415,16 @@
 					assoAttValueList.addItem(url);
 					association.attributes[attType.name] = assoAttValueList;					
 				}
-
+				
 				if (tp == "Address") {
 					var address:Address = new Address();
 					address = addressWindow.address;
 					assoAttValueList.addItem(address.id);
 					association.attributes[attType.name] = assoAttValueList;					
 				}
-
+				
 			}
-
+			
 			protected function assoDeleteValueButton_clickHandler(event:MouseEvent):void
 			{
 				if (assoAttValueList == null) {
@@ -1454,29 +1459,29 @@
 				if (tp == "Memo") {
 					assoAttributeList.removeItemAt(assoValueGrid.selectedIndex);
 				}
-
+				
 			}
-
+			
 			protected function showAssoButton_clickHandler(event:MouseEvent):void
 			{
 				if (association.relateFrom.length == 0 && association.relateTo.length == 0) {
 					Alert.show("Alert", "Set from and to feature before showing association.", 4, this);
 					return;
 				}
-					
+				
 				var assoType:AssociationType;
 				for (var i:int = 0; i < associationTypes.length; i++) {
 					assoType = associationTypes.getItemAt(i) as AssociationType;
 					if (assoType.name == association.typeName) break;
 				}
-
+				
 				var fAttType:AttributeType = assoType.from.getAttributeTypeByName(assoType.from.proxyName);
 				var tAttType:AttributeType = assoType.to.getAttributeTypeByName(assoType.to.proxyName);
-					
+				
 				if (showAssoButton.label == "show") {										
-
+					
 					if (fAttType.dataType == "CharacterString") {
-					    if (fromListWindow == null) this.openFromListWindow();
+						if (fromListWindow == null) this.openFromListWindow();
 						fromListWindow.selectedList = new ArrayList();
 						for (i = 0; i < fromFeatures.length; i++) {
 							var f:Feature = fromFeatures.getItemAt(i) as Feature;
@@ -1504,7 +1509,7 @@
 							if (kitName.text != "" && kit.baseMapImageURL != "null") 
 								geometryWindow.opViewStack.selectedChild = geometryWindow.orientationView;
 						}
-				
+						
 						// draw association
 						fromRadio.selected = false;
 						toRadio.selected   = false;
@@ -1537,13 +1542,13 @@
 				var request:URLRequest = new URLRequest("documents/jp/editor_jp.html");
 				navigateToURL(request);
 			}
-
+			
 			protected function text_en_clickHandler(event:MouseEvent):void
 			{
 				var request:URLRequest = new URLRequest("documents/en/editor_en.html");
 				navigateToURL(request);
 			}
-
+			
 			protected function fromRadio_clickHandler(event:MouseEvent):void
 			{
 				if (associationIDList.selectedIndex == -1) {
@@ -1562,7 +1567,7 @@
 				if (fromType.proxyName != null) {
 					var pxType:AttributeType = fromType.getProxyType();
 					var dt:String = pxType.dataType;
-								
+					
 					if (dt == "SG_Point" || dt == "SG_Curve" || dt == "SG_Surface") {
 						if (geometryWindow == null) {
 							this.openGeometryWindow();
@@ -1661,7 +1666,7 @@
 						association.relateFrom = fromFeatures;
 					}
 					else {
-
+						
 						Alert.show("Alert", "selected geometry is not an attribute of the from feature.", 4, this);
 						return;
 					}
@@ -1682,7 +1687,7 @@
 					if (pType.proxyName != null) toType.proxyName = pType.proxyName;
 					pType = pType.parent;
 				}
-
+				
 				if (toType.proxyName != null) {
 					var pxType:AttributeType = toType.getProxyType();
 					var dt:String = pxType.dataType;
@@ -1696,7 +1701,7 @@
 						if (dt == "SG_Point") 	geometryWindow.pointRadio.selected = true;
 						if (dt == "SG_Curve") 	geometryWindow.curveRadio.selected = true;
 						if (dt == "SG_Surface")	geometryWindow.surfaceRadio.selected = true;
-				
+						
 						geometryWindow.fromToLabel.text = "to";
 						geometryWindow.searchGeomButton.selected = true;
 						geometryWindow.geomFlag = "search";
@@ -1704,7 +1709,7 @@
 						geometryWindow.clearAnnotationLayer();
 						geometryWindow.addEventListener(MouseEvent.MOUSE_DOWN, geometryWindowCheckTo);
 					}
-				
+					
 					if (dt == "CharacterString") {
 						this.openToListWindow();
 					}
@@ -1718,7 +1723,7 @@
 				if (toListWindow == null) toListWindow = new ListWindow();
 				//toListWindow = new ListWindow();
 				toListWindow.open();
-
+				
 				toListWindow.addEventListener(MouseEvent.CLICK, getToSelectedIndex);
 				toListWindow.addEventListener(Event.CLOSE, toListWindowClosed);
 				
@@ -1744,7 +1749,7 @@
 					Alert.show("Alert", "To-feature shall be one.", 4, this);
 					return;
 				}
-
+				
 				var fSet:FeatureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
 				var d:CharacterString = toListWindow.dataList.getItemAt(toListWindow.selectedIndex) as CharacterString;
 				var f:Feature = fSet.features[d.featureID];
@@ -1977,12 +1982,12 @@
 				for each (var mcx:SG_Complex in mkit.complexList) {
 					kit.complexList[mcx.id] = mcx;
 				}
-
+				
 				//Set orientable curve list 
 				for each (var moc:SG_OrientableCurve in mkit.orientableCurveList) {
 					kit.orientableCurveList[moc.id] = moc;
 				}
-
+				
 				//Set ring list 
 				for each (var mr:SG_Ring in mkit.ringList) {
 					kit.ringList[mr.id] = mr;
@@ -1997,7 +2002,7 @@
 					// feature
 					concreteType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
 					featureSet = kit.featureSetArray[concreteType.name] as FeatureSet;
-
+					
 					if (featureSet != null) {
 						if (idList == null) idList = new ArrayList();	// idList is a dataprovider for instanceIDList
 						var features:Dictionary = featureSet.features;
@@ -2032,7 +2037,7 @@
 				}
 				
 			}
-		
+			
 		]]>
 	</fx:Script>
 	
@@ -2154,15 +2159,15 @@
 							<s:Label x="16" y="259" text="Proxy type"/>
 							<s:Label x="93" y="257" id="fromProxyTypeLabel" verticalAlign="middle" backgroundColor="#E0E0E0" height="18" width="120"/>
 							<s:Label x="221" y="257" id="toProxyTypeLabel" verticalAlign="middle" backgroundColor="#E0E0E0" width="120" height="18"/>
-
+							
 							<s:List id="fromIDList" x="93" y="106" width="120" height="120"
 									borderVisible="false" contentBackgroundColor="#DADADA" labelField="id"
 									dataProvider="{fromFeatures}" allowMultipleSelection="true"
-								 	click="fromIDList_clickHandler(event)"/>
+									click="fromIDList_clickHandler(event)"/>
 							<s:List x="221" y="106" width="120" height="120" id="toIDList" labelField="id" 
 									contentBackgroundColor="#DADADA" dataProvider="{toFeatures}" 
 									borderVisible="false" allowMultipleSelection="true"
-								    click="toIDList_clickHandler(event)"/>
+									click="toIDList_clickHandler(event)"/>
 							<s:Label x="375" y="164" text="Association"/>
 						</s:Group>
 					</s:NavigatorContent>

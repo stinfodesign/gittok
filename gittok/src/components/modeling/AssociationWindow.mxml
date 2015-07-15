@@ -404,9 +404,9 @@
 	<s:Label x="539" y="7" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
 	
-	<mx:Image x="10" y="10" source="@Embed(source='images/pictModeling1.png')" width="60" height="60"/>
-	<mx:Image source="@Embed(source='images/associationTypeFrame.png')" x="145" y="143" />
-	<mx:Image id="compositionMark" x="370" y="219" width="20" height="20" visible="false"
+	<s:Image x="10" y="10" source="@Embed(source='images/pictModeling1.png')" width="60" height="60"/>
+	<s:Image source="@Embed(source='images/associationTypeFrame.png')" x="145" y="143" />
+	<s:Image id="compositionMark" x="370" y="219" width="20" height="20" visible="false"
 			  source="@Embed('images/compositionMark.png')"/>
 
 	<s:List x="20" y="120" id="featureTypeList" width="128" height="80" contentBackgroundColor="#DADADA" 

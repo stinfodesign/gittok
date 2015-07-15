@@ -49,10 +49,10 @@
 			protected var featureTypes:ArrayList = new ArrayList();
 			
 			protected var atts:ArrayList;	// variable using for recursive process
-						
+			
 			protected var baseMapFile:File = new File();
 			protected var imageLocation:ImageURL = new ImageURL();
-
+			
 			protected var defaultSymbolFile:File = new File();
 			protected var symbolStyles:SymbolStyleDictionary = new SymbolStyleDictionary();
 			
@@ -96,7 +96,7 @@
 			
 			[Bindable]
 			protected var attTypes:ArrayList = new ArrayList();
-						
+			
 			protected var concreteType:FeatureType;
 			
 			[Bindable]
@@ -132,7 +132,7 @@
 				registerClassAlias("dataTypes.location.ImageLocation", ImageURL);
 				registerClassAlias("dataTypes.location.VideoLocation", VideoURL);
 				registerClassAlias("dataTypes.location.SoundLocation", SoundURL);
-
+				
 				// Geometry
 				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
 				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
@@ -214,7 +214,7 @@
 					var symbolStream:FileStream = new FileStream();
 					var fileURL:String = kitURL + "defaultSymbols.sym";
 					var symbolFile:File = new File(fileURL);
-				
+					
 					symbolStream.open(symbolFile, FileMode.READ);
 					symbolStyles = symbolStream.readObject() as SymbolStyleDictionary;
 					symbolStream.close();
@@ -222,7 +222,7 @@
 					pointSymbolStyle = symbolStyles.pointSymStyles["defPoint"]	as PointSymbolStyle;
 					lineSymbolStyle  = symbolStyles.lineSymStyles["defLine"] 	as LineSymbolStyle;
 					areaSymbolStyle  = symbolStyles.areaSymStyles["defArea"]	as AreaSymbolStyle;
-				
+					
 				}
 				catch (error:IOError) {
 					Alert.show("Symbol style: " + error.message, "Alert", 4, this);
@@ -255,10 +255,10 @@
 				
 				baseMapImage.load(baseMapFile.url);
 				baseMapImage.addEventListener(Event.RESIZE, onComplete2);
-								
+				
 				kit.baseMapImageURL = baseMapFile.name;
 				
-
+				
 				
 			}
 			
@@ -307,10 +307,10 @@
 				annotationLayer.scaleX = annotationLayer.scaleY = s;
 				
 				geometrySubBox.x = geometrySubBox.y = 0;
-
+				
 				resetDrawing();
 			}
-						
+			
 			protected function openControlPointsButton_clickHandler(event:MouseEvent):void
 			{
 				// Open control points file
@@ -344,9 +344,9 @@
 				controlPoints.setXML(_xml);
 				
 				if (baseMapFileLabel.text != "") opViewStack.selectedChild = orientationView; 
-
+				
 			}			
-
+			
 			
 			// SCALING, DRAGING, AND CONTROL TRANSPARENCY --------------------------
 			
@@ -400,7 +400,7 @@
 					dragButton.label = "on";
 					Mouse.cursor = "hand";
 				}
-
+				
 			}
 			
 			private function resetButton_clickHandler(event:MouseEvent):void
@@ -468,7 +468,7 @@
 					Mouse.cursor = "button";
 					return;
 				}
-								
+				
 				// ADD GEOMETRY and controls
 				switch (geomFlag) {
 					case "control":
@@ -600,7 +600,7 @@
 										lSym.decode(lObj);
 										lSym.name = curve.id.toString();
 										workLayer.addChild(lSym);
-									
+										
 										kit.curveList[curve.id] = curve;	// add curve in the dictionary
 										curveStartFlag = false;
 									}
@@ -630,7 +630,7 @@
 								kit.surfaceList[surface.id] = surface;	// add surface in the dictionary
 								
 								break;
-								
+							
 						}
 						break;
 					
@@ -642,12 +642,12 @@
 								//search nearest point
 								var dist:Number = Number.MAX_VALUE;
 								for each (wp in kit.pointList) {
-									var wd:Number = math.Distance.p2p(wp.position, coor);
-									if (wd <= dist) {
-										dist = wd;
-										point = wp;
-									}
+								var wd:Number = math.Distance.p2p(wp.position, coor);
+								if (wd <= dist) {
+									dist = wd;
+									point = wp;
 								}
+							}
 								
 								if (point.featureID != "") {
 									var f:Feature = kit.featureList[point.featureID];
@@ -673,18 +673,18 @@
 								dist = Number.MAX_VALUE;
 								var nearestCoord:Coordinate2;
 								for each (var wc:SG_Curve in kit.curveList) {
-									var coors:CoordinateArray = new CoordinateArray();										
-									coors.addItem(wc.start.position);
-									coors.addAll(wc.shape);
-									coors.addItem(wc.end.position);
-									var nCoord:Coordinate2 = math.Relation.nearestPonLS(coor, coors);
-									wd = math.Distance.p2ls(coor, coors);
-									if (wd < dist) {
-										dist = wd;
-										nearestCoord = nCoord;
-										curve = wc
-									}
+								var coors:CoordinateArray = new CoordinateArray();										
+								coors.addItem(wc.start.position);
+								coors.addAll(wc.shape);
+								coors.addItem(wc.end.position);
+								var nCoord:Coordinate2 = math.Relation.nearestPonLS(coor, coors);
+								wd = math.Distance.p2ls(coor, coors);
+								if (wd < dist) {
+									dist = wd;
+									nearestCoord = nCoord;
+									curve = wc
 								}
+							}
 								
 								if (curve.featureID != "") {
 									f = kit.featureList[curve.featureID];
@@ -728,16 +728,16 @@
 								var nearest:Number = Number.MAX_VALUE;
 								surface = null;
 								for each(var s:SG_Surface in kit.surfaceList) {
-									var ring:SG_Ring = s.exterior;
-									if (math.Relation.pointInRing(coor, ring)) {
-										var d:Number = math.EastWest.isLSEastOfP(coor, ring.coordinateSequence());
-										if (nearest > d) {
-											nearest = d;
-											surface = s;
-											foundCoord = coor;
-										}
+								var ring:SG_Ring = s.exterior;
+								if (math.Relation.pointInRing(coor, ring)) {
+									var d:Number = math.EastWest.isLSEastOfP(coor, ring.coordinateSequence());
+									if (nearest > d) {
+										nearest = d;
+										surface = s;
+										foundCoord = coor;
 									}
 								}
+							}
 								
 								if (surface == null) break;
 								
@@ -749,7 +749,7 @@
 										Alert.show("You should not change position, as it is derived attribute.", "Error", 4, this);
 									}
 								}
-																		
+								
 								//searched geometry
 								searchedGM = surface;
 								
@@ -767,7 +767,7 @@
 						circle.name = "circle";
 						this.clearAnnotationLayer();
 						annotationLayer.addChild(circle);	
-
+						
 						break;
 					
 					case "move":
@@ -859,9 +859,9 @@
 						// search interiors
 						var crvList:ArrayList = this.searchInteriorCurves(s);
 						if (crvList == null) return s;
-					
+						
 						s.interior = this.constructInterior(crvList, s);
-											
+						
 						return s;
 					}
 				}
@@ -907,7 +907,7 @@
 				}
 				return rings;
 			}
-				
+			
 			protected function searchInteriorCurves(_exterior:SG_Surface):ArrayList {
 				var crvList:ArrayList = new ArrayList();
 				for each (var c:SG_Curve in kit.curveList) {
@@ -1040,15 +1040,15 @@
 					
 					var n:int = wocs.length;
 					if (n == 0) return null;
-				
+					
 					var maxBearing:Number = Number.MIN_VALUE;
-				
+					
 					var cSeq:ArrayList = ocurve.coordinateSequence();
 					var m:int = cSeq.length;
 					// last two points
 					var c0:Coordinate2 = cSeq.getItemAt(m - 2) as Coordinate2;
 					var c1:Coordinate2 = cSeq.getItemAt(m - 1) as Coordinate2;
-				
+					
 					for (var i:int = 0; i < n; i++) {
 						woc = wocs.getItemAt(i) as SG_OrientableCurve;
 						var dSeq:ArrayList = woc.coordinateSequence();
@@ -1124,10 +1124,10 @@
 				searchGeomButton.alpha = 0.5;
 				moveGeomButton.alpha = 0.5;
 				deleteGeomButton.alpha = 0.5;
-			
+				
 			}
-
-
+			
+			
 			protected function searchGeomButton_clickHandler(event:MouseEvent):void
 			{
 				if (kit.affineParam == null) {
@@ -1139,7 +1139,7 @@
 					Alert.show("Cannot push this button during curve digitizing.", "Alert", 4, this);
 					return;					
 				}
-
+				
 				geomFlag = "search";
 				
 				addGeomButton.alpha = 0.5;
@@ -1147,7 +1147,7 @@
 				moveGeomButton.alpha = 0.5;
 				deleteGeomButton.alpha = 0.5;
 			}
-
+			
 			protected function moveGeomButton_clickHandler(event:MouseEvent):void
 			{
 				if (kit.affineParam == null) {
@@ -1159,7 +1159,7 @@
 					Alert.show("Cannot push this button during curve digitizing.", "Alert", 4, this);
 					return;					
 				}
-
+				
 				geomFlag = "move";
 				
 				addGeomButton.alpha = 0.5;
@@ -1179,7 +1179,7 @@
 					Alert.show("Cannot push this button during curve digitizing.", "Alert", 4, this);
 					return;					
 				}
-
+				
 				geomFlag = "delete";
 				
 				addGeomButton.alpha = 0.5;
@@ -1227,10 +1227,10 @@
 						
 						lSym = workLayer.getChildByName(curve.id.toString()) as LineSymbol;
 						if (lSym != null) workLayer.removeChild(lSym);
-
+						
 						curve.start.goOut.removeItem(curve);
 						curve.end.getIn.removeItem(curve);
-
+						
 						delete kit.curveList[curve.id];	
 						break;
 					
@@ -1276,16 +1276,18 @@
 						}
 						
 						delete kit.surfaceList[surface.id];
-
+						
 						break;
-
+					
 				}
 				operationGroup.selectedValue = null;
 			}
 			
 			public function displaySGPrimitive(_name:String, gm:SG_Primitive):Coordinate2 {
 				var center:Coordinate2;
-
+				
+				searchedGM = gm;
+				
 				if (getQualifiedClassName(gm) == "dataTypes.spatialGeometry::SG_Point") {
 					point = gm as SG_Point;
 					center = point.position;
@@ -1310,7 +1312,7 @@
 					argObj["surface"] = attValues;
 					center = geoOperations.Center.centerOfMIC(argObj).position;
 				}
-
+				
 				// Draw the Found Circle	
 				if (_name == "circle") {
 					var circle:Circle = new Circle(center, foundRadi);
@@ -1349,7 +1351,7 @@
 					crd2   = new Coordinate2();
 					crd2.x = center.x - 6;
 					crd2.y = center.y;
-
+					
 					crdArray.addItem(crd2);
 					var toTrg:Triangle = new Triangle("toTriangle", crdArray, 0xff0000);
 					annotationLayer.addChild(toTrg);
@@ -1385,7 +1387,7 @@
 					}
 				}
 			}
-
+			
 			protected function getParamButton_clickHandler(event:MouseEvent):void
 			{
 				if (geomFlag == "control") {
@@ -1416,7 +1418,7 @@
 						X[i] = new Array();		// ground point
 						X[i][0] = jcrd.x;
 						X[i][1] = jcrd.y;
-													
+						
 						i++;
 					}
 					
@@ -1427,7 +1429,7 @@
 					}
 					
 					kit.affineParam = affineParam;
-										
+					
 					geomFlag = "";
 					
 					// eliminate control points from the screen
@@ -1462,10 +1464,10 @@
 					getParamEnable = true;
 				}
 				accuracyWindow = null;
-
+				
 			}
-
-
+			
+			
 			protected function qualityButton_clickHandler(event:MouseEvent):void
 			{
 				if (kit.affineParam == null) {
@@ -1484,7 +1486,7 @@
 			{
 				if (association.relateFrom.length == 0 && association.relateTo.length == 0) {
 					Alert.show("Alert", "Select at least from or to before.", 4, this);
-				    return;
+					return;
 				}
 				
 				// from geometry
@@ -1527,25 +1529,25 @@
 				
 				/* display association by connecting lines
 				if (attTypeFrom != null) {
-					var fromFeatures:ArrayList = association.relateFrom;	// instances
-					for (var i:int = 0; i < fromFeatures.length; i++) {
-						var fromFeature:Feature = fromFeatures.getItemAt(i) as Feature;
-						var primiList:ArrayList   = fromFeature.attributes[attTypeFrom.name] as ArrayList;
-						var start:Coordinate2 = this.displaySGPrimitive("fromTriangle", primiList.getItemAt(0) as SG_Primitive);
-							
-						// to geometries
-						var attTypeTo:AttributeType = assoType.to.proxy;
-						if (attTypeTo != null) {
-							var toFeatures:ArrayList = association.relateTo;		// instances
-							for (var j:int = 0; j < toFeatures.length; j++) {
-								var toFeature:Feature = toFeatures.getItemAt(j) as Feature;
-								primiList = toFeature.attributes[attTypeTo.name] as ArrayList;
-								var end:Coordinate2 = this.displaySGPrimitive("toTriangle", primiList.getItemAt(0) as SG_Primitive);
-								var name:String = "line:" + association.id + ":" + fromFeature.id + ":" + toFeature.id;
-								this.displayLine(name, start, end);
-							}
-						}
-					}
+				var fromFeatures:ArrayList = association.relateFrom;	// instances
+				for (var i:int = 0; i < fromFeatures.length; i++) {
+				var fromFeature:Feature = fromFeatures.getItemAt(i) as Feature;
+				var primiList:ArrayList   = fromFeature.attributes[attTypeFrom.name] as ArrayList;
+				var start:Coordinate2 = this.displaySGPrimitive("fromTriangle", primiList.getItemAt(0) as SG_Primitive);
+				
+				// to geometries
+				var attTypeTo:AttributeType = assoType.to.proxy;
+				if (attTypeTo != null) {
+				var toFeatures:ArrayList = association.relateTo;		// instances
+				for (var j:int = 0; j < toFeatures.length; j++) {
+				var toFeature:Feature = toFeatures.getItemAt(j) as Feature;
+				primiList = toFeature.attributes[attTypeTo.name] as ArrayList;
+				var end:Coordinate2 = this.displaySGPrimitive("toTriangle", primiList.getItemAt(0) as SG_Primitive);
+				var name:String = "line:" + association.id + ":" + fromFeature.id + ":" + toFeature.id;
+				this.displayLine(name, start, end);
+				}
+				}
+				}
 				}
 				*/
 				
@@ -1570,7 +1572,7 @@
 	<fx:Declarations>
 		<s:RadioButtonGroup id="geomGroup"/>
 		<s:RadioButtonGroup id="operationGroup"/>
-
+		
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
 	<mx:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
@@ -1608,7 +1610,7 @@
 						  click="getParamButton_clickHandler(event)" enabled="{getParamEnable}"/>
 				<s:Button id="qualityButton" x="373" y="42" width="111" label=" show quality »"
 						  click="qualityButton_clickHandler(event)"/>
-
+				
 			</s:Group>
 		</s:NavigatorContent> 		
 	</mx:ViewStack> 	
@@ -1637,7 +1639,7 @@
 			</s:Group>
 		</s:Group>
 	</s:Panel>	
-
+	
 	<s:Group x="532" y="167" width="92" height="104" right="15" top="167">
 		<s:Rect x="0.5" y="0.5" width="100%" height="100%">
 			<s:stroke>
@@ -1647,7 +1649,7 @@
 				<s:SolidColor color="0xdadada"/>
 			</s:fill>
 		</s:Rect>
-
+		
 		<s:Label x="4" y="12" fontWeight="bold" text="Geometry"/>
 		<s:RadioButton x="4" y="28" label="SG_Point" groupName="geomGroup" id="pointRadio"/>
 		<s:RadioButton x="4" y="52" label="SG_Curve" groupName="geomGroup" id="curveRadio"/>
@@ -1677,7 +1679,7 @@
 				<s:SolidColor color="0xdadada"/>
 			</s:fill>
 		</s:Rect>
-
+		
 		<s:RadioButton x="8" y="7" label="add" id="addGeomButton" groupName="operationGroup" click="addGeomButton_clickHandler(event)"/>
 		<s:RadioButton x="8" y="30" label="search" id="searchGeomButton" groupName="operationGroup" click="searchGeomButton_clickHandler(event)"/>
 		<s:RadioButton x="8" y="53" label="move" id="moveGeomButton" groupName="operationGroup" click="moveGeomButton_clickHandler(event)" />
@@ -1690,7 +1692,7 @@
 		<s:Label x="12" y="0" width="103" id="XLabel" backgroundColor="#DADADA" verticalAlign="middle" height="20"/>
 		<s:Label x="148" y="0" id="YLabel" width="113" backgroundColor="#DADADA" verticalAlign="middle" height="20"/>
 	</s:Group>
-
+	
 	<s:Label x="547" y="16" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="588" y="18" text="English" color="#969696"

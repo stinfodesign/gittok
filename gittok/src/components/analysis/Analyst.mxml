@@ -1376,7 +1376,7 @@
 		<s:RadioButtonGroup id="geomGroup" enabled="false"/>
 	</fx:Declarations>
 	
-	<mx:Image x="10" y="10" source="@Embed('images/pictAnalysis1.png')" />
+	<s:Image x="10" y="10" source="@Embed('images/pictAnalysis1.png')" />
 	<s:Label x="75" y="15" text="Analyst" fontSize="16"/>
 	<s:Button x="40" y="89" label="open" width="54" id="openKitButton" click="openKitButton_clickHandler(event)"/>
 	<s:Button x="101" y="89" label="save" width="51" id="saveKitButton" click="saveKitButton_clickHandler(event)"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="469" height="270" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="470" height="270" 
 		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<s:layout>
@@ -9,6 +9,8 @@
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
+			import com.google.maps.Color;
+			
 			import components.modeling.*;
 			
 			import flash.filesystem.*;
@@ -28,6 +30,9 @@
 			
 			public var featureTypes:Dictionary 		= new Dictionary();
 			public var associationTypes:Dictionary 	= new Dictionary();
+			
+			[Bindable]
+			private var frColor:int = 0xffffff;
 			
 			protected function initializeApp(): void {
 				this.move(300,50);
@@ -156,11 +161,12 @@
 			}
 			
 			protected function featureLabel_mouseOver(event:MouseEvent):void {
-				frColor.color = 0xcacaca;
+				frColor = 0xcacaca;
+				
 			}
 			
 			protected function featureLabel_mouseOut(event:MouseEvent):void {
-				frColor.color = 0xffffff;
+				frColor = 0xffffff;
 			}
 			
 			protected function featureWindowClosing(event:Event):void 
@@ -222,19 +228,22 @@
 	<s:Label x="403" y="18" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>	
 	
-	<mx:Image x="10" y="10" source="@Embed('images/pictModeling1.png')" width="60" height="60"/>	
-	<mx:Image x="39" y="110" source="images/GFM.png"/>
+	<s:Image x="10" y="10" source="@Embed(source='images/pictModeling1.png')" width="60" height="60"/>	
+	<s:Image x="37" y="108" width="365" height="92" source="@Embed(source='images/GFM.png')"/>	
 	
-	<s:Rect id="featureRect" x="86" y="148" width="102" height="53">
+	<s:Label id="featureLabel" x="85" y="147" text="     FeatureType" 
+			 width="101" height="52"
+			 verticalAlign="middle" fontSize="12"
+			 click="featureLabel_clickHandler(event)" 
+			 mouseOver="featureLabel_mouseOver(event)"
+			 mouseOut="featureLabel_mouseOut(event)" backgroundColor="{frColor}"  />
+	<s:Rect x="85" y="147" width="100" height="51">
 		<s:stroke>
 			<s:SolidColorStroke color="0x000000"/>
 		</s:stroke>
-		<s:fill>
-			<s:SolidColor id="frColor" color="0xffffff"/>
-		</s:fill>
 	</s:Rect>
 	
-	<s:Rect id="associationRect" x="278" y="148" width="126" height="53">
+	<s:Rect id="associationRect" x="277" y="146" width="124" height="54">
 		<s:stroke>
 			<s:SolidColorStroke color="0x000000"/>
 		</s:stroke>
@@ -243,20 +252,13 @@
 		</s:fill>
 	</s:Rect>
 	
-	<s:Label id="featureLabel" x="86" y="148" text="     FeatureType" 
-			 width="102" height="53"
-			 verticalAlign="middle" fontSize="12"
-			 click="featureLabel_clickHandler(event)" 
-			 mouseOver="featureLabel_mouseOver(event)"
-			 mouseOut="featureLabel_mouseOut(event)" />
-	
-	<s:Label id="associationLabel" x="278" y="148" text="      AssociationType" 
-			 width="126" height="53"
+	<s:Label id="associationLabel" x="277" y="147" text="      AssociationType" 
+			 width="125" height="53"
 			 verticalAlign="middle" fontSize="12"
 			 click="associationLabel_clickHandler(event)" 
 			 mouseOver="associationLabel_mouseOver(event)"
 			 mouseOut="associationLabel_mouseOut(event)" />
-
+	
 	<!--
 	<s:Button x="86" y="148" label="FeatureType" width="102" height="53" id="featureButton" 
 			  click="featureButton_clickHandler(event)" cornerRadius="0"/>

@@ -3,32 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Editor</title>
-<style type="text/css">
-.mainSentence {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-}
-.FirstHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 20px;
-	font-style: normal;
-	font-weight: bold;
-}
-.secondHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 16px;
-	font-weight: bold;
-}
-.thirdHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-	font-weight:bold;
-}
-.mainSentence .thirdHeader .mainSentence .mainSentence {
-	font-weight: normal;
-	font-size:12px;
-}
-</style>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
 window.resizeTo(600,700);
 window.moveTo(750,20);
@@ -37,7 +12,7 @@ window.moveTo(750,20);
 
 <body>
 <p id="Top" class="FirstHeader">Editor<br/>
-データの編集</p>
+データ編集</p>
 <p class="secondHeader">はじめに</p>
 <p class="mainSentence">Editor ページは，応用スキーマに従って地物及び関連のインスタンスを取得し，編集するためにあります．そして地理データセット（gittok では kit といいます）を出力します．ここでは，まず地物インスタンスとその属性値を取得するときの規則であるインスタンスモデルを解説します．次に，実際に地理データをつくる手順を説明します．さらに，取得できる属性の種類とその概要について解説します．最後に，このページの操作法を示します．インスタンスモデルについては，以下の講義用スライドを最初に見ると良いでしょう．</p>
 <p class="mainSentence">
@@ -52,12 +27,12 @@ window.moveTo(750,20);
 <a href="#CRS">座標参照系と地図投影法の指定</a><br/>
 <a href="#editor">Editorの操作法</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p id="lecture" class="FirstHeader">講義用スライド</p>
+<p id="lecture" class="secondHeader">講義用スライド</p>
 <p class="mainSentence"><a href="../../lectureNotes/jp_pdf/04jpIntroductionToXML.pdf" target="_new">04 XML入門</a><br/>
 <a href="../../lectureNotes/jp_pdf/05jpFeatureInstance.pdf" target="_new">05 インスタンスの表現</a></p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p id="instanceModel" class="FirstHeader">インスタンスモデル (Instance Model)</p>
+<p id="instanceModel" class="secondHeader">インスタンスモデル (Instance Model)</p>
 <p class="mainSentence">インスタンスの構造は，インスタンスモデルというスキーマで定義されています．応用スキーマには，地物型及び関連型が定義されていますので，インスタンスモデルは，インスタンス（オブジェクトまたは単純にデータという場合もある）の集まりである地理データセットを取得するための仕様書という役割をもちます (図１参照)．</p>
 <p><img src="../figures/Instance Model and Instance.png" width="166" height="197" alt="InstanceModeAndDatal" /></p>
 <p class="mainSentence">図１．インスタンスモデルとデータセット</p>
@@ -66,114 +41,139 @@ window.moveTo(750,20);
 <p class="mainSentence">図2．gittokで使用するインスタンスモデル</p>
 <p class="mainSentence">インスタンスモデルは，どのような地物型，関連型であっても，一定の構造をもった地理データとして実装できるようにするためのスキーマです．</p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
-<p class="mainSentence">&nbsp;</p>
-<p id="kit" class="FirstHeader">キット (Kit)</p>
-<p><span class="mainSentence">gittokではインスタンスの集合を格納する地理データセットをキット(kit) と呼びます．Kit は応用スキーマに従って作成されます．Kit は，地物インスタンスの集合 (FeatureSet)と関連インスタンスの集合 (AssociationSet) を含みます.例えば，建物，道路，そして街路樹を含む kit があったとします．また建物と道路，道路と街路樹の間には関連があるとします．それぞれの地物型をとる地物インスタンスは複数あるのが普通です．例えば建物が100棟，交差点から交差点までを単位とする道路が50本，そして道路上に植えられた街路樹が65本というようにです．また，建物ー道路関連は100件，道路ー街路樹関連は50件あるかもしれません．つまり，キットはそれぞれ複数の種類の地物の集合（建物，道路，街路樹）と関連の集合（建物ー道路，道路ー街路樹）をもちます．この構造を，インスタンスモデルでは，キットはfeatureSetArrayという役割をもつ複数の地物集合(FreatureSet)及び，associationSetArrayという役割名をもつ，複数の関連集合 (AssociationSet) をもつ，と表現しています．そして，上の例でいえば，FeatureSet 及び AssociationSetそれぞれは，建物であれば，100棟の</span><span class="mainSentence">インスタンス (features)，道路ー街路樹関連であれば50件の関連インスタンス(associations) をもつでしょう．地物インスタンス，関連インスタンスは，Feature, Associationという型をとりますが，それらは，地物型 (FeatureType)，関連型 (AssociationType)のIDを属性にするので，インスタンスがどの型に従うかがわかります</span><span class="mainSentence">．</span></p>
-<p class="mainSentence"><span class="secondHeader">属性</span><br/>
+<p id="kit" class="secondHeader">Kit (地理空間データセット)</p>
+<p><span class="mainSentence">gittokではインスタンスの集合と，関連するデータの集まりを統合した地理空間データセットのことをキット(kit) と呼びます．Kit は応用スキーマに従って作成されます．Kit は，地物インスタンスの集合 (FeatureSet)と関連インスタンスの集合 (AssociationSet) を含みます．キットはそれぞれ複数の種類の地物の集合（例えば，建物，道路，街路樹）と関連の集合（例えば，建物ー道路，道路ー街路樹）をもちます．この構造を，インスタンスモデルでは，キットはfeatureSetArrayという役割をもつ複数の地物集合(FreatureSet)及び，associationSetArrayという役割名をもつ，複数の関連集合 (AssociationSet) をもつ，と表現しています．そして，上の例でいえば，FeatureSet 及び AssociationSetそれぞれは，建物であれば，100棟の</span><span class="mainSentence">インスタンス (features)，道路ー街路樹関連であれば50件の関連インスタンス(associations) をもつでしょう．地物インスタンス，関連インスタンスは，Feature, Associationという型をとりますが，それらは，地物型 (FeatureType)，関連型 (AssociationType)のIDを属性にするので，インスタンスがどの型に従うかがわかります</span><span class="mainSentence">．</span></p>
+<p class="mainSentence"><span class="thirdHeader">属性</span><br/>
 </p>
-<p class="mainSentence">Kitクラスは，複数の属性をもちます．このクラスのインスタンスは地理データセットになる訳で，いわば，これが地理空間データベースと呼べます．gittokではMySQLのようなデータベース管理システム (DBMS) は使わず，データ操作は全てメモリー上で行います．さて，それでは kit はどのような属性を保持するでしょうか．</p>
-<p class="mainSentence"><span class="thirdHeader">applicationSchemaURL</span>：Kitは応用スキーマに従って作成されますが，kit自身，自分がどの応用スキーマに従うかを示す情報を持っています．それがこのURLです．</p>
-<p class="mainSentence"><span class="thirdHeader">baseMapImageURL</span>: gittokではデジタイズ用の地図画像（ベースマップという）を用意し，それを画面に表示して，空間属性（点，線，面）を取得（数値化という意味でデジタイズという）します．ベースマップの所在を示すURLがこの属性です．</p>
-<p class="mainSentence"><span class="thirdHeader">affineParam</span>: ベースマップ上で幾何データをデジタイズしますが，データがもつ座標は，そのままですと，画面座標になります．しかし，これを地上の座標にしておくと，空間解析を行うときに，地上の尺度で計算できるので，距離や面積などを，分かりやすい単位で求めることができるようになります．そこで，画面座標を地上の平面座標に換算するパラメータが必要になります．gittokでは画面座標を，地上の平面座標に換算するためにアフィン変換を用い，そのパラメータを最小二乗法で求めます．また，換算の正確度を評価するパラメータも求めることができます．この方法の詳細については，edit CRSボタンを押すと現れる CRS Definition ページのテキストを見て下さい．</p>
-<p class="mainSentence"><span class="thirdHeader">crsUR</span>L: affineparamは画面座標と地上の平面座標の換算のためにありますが，地上の平面座標と経緯度の相互換算を行うためには，座標参照系 (Coordinate Reference System)が選択されなければいけません．crsURLは，座標参照系の定義とパラメータが入っているxml文書の所在位置を示します．これを使えば，gittokではガウス・クリューガ投影を使って，相互の換算を行うことができます．投影の仕組みについては，CRS Managerのページで解説しますので，そちらで学んで下さい．ます．gittok で使われる座標換算の詳細については，CRS Definition ページで解説します．</p>
-<p class="mainSentence"><span class="thirdHeader">pointLis</span>t: デジタイズした点は，SG_Point型をとるインスタンスですが，そのリストがpointListです．このリストに対してidを指定すれば，点を得ることができます．なお，幾何プリミティブについて知りたい場合は，AttributeTypeDesignerの解説を読みましょう．また，より詳細に学びたい場合は，別に用意するスライドを見て下さい．</p>
-<p class="mainSentence"><span class="thirdHeader">curveList</span>: デジタイズした曲線は，SG_Curve型をとるインスタンスですが，そのリストがcurveListです．このリストに対してidを指定すれば，曲線を得ることができます．</p>
-<p class="mainSentence"><span class="thirdHeader">surfaceList</span>: デジタイズした曲面は，SG_Surface型をとるインスタンスですが，そのリストがsurfaceListです．このリストに対してidくぉ指定すれば，曲面を得ることができます．</p>
-<p class="mainSentence"><span class="thirdHeader">complexList</span>: 幾何複体は，SG_Complex型をとるインスタンスですが，そのリストがcomplexListです．幾何複体はデジタイズして得るものではなく，ほとんどの場合，空間解析の結果を幾何で表現するときに使います．</p>
-<p class="mainSentence"><span class="thirdHeader">orientableCurveList</span>: 有向曲線リストは，SG_OrientableCurve型をとる有向曲線のインスタンスを内容にし，idをキーにするDictionaryです．有向曲線とは，SG_Curveを継承し，向きが付加されています．有向曲線は曲面の境界線の構成要素になり，プラスの符号をもつ場合は，曲面は左側にあり，マイナスの符号をもつ場合は曲面は右側にあります．</p>
-<p class="mainSentence"><span class="thirdHeader">ringList</span>: リング（輪）リストは，SG_Ring型をとり，曲面の内側と外側を区切る境界線になります．リングは有向曲線の列で表現されます．</p>
-<p class="mainSentence"><span class="thirdHeader">addressList</span>: 地物が属性として，住所をもつ場合は，そのインスタンスはaddressListの要素になります．アドレスリストは，Address型をとるアドレスを内容にして，そのidをキーにするDictionary型をとりまる．アドレスについてより詳しく知りたい場合は，別に用意するスライドを見て下さい．</p>
-<p class="mainSentence"><span class="thirdHeader">featureList</span>: 型によらず，全ての地物インスタンスを集めたリストです．GeometryWindowなどで，幾何プリミティブを指定して，それが属性になっている地物インスタンスを特定する必要がありますが，そのときは，このfeatureListに地物インスタンスのidを与えれば，簡単に地物インスタンスを取り出すことができます．</p>
-<p class="mainSentence"><span class="thirdHeader">associationList</span>: 型によらず，全ての関連インスタンスを集めたリストです．GeometryWindowなどで，幾何プリミティブを指定して，それが属性になっている関連インスタンスを特定する必要がありますが，そのときは，このassociationListに関連インスタンスのidを与えれば，簡単に関連インスタンスを取り出すことができます．</p>
-<p class="mainSentence"><span class="secondHeader">関連</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>applicationSchemaURL</strong></span><br />
+Kitは応用スキーマに従って作成されますが，kit自身，自分がどの応用スキーマに従うかを示す情報を持っています．それがこのURLです．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>baseMapImageURL</strong></span><br />
+gittokではデジタイズ用の地図画像（ベースマップという）を用意し，それを画面に表示して，空間属性（点，線，面）を取得（数値化という意味でデジタイズという）します．ベースマップの所在を示すURLがこの属性です．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>affineParam</strong></span><br />
+ベースマップ上で幾何データをデジタイズしますが，データがもつ座標は，そのままですと，ベースマップ上の座標、つまり地図座標になります．しかし，これを地上の座標にしておくと，空間解析を行うときに，地上の尺度で計算できるので，距離や面積などを，分かりやすい単位で求めることができるようになります．そこで，地図座標を地上の平面座標に換算するパラメータが必要になります．gittokでは地図座標を，地上の平面座標に換算するためにアフィン変換を用い，そのパラメータを最小二乗法で求めます．また，換算の正確度を評価するパラメータも求めることができます．この方法の詳細については，edit CRSボタンを押すと現れる CRS Definition ページのテキストを見て下さい．</p>
+<p class="mainSentence"><strong>crsURL</strong><br />
+affineParamは地図座標と地上の平面座標の換算のためにありますが，地上の平面座標と経緯度の相互換算を行うためには，さらに座標参照系 (Coordinate Reference System)の諸変数が必要になります．crsURLは，座標参照系の定義とパラメータが入っているファイルの所在位置を示します．これを使えば，gittokではガウス・クリューガー投影を使って，相互の換算を行うことができます．投影の仕組みについては，CRS Managerのページで解説しますので，そちらで学んで下さい．ます．gittok で使われる座標換算の詳細については，CRS Definition ページで解説します．</p>
+<p class="mainSentence"><strong>pointList<br />
+</strong>デジタイズした点は，SG_Point型をとるインスタンスですが，そのリストがpointListです．このリストに対してidを指定すれば，点を得ることができます．なお，幾何プリミティブについて知りたい場合は，AttributeTypeDesignerの解説を読みましょう．また，より詳細に学びたい場合は，別に用意するスライドを見て下さい．</p>
+<p class="mainSentence"><strong>curveList<br />
+</strong>デジタイズした曲線は，SG_Curve型をとるインスタンスですが，そのリストがcurveListです．このリストに対してidを指定すれば，曲線を得ることができます．</p>
+<p class="mainSentence"><strong>surfaceList<br />
+</strong>デジタイズした曲面は，SG_Surface型をとるインスタンスですが，そのリストがsurfaceListです．このリストはDictionary型，つまりに対してidを指定すれば，曲面を得ることができます．</p>
+<p class="mainSentence"><strong>complexList<br />
+</strong>幾何複体は，SG_Complex型をとるインスタンスですが，そのリストがcomplexListです．幾何複体はデジタイズして得るものではなく，ほとんどの場合，空間解析の結果を幾何で表現するときに使います．</p>
+<p class="mainSentence"><strong>orientableCurveList<br />
+</strong>有向曲線リストは，SG_OrientableCurve型をとる有向曲線のインスタンスを内容にし，idをキーにするDictionaryです．有向曲線とは，SG_Curveを継承し，向きが付加されています．有向曲線は曲面の境界線の構成要素になり，プラスの符号をもつ場合は，曲面は左側にあり，マイナスの符号をもつ場合は曲面は右側にあります．</p>
+<p class="mainSentence"><strong>ringList<br />
+</strong>リング（輪）リストは，SG_Ring型をとり，曲面の内側と外側を区切る境界線になります．リングは有向曲線の列で表現されます．</p>
+<p class="mainSentence"><strong>addressList<br />
+</strong>地物が属性として，住所をもつ場合は，そのインスタンスはaddressListの要素になります．アドレスリストは，Address型をとるアドレスを内容にして，そのidをキーにするDictionary型をとりまる．アドレスについてより詳しく知りたい場合は，別に用意するスライドを見て下さい．</p>
+<p class="mainSentence"><strong>featureList<br />
+</strong>型によらず，全ての地物インスタンスを集めたリストです．GeometryWindowなどで，幾何プリミティブを指定して，それが属性になっている地物インスタンスを特定する必要がありますが，そのときは，このfeatureListに地物インスタンスのidを与えれば，簡単に地物インスタンスを取り出すことができます．</p>
+<p class="mainSentence"><strong>associationList<br />
+</strong>型によらず，全ての関連インスタンスを集めたリストです．GeometryWindowなどで，幾何プリミティブを指定して，それが属性になっている関連インスタンスを特定する必要がありますが，そのときは，このassociationListに関連インスタンスのidを与えれば，簡単に関連インスタンスを取り出すことができます．</p>
+<p class="mainSentence"><span class="thirdHeader">関連</span><br/>
 </p>
 <p class="mainSentence">キットは，featureSetの集まり，つまり地物型ごとにまとめられた地物インスタンスの集合の集まりと関連します．この関連の役割名がfeatureSetArrayです．同様に関連インスタンスの集合の集まりと関連しますが，その役割名はassociationSetArrayです．これらについて，以下に解説します．</p>
-<p class="mainSentence"><span class="thirdHeader">featureSetArray</span>: 地物型ごとに作られる，地物インスタンスの集合featureSetを集めて作られるDictionary型をとるデータです．キーとしては，地物型の型名が使われます．</p>
-<p class="mainSentence"><span class="thirdHeader">associationSetArray</span>: 関連型ごとに作られる，関連インスタンスに集合associationSetを集めて作られるDictionary型をとるデータです．キーとしては，関連型の型名が使われます．</p>
+<p class="mainSentence"><strong>featureSetArray<br />
+</strong>地物型ごとに作られる，地物インスタンスの集合featureSetを集めて作られるDictionary型をとるデータです．インデックスとしては，地物型の型名が使われます．</p>
+<p class="mainSentence"><strong>associationSetArray<br />
+</strong>関連型ごとに作られる，関連インスタンスに集合associationSetを集めて作られるDictionary型をとるデータです．インデックスとしては，関連型の型名が使われます．</p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p id="featureSet" class="mainSentence"><span class="FirstHeader">地物集合 (FeatureSet)</span><br/>
+<p id="featureSet" class="mainSentence"><span class="secondHeader">FeatureSet (地物集合)</span><br/>
 </p>
 <p class="mainSentence">地物型ごとにまとめた地物インスタンスの集合を，地物集合と呼びますが，その型はFeatureSetです．以下の属性と関連をもちます．</p>
-<p class="mainSentence"><span class="secondHeader">属性</span><br/>
+<p class="mainSentence"><span class="thirdHeader">属性</span><br/>
 </p>
-<p class="mainSentence"><span class="thirdHeader">typeID</span>: 地物型の識別子です．</p>
-<p class="mainSentence"><span class="secondHeader">関連</span><br/>
+<p class="mainSentence"><strong>typeID <br />
+</strong>地物型の識別子です．</p>
+<p class="mainSentence"><span class="thirdHeader">関連</span><br/>
 </p>
-<p class="mainSentence">featureSetはfeaturesという役割名をもつ，地物インスタンスの集まりに関連します．</p>
-<p class="mainSentence"><span class="thirdHeader">features</span>: 地物インスタンスはFeatureという型を取ります．featuresはその集まりで，実質的にインスタンスの集まりを表現します．</p>
+<p class="mainSentence"><strong>features</strong><br /> 
+地物インスタンスはFeatureという型を取ります．featuresはその集まりで，実質的にインスタンスの集まりを表現します．</p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p id="associationSet" class="FirstHeader"> 関連集合 (AssociationSet)</p>
+<p id="associationSet" class="secondHeader"> AssociationSet (関連集合)</p>
 <p class="mainSentence">関連型ごとにまとめた関連インスタンスの集合を，関連集合と呼びますが，その型はAssociationSetです．以下の属性をもちます．</p>
-<p class="mainSentence"><span class="secondHeader">属性</span><br/>
+<p class="mainSentence"><span class="thirdHeader">属性</span><br/>
 </p>
-<p class="mainSentence"><span class="thirdHeader">typeID</span>: 地物型の識別子です．</p>
-<p class="mainSentence"><span class="secondHeader">関連</span><br/>
+<p class="mainSentence"><strong>typeID: </strong>地物型の識別子です．</p>
+<p class="mainSentence"><span class="thirdHeader">関連</span><br/>
 </p>
-<p class="mainSentence"><span class="thirdHeader">associations</span>: 関連インスタンスはAssociationという型を取ります．associationsはその集まりで，実質的に関連インスタンスの集まりを表現します．</p>
+<p class="mainSentence"><strong>associations:</strong> 関連インスタンスはAssociationという型を取ります．associationsはその集まりで，実質的に関連インスタンスの集まりを表現します．</p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p id="feature" class="FirstHeader">地物 (Feature)</p>
+<p id="feature" class="secondHeader">Feature (地物)</p>
 <p class="mainSentence">これは地物インスタンスがとる型です．地物インスタンスは地物型に従って作られますので，そのインスタンスが従う地物型FeatureTypeを参照し，二つの属性と二つの関連から成り立ちます．</p>
-<p class="mainSentence"><span class="secondHeader">属性</span><br/>
+<p class="mainSentence"><span class="thirdHeader">属性</span><br/>
 </p>
-<p class="mainSentence"><span class="thirdHeader">id</span>: 地物インスタンスの識別子です．</p>
-<p class="mainSentence"><span class="thirdHeader">attributes</span>: 属性型の名前をキーとし，属性値を内容とするDictionary型を取る地物属性の集まりです．</p>
-<p class="mainSentence"><span class="secondHeader">関連</span><br/>
+<p class="mainSentence"><strong>id<br />
+</strong>地物インスタンスの識別子です．</p>
+<p class="mainSentence"><strong>attributes<br />
+</strong>属性型の名前をインデックスとし，属性値を内容とするDictionary型を取る地物属性の集まりです．</p>
+<p class="mainSentence"><span class="thirdHeader">関連</span><br/>
 </p>
-<p class="mainSentence"><span class="thirdHeader">connects</span>: 地物インスタンスが，他の地物インスタンスと関連するときは，関連インスタンスを通して行います．connectsを使えば，複数の関連インスタンスと関連することができます．</p>
-<p class="mainSentence"><span class="thirdHeader">connectedBy</span>: 地物インスタンスが，別のインスタンスから関連されるときは，関連インスタンスを通して行います．connectedByを使えば，１つの関連インスタンスからの関連を受けることができます．</p>
+<p class="mainSentence"><strong>connects<br />
+</strong>地物インスタンスが，他の地物インスタンスと関連するときは，関連インスタンスを通して行います．connectsを使えば，複数の関連インスタンスと関連することができます．</p>
+<p class="mainSentence"><strong>connectedBy<br />
+</strong>地物インスタンスが，別のインスタンスから関連されるときは，関連インスタンスを通して行います．connectedByを使えば，１つの関連インスタンスからの関連を受けることができます．</p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p id="association" class="FirstHeader">関連 (Asociation)</p>
+<p id="association" class="secondHeader">Association (関連)</p>
 <p class="mainSentence">これは関連インスタンスがとる型です．関連型AssociationTypeを参照し，二つの属性と二つの関連から成り立ちます．</p>
-<p class="mainSentence"><span class="secondHeader">属性</span><br/>
+<p class="mainSentence"><span class="thirdHeader">属性</span><br/>
 </p>
-<p class="mainSentence"><span class="thirdHeader">id</span>: 関連インスタンスの識別子です．</p>
-<p class="mainSentence"><span class="thirdHeader">attributes</span>: 関連型の名前をキーとし，関連インスタンスの属性の値を内容とするDictionary型を取る，関連の属性の集まりです．</p>
-<p class="mainSentence"><span class="secondHeader">関連</span><br/>
+<p class="mainSentence"><strong>id: </strong>関連インスタンスの識別子です．</p>
+<p class="mainSentence"><strong>attributes:</strong> 関連型の名前をキーとし，関連インスタンスの属性の値を内容とするDictionary型を取る，関連の属性の集まりです．</p>
+<p class="mainSentence"><span class="thirdHeader">関連</span><br/>
 </p>
-<p class="mainSentence"><span class="thirdHeader">relateFrom</span>: 関連インスタンスは関連元の地物インスタンスと，関連先の地物インスタンスを結ぶ働きをもっています．relateFromという役割は，関連元の地物インスタンスを示すためにあります．</p>
-<p class="mainSentence"><span class="thirdHeader">relateTo</span>: この役割は，関連先の地物インスタンスを示すためにあります．関連先の地物インスタンスは，複数になる場合があります．</p>
+<p class="mainSentence"><strong>relateFrom:</strong> 関連インスタンスは関連元の地物インスタンスと，関連先の地物インスタンスを結ぶ働きをもっています．relateFromという役割は，関連元の地物インスタンスを示すためにあります．</p>
+<p class="mainSentence"><strong>relateTo: </strong>この役割は，関連先の地物インスタンスを示すためにあります．関連先の地物インスタンスは，複数になる場合があります．</p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p id="acquisition" class="FirstHeader">地理データの取得とその手順</p>
-<p class="mainSentence"><span class="secondHeader">地理データの取得とは</span><br/>
+<p id="acquisition" class="secondHeader">データの取得</p>
+<p class="mainSentence"><span class="thirdHeader">データの取得とは</span><br/>
 </p>
-<p class="mainSentence">地理データの取得とは，地物インスタンス，関連インスタンス及びその集まりを取得し，キットに入れて，外部に出力するファイルを作成することです．ここで取得とは，現場などでの調査結果をまとめて、，属性値としてインスタンスにもたせて，インスタンスを完成させる行為を指します．</p>
+<p class="mainSentence">データの取得とは，地物インスタンス，関連インスタンス及びその集まりを取得し，キットに入れて，外部に出力するファイルを作成することです．</p>
 <p class="mainSentence">例えば，建物が，名前，所有者，使用目的，住所，形状を属性としてもつとします．名前と住所は現場に行けば分かるでしょう．所有者と使用目的は管轄する市役所が把握しているでしょう．形状については，航空写真や大縮尺の地図からその外形をデジタイズすれば，曲面を作ることができます．そして名前，所有者及び使用目的は主題属性（文字列），住所は場所属性，形状は空間属性（曲面）に分類されます．これらの属性を建物インスタンスにもたせることができれば，一つのインスタンスは完成です．このような行為を通じて，インスタンスを追加してゆけば，地理データができます．</p>
-<p class="mainSentence"><span class="secondHeader">gittokでできるデータ取得</span><br/>
+<p class="mainSentence"><span class="thirdHeader">gittokでできるデータ取得</span><br/>
 </p>
 <p class="mainSentence">gittokでは，以下に示す作業用のページを使って，インスタンス及び属性を組み合わせ，地理データ（キット）を編集します．</p>
-<p class="mainSentence"><span class="thirdHeader">Editor</span>: 応用スキーマに従って，キットとインスタンスの編集，登録，更新を行うページ．文字列や数値で表現される主題属性の編集も，ここで行います．</p>
-<p class="mainSentence"><span class="thirdHeader">Geometry Window</span>: 空間属性の編集を行う属性編集ページ</p>
-<p class="mainSentence"><span class="thirdHeader">Image Window</span>: 画像が格納されている場所（場所属性）の編集を行う属性編集ページ</p>
-<p class="mainSentence"><span class="thirdHeader">Sound Window</span>: 音声が格納されている場所（場所属性）の編集を行う属性編集ページ</p>
-<p class="mainSentence"><span class="thirdHeader">Video Window</span>: 映像や動画が格納されている場所（場所属性）の編集を行う属性編集ページ</p>
-<p class="mainSentence"><span class="thirdHeader">Url Window</span>: URL（場所属性）の編集を行う属性編集ページ</p>
-<p class="mainSentence"><span class="thirdHeader">Address Window</span>: 住所（場所属性）の編集を行う属性編集ページ</p>
+<p class="mainSentence"><strong>Editor<br />
+</strong>応用スキーマに従って，キットとインスタンスの編集，登録，更新 及び削除を行うページ．文字列や数値で表現される主題属性の編集も，ここで行います．</p>
+<p class="mainSentence"><strong>Geometry<br />
+</strong>空間属性の編集を行う属性編集ページ</p>
+<p class="mainSentence"><strong>Image<br />
+</strong>画像が格納されている場所（場所属性）の編集を行う属性編集ページ</p>
+<p class="mainSentence"><strong>Sound<br />
+</strong>音声が格納されている場所（場所属性）の編集を行う属性編集ページ</p>
+<p class="mainSentence"><strong>Video<br />
+</strong>映像や動画が格納されている場所（場所属性）の編集を行う属性編集ページ</p>
+<p class="mainSentence"><strong>Url<br />
+</strong>URL（場所属性）の編集を行う属性編集ページ</p>
+<p class="mainSentence"><strong>Address<br />
+</strong>住所（場所属性）の編集を行う属性編集ページ</p>
 <p class="mainSentence">これらの具体的な説明は，それぞれのページで行います．なお，時間属性の編集も，近い将来，できるようにします．</p>
-<p class="mainSentence"><span class="secondHeader">地物インスタンスの取得</span><br/>
+<p class="mainSentence"><span class="thirdHeader">地物インスタンスの取得</span><br/>
 <p class="mainSentence">1．gittokのタイトルページから，Acquisitionアイコンを選択します．<br />
   2．Editor ページが開いたら，Modellerで作成した応用スキーマをオープンします．<br />
   3．Feature タブを選択して，FeatueTypeのドロップダウンリストの中から，編集する地物型を選択します．すると，Attribute Type List の中に，この地物型がもつべき属性の名前，データ型及び多重度の有無のリストが表示されます．<br />
   4．Instance ID の斜め上のaddボタンを押すと instance のリストを表示するドロップダウンリストInstance IDに新たな識別子が表示されます．これが地物インスタンスを追加する行為です．<br />
-5．Attribute Type List に表示された属性の中から，一つ選んで，マウスでプッシュすると，それぞれのデータ型に合わせた属性編集ページが表示されます．ただし，文字列や数値等の単純データ型を取る属性の場合は以下の説明を読んで下さい．<br />
-<p class="mainSentence"><span class="secondHeader">地物属性の取得</span><br />
+5．Attribute Type List に表示された属性の中から，一つ選んで，マウス等でクリックすると，それぞれのデータ型に合わせた属性編集ページが表示されます．ただし，文字列や数値等の単純データ型を取る属性の場合は以下の説明を読んで下さい．<br />
+<p class="mainSentence"><span class="thirdHeader">地物属性の取得</span><br />
 </p>
-<p class="mainSentence"><span class="thirdHeader">(複雑な属性の場合）</span><br/>
-  1. 属性編集用のページ（Geometry や Address など）で属性を作成し，指定します．<br />
+<p class="mainSentence"><span class="mainSentence"><strong>単純データ型をとる属性の場合</strong></span><br />
+1. Valueのテキストインプットに，属性値をキーインします．<br />
+2. addボタンを押すと，Value Gridのvalue欄に属性値が表示されます．これで，地物インスタンスに一つの属性が追加されたことになります．<br />
+3. もし属性に多重度がある場合は，1.と2.を繰り返すことによって，複数の属性値をValue Gridに追加することができます．<br />
+もし，追加した属性値が不要の場合は，Value Gridの該当する行を指定して，deleteボタンを押します．すると，Value Gridの中のその行が消去されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>複雑な属性の場合</strong></span><br/>
+  1. 属性編集用のページ（Geometry や Address など）で属性を作成し，追加する属性を選択します．<br />
   2. この状態で，ページ右下にあるaddボタンを押すと，Attribute Gridの右にあるValue Gridのid欄に属性のidが表示され，値がMemo型の場合はvalue欄に文字列が表示されます．これで，地物インスタンスに一つの属性が追加されたことになります．<br />
   3. もし属性値が複数ある場合は，1．と2．を繰り返すことによって，複数の属性idをValue Gridに追加することができます．<br />
-4. もし，追加した属性idや属性値が不要の場合は，Value Gridの該当する行を指定して，deleteボタンを押します．すると，Value Gridの中のその行が消去されます．<br />
+4. もし，追加した属性idや属性値が不要の場合は，Value Gridの該当する行を指定して，deleteボタンを押します．すると，Value Gridの中のその行が消去されます．ただし，属性編集ページ上の値は消去されない．その消去は，それぞれの属性編集ページで行わなければいけない．<br />
 </p>
-<p class="mainSentence"><span class="thirdHeader">（単純データ型をとる属性の場合）</span><br />
-  5. Valueのテキストインプットに，属性値をキーインします．<br />
-  6. addボタンを押すと，Value Gridのvalue欄に属性値が表示されます．これで，地物インスタンスに一つの属性が追加されたことになります．<br />
-  7. もし属性に多重度がある場合は，5.と6.を繰り返すことによって，複数の属性値をValue Gridに追加することができます．<br />
-8. もし，追加した属性値が不要の場合は，Value Gridの該当する行を指定して，deleteボタンを押します．すると，Value Gridの中のその行が消去されます．</p>
-<p class="mainSentence"><span class="secondHeader">関連インスタンスの取得</span><br/>
+<p class="mainSentence"><span class="thirdHeader">関連インスタンスの取得</span><br/>
 </p>
 <p class="mainSentence">関連インスタンスは，結ばれる地物インスタンスがそろっていなければ作成することはできません．以下，地物インスタンスの取得手順を説明します．<br/>
   1．gittokのタイトルページから，Acquisitionアイコンを選択します．<br />
@@ -181,130 +181,132 @@ window.moveTo(750,20);
   3．Association タブを選択して，AssociationTypeのドロップダウンリストの中から，編集する関連型を選択します．すると，connecterタブのボックスの中に，どの地物型から，どの地物型が関連するかが示されます．<br />
   4．まずはadd ボタンを押して，インスタンスを追加しましょう．<br />
   5. 次に，connecterタブのボックスにあるfromボタンを押しましょう．<br />
-  6. すると，これによってfrom側のproxy属性のデータ型に応じて，操作用のページが開きます．例えばproxy属性が幾何プリミティブであれば，Geometry ページが出現し，キットに含まれる全ての幾何属性が表示されます．proxy属性が文字列であれば，list ページが出現し，文字列の一覧が見られます．<br />
-  7．操作用のページを使って，関連の対象になる地物を全て選択しましょう．<br />
-  8．ここで，Editor のaddボタンを押すと，from地物にInstanceIDが表示されます．これはfrom地物のidです．<br />
-  9．次に，toボタンを押し，fromの場合と同様に，関連の対象になる地物を全て選択します．<br />
-10．from地物とto地物が関連付いているか，確認したいときは，showボタンを押します．すると，Geometry ページ上で，from地物には右向きの赤い三角形．to地物には左向きの赤い三角形が現れます．この表示を消すときは，Editor 上のclearボタンを押します．clearボタンの表示はshowに戻ります．fromまたはtoのproxyが幾何属性ではないときは，三角形は表示されません．</p>
-<p class="mainSentence"><span class="secondHeader">関連属性の取得</span><br/>
+  6. すると，これによってfrom側のproxy属性のデータ型に応じて，属性編集ページが開きます．例えばproxy属性が幾何プリミティブであれば，Geometry ページが出現し，キットに含まれる全ての幾何属性が表示されます．proxy属性が文字列であれば，list ページが出現し，文字列の一覧が見られます．<br />
+  7．操作用のページを使って，関連の対象になる地物を全て選択しましょう．すると，Instance ID リストに選択された地物のIDが順に表示されます．<br />
+  8．次に，toボタンを押し，fromの場合と同様に，関連の対象になる地物を全て選択します．<br />
 </p>
-<p class="mainSentence">次に関連自身がもつ属性の編集を行います．関連は，それ自体が実世界に起きている現象なので，地物の性質を継承します．例えば，橋と，その下を流れる川に関連を設定して，水面から桁下までの高さを関連の属性にすることができるでしょう．以下，関連がもつ属性の編集手順を説明します．<br />
+<p class="mainSentence">from地物とto地物が関連付いているか，確認したいときは，showボタンを押します．すると，Geometry ページ上で，from地物には右向きの赤い三角形．to地物には左向きの赤い三角形が現れます．この表示を消すときは，Editor 上のclearボタンを押します．clearボタンの表示はshowに戻ります．fromまたはtoのproxyが幾何属性ではないときは，三角形は表示されません．その代わり，proxy が文字列の場合は，List page が現れ，そこにproxyの値が表示されます．</p>
+<p class="mainSentence"><span class="thirdHeader">関連属性の取得</span><br/>
+</p>
+<p class="mainSentence">次に関連自身がもつ属性の編集を行います．関連は，それ自体が実世界に起きている現象なので，本来は地物の性質を継承します．しかしgittok では，関連は属性と操作はもつことができますが，継承関係は持ちません．それによって，応用スキーマの構造が複雑にならないようにしています．以下，関連の属性取得の手順を示します．<br />
   1. 関連インスタンスの取得を行った後で，AssociationTypeが指定され，InstanceIDが指定されている状態で，attributeEditorタブを選択して，関連用の属性編集ページを開きます．すると，Attribute Type List に属性型の一覧が表示されます．<br/>
   2. Attribute Type List の一覧から，適当な属性を選択します．<br/>
   3. 地物インスタンスの属性と同じ手順で，属性の取得，編集を行います．</p>
-<p class="mainSentence"><span class="secondHeader">キットのセーブとオープン</span><br />
+<p class="mainSentence"><span class="thirdHeader">Kit のセーブとオープン</span><br />
 </p>
-<p class="mainSentence">作成した地物及び関連のインスタンスは，このままではgittokを終了させた時点で消えてしまいます．そこで，キットとして外部の記憶装置に格納します．これをsaveと呼びます．キットをセーブするためには，Acquisition managerのsaveボタンを押します．すると，セーブするフォルダーやファイルの名前を指定するページが現れます．フォルダーと名前を決めると保存，つまりセーブすることができます．<br />
-  セーブしたキットを再度呼び出す行為はオープンと呼ばれます．オープンするためには，Acquisition Managerのオープンボタンを押します．すると，オープンするキットが入っているフォルダとキットの名前を指定することができ，それによって，キットがオープンされます．オープンしたキットの名前は，オープンボタンの下にあるラベルで見ることができます．</p>
+<p class="mainSentence">作成した地物及び関連のインスタンスは，このままではgittokを終了させた時点で消えてしまいます．そこで，キットとして外部の記憶装置に格納します．これをsaveと呼びます．キットをセーブするためには，Editor page の save ボタンを押します．すると，セーブするフォルダーやファイルの名前を指定するページが現れます．フォルダーと名前を決めると保存，つまりセーブすることができます．<br />
+  セーブしたキットを再度呼び出す行為はオープンと呼ばれます．オープンするためには，Editor page のオープンボタンを押します．すると，オープンするキットが入っているフォルダとキットの名前を指定することができ，それによって，キットがオープンされます．オープンしたキットの名前は，オープンボタンの下にあるラベルで見ることができます．</p>
+<p class="thirdHeader">Kit の併合</p>
+<p class="mainSentence">複数の人々が，共同でインスタンスの入力作業を行うとき，Gittok ではそれらを併合 (merge) して，一つの kit にすることができます．ただし，同じ地物や関連を別の人が入力しても，現状では重複のチェックは行っていません．したがって，重複が起きないように，作業領域の境界を明確にしておく必要があります．Editor 上のmerge ボタンを押して，併合するkitを指定すれば，併合が実行されます．</p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p id="CRS" class="FirstHeader">座標参照系パラメータの指定</p>
-<p class="mainSentence">空間属性に含まれる座標は，スクリーン上の画面座標です．これを地上の平面座標に換算するためにはアフィン変換を使います．さらに，地上平面座標と経緯度の換算には，gittokの場合，ガウス・クリューガー投影が用いられます．この投影法を使用するには，地球の形状や，座標の原点などで定義される座標参照系 (Coordinate Reference System: CRS) を指定する必要があります．そのために，Editor ページには、edit CRS というボタンが含まれており，これを押すと，上記のパラメータの指定ができ，そのパラメータとキットを関連づけることができます．詳細については，edit CRS ボタンを押すと現れる CRS Definition ページのテキストを読んで下さい．</p>
+<p id="CRS" class="secondHeader">座標参照系パラメータの指定</p>
+<p class="mainSentence">Gittok の空間属性に含まれる座標は，Geometry ページでデジタイズされた地図座標です．これを地上の平面座標に換算するためにはアフィン変換を使います．さらに，地上平面座標と経緯度の換算には，gittokの場合，ガウス・クリューガー投影が用いられます．この投影法を使用するには，地球の形状や，座標の原点などで定義される座標参照系 (Coordinate Reference System: CRS) を指定する必要があります．そのために，Editor ページには、edit CRS というボタンが含まれており，これを押すと，上記のパラメータの指定ができ，そのパラメータとキットを関連づけることができます．詳細については，edit CRS ボタンを押すと現れる CRS Definition ページのテキストを読んで下さい．</p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p id="editor" class="FirstHeader">Editor の操作画面<span class="thirdHeader"></span></p>
+<p id="editor" class="secondHeader">Editor の操作画面</p>
 <p class="mainSentence">Editor を使用するためには，最初は応用スキーマの指定，一度キットを作成した場合は，そのオープンを行います．</p>
-<p class="secondHeader">表示欄</p>
-<p class="mainSentence"><span class="thirdHeader">Application Schema</span><br/>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Application Schema</strong></span><br/>
 応用スキーマに従う地理データを作成するに，最初に応用スキーマを指定します．それは，openボタンを押して表示されるページから行いますが，指定された応用スキーマの名前がこの欄に表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">kit</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>kit</strong></span><br/>
   作成した地理データはキットと呼ばれ，取得作業が終了すると補助記憶装置に格納します．また，再度取得や編集の作業を行う場合は，お序記憶装置から呼び出します．そのとき，キットの名前がこの欄に表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">CRS</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>CRS</strong></span><br/>
 キットの座標を経緯度と相互換算するための座標参照系を定義するパラメータファイルの名前がここに表示されます．</p>
-<p class="secondHeader">ボタン</p>
-<p class="mainSentence"><span class="thirdHeader">open (Application Schema)</span><br/>応用スキーマをオープンするには，このボタンを押して，スキーマの選択を行います．</p>
-<p class="mainSentence"><span class="thirdHeader">open (Kit)</span><br/>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>open (Application Schema)</strong></span><br/>応用スキーマをオープンするには，このボタンを押して，スキーマの選択を行います．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>open (Kit)</strong></span><br/>
 一度作成したキットを呼び出すときは，このボタンを押して，キットの選択を行います．キットがオープンされると下の表示欄に，キットのファイル名が表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">save (Kit)</span><br/>作成したキットを補助記憶装置に格納するためには，このボタンを押して，格納するフォルダーとファイル名を指定して，格納します．</p>
-<p class="mainSentence"><span class="thirdHeader">edit (CRS)</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>save (Kit)</strong></span><br/>作成したキットを補助記憶装置に格納するためには，このボタンを押して，格納するフォルダーとファイル名を指定して，格納します．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>edit (CRS)</strong></span><br/>
 座標参照系を指定するためには，このボタンを押して，CRS Definition ページの中で行います．</p>
-<p class="mainSentence"><span class="thirdHeader">get (CRS)</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>get (CRS)</strong></span><br/>
 このボタンを押すと，CRS Editor 上にある座標参照系ファイルを kit に付加することができます．</p>
-<p class="secondHeader">Feature Editor</p>
-<p class="mainSentence">Feature タブを押してでてくるボックスはFeatureEditor です．これは，地物インスタンスの作成を行うためにあります．インスタンスの生成を行い，Attribute Type List 各行で示された属性型ごとに開くページを使って属性を取得し，キットに追加して行きます．作業を終えるときは，キットを補助記憶装置に格納し，再開するときは，呼び出して，作業を継続します．</p>
-<p class="thirdHeader"><img src="../figures/Editor_Feature.png" width="492" height="656" alt="AcqFeature" /></p>
-<p class="mainSentence">図2. 地物インスタンスとその属性の取得のための画面</p>
-<p class="secondHeader">表示欄<span class="thirdHeader"></span></p>
-<p class="mainSentence"><span class="thirdHeader">Feature Type（操作可能）</span><br/>このドロップダウンリストで，取得する地物の型を指定します．指定すると，Attribute Grid欄に地物属性の一覧が表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">Instance ID（操作可能）</span><br/>
+<p class="thirdHeader">Feature Tab</p>
+<p class="mainSentence">Feature タブを押してでてくるパネルはFeatureEditor です．これは，地物インスタンスの作成を行うためにあります．インスタンスの生成を行い，Attribute Type List 各行で示された属性型ごとに開くページを使って属性を取得し，キットに追加して行きます．</p>
+<p class="thirdHeader"><img src="../figures/Editor_Feature.png" width="520" height="650" alt="AcqFeature" /></p>
+<p class="mainSentence">図2. 地物インスタンスとその属性の編集のための画面</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Feature Type（選択可能）</strong></span><br/>このドロップダウンリストで，取得する地物の型を指定します．指定すると，Attribute Grid欄に地物属性の一覧が表示されます．</p>
+<p class="mainSentence"><strong>Instance ID（選択可能）</strong><br/>
   このドロップダウンリストには，生成されたインスタンスのIDの一覧が表示されます．既に生成されたインスタンスの属性を編集する場合は，ここで，該当するインスタンスを選択します．</p>
-<p class="mainSentence"><span class="thirdHeader">Attribute Type List（操作可能）</span><br/>
-指定された地物型に含まれる属性の名前，データ型,多重度そして計量の単位が，一覧として表示されます．最初のdr は derived の略で，派生属性の場合は，/ が表示されます．属性の取得を行うためには，この中から対象の行を選択します．すると，該当するデータ型のためのページが表示されます．基本データ型の場合は，Value欄から入力します．派生属性は，別の場所で値が求められますので，ここでは指定することはできません．</p>
-<p class="mainSentence"><span class="thirdHeader">Value（編集可能）</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>Attribute Type List（選択可能）</strong></span><br/>
+指定された地物型に含まれる属性の名前，データ型,多重度そして計量の単位が，一覧として表示されます．最初のdr は derived の略で，派生属性の場合は，/ が表示されます．属性の編集を行うためには，この中から対象の行を選択します．すると，該当するデータ型のためのページが表示されます．基本データ型の場合は，Value欄から入力します．派生属性は，別の場所で値が求められますので，ここでは指定することはできません．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Value（編集可能）</strong></span><br/>
   属性値が単純データ型の場合は，この欄に値を入力します．</p>
-<p class="mainSentence"><span class="thirdHeader">Attribute ID Value List（操作可能）</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>Attribute ID-Value List（選択可能）</strong></span><br/>
   属性が取得されると，それが単純データ型を撮る場合はvalue欄に値が入ります．複合データ型をとる場合は，その属性値のidが ID 欄に表示されます．多重度がある属性の場合，複数の行に表示が行われます．</p>
-<p class="secondHeader">ボタン</p>
-<p class="mainSentence"><span class="thirdHeader">add (Instance ID)</span><br/>地物インスタンスを取得するためには，まず，このボタンを押して，インスタンスの生成を行わなければ行けません．生成が行われると，下のドロップダウンリストに，インスタンスのidが一覧表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">delete (Instance ID)</span><br/>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>add (Instance ID)</strong></span><br/>
+地物インスタンスの属性を取得するためには，まず，このボタンを押して，インスタンスの生成を行わなければ行けません．生成が行われると，下のドロップダウンリストに，インスタンスのidが一覧表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>delete (Instance ID)</strong></span><br/>
 取得されたインスタンスを削除するときは，下のドロップダウンリストから該当するインスタンスのidを選択し，このボタンを押します．インスタンスは削除され，ドロップダウンリストからidが消えます．</p>
-<p class="mainSentence"><span class="thirdHeader">add (Attribute ID Value List)</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>add (Attribute ID-Value List)</strong></span><br/>
 属性の取得が行われるたとき，このボタンをを押すと，複合データ型の場合は属性値の id が ID 欄に，単純データ型の場合は，属性値が value 欄に追加されます．多重度が指定されているときは，複数の行が使われますが，多重度がないときは，一つ以上の値を追加しようとすると警告が表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">delete (Attribute ID Value List)</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>delete (Attribute ID Value List)</strong></span><br/>
 取得された属性を削除するときは，削除する行を指定して，このボタンを押します．指定された行の値が消去されます．</p>
-<p class="secondHeader">Association Editor</p>
+<p class="secondHeader"><strong>Association Tab</strong></p>
 <p class="mainSentence">Association タブを選択して現れる Association Editor は，関連インスタンスの作成を行うためにあります．インスタンスの生成を行い，データ型ごとに開く編集用のページを使って属性を取得し，キットに追加して行きます．作業を終えるときは，キットを補助記憶装置に格納し，再開するときは，呼び出して，作業を継続します．</p>
-<p class="secondHeader">表示欄</p>
-<p class="mainSentence"><span class="thirdHeader">AssociationType（操作可能）</span><br/>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>AssociationType（選択可能）</strong></span><br/>
 このドロップダウンリストで，関連型を指定します．</p>
-<p class="mainSentence"><span class="thirdHeader">Instance ID（操作可能）</span><br/>このドロップダウンリストには，生成されたインスタンスのIDの一覧が表示されます．既に生成されたインスタンスの属性を編集する場合は，ここで，該当するインスタンスを選択します．</p>
-<p class="secondHeader">ボタン</p>
-<p class="mainSentence"><span class="thirdHeader">add (Instance ID)</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>Instance ID（選択可能）</strong></span><br/>このドロップダウンリストには，生成されたインスタンスのIDの一覧が表示されます．既に生成されたインスタンスの属性を編集する場合は，ここで，該当するインスタンスを選択します．</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>add (Instance ID)</strong></span><br/>
 関連インスタンスを取得するためには，まず最初に，このボタンを押して，インスタンスの生成を行わなければ行けません．生成が行われると，下のドロップダウンリストに，インスタンスの id が表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">delete (Instance ID)</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>delete (Instance ID)</strong></span><br/>
   取得されたインスタンスを削除するときは，下のドロップダウンリストから該当するインスタンスの id を選択し，このボタンを押します．インスタンスは削除され，ドロップダウンリストから id が消えます．</p>
-<p class="secondHeader">Connecter</p>
+<p class="secondHeader">Association &gt; Connecter</p>
 <p class="mainSentence">関連インスタンスの目的は，主に，二種類の地物（fromとto）を結びつけることにあります．このタブボックスを開くと，from 地物とto 地物の型，役割名，多重度，proxy 幾何属性の名前と型が表示されます．</p>
 <p class="mainSentence">このタブボックスでは，Geometry ページや List ページを使って，指定された関連のfrom地物とto地物のインスタンスを指定します．proxy 属性を通じて，インスタンスを指定すると Instance ID 欄にそれぞれの id が一覧表示されます．ただし，correspondence つまりfrom と to の対応関係が 1:1, 1:n のときは from 側のインスタンスは一つだけ，m:1 のときは to 側のインスタンスは一つだけしか指定できません．</p>
-<p class="mainSentence"><img src="../figures/Editor_AssocConnecter.png" width="492" height="656" alt="connecter" /></p>
+<p class="mainSentence"><img src="../figures/Editor_AssocConnecter.png" width="524" height="650" alt="connecter" /></p>
 <p class="mainSentence">図3.　from 地物と to 地物のインスタンス同士を関連づけるタブボックス</p>
-<p class="secondHeader">表示欄</p>
-<p class="mainSentence"><span class="thirdHeader">Association style</span><br/>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Association style</strong></span><br/>
 指定された関連が，通常の関連 (association)か，合成 (composition)か，が示されます．本来であれば，合成が選択されると，from 側のインスタンスが消去されると， to 側のインスタンスも自動的に消去されなければいけませんが，現在はまだ，実装していません．</p>
-<p class="mainSentence"><span class="thirdHeader">Feature type</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>Feature type</strong></span><br/>
 from 地物とto 地物の型が表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">Role name</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>Role name</strong></span><br/>
 to 地物の役割名が示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">Correspondence</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>Correspondence</strong></span><br/>
   from 地物とto 地物の対応関係（1:1, 1:n, m:1, m:n）が表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">Instance ID</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>Instance ID</strong></span><br/>
   Geometry Window 上で，from 地物または to 地物のインスタンスが選択され，add ボタンが押されると，ID が示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">Proxy</span><br/>
-地物の proxy 空間属性の名前が表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">Proxy type</span><br/>
-proxy 空間属性のデータ型が示されます．</p>
-<p class="secondHeader">ボタン</p>
-<p class="mainSentence"><span class="thirdHeader">from</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>Proxy</strong></span><br/>
+地物の proxy 属性の名前が表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Proxy type</strong></span><br/>
+proxy 属性のデータ型が示されます．</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>from</strong></span><br/>
 このラジオボタンを押すと属性編集 ページ上で from 地物のインスタンスを指定できるようになります．</p>
-<p class="mainSentence"><span class="thirdHeader">to</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>to</strong></span><br/>
 このラジオボタンを押すと，属性編集ページ上で to 地物のインスタンスを指定できるようになります．</p>
-<p class="mainSentence"><span class="thirdHeader">show</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>show</strong></span><br/>
 このボタンを押すと，Geometry ページ上のfrom地物の代理幾何図形に右向きの赤い三角形，to地物の代理幾何図形上に左向きの赤い三角が表示されます．表示されると，このボタンには，showに代ってclearということばが表示されます．clearボタンを押すと，赤い三角形は消去されます．</p>
-<p class="mainSentence"><span class="thirdHeader">cancel</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>cancel</strong></span><br/>
   削除するインスタンスを選び，このボタンを押すと，InstanceIDが消去されます．インスタンスの選択は，from 地物の場合は，from ボタンを押した状態にすること，to 地物の場合は，to ボタンを押した状態にして，該当するインスタンスの行を指定した後で行います．</p>
-<p class="mainSentence"><span class="thirdHeader"></span></p>
-<p class="secondHeader">AttributeEditor</p>
+<p class="secondHeader">Association &gt; AttributeEditor</p>
 <p class="mainSentence">Attribute Editorは，関連インスタンスの属性の取得と編集を行うためにあります．Attribute Type List に表示されるデータ型ごとに開く属性編集用のページを使って属性を取得し，関連インスタンスに追加して行きます<span class="secondHeader">．</span></p>
 <p class="mainSentence"><img src="../figures/Editor_AssocAttribute.png" width="492" height="656" alt="assoAttEditor" /></p>
 <p class="mainSentence">図4．関連インスタンスの属性を編集するためのタブボックス</p>
-<p class="secondHeader">表示欄</p>
-<p class="mainSentence"><span class="thirdHeader">Association Type（操作可能）</span><br/>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Association Type（選択可能）</strong></span><br/>
   このドロップダウンリストで，取得する関連の型を指定します．指定すると，Attribute Type List 欄に属性の一覧が表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">Instance ID（操作可能）</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>Instance ID（選択可能）</strong></span><br/>
 このドロップダウンリストには，生成されたインスタンスのIDの一覧が表示されます．既に生成されたインスタンスの属性を編集する場合は，ここで，該当するインスタンスを選択します．</p>
-<p class="mainSentence"><span class="thirdHeader">Attribute Type List（操作可能）</span><br/>
-指定された地物型に含まれる属性の名前，データ型,多重度そして単位が，一覧として表示されます．最初の der. は derived の略で，派生属性の場合は，/ が表示されます．属性の取得を行うためには，この中から対象の行を選択します．すると，該当するデータ型のためのページが表示されます．基本データ型の場合は，Value 欄から入力します．派生属性は，別の場所で値が求められますので，ここでは指定することはできません．</p>
-<p class="mainSentence"><span class="thirdHeader">Attribute ID / Value List（編集可能）</span><br/>属性値が単純データ型の場合は，この欄に値を入力します．</p>
-<p class="mainSentence"><span class="thirdHeader">Value（操作可能）</span><br/>
+<p class="mainSentence"><strong>Attribute Type List（選択可能）</strong><br/>
+指定された地物型に含まれる属性の名前，データ型,多重度そして単位が，一覧として表示されます．最初の dr は derived の略で，派生属性の場合は，/ が表示されます．属性の取得を行うためには，この中から対象の行を選択します．すると，該当するデータ型のためのページが表示されます．基本データ型の場合は，Value 欄から入力します．派生属性は，別の場所で値が求められますので，ここでは指定することはできません．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Attribute ID-Value List（選択可能）</strong></span><br/>属性値が単純データ型の場合は，この欄に値を入力します．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Value（選択可能）</strong></span><br/>
   ここから属性を入力すると，それがAttribute ID / Value List の value 欄に値が入ります．複合データ型をとる場合は，その属性値の id が ID 欄に表示されます．多重度がある属性の場合，複数の行に表示が行われます．</p>
-<p class="secondHeader">ボタン</p>
-<p class="mainSentence"><span class="thirdHeader">add (Attribute)</span><br/>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>add (Attribute)</strong></span><br/>
 属性の取得が行われるたとき，このボタンを押すと，複合データ型の場合は属性値のidが ID 欄に，単純データ型の場合は，属性値が value 欄に追加されます．多重度が指定されているときは，複数の行が使われますが，多重度がないときは，一つ以上の値を追加しようとすると警告が表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">delete (Attribute)</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>delete (Attribute)</strong></span><br/>
   取得された属性を削除するときは，削除する行を指定して，このボタンを押します．指定された行の値が消去されます．</p>
-<p class="mainSentence"><span class="thirdHeader">日本語</span><br />
+<p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />
 今あなたが読んでいるドキュメントが表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">English</span><br />
+<p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
   You can read the tutorial written in English.</p>
 <p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="secondHeader"></p>

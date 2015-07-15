@@ -180,7 +180,7 @@ package geoOperations
 		}
 		
 		// center of Maximal Inscribed Circle in any polygon
-		public static function centerOfMIC(argObj:Object):SG_Point {
+		public static function centerOfMIC(argObj:Object, gridSize:int = 10):SG_Point {
 			/*
 			This algorithm can be used for the surface without interior boundaries
 			*/
@@ -191,7 +191,7 @@ package geoOperations
 			var coors:CoordinateArray = surface.exterior.coordinateSequence();
 
 			// define grid
-			var m:int = 10;
+			var m:int = gridSize;
 			
 			var minx:Number = Number.MAX_VALUE;
 			var miny:Number = Number.MAX_VALUE;
@@ -217,7 +217,7 @@ package geoOperations
 			var bc:Coordinate2;
 			var ec:Coordinate2;
 			var dist:Number;
-			var target:Coordinate2 = new Coordinate2();
+			var target:Coordinate2;
 			var cc:Coordinate2 = new Coordinate2();
 			var interval:Number;
 			var dt:Number;
@@ -259,6 +259,11 @@ package geoOperations
 					}
 				}
 			}
+			
+			/*
+			Retry centering if target position was null.
+			*/
+			if (target == null) centerOfMIC(argObj, gridSize * 2);
 			
 			var p:SG_Point = new SG_Point();
 			p.featureID = surface.featureID;

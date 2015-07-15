@@ -237,31 +237,36 @@
 			}
 			
 			private function drawGeographicExtent():void {
+				//epsg:4326 WGS84
 				var ll:Location = new Location(geographicExtent.lowerLeft.y, geographicExtent.lowerLeft.x, "EPSG:4326");
 				var ur:Location = new Location(geographicExtent.upperRight.y, geographicExtent.upperRight.x, "EPSG:4326");
-				ll = ll.reprojectTo("EPSG:900913");
-				ur = ur.reprojectTo("EPSG:900913");
 				
-				var bounds:Bounds = new Bounds(ll.lon, ll.lat, ur.lon, ur.lat, "EPSG:900913");
+				//epsg:900913 or 3857  Spherical mercator projection coordinate system popularaized by Google maps, OSM and so on
+				ll = ll.reprojectTo("EPSG:3857");
+				ur = ur.reprojectTo("EPSG:3857");
+				
+				var bounds:Bounds = new Bounds(ll.lon, ll.lat, ur.lon, ur.lat, "EPSG:3857");
 				fxMap.map.zoomToExtent(bounds);
 				
 				var reso:Number = Math.log(fxMap.map.resolution.value) / Math.LN2;
 				
 				var ireso:int = int(reso + 0.5);
-				if (ireso >18) ireso = 18;
+				if (ireso >17) ireso = 17;
 				if (ireso < 0) ireso =  0;
 				reso = dLayer.resolutions[17 - ireso];
 				
 				fxMap.map.resolution = new Resolution(reso, fxMap.map.projection);
-				zoomSlider.value =18.0 - ireso + 1;
+				zoomSlider.value =17.0 - ireso;
 				
 				
 				plygnFeature = this.getPolygonFeature(ll, ur);
 				
-				dLayer.clear();
+				if (dLayer != null) fxMap.map.removeLayer(dLayer);
+				
+				dLayer = new DrawingsLayer("drawingLayer");
 				dLayer.addFeature(plygnFeature);
 				fxMap.map.addLayer(dLayer);
-				dLayer.generateResolutions(18);				
+				this.setResolution(); 	// In fact, geographic extent is drawn on the panel by this function
 			}
 
 			protected function getPolygonFeature(lowerLeft:Location, upperRight:Location):PolygonFeature {				
@@ -877,7 +882,7 @@
 		<s:RadioButtonGroup id="selectRadio"/>
 	</fx:Declarations>
 	
-	<mx:Image x="10" y="4" source="images/pictManagement1.png"/>
+	<s:Image x="10" y="4" source="@Embed(source='images/pictManagement1.png')"/>
 	<s:Label x="75" y="15" text="Manager" fontSize="16"/>
 	
 	<s:Panel id="mapPanel" left="25" top="335" right="25" bottom="25" title="Geographic Extent" 

@@ -48,7 +48,7 @@ An application schema may have more than zero association types.</p>
   A definition of the feature type. It should be described to explain meaning of this type in the application schema (universe of discource).</p>
 <p class="mainSentence"><span class="thirdHeader">Associations</span></p>
 <p class="mainSentence"><strong>parent</strong><br />
-A feature type may inherit properties of a parental type as mentioned above. While a parent is inherited by children. Such relationship is called inheritance. The association between parent and children is a self association, because it is an association between feature types. In case of gittok, multiple inheritance is not allowed to keep the structure as simple as possible. </p>
+A feature type may derive properties of a parental type as mentioned above. While a parent is derived by children. Such relationship is called inheritance. The association between parent and children is a self association, because it is an association between different feature types. In case of gittok, multiple inheritance is not allowed to keep the structure as simple as possible. According to the notation rule of UML, inheritance relationship is represented as an arrow of which front end is triangle. However, GFM is a meta-schema to show how to represent application schemata. A self-association between feature types shown in GFM specifies that application schema may have inheritance relationship between different feature types.</p>
 <p class="mainSentence"><strong>children</strong><br />
 Feature types inherit properties of a parent type are child types.</p>
 <p class="mainSentence"><strong>proxyName</strong><br />

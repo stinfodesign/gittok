@@ -76,7 +76,7 @@
 		]]>
 	</fx:Script>
 	<s:Label x="80" y="15" text="Address" fontSize="16"/>
-	<mx:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
+	<s:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
 	<s:Label x="77" y="52" text="ZIP code"/>
 	<s:TextInput id="zipInput" x="136" y="44" width="100" height="20"/>
 	<s:Label x="77" y="101" text="address"/>

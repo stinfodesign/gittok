@@ -245,7 +245,7 @@
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
-	<mx:Image x="10" y="16" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
+	<s:Image x="10" y="16" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
 	<s:Label x="76" y="15" text="Image" fontSize="16"/>
 	<s:Panel id="imagePanel" title="Image Panel" width="450" height="360" x="26" y="88" 
 			 mouseDown="imagePanel_mouseDownHandler(event)" 

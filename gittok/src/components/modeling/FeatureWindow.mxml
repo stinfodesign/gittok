@@ -486,7 +486,7 @@
 
 			protected function text_en_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("/documents/jp/featureTypeDesigner_en.html");
+				var request:URLRequest = new URLRequest("/documents/en/featureTypeDesigner_en.html");
 				navigateToURL(request);
 			}
 
@@ -550,8 +550,8 @@
 	<s:Label x="547" y="10" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
 	
-	<mx:Image x="10" y="10" source="@Embed('images/pictModeling1.png')" width="60" height="60"/>
-	<mx:Image x="12" y="84" source="@Embed('images/featureTypeFrame.png')"/>
+	<s:Image x="10" y="10" source="@Embed('images/pictModeling1.png')" width="60" height="60"/>
+	<s:Image x="12" y="84" source="@Embed('images/featureTypeFrame.png')"/>
 	
 	<!-- MATERIALS -->
 	

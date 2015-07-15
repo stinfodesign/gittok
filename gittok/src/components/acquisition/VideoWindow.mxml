@@ -110,7 +110,7 @@
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
-	<mx:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
+	<s:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
 	<s:VideoDisplay id="videoView" left="69" right="69" top="115" bottom="110" autoPlay="false"
 					source="{videoURL}"/>
 	<s:HGroup bottom="67" width="186" height="24" horizontalCenter="-9">

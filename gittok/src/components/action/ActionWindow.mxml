@@ -13,8 +13,8 @@
 			}
 		]]>
 	</fx:Script>
-	<mx:Image x="15" y="10" source="@Embed('images/pictAction0.png')" width="80" height="60"/>
-	<mx:Image x="48" y="85" width="400" height="150"
+	<s:Image x="15" y="10" source="@Embed('images/pictAction0.png')" width="80" height="60"/>
+	<s:Image x="48" y="85" width="400" height="150"
 			  source="@Embed('images/actionText.png')"/>
 	<s:Label x="95" y="23" fontSize="16" text="Action"/>
 </s:Window>

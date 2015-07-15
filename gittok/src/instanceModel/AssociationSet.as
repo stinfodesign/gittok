@@ -20,7 +20,7 @@ package instanceModel
 			str += '<associations';
 			var flag:Boolean = false;
 			var aids:String = ' idref="';
-			for each(var association:Association in associations) {
+			for each(var association:* in associations) {
 				aids += association.id + ',';
 				flag = true;
 			}

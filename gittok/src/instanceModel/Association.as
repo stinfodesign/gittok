@@ -89,21 +89,32 @@ package instanceModel
 			str += strAddr;
 			str += strGeom;
 			
-			str += '<relateFrom idref="';
 			m = relateFrom.length;
-			for (i = 0; i < m; i++) {
-				var fromFt:Feature = relateFrom.getItemAt(i) as Feature;
-				str += fromFt.id + ',';
+			if (m == 0) {
+				str += '<relateFrom />';
 			}
-			str = str.substr(0, str.length - 1) + '"/>';		// cut the last ','.
+			else {
+				str += '<relateFrom idref="';
+				for (i = 0; i < m; i++) {
+					var fromFt:Feature = relateFrom.getItemAt(i) as Feature;
+					str += fromFt.id + ',';
+				}
+				str = str.substr(0, str.length - 1) + '"/>';		// cut the last ','.
+			}
 			
-			str += '<relateTo idref="';
 			m = relateTo.length;
-			for (i = 0; i < m; i++) {
-				var toFt:Feature = relateTo.getItemAt(i) as Feature;
-				str += toFt.id + ',';
+			if (m == 0) {
+				str += '<relateTo />';
 			}
-			str = str.substr(0, str.length - 1) + '"/>';		// cut the last ','.
+			else {
+				str += '<relateTo idref="';
+				for (i = 0; i < m; i++) {
+					var toFt:Feature = relateTo.getItemAt(i) as Feature;
+					str += toFt.id + ',';
+				}
+			
+				str = str.substr(0, str.length - 1) + '"/>';		// cut the last ','.
+			}
 			
 			str += '</Association>';
 			

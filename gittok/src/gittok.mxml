@@ -295,55 +295,55 @@
 			
 		]]>
 	</fx:Script>
-	<mx:Image x="61" y="104" width="277" height="381" source="documents/figures/GIT_Bok_Frame.png"/>
-	<mx:Image left="14" top="14" source="documents/pictgrams/gittokLogo.png"/>
+	<s:Image x="61" y="104" width="277" height="381" source="@Embed(source='documents/figures/GIT_Bok_Frame.png')"/>
+	<s:Image left="14" top="14" source="@Embed(source='documents/pictgrams/gittokLogo.png')"/>
 	
-	<mx:Image id="action0" source="@Embed(source='documents/pictgrams/pictAction0.png')" x="304" y="242" width="80" height="60" visible="true"/>
-	<mx:Image id="action1" source="@Embed(source='documents/pictgrams/pictAction1.png')" x="304" y="242" width="80" height="60" visible="false"/>
+	<s:Image id="action0" source="@Embed(source='documents/pictgrams/pictAction0.png')" x="304" y="242" width="80" height="60" visible="true"/>
+	<s:Image id="action1" source="@Embed(source='documents/pictgrams/pictAction1.png')" x="304" y="242" width="80" height="60" visible="false"/>
 	<s:Label id="actionLabel" x="311" y="247" width="60" height="63" text="" alpha="0"
 			 click="actionLabel_clickHandler(event)"
 			 mouseOver="actionMouseOver(event)"
 			 mouseOut="actionMouseOut(event)"/>
 
 	
-	<mx:Image id="modeling0" source="@Embed(source='documents/pictgrams/pictModeling0.png')" x="31" y="216" visible="false"/>
-	<mx:Image id="modeling1" source="@Embed(source='documents/pictgrams/pictModeling1.png')" x="31" y="216" visible="false"/>	
+	<s:Image id="modeling0" source="@Embed(source='documents/pictgrams/pictModeling0.png')" x="31" y="216" visible="false"/>
+	<s:Image id="modeling1" source="@Embed(source='documents/pictgrams/pictModeling1.png')" x="31" y="216" visible="false"/>	
 	<s:Label id="modelingLabel" x="31" y="216" width="60" height="60" text="" alpha="0"
 			 click="modelingLabel_clickHandler(event)"
 			 mouseOver="modelingMouseOver(event)"
 			 mouseOut="modelingMouseOut(event)"/>
 			 
-	<mx:Image id="acquisition0" source="@Embed(source='documents/pictgrams/pictAcquisition0.png')" x="190" y="216" visible="false"/>
-	<mx:Image id="acquisition1" source="@Embed(source='documents/pictgrams/pictAcquisition1.png')" x="190" y="216" visible="false"/>	
+	<s:Image id="acquisition0" source="@Embed(source='documents/pictgrams/pictAcquisition0.png')" x="190" y="216" visible="false"/>
+	<s:Image id="acquisition1" source="@Embed(source='documents/pictgrams/pictAcquisition1.png')" x="190" y="216" visible="false"/>	
 	<s:Label id="acquisitionLabel" x="190" y="216" width="60" height="60" text="" alpha="0"
 			 click="acquisitionLabel_clickHandler(event)"
 			 mouseOver="acquisitionMouseOver(event)"
 			 mouseOut="acquisitionMouseOut(event)"/>
 	
-	<mx:Image id="analysis0" source="@Embed(source='documents/pictgrams/pictAnalysis0.png')" x="33" y="336" visible="false"/>
-	<mx:Image id="analysis1" source="@Embed(source='documents/pictgrams/pictAnalysis1.png')" x="33" y="336" visible="false"/>	
+	<s:Image id="analysis0" source="@Embed(source='documents/pictgrams/pictAnalysis0.png')" x="33" y="336" visible="false"/>
+	<s:Image id="analysis1" source="@Embed(source='documents/pictgrams/pictAnalysis1.png')" x="33" y="336" visible="false"/>	
 	<s:Label id="analysisLabel" x="33" y="336" width="60" height="60" text="" alpha="0"
 			 click="analysisLabel_clickHandler(event)"
 			 mouseOver="analysisMouseOver(event)"
 			 mouseOut="analysisMouseOut(event)"/>
 	
-	<mx:Image id="management0" source="@Embed(source='documents/pictgrams/pictManagement0.png')" x="191" y="338" visible="false"/>
-	<mx:Image id="management1" source="@Embed(source='documents/pictgrams/pictManagement1.png')" x="191" y="338" visible="false"/>
+	<s:Image id="management0" source="@Embed(source='documents/pictgrams/pictManagement0.png')" x="191" y="338" visible="false"/>
+	<s:Image id="management1" source="@Embed(source='documents/pictgrams/pictManagement1.png')" x="191" y="338" visible="false"/>
 	
 	<s:Label id="managementLabel" x="191" y="338" width="60" height="60" text="" alpha="0"
 			 click="managementLabel_clickHandler(event)"
 			 mouseOver="managementMouseOver(event)"
 			 mouseOut="managementMouseOut(event)"/>
 	
-	<mx:Image id="exchange0" source="@Embed(source='documents/pictgrams/pictExchange0.png')" x="37" y="451" visible="false"/>
-	<mx:Image id="exchange1" source="@Embed(source='documents/pictgrams/pictExchange1.png')" x="37" y="451" visible="false"/>	
+	<s:Image id="exchange0" source="@Embed(source='documents/pictgrams/pictExchange0.png')" x="37" y="451" visible="false"/>
+	<s:Image id="exchange1" source="@Embed(source='documents/pictgrams/pictExchange1.png')" x="37" y="451" visible="false"/>	
 	<s:Label id="exchangeLabel" x="34" y="451" width="60" height="60" text="" alpha="0"
 			 click="exchangeLabel_clickHandler(event)"
 			 mouseOver="exchangeMouseOver(event)"
 			 mouseOut="exchangeMouseOut(event)"/>
 	
-	<mx:Image id="representation0" source="@Embed(source='documents/pictgrams/pictRepresentation0.png')" x="197" y="455" visible="false"/>
-	<mx:Image id="representation1" source="@Embed(source='documents/pictgrams/pictRepresentation1.png')" x="197" y="455" visible="false" 
+	<s:Image id="representation0" source="@Embed(source='documents/pictgrams/pictRepresentation0.png')" x="197" y="455" visible="false"/>
+	<s:Image id="representation1" source="@Embed(source='documents/pictgrams/pictRepresentation1.png')" x="197" y="455" visible="false" 
 			  width="60" height="60"/>	
 	<s:Label id="representationLabel" x="197" y="455" width="60" height="60" text="" alpha="0"
 			 click="representationLabel_clickHandler(event)"

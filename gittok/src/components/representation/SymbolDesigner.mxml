@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="458" height="494"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" 
+		  width="458" height="494"
 		  title="Symbol Designer"
 		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
@@ -1197,7 +1198,7 @@
 		<s:RadioButtonGroup id="geomRadioGroup"/>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
-	<mx:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')"/>
+	<mx:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="75" y="15" text="Symbol Style Designer" fontSize="16"/>
 
 	<s:TabBar dataProvider="{myViewStack}" x="29" y="91" height="20" /> 
@@ -1346,7 +1347,7 @@
 		</s:NavigatorContent> 
 	</mx:ViewStack> 
 	
-	<s:Label x="349" y="41" text="symbol style &#xd;schema"/>
+	<s:Label x="349" y="41" text="symbol style &#xd;dictionary"/>
 	<s:Label x="287" y="72" id="symbolStylesLabel" backgroundColor="#DADADA" width="140" height="20" 
 			 verticalAlign="middle"/>
 	<s:Button x="287" y="20" label="open" width="55" id="openSymbolStylesButton" 
