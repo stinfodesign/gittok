@@ -18,7 +18,7 @@
 			public var portrayalDesigner:PortrayalDesigner;
 			public var gazetteerDesigner:GazetteerDesigner;
 			public var mapEditor:MapEditor;
-			public var listDesigner:ListDesigner;
+			public var listSchemaDesgner:ListSchemaDesigner;
 			public var listViewer:ListViewer;
 						
 			protected function initializeApp():void {
@@ -84,10 +84,10 @@
 			
 			protected function ListDesignButton_clickHandler(event:MouseEvent):void
 			{
-				listDesigner = new ListDesigner();
-				listDesigner.open();
-				listDesigner.title = "Cartographer >";
-				listDesigner.addEventListener(Event.CLOSING, listClose);
+				listSchemaDesgner = new ListSchemaDesigner();
+				listSchemaDesgner.open();
+				listSchemaDesgner.title = "Cartographer >";
+				listSchemaDesgner.addEventListener(Event.CLOSING, listClose);
 			}
 			
 			private function listClose(event:Event):void {
@@ -126,6 +126,8 @@
 				if (listViewer.memoViewer != null) listViewer.memoViewer.close();
 				if (listViewer.addressViewer != null) listViewer.addressViewer.close();
 				if (listViewer.webSiteViewer!= null) listViewer.webSiteViewer.close();
+				
+				listViewer = null;
 			}
 			
 		]]>

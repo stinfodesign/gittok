@@ -10,7 +10,7 @@ package gfm
 	public class FeatureType
 	{
 		public var name:String;					// type name
-		public var definition:String			// it will be used in near future! -----------------
+		public var definition:String			// feature type definition
 		public var isAbstract:Boolean;			// abstract:true, concrete:false
 		
 		public var attributeTypes:ArrayList;	// of AttributeType

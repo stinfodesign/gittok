@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
-		  title="Video Viewer"
+		  title="Video Selector"
 		  width="500" height="498"
 		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
@@ -61,13 +61,13 @@
 			// Text and instruction  Controls
 			protected function text_jp_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/jp/videoViewer_jp.html");
+				var request:URLRequest = new URLRequest("documents/jp/videoSelector_jp.html");
 				navigateToURL(request);
 			}
 			
 			protected function text_en_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/en/videoViewer_en.html");
+				var request:URLRequest = new URLRequest("documents/en/videoSelector_en.html");
 				navigateToURL(request);
 			}
 			
@@ -133,7 +133,7 @@
 	<s:Label bottom="48" fontSize="10" horizontalCenter="0" text="Volume"/>
 	<s:HSlider id="volumeSlider" bottom="29" width="67" change="volumeSlider_changeHandler(event)"
 			   horizontalCenter="0" maximum="1.0" minimum="0.0" stepSize="0.01" value="0.5"/>
-	<s:Label x="76" y="15" text="Video Viewer " fontSize="16"/>
+	<s:Label x="76" y="15" text="Video Selector" fontSize="16"/>
 
 
 </s:Window>

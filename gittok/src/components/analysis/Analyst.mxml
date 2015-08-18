@@ -762,7 +762,7 @@
 					}
 				}
 				
-				// for coordinate conversion from screen to plane
+				// for coordinate conversion from map to ground
 				argObj["affineParam"] = kit.affineParam;
 								
 				/* 

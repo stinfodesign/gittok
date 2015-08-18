@@ -1,6 +1,7 @@
 package portrayal.gpm
 {
 	import flash.utils.Dictionary;
+	
 	import gfm.AttributeType;
 	
 	public class FeaturePortrayalUnit
@@ -25,17 +26,17 @@ package portrayal.gpm
 			var str:String = '<FeaturePortrayalPair featureTypeID="' + this.featureTypeID + '">';
 			str += '<generalModifier>';
 			for each(var asPair:AttributeStylePair in generalModifiers) {
-				str += asPair.getXML();
+				str += asPair.getXML().toXMLString();
 			}
 			str += '</generalModifier>';
 			
 			str += '<thematicModifier>';
-			str += thematicModifier.getXML();
+			str += thematicModifier.getXML().toXMLString();
 			str+= '</thematicModifier>';
 			
 			str += '<balloonsOnMap>';
 			for each(var infoPageAttType:AttributeType in infoPages) {
-				str += infoPageAttType.getXML();
+				str += infoPageAttType.getXML().toXMLString();
 			}
 			str += '</balloonsOnMap>';
 			

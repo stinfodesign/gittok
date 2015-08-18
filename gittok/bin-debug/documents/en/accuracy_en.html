@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Accuracy Evaluation</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+window.resizeTo(600,700);
+window.moveTo(750,20);
+</script>
+</head>
+
+<body>
+<p class="FirstHeader">Accuracy Evaluation
+</p>
+<p class="mainSentence">This text explains a map orientation and its accuracy evaluation at first, how to read accuracy evaluation page at second, and finally how to operate accuracy evaluation page.</p>
+<p class="mainSentence"><span class="secondHeader">Map orientation</span><br />
+  </p>
+<p class="mainSentence">Map orientation means to get unknown parameters for conversion between map coordinates and plane rectangular coordinate. The limited area of the ground may be thought so that it is a plane, because the side of the earth is huge. Thus the geometric relationship between map coordinates and ground coordinates can be defined by linear transformation (Affine transformation in case of gittok). To get unknown parameters of the transformation is called &quot;map orientation&quot;.</p>
+<p class="mainSentence">Affine transformation ia described as follows.</p>
+<p class="mainSentence">X = ax+by+c<br />
+  Y = dx+ey+f</p>
+<p class="mainSentence">Where, (X, Y) is a ground coordinate, (x, y) is a map coordinate.<br />
+  The number of unknown parameters is six (a to f). It means if there are 3 pairs of (X, Y) and (x, y), Unknown Parameters can be obtained by using 6 equations. However it is impossible to evaluate positional accuracy of (x, y)s, even if they contain errors as they are digitized on the screen. Usually more than 3 control points are digitized and unknown parameters are obtained by applying the least square method. Positional accuracy is evaluated by variance-covariance matrix, root mean square error and estimated errors at each control point.</p>
+<p class="mainSentence">Accuracy is a difference between true value or a value being recognized as true and measured value. In case of map orientation, measured value is a digitized coordinate of a control point displayed on the screen. While, a value being recognized as a true is a ground coordinate included in the control point file. Accuracy is evaluated by the difference between ground coordinates and converted ground coordinates obtained from map coordinates.Root mean square error and estimated errors at each point are useful values to evaluate the quality of map orientation. If they are small enough, the conversion parameters should be accepted. But it is not god, the user can reject the result and user can try the orientation again.</p>
+<p class="secondHeader">Accuracy evaluation page</p>
+<p class="mainSentence"><img src="../figures/AccuracyEvaluation.png" width="368" height="476" alt="accuracyEv" /></p>
+<p class="mainSentence">Figure 1. Accuracy evaluation page</p>
+<p class="thirdHeader">Fields</p>
+<p class="mainSentence"><strong>Variance-covariance matrix</strong><br />
+  A variance-covariance matrix is a square matrix that contains the variances and covariances associated with variables. The diagonal elements of the matrix contain the variances of the variables and the off-diagonal elements contain the covariances between all possible pairs of variables.It is used to calculate standard errors of functions (in case of gittok functions are equations of Affine transformation).</p>
+<p class="mainSentence"><strong>Root mean square error (rmse)</strong><br />
+  RMSE measures how much error there is between two datasets. RMSE usually compares a predicted value and an observed value. In case of Map orientation, predicted value is a coordinate of ground control point. Observed value is a coordinate of control point digitized on the map.<br />
+</p>
+<p class="mainSentence"><strong>Error</strong><br />
+  Error is a difference between estimated ground coordinate digitized on the screen and given ground coordinate included in the control point file.</p>
+<p class="thirdHeader">Buttons</p>
+<p class="mainSentence"><strong>accept</strong><br />
+  Click this button if the result of orientation is sufficient enough.<br />
+  Then geometry digitizing will be possible.</p>
+<p class="mainSentence"><strong>reject</strong><br />
+  Click this button if the result is in-sufficient.<br />
+  Map orientation will be able to perform again.</p>
+<p class="mainSentence"><strong>日本語</strong><br />
+今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><strong>English</strong><br />
+  You can read the tutorial written in English.</p>
+</body>
+</html>

@@ -717,11 +717,12 @@
 			map control
 			*/
 			protected function onMapAddedToStage(e:Event):void {
-				//fxMap.map.addLayer(gsiMap); // 地理院地図  ズームレベル18未整備のため現時点(2013年12月)ではこちら  (numZoomLevels=18)
-				
-				fxMap.map.addLayer(new GSIMaps("地理院地図"));　// 地理院地図 ズームレベル18整備後はこちら  デフォルト値のため第２引数19省略 (numZoomLevels=19)
-				//fxMap.map.addLayer(new GSIMaps("地理院地図2012", 19, 'http://cyberjapandata.gsi.go.jp/xyz/std2012/')); // 2012年度版地理院地図 (numZoomLevels=19)
-				//fxMap.map.resolution = new Resolution(1.195, "EPSG:900913");
+				//fxMap.map.addLayer(gsiMap); // 地理院地図  ズームレベル18未整備のため現時点(2013年12月)ではこちら  (numZoomLevels=18)				
+				//fxMap.map.addLayer(new GSIMaps("地理院地図"));　// 地理院地図 ズームレベル18整備後はこちら  デフォルト値のため第２引数19省略 (numZoomLevels=19)
+
+				fxMap.map.addLayer(osmMap);
+				gsiTerms.visible = false;
+				osmTerms.visible = true;
 				
 				dLayer.projection = new ProjProjection("EPSG:900913");
 				dLayer.style = Style.getDefaultPolygonStyle();				
@@ -886,7 +887,7 @@
 	<s:Label x="75" y="15" text="Manager" fontSize="16"/>
 	
 	<s:Panel id="mapPanel" left="25" top="335" right="25" bottom="25" title="Geographic Extent" 
-			 dropShadowVisible="false" chromeColor="#444444" color="#ffffff">
+			 dropShadowVisible="false" chromeColor="#444444" color="#000000">
 		<os:Map id="fxMap" width="100%" height="100%"  maxExtent="-180,-90,180,90" center="139.73945, 35.701394" 
 				projection="EPSG:900913" addedToStage="onMapAddedToStage(event)"
 			    mouseMove="_mouseMoveHandler(event)"
@@ -902,7 +903,7 @@
 			<os:DragHandler />
 			<os:ClickHandler />
 		</os:Map>
-		<s:Button id="mapButton" right="10" top="160" width="55" height="20" label="OSM"
+		<s:Button id="mapButton" right="10" top="160" width="55" height="20" label="GSI"
 					  click="mapButton_clickHandler(event)"/>
 		<s:Label id="coordinateLabel" left="10" bottom="10" width="170" height="16" color="0x000000"
 				 backgroundColor="0xffffff" fontSize="11" verticalAlign="middle"/>

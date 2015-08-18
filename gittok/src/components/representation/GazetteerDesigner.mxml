@@ -300,9 +300,9 @@
 					}
 					else {
 						argObj = new Object();
-						attValues = new ArrayList();
-						attValues.addItem(positionArray);
-						argObj["points"] = attValues;
+						//attValues = new ArrayList();
+						//attValues.addItem(positionArray);
+						argObj["points"] = positionArray;
 						point = Center.centerOfPoints(argObj);
 					}
 					

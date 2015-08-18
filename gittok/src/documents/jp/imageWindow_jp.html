@@ -3,32 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Image Editor</title>
-<style type="text/css">
-.mainSentence {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-}
-.FirstHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 20px;
-	font-style: normal;
-	font-weight: bold;
-}
-.secondHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 16px;
-	font-weight: bold;
-}
-.thirdHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-	font-weight:bold;
-}
-.mainSentence .thirdHeader .mainSentence .mainSentence {
-	font-weight: normal;
-	font-size:12px;
-}
-</style>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
 window.resizeTo(600,700);
 window.moveTo(750,20);
@@ -36,45 +11,38 @@ window.moveTo(750,20);
 </head>
 
 <body>
-<p class="FirstHeader">Image Editor<br/>
+<p class="FirstHeader">Image<br/>
   画像の選択</p>
-<p class="mainSentence">このページは，Acquisition Manager との連携のもとで，地物や関連を画像として示す属性の取得と編集を行うためにあります．gittok では，地物は，画像を保存している場所を属性とします．ここではまず，画像の保存場所を，gittokはどのように扱うか説明し，次に，このページの操作手順を説明します．最後に表示欄とボタンそれぞれについて，説明します．</p>
-<p class="mainSentence">&nbsp;</p>
-<p class="FirstHeader">画像の保存場所</p>
-<p class="mainSentence">作業用フォルダーの直下にimagesというサブフォルダーを設け，そこに全ての写真を格納しましょう．kit は画像を直にもつ訳ではありません．Kit は，画像が保存されている場所を示す URLを属性値として保存します．従って，kitを別のパソコンに移動しても，画像は移りません．しかし，images フォルダーにまとめておき，作業用フォルダーごと，データを移せば，何の問題も発生しません．</p>
-<p class="mainSentence">&nbsp;</p>
-<p class="FirstHeader">操作画面</p>
-<p class="mainSentence"><span class="secondHeader"><img src="../figures/ImageViewer1.png" width="340" height="349" alt="ImageViewer" /></span></p>
-<p class="mainSentence">図1. Image Editor の初期画面</p>
-<p class="mainSentence">Edito ページのAttribute Type List からImageURLデータ型をとる属性を選択すると，最初に現れるのが，このページである．画像を選択するには，右上にある &gt;&gt; マークを押す．</p>
-<p class="mainSentence"><img src="../figures/ImageViewer2.png" width="504" height="362" alt="imageViewer2" /></p>
-<p class="mainSentence">図2. 画像一覧を出したImage Viewer</p>
+<p class="mainSentence">このページは，Editor との連携のもとで，地物や関連を画像として示す属性の選択を行うためにあります．gittok では，地物は，画像を保存している場所 を示すURLを属性とします．ここではまず，画像の保存場所を，gittokはどのように扱うか説明し，次に，このページの操作手順を説明します．最後に表示欄とボタンそれぞれについて，説明します．</p>
+<p class="secondHeader">画像の保存場所</p>
+<p class="mainSentence">作業用フォルダーの直下にimagesというサブフォルダーを設け，そこに全ての写真を格納しましょう．kit は画像を直にもつ訳ではありません．地物は，画像が保存されている場所を示す URLを属性値として保存します．従って，kitを別のパソコンに移動しても，画像は移りません．しかし，images フォルダーにまとめておき，作業用フォルダーごと，データを移せば，何の問題も発生しません．</p>
+<p class="secondHeader">Image</p>
+<p class="mainSentence"><span class="secondHeader"><img src="../figures/ImageWindow1.png" width="340" height="349" alt="ImageWindow1" /></span></p>
+<p class="mainSentence">図1. Image page の初期画面</p>
+<p class="mainSentence">Editor ページのAttribute Type List からImageURLデータ型をとる属性を選択すると，最初に現れるのが，このページである．画像を選択するには，右上にある &gt;&gt; マークを押す．</p>
+<p class="mainSentence"><img src="../figures/ImageWindow2.png" width="504" height="362" alt="imageWindow2" /></p>
+<p class="mainSentence">図2. 画像一覧を出したImage page</p>
 <p class="mainSentence">右側に伸びたパートは，画像一覧を表示するためにある．ここで，openボタンを押して，画像が入ったフォルダーを選択する．このフォルダーは，作業用フォルダーの中に設けるimagesとすることを推奨する．</p>
-<p class="mainSentence"><img src="../figures/ImageViewer3.png" width="506" height="344" alt="imageViewer3" /></p>
-<p class="mainSentence">図3. 画像一覧から画像を選択して表示した Image Viewer</p>
+<p class="mainSentence"><img src="../figures/ImageWindow3.png" width="506" height="344" alt="imageWindow3" /></p>
+<p class="mainSentence">図3. 画像一覧から画像を選択して表示した Image page</p>
 <p class="mainSentence">画像一覧の中から一枚の画像を選び，画像の上にカーソルをもっていってクリックすると，その画像がImage Panelにあらわれる．これを地物インスタンスの属性にする場合は，Editor ページのAttribute ID Value List の下にあるadd ボタンを押せばいい．</p>
-<p class="secondHeader">表示欄</p>
-<p class="mainSentence"><span class="thirdHeader">Image folder</span><br/>
+<p class="thirdHeader">Fields</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Image folder</strong></span><br/>
 画像ファイルが格納されているフォルダーの名前が表示されます．</p>
-<p class="secondHeader">ボタン</p>
-<p class="mainSentence"><span class="thirdHeader">Push &gt;&gt;</span><br/>
+<p class="thirdHeader">Buttons</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Push &gt;&gt;</strong></span><br/>
 画像一覧用のパートが表示される．隠すときも同じボタンを押す．</p>
-<p class="mainSentence"><span class="thirdHeader">off/on</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>off/on</strong></span><br/>
 画像の移動を可能にするときはon，そうでないときはoffにする．</p>
-<p class="mainSentence"><span class="thirdHeader">&gt;</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>&gt;</strong></span><br/>
   このボタンを押すと画像が縮小される．</p>
-<p class="mainSentence"><span class="thirdHeader">&lt;</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>&lt;</strong></span><br/>
   このボタンを押すと，画像が拡大される．</p>
-<p class="mainSentence"><span class="thirdHeader">-</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>-</strong></span><br/>
   このボタンを押すと，表示される画面縮尺が，初期化される．</p>
-<p class="mainSentence"><span class="thirdHeader">日本語</span><br />
+<p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />
 今あなたが読んでいるドキュメントが表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">English</span><br />
+<p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
   You can read the tutorial written in English.</p>
-<p class="mainSentence">&nbsp;</p>
-<p class="mainSentence">&nbsp;</p>
-<p class="mainSentence">&nbsp;</p>
-<p class="mainSentence">&nbsp;</p>
-<p class="mainSentence">&nbsp;</p>
 </body>
 </html>

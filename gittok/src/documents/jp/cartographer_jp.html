@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Representation Editor</title>
+<title>Cartographer</title>
 <link href="gittokCSS.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
 window.resizeTo(650,650);
@@ -52,11 +52,11 @@ window.moveTo(750,20);
 <p class="mainSentence"> ところで，地名辞典の場合は，地名を探すと，その地域の特徴，歴史，人口，産業，そして自然環境など，対象地域に関する様々な情報を得ることができます．現在多くの国や地域で地名辞典 (geographic name dictionary) を公開しています．Gazetteer Designer は特に地名辞典を作るということは想定していませんが，検索した地物が地名辞典のように，様々な属性をもつ場合は，それらを呼び出してみることによって，ユーザは，地名辞典に類似したサービスをうけることができます．</p>
 <p class="mainSentence">なお，gittok には，紙の地図を出力する機能は，まだありません．今後の課題です．</p>
 <p class="FirstHeader">&nbsp;</p>
-<p id="slide" class="secondHeader">操作画面</p>
-<p class="mainSentence"><img src="../figures/Cartographer.png" alt="Representation" /></p>
+<p id="slide" class="secondHeader">Cartographer</p>
+<p class="mainSentence"><img src="../figures/Cartographer.png" alt="Representation"/></p>
 <p class="mainSentence">図1. Cartographer ページ</p>
 <p class="mainSentence">&nbsp;</p>
-<p class="secondHeader">ボタン</p>
+<p class="thirdHeader">Buttons</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Symbol Style Design</strong></span><br/>
 記号デザインのページ (Symbol Style Designer) を開きます．記号とは，表現規則に則って図示された，地図要素の表現のことです．このページでは，記号の表現規則，つまり記号スタイルをデザインします．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Label Style Design</strong></span><br/>
@@ -65,6 +65,10 @@ window.moveTo(750,20);
 描画スキーマデザインのページ (Portrayal Schema Designer)を開きます．描画スキーマとは，どの地物型のどの属性をどのようなデザイン規則に従って図示するかを指定した，地物型及び属性とデザイン規則の対応表です．これがないと，地図を描画することはできません．描画スキーマには，地物がもつ様々な属性を選択して表示する対話型の地図を実現するために，地物のどの属性を表示できるようにするか，指定することができます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Mapping</strong></span><br/>
 地図編集のページ (Map Editor) を開きます．Kit と描画スキーマを呼び出すと，地図の本体が画面いっぱいに入るように表示されます．ここではさらに，タイトルや方位記号などを置いたり，注記の位置を調整したりして，対話型の地図を編集します．</p>
+<p class="mainSentence"><strong>List Schema Design</strong><br />
+リストスキーマのデザイン用ページ を開きます．リストスキーマとは，幾何属性以外のproxy をもつ地物について，どの属性を表示するかを指定するスキーマです．これがないと，幾何属性をproxy としない地物の情報表現ができません．Cartographer というページは，一般的にはkitの地図表現をするためにありますが，幾何属性をproxyとしない地物にとって「地図」は一覧表をさすことになります．地図は地物の位置と形状を示す２次元表現であり，リストは，地物を示すキーワードの一次元表現です．両者とも，実世界の存在を mapping した結果であることは変わりません．</p>
+<p class="mainSentence"><strong>Listing</strong><br />
+リスト表示のためのページを開きます．Kitとリストスキーマを呼び出すと，文字列属性をproxy とする地物のリストが，表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />
 今あなたが読んでいるドキュメントが表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />

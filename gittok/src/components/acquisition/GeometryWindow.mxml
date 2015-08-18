@@ -1556,13 +1556,13 @@
 			// Text and instruction  Controls
 			protected function text_jp_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/jp/geometryAndAssociation_jp.html");
+				var request:URLRequest = new URLRequest("documents/jp/geometry_jp.html");
 				navigateToURL(request);
 			}
 			
 			protected function text_en_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/en/geometryAndAssociation_en.html");
+				var request:URLRequest = new URLRequest("documents/en/geometry_en.html");
 				navigateToURL(request);
 			}
 			

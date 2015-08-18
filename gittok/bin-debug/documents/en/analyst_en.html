@@ -3,32 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Analyst</title>
-<style type="text/css">
-.mainSentence {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-}
-.FirstHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 20px;
-	font-style: normal;
-	font-weight: bold;
-}
-.secondHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 16px;
-	font-weight: bold;
-}
-.thirdHeader {
-	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
-	font-size: 12px;
-	font-weight:bold;
-}
-.mainSentence .thirdHeader .mainSentence .mainSentence {
-	font-weight: normal;
-	font-size:12px;
-}
-</style>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
 window.resizeTo(600,700);
 window.moveTo(750,20);
@@ -38,10 +13,98 @@ window.moveTo(750,20);
 <body>
 <p class="FirstHeader">Analyst<br/>
 </p>
-<p class="secondHeader">Introduction</p>
-<p class="mainSentence">Analyst performs operations of features or associations specified in the application schema. Operation inputs data called an argument, processes in order to get  information, and outputs information called as return value. Gittok puts return value in the attribute included in  a feature. In other words, you need the definition of attribute for return value, if you will define operation. <br />
-  The term &quot;Spatial Analysis&quot; is an alternative term of operation. This is the reason that the name of this page is &quot;Analyst&quot;. </p>
-<p class="mainSentence">Now we will learn the procedure of operation in gittok. Next we will learn how to interact with Analyst. Finally, you can study the method to install your original operation in gittok. Gittok is an open source software. We recommend you to develop your own applications and apply them in your gittok!</p>
-<p class="mainSentence">to be continued.</p>
+<p class="mainSentence">Analyst enables to execute operations included in feature or association. Operation is a method or function to return data as a result of processing by receiving arguments as input data. In the context of geospatial information sciences, operations using position on the earth is called spatial analysis. This is the reason that the name of this page is Analyst.</p>
+<p class="mainSentence">This text explains the procedure of the execution of an operation, fields and buttons in Analyst page, the mechanism of operation, and how to buid in operations in gittok.</p>
+<p class="secondHeader">Operation procedure</p>
+<p class="mainSentence">1. Base map and geometries appear in Instance view panel by opening a kit file.<br />
+  2. &quot;Feature&quot; or &quot;Association&quot; tab is selected in order to execute operations.</p>
+<p class="thirdHeader">In case of Feature</p>
+<p class="mainSentence">1. Radio button of geometry type that is a proxy of the feature is selected by selecting feature type at Feature type list.<br />
+  2. Instance id is shown in Instance ID field by selecting feature instance on Instance view panel. Simultaneously, a name and return data type of the operation are displayed on Operation grid.<br />
+  3. Operation is executed by clicking &quot;execute&quot; button after the selection of operation at Operation grid.<br />
+  4. The result of operation is displayed in Return attribute value field. If the return data type is simple, the value is shown in the value field. While if it is complex, an id of the return value is shown in the id field.</p>
+<p class="thirdHeader">In case of Association</p>
+<p class="mainSentence">1. The names of feature types are displayed in From and To fields and the list of operations are shown in Operation grid by selecting association type at Association type list.<br />
+  2. Association instance is selected at Association instance ID list.<br />
+  3. Instance ids are displayed in From and To boxes.<br />
+  4. If it is necessary to confirm the selection, click show button. Then blue triangles (From) and red triangles (to) are displayed in the panel.<br />
+  5. Click &quot;execute&quot; button to execute the operation.<br />
+  6. he result of operation is displayed in Return attribute value field. If the return data type is simple, the value is shown in the value field. While if it is complex, an id of the return value is shown in the id field.</p>
+<p class="thirdHeader">Display of the result</p>
+<p class="mainSentence">If the return value is geometry, the result is displayed in Instance view panel.</p>
+<p class="secondHeader">Analyst</p>
+<p class="secondHeader">Feature</p>
+<p class="mainSentence">Figure 1. Page of feature operation</p>
+<p class="thirdHeader">Fields</p>
+<p class="mainSentence"><strong>Kit</strong><br />
+  The name of the kit is shown in this field.</p>
+<p class="mainSentence"><strong>Operation (selectable)</strong><br />
+  The names and data types of return value for operations are listed. operation shall be selected at this grid before execution.</p>
+<p class="mainSentence"><span class="strongMainSentence">Return attribute value</span><br />
+  The result of operation is shown. If the data type of a return value is simple, the value is shown. While if it is complex, the id of the return value is shown.</p>
+<p class="mainSentence"><span class="strongMainSentence">Instance view panel</span><br />
+  Geometries and symbols of feature and association instances are displayed on the base map.</p>
+<p class="mainSentence"><span class="strongMainSentence">Feature type list (selectable)</span><br />
+  Feature type which includes the operation can be selected from the list.</p>
+<p class="mainSentence"><span class="strongMainSentence">Instance ID</span><br />
+Instance ID selected at Instance view panel is shown in this field.</p>
+<p class="thirdHeader">Buttons</p>
+<p class="mainSentence"><span class="strongMainSentence">open (Kit)</span><br />
+  Kit can be opened by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">save (Kit)</span><br />
+  Kit with the result of operations can be saved by using this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">execute</span><br />
+  An operation is executed by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">&gt;</span><br />
+  Map scale is smaller by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">&lt;</span><br />
+Map scale is larger by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">-</span><br />
+  Initialize the map scale by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">slider</span><br />
+  Transparency of the base map changes by dragging slider button.</p>
+<p class="mainSentence"><span class="strongMainSentence">日本語</span><br />
+  今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><span class="strongMainSentence">English</span><br />
+  You can read the tutorial written in English.</p>
+<p class="secondHeader">Association</p>
+<p class="mainSentence">Figure 2. Page of operation included in association</p>
+<p class="thirdHeader">Fields</p>
+<p class="mainSentence"><span class="strongMainSentence">Kit</span><br />
+  The name of the kit is shown in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">Operation (selectable)</span><br />
+  The names and data types of return value for operations are listed. operation shall be selected at this grid before execution.</p>
+<p class="mainSentence"><span class="strongMainSentence">Return attribute value</span><br />
+  The result of operation is shown. If the data type of a return value is simple, the value is shown. While if it is complex, the id of the return value is shown.</p>
+<p class="mainSentence"><span class="strongMainSentence">Instance view panel</span><br />
+  Geometries and symbols of feature and association instances are displayed on the base map.</p>
+<p class="mainSentence"><span class="strongMainSentence">Association type list (selectable)</span><br />
+  Association type which includes the operation can be selected from the list.</p>
+<p class="mainSentence"><span class="strongMainSentence">Association Instance ID list</span><br />
+  Instance ID selected at Instance view panel is shown in this field. If it is necessary to confirm the selection, click show button. Then blue triangles (From) and red triangles (to) are displayed in the panel. Figure 2 shows from and to features by blue and red triangles.</p>
+<p class="thirdHeader">Buttons</p>
+<p class="mainSentence"><span class="strongMainSentence">open (Kit)</span><br />
+  Kit can be opened by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">save (Kit)</span><br />
+  Kit with the result of operations can be saved by using this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">show/clear</span><br />
+  By clicking this button, blue triangles (From) and red triangles (to) are displayed in the panel. &quot;Show&quot; is replaced by &quot;clear&quot; after clicking &quot;show&quot;. &quot;Clear&quot; button eliminates triangles.</p>
+<p class="mainSentence"><span class="strongMainSentence">execute</span><br />
+  An operation is executed by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">&gt;</span><br />
+  Map scale is smaller by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">&lt;</span><br />
+  Map scale is larger by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">-</span><br />
+  Initialize the map scale by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">slider</span><br />
+  Transparency of the base map changes by dragging slider button.</p>
+<p class="mainSentence"><span class="strongMainSentence">日本語</span><br />
+  今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><span class="strongMainSentence">English</span><br />
+  You can read the tutorial written in English.</p>
+<p class="secondHeader">Operation embedding</p>
+<p class="mainSentence">If you are familiar with Adobe Flush Builder and Actionscript 3.0, you can embed the new operations in gittok. The instruction can be found <a href="rulesForOperationEmbeddng_en.html">here</a>. </p>
+<p class="mainSentence">&nbsp;</p>
 </body>
 </html>

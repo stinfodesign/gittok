@@ -42,6 +42,20 @@
 				selectedList.addItem(dataValue);
 			}
 			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/listWindow_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/listWindow_en.html");
+				navigateToURL(request);
+			}
+
+			
 		]]>
 	</fx:Script>
 
@@ -59,4 +73,8 @@
 	<s:List id="selectedItemList" x="30" y="267" width="267" height="61" borderVisible="false"
 			contentBackgroundColor="#DADADA" dataProvider="{selectedList}" labelField="value"></s:List>
 	<s:Label x="31" y="251" text="Selected items"/>
+	<s:Label right="55" top="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label right="10" top="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
 </s:Window>

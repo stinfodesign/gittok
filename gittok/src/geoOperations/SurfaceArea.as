@@ -29,7 +29,7 @@ package geoOperations
 			var ring:SG_Ring = srf.exterior;
 			var closedLS:CoordinateArray = ring.coordinateSequence();
 			
-			// coordinate conversion from screen to ground
+			// coordinate conversion from map to ground
 			var n:int = closedLS.length;
 			for (var i:int = 0; i < n; i++) {
 				var coor:Coordinate2 = closedLS.getItemAt(i) as Coordinate2;
@@ -38,12 +38,20 @@ package geoOperations
 			}
 
 			area = math.Area.getSimpleArea(closedLS);
+			
 			n = srf.interior.length;
 			for (i = 0; i < n; i++) {
 				ring = srf.interior.getItemAt(i) as SG_Ring;
 				closedLS = ring.coordinateSequence();
-				area += math.Area.getSimpleArea(closedLS);
+				for (var j:int = 0; j <closedLS.length; j++) {
+					coor = closedLS.getItemAt(j) as Coordinate2;
+					coor = math.Affine.conversion(coor, ap.coefficient);
+					closedLS.setItemAt(coor, j);
+				}
+				var a:Number = math.Area.getSimpleArea(closedLS);
+				area -= a;
 			}
+			
 			if (area < 0) area = -area;
 			
 			var ans:Real = new Real();

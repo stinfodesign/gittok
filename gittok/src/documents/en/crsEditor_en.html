@@ -20,6 +20,159 @@
 <p class="mainSentence"><strong>id</strong><br />
 an identification of CRS put under the rule adopted by the authority.</p>
 <p class="thirdHeader">Associations</p>
-<p class="mainSentence">datum</p>
+<p class="mainSentence"><strong>datum</strong><br />
+A role name of GeodeticDatum that represents the shape of Earth.</p>
+<p class="mainSentence"><strong>cs</strong><br />
+  A role name of CoordinateSystem that defines a set of horizontal coordinate axes.</p>
+<p class="mainSentence"><strong>vDatum</strong><br />
+  A role name of VerticalDatum that defines vertical coordinate axis to represent height.</p>
+<p class="mainSentence"><span class="secondHeader">GeodeticDatum</span><br />
+  </p>
+<p class="mainSentence">GeodeticDatum defines a shape of Earth as an ellipsoid, and where is the prime meridian for this datum. Datum is a singular form of data. But geodetic datum consists of multi parameters. A line specifying longitude is a curve called meridian which connects north pole and south pole. The meridian referring zero degree is called prime meridian that is a curve usually passing Greenwich in England and the east direction is plus. However it is possible to set prime meridian at any longitude. Such longitude can be defined in the geodetic datum as &quot;greenwich longitude&quot;.</p>
+<p class="thirdHeader">Attributes</p>
+<p class="mainSentence"><strong>id</strong><br />
+  identification code of the geodetic datum. A rule to put id should be specified at the authoritative organization such as International Association of Oil &amp; Gas Products (http://www.epsg-registry.org). An id of Japanese Deodetic Datum today is &quot;JGD2011&quot;.</p>
+<p class="mainSentence"><strong>name</strong><br />
+  A name of the geodetic datum. A name of Japanese geodetic datum is &quot;Japanese Geodetic Datum 2011&quot;.</p>
+<p class="thirdHeader">Associations</p>
+<p class="mainSentence"><strong>ellips</strong><br />
+  A role name of Ellipsoid that represents a reference ellipsoid to define the shape of Earth.</p>
+<p class="mainSentence"><strong>pm</strong><br />
+  A role name of PrimeMeridian that represents the greenwich longitude.</p>
+<p class="mainSentence"><span class="secondHeader">Ellipsoid</span><br />
+  </p>
+<p class="mainSentence">This class has a set of parameters defining the shape of Earth as a reference ellipsoid. The shape of Earth can be approximated by the spheroid and it is called a reference ellipsoid. Parameters of Ellipsoid are semi-major axis (semiMajorAxis) and inverse flattening (inverseFlattening). Inverse flattening is frequently used in Geodetical computations. It can is defined as, a/ (a - b). Where &quot;a&quot; is a length of semi-major axis, and &quot;b&quot; is a length of semi-minor axis. </p>
+<p class="mainSentence">Japanese government adopted &quot;Japanese Geodetic datum 2011&quot; and which parameters are,<br />
+  semiMajorAxis = 6377397.155 m<br />
+  inverseFlattening = 298.257222101</p>
+<p class="mainSentence">This ellipsoid is originally provided as GRS80 by International Union of Geodesy and Geophysics (IUGG) in 1980.  Meanwhile in October 2011, GSI released &quot;Japanese Geodetic Datum 2011 (JGD2011)&quot; as the new standard datum of Japan because of the wide area crustal deformation caused by &quot;The 2011 off the Pacific coast of Tohoku Earthquake&quot; which occurred on March 11, 2011.  Parameters of Ellipsoid did not change but the local origin point of latitude and longitude, and the reference position of height changed. These parameters are used for the determination of control points, but they are not required for map projections.</p>
+<p><span class="thirdHeader">Attributes</span><br />
+</p>
+<p><span class="mainSentence"><strong>name</strong><br />
+  a name of the reference ellipsoid.</span></p>
+<p class="mainSentence"><strong>semiMajorAxis</strong><br />
+Length of the semi-major axis. The unit is meter.</p>
+<p class="mainSentence"><strong>inverseFlattening</strong><br />
+  a value of inverse flattening.</p>
+<p><span class="secondHeader">PrimeMeridian</span><br />
+</p>
+<p><strong><span class="mainSentence">The meridian referring zero degree of longitude is called a prime meridian that is a curve usually passing Greenwich in England and the east direction is plus. However it is possible to set prime meridian at any longitude. Such longitude can be defined in the geodetic datum as &quot;greenwich longitude&quot;.  In case of Japan, greenwich longitude is zero.</span></strong></p>
+<p class="mainSentence"><span class="thirdHeader">Attributes</span><strong><br />
+</strong></p>
+<p class="mainSentence"><strong>GereenwichLongitude<br />
+</strong>Longitude determined as a local reference measured from the meridian passing Greenwich.</p>
+<p><span class="secondHeader">CoordinateSystem</span><br />
+</p>
+<p><span class="mainSentence">Coordinate system defined in gittok consists of  definition of Axes and a definition of projection system. Projection system specifies the relationships between geodetic coordinates (latitude and longitude) and plane rectangular coordinates. Gittok only can use Gauss-Kruger projection now.</span></p>
+<p class="mainSentence"><span class="thirdHeader">Attributes</span><br />
+</p>
+<p class="mainSentence"><strong>id</strong><br />
+  identification code of the coordinate system. A rule to put id should be specified by the authoritative organization such as the national mapping agency. </p>
+<p class="mainSentence"><strong>name</strong><br />
+  a name of the coordinate system.</p>
+<p class="mainSentence"><strong>dimension</strong><br />
+  a number of coordinate dimension.</p>
+<p class="thirdHeader">Associations</p>
+<p class="mainSentence"><strong>axis</strong><br />
+  a role name of Axis that defines an axis of coordinate element.</p>
+<p class="mainSentence"><strong>ps</strong><br />
+  a role name of ProjectionSystem that defines  parameters of Gauss-Kruger Projection.</p>
+<p><span class="secondHeader">Axis</span><br />
+<span class="mainSentence">Coordinate axis is defined by a name, direction and measuring unit. For example,</span></p>
+<p class="mainSentence">name: X<br />
+  direction: north<br />
+unit: m</p>
+<p class="thirdHeader">Attributes</p>
+<p class="mainSentence"><strong>name</strong><br />
+  a name of the coordinate.</p>
+<p class="mainSentence"><strong>direction</strong><br />
+  positive direction of the axis.</p>
+<p class="mainSentence"><strong>unit</strong><br />
+  measuring unit.</p>
+<p class="secondHeader">ProjectionSystem</p>
+<p class="mainSentence">A definition of the projection is used to encode plane rectangular coordinates in a kit into geodetic coordinates in the XML document. In Japan, 19 plane rectangular coordinate systems are defined by the government. Conversion between plane coordinates and geodetic coordinates are done by Gauss-Kruger Projection. The extent of each system is determined in order to restrict the scale factor is less than 0.9999 (0.9996 in case of Universal Transverse Mercator Projection (UTM)).</p>
+<p class="thirdHeader">Attributes</p>
+<p class="mainSentence"><strong>name</strong><br />
+  a name of projection.</p>
+<p class="mainSentence"><strong>scaleFactor</strong><br />
+  a value of the scale factor.</p>
+<p class="mainSentence"><strong>origin</strong><br />
+  a geodetic coordinate of the origin point.</p>
+<p class="secondHeader">VerticalDatum</p>
+<p class="mainSentence">A vertical datum is a surface of zero elevation to which heights of various points are referred in order that those heights be in a consistent system. A height from the surface of reference ellipsoid (ellipsoidal height) is usually used to represent an elevation.</p>
+<p class="thirdHeader">Attributes</p>
+<p class="mainSentence"><strong>id</strong><br />
+  an identification of the vertical datum.</p>
+<p class="mainSentence"><strong>name</strong><br />
+  a name of the vertical datum.</p>
+<p class="secondHeader">CRS Editor</p>
+<p class="mainSentence"><img src="../figures/CRSEditor.png" width="400" height="736" alt="CRS Manager" /></p>
+<p class="thirdHeader">Fields</p>
+<p class="mainSentence"><strong>CRS file</strong><br />
+A name of CRS file is shown in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">[CRS]</span><br />
+  <strong>id (editable)</strong><br />
+  An id of the coordinate reference system is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">[CRS:Geodetic datum]</span><br />
+  <strong>id (editable)</strong><br />
+  An id of the geodetic datum is keyed-in this field.</p>
+<p class="mainSentence"><strong>name (editable)</strong><br />
+  A name of the geodetic datum is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">[CRS: Geodetic datum: Ellipsoid]</span><br />
+  <strong>name (editable)</strong><br />
+  A name of the reference ellipsoid is keyed-in this field.</p>
+<p class="mainSentence"><strong>semi major axis (editable)</strong><br />
+  Length of the semi major axis is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">inverse flattening (editable)</span><br />
+  A value of the inverse flattening is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">[CRS: Geodetic datum: Prime meridian]<br />
+  longitude (editable)</span><br />
+  A value of Greenwich longitude is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">[CRS: Coordinate system]<br />
+  id (editable)</span><br />
+  An id of the projected coordinate system is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">name (editale)</span><br />
+  A name of  the projected coordinate system is keyed-in this field.</p>
+<p class="mainSentence"><strong>dimension (editable)</strong><br />
+  A number of coordinate dimension is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">[CRS: Coordinate system: Axis]</span><br />
+  The definitions of coordinate axes (name, direction and unit) are keyed-in this data grid. Values can be changed by over-writing on the cells. The definition row can be deleted by clicking delete button after the section of the row. The definition can be added by key-in after the new row appears by clicking add button.</p>
+<p class="mainSentence"><span class="strongMainSentence">name (editable)</span><br />
+  A name of axis is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">direction (editable)</span><br />
+  direction (north, south, east or west) of the axis is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">uom (editable)</span><br />
+  An unit of measure for example &quot;m&quot; (meter) is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">offset (editable)</span><br />
+  If false easting and false northing is used, the values can be keyed-in these fields. False easting (northing) is a value added to all horizontal (vertical) coordinates of a map projection so that values in the geographic extent being mapped are positive.</p>
+<p class="mainSentence"><span class="strongMainSentence">[CRS: Coordinate system: Projection system]<br />
+  name (editable)</span><br />
+  A name of projection method is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">scale factor (editable)</span><br />
+  A value applied to the center point or centerline of a map projection. Scale factor is usually slightly less than one. In case of UTM projection, scale factor is 0.9996.</p>
+<p class="mainSentence"><span class="strongMainSentence">origin latitude (editable)</span><br />
+  The latitude of origin point for the plane coordinate system is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">origin longitude (editable)</span><br />
+  The longitude of origin point for the plane coordinate system is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">[CRS: Vertical datum]<br />
+  id (editable)</span><br />
+  An id of the vertical datum is keyed-in this field.</p>
+<p class="mainSentence"><span class="strongMainSentence">name (editable)</span><br />
+  A name of  the vertical datum is keyed-in this field.</p>
+<p class="mainSentence"><span class="thirdHeader">Buttons</span><br />
+  </p>
+<p class="mainSentence"><span class="strongMainSentence">open</span><br />
+  CRS file is opened by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">save</span><br />
+  CRS file is saved by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">add</span><br />
+  The new row of axis is added by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">delete</span><br />
+  The selected row is deleted by clicking this button.</p>
+<p class="mainSentence"><span class="strongMainSentence">日本語</span><br />
+  今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><span class="strongMainSentence">English</span><br />
+  You can read the tutorial written in English.</p>
+<p class="mainSentence">&nbsp;</p>
 </body>
 </html>

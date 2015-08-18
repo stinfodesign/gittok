@@ -31,12 +31,12 @@ CRSは，他の参照系と区別するために，id，つまり識別子をも
 <p class="mainSentence"><span class="mainSentence"><strong>datum</strong></span><br/>
 地球の形状を代表する測地原子 (GeodeticDatum)の役割名です，</p>
 <p class="mainSentence"><span class="mainSentence"><strong>cs</strong></span><br/>
-地球の水平的な座標の軸を定義する，座標系 (CoordinateSystem)の役割名です，</p>
+水平的な座標の軸を定義する，座標系 (CoordinateSystem)の役割名です，</p>
 <p class="mainSentence"><span class="mainSentence"><strong>vDatum</strong></span><br/>
-鉛直方向の座標，つまり高さの座標軸を定義する，鉛直原子 (NerticalDatum)の役割名です．鉛直原子は，水平座標しか扱わない場合は不要です．</p>
+鉛直方向の座標，つまり高さの座標軸を定義する，鉛直原子 (VerticalDatum)の役割名です．鉛直原子は，水平座標しか扱わない場合は不要です．</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="secondHeader">GeodeticDatum</p>
-<p class="mainSentence">このクラスは，地球の形状 (Ellipsoid) を示すとともに，経度０°の線（本初子午線(PrimeMeridian)）がどこにあるかを定義するためにあります．なお，緯度０°は必ず赤道です．地球の形状を示すパラメータは測地原子 (GeodeticDtum)と呼ばれます．ここでdatumは測地学の用語として原子と訳していますが，dataの単数形です．言い換えると，dataは複数形なのですが，今日では単数形として使うことも多くなっています．さて，経度０°の線は，北極から南極を結ぶ線ですが，普通はグリニッジ天文台があった場所に基準があり，それを０°として，東向きに＋の方向があると定められています．ただし，ローカルな位置に原点をもってくる例があるので，ローカルな基準を定めるときは，グリニッジからどの角度になっているかを示す必要があります．</p>
+<p class="mainSentence">このクラスは，地球の形状 (Ellipsoid) を示すとともに，経度０°の線（本初子午線(PrimeMeridian)）がどこにあるかを定義します．なお，緯度０°は必ず赤道です．地球の形状を示すパラメータは測地原子 (GeodeticDtum)と呼ばれます．ここでdatumは測地学の用語として原子と訳していますが，dataの単数形です．言い換えると，dataは複数形なのですが，今日では単数形として使うことも多くなっています．さて，経度０°の線は，北極から南極を結ぶ線ですが，普通はグリニッジ天文台があった場所に基準があり，それを０°として，東向きに＋の方向があると定められています．ただし，ローカルな位置に原点をもってくる例があるので，ローカルな基準を定めるときは，グリニッジからどの角度になっているかを示す必要があります．</p>
 <p class="thirdHeader">属性</p>
 <p class="mainSentence"><span class="mainSentence"><strong>id</strong></span><br/>
 測地原子は識別子をもちます．識別子の詳細については後述します．</p>
@@ -74,7 +74,7 @@ inverseFlattening: 298.257222101</p>
 グリニッジからの東西方向の角度です．日本の場合は常に０°です．</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="secondHeader">CoordinateSystem</p>
-<p class="mainSentence">gittokでは，座標系は，座標軸の定義 (Axis) と，投影法 (ProjectionSystem) の定義から成ります．一般には投影座標系と呼ばれ，緯度・経度と，それを投影してできる平面座標との関係を示します．また，gittokでは，日本で最も多く使われるGauss-Kruger投影を採り上げ，その実装をしています．将来は，その他の投影法も実装するかもしれません．CoordinateSystemは，その識別子 (id)，名前 (name)，そして次元の数 (dimension)を属性とします．例えば，</p>
+<p class="mainSentence">gittokでは，座標系は，座標軸の定義 (Axis) と，投影法 (ProjectionSystem) の定義から成ります．投影法は，緯度・経度と，それを投影してできる平面座標との関係を示します．また，gittokでは，日本で最も多く使われるGauss-Kruger投影を採り上げ，その実装をしています．将来は，その他の投影法も実装するかもしれません．CoordinateSystemは，その識別子 (id)，名前 (name)，そして次元の数 (dimension)を属性とします．例えば，</p>
 <p class="mainSentence">id: (X, Y)<br/>
   name: Gauss-Kruger<br/>
 dimension: 2</p>
@@ -85,7 +85,7 @@ dimension: 2</p>
 <p class="mainSentence"><span class="mainSentence"><strong>name</strong></span><br/>
 投影法の名前です．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>dimension</strong></span><br/>
-投影座標のの次元です．</p>
+投影座標の次元です．</p>
 <p class="thirdHeader">関連</p>
 <p class="mainSentence"><span class="mainSentence"><strong>axis</strong></span><br/>
 投影座標系の座標軸の定義をするAxisの役割名です．</p>
@@ -114,18 +114,17 @@ dimension: 2</p>
 縮尺係数です．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>origin</strong></span><br/>
 投影ための原点です．</p>
-<p class="mainSentence">&nbsp;</p>
-<p class="FirstHeader">VerticalDatum</p>
+<p class="secondHeader">VerticalDatum</p>
 <p class="mainSentence">鉛直位置，つまり高さを求めるには，その基準となる海面の説明が必要になります．それは鉛直原子と呼ばれます．日本には，国家水準原点が測量法施行令で定められていますが，その第2条２において，日本水準原点の地点及び原点数値は，</p>
 <p class="mainSentence">地点　東京都千代田区永田町一丁目一番二地内水準点標石の水晶板の零分画線の中点<br />
 原点数値　東京湾平均海面上二十四・三九〇〇メートル</p>
 <p class="mainSentence">としています．逆に言えば、水準原点の直下，24.3900mのところに，東京湾平均海面があるということです．この東京湾平均海面が，高さの基準になります．この平均海面から鉛直方向の高さを標高といいます．平均海面については，これ以外にも，港湾における土木工事などを円滑に行うために，例えば大阪湾平均海面等，地域や港湾事に定められたものがあります．</p>
 <p class="mainSentence">gittokでは，そのidと名称(日本水準原点など)が示されればよいとしています．idの付け方については後で解説します．</p>
 <p class="mainSentence">高さについては，他にも，準拠楕円体の表面からの高さ（楕円体高）などがありますが，一般に使用されるのは，標高です．</p>
-<p class="secondHeader">属性</p>
-<p class="mainSentence"><span class="thirdHeader">id</span><br/>
+<p class="thirdHeader">属性</p>
+<p class="mainSentence"><span class="mainSentence"><strong>id</strong></span><br/>
 鉛直原子の識別子です．</p>
-<p class="mainSentence"><span class="thirdHeader">name</span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>name</strong></span><br/>
 鉛直原子の名前です．</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="FirstHeader">識別子の付与</p>
@@ -186,73 +185,73 @@ dimension: 2</p>
 </table>
 <p class="mainSentence">平面直角座標系 を利用する場合，例えば測地原子 として日本測地系2000を用い，平面直角座標系第Ⅲ系で座標を記述しているとき，その略称は“JGD2000 / 3 (X, Y)”となる。さらに高さのデータも含み，これが“東京湾平均海面上の高さ”のとき，略称は“JGD2000, TP / 3 (X, Y), H”となる。</p>
 <p class="mainSentence">&nbsp;</p>
-<p class="FirstHeader">操作画面</p>
+<p class="secondHeader">CRS Editor</p>
 <p class="mainSentence"><img src="../figures/CRSEditor.png" width="400" height="736" alt="CRS Manager" /></p>
 <p class="mainSentence">図２．CRS Editor</p>
-<p class="secondHeader">表示欄</p>
-<p class="mainSentence"><span class="thirdHeader">CRS file</span><br/>
+<p class="thirdHeader">Fields</p>
+<p class="mainSentence"><strong>CRS file</strong><br/>
 読み込んだり書き出したりしたCRSファイルの名前がここに表示されます．</p>
 <p class="thirdHeader">[CRS]</p>
-<p class="mainSentence"><span class="thirdHeader">id (編集可能)</span><br/>
+<p class="mainSentence"><strong>id (編集可能)</strong><br/>
 座標参照系の識別子をここに記入します．</p>
 <p class="thirdHeader">[CRS: Geodetic datum]</p>
-<p class="mainSentence"><span class="thirdHeader">id (編集可能)</span><br/>
+<p class="mainSentence"><strong>id (編集可能)</strong><br/>
 測地原子の識別子をここに記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">name (編集可能)</span><br/>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
 測地原子の名前をここに記入します．</p>
 <p class="thirdHeader">[CRS: Geodetic datum: Ellipsoid]</p>
-<p class="mainSentence"><span class="thirdHeader">name (編集可能)</span><br/>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
 地球楕円体の名前をここに記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">semi major axis (編集可能)</span><br/>
+<p class="mainSentence"><strong>semi major axis (編集可能)</strong><br/>
 楕円体の短半径の長さをここに記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">inverse flattening (編集可能)</span><br/>
+<p class="mainSentence"><strong>inverse flattening (編集可能)</strong><br/>
 逆扁平率をここに記入します．</p>
 <p class="thirdHeader">[CRS:Geodetic datum: Prime meridian]</p>
-<p class="mainSentence"><span class="thirdHeader">longitude (編集可能)</span><br/>
+<p class="mainSentence"><strong>longitude (編集可能)</strong><br/>
 本初子午線がグリニッジから何度の位置にあるかを記入します．多くの場合値は0になります．</p>
 <p class="thirdHeader">[CRS: Coordinate system]</p>
-<p class="mainSentence"><span class="thirdHeader">id (編集可能)</span><br/>
+<p class="mainSentence"><strong>id (編集可能)</strong><br/>
 投影座標系の識別子をここに記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">name (編集可能)</span><br/>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
 投影座標系の名前をここに記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">dimension (編集可能)</span><br/>
+<p class="mainSentence"><strong>dimension (編集可能)</strong><br/>
 投影座標系の次元の数をここに記入します．</p>
 <p class="thirdHeader">[CRS: Coordinate system: Axis]</p>
 <p class="mainSentence">座標軸の定義（名前，方向，単位）をここに記入します．既にある定義の値を編集する場合は，該当するセルにカーソルを移動し，クリックして，変更します．軸の定義自体を削除する場合は，その行を指定して，deleteボタンをおします．新たに定義を追加する場合はaddボタンを押して，空の行を作ってから値を記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">name (編集可能)</span><br/>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
 座標軸の名前がここに記入できます．</p>
-<p class="mainSentence"><span class="thirdHeader">direction (編集可能)</span><br/>
+<p class="mainSentence"><strong>direction (編集可能)</strong><br/>
 座標軸の方向をここに記入します．記述のルールはありません．</p>
-<p class="mainSentence"><span class="thirdHeader">uom (編集可能)</span><br/>
+<p class="mainSentence"><strong>uom (編集可能)</strong><br/>
 距離の計測単位をここに記入します．例えば ISO 31-1:1992 Qualities and units - Part1: Space and time（対応する日本の規格は JIS Z 8202-1:2000）では，長さの単位はメートルで，その定義は，1/299 792 458秒の時間に光が真空中を伝わる行程の長さ，その記号は&quot;m&quot;です．</p>
-<p class="mainSentence"><span class="thirdHeader">offset(編集可能)</span><br/>
+<p class="mainSentence"><strong>offset(編集可能)</strong><br/>
 座標系によっては，それが覆う地理的な範囲内で常に座標値をプラスにするために，本来の原点から一定の距離を加えて水平座標を表示することが行われる場合がある．これをfalse easting, とか false northingという．もしそのようなシステムをとっている場合は，その値をメートル単位でここに与える．日本の場合は0である．一般に標高の場合はこのようなことは行わない．</p>
 <p class="thirdHeader">[CRS: Coordinate system: Projection system]</p>
-<p class="mainSentence"><span class="thirdHeader">name (編集可能)</span><br/>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
 投影法の名前をここに記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">scale factor (編集可能)</span><br/>
+<p class="mainSentence"><strong>scale factor (編集可能)</strong><br/>
 縮尺係数をここに記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">origin latitude (編集可能)</span><br/>
+<p class="mainSentence"><strong>origin latitude (編集可能)</strong><br/>
 平面座標系の原点の緯度を十進度単位で記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">origin longitude (編集可能)</span><br/>
+<p class="mainSentence"><strong>origin longitude (編集可能)</strong><br/>
 平面座標系の原点の経度を十進度単位で記入します．</p>
 <p class="thirdHeader">[CRS: Vertical datium]</p>
-<p class="mainSentence"><span class="thirdHeader">id (編集可能)</span><br/>
+<p class="mainSentence"><strong>id (編集可能)</strong><br/>
 鉛直原子の識別子をここに記入します．</p>
-<p class="mainSentence"><span class="thirdHeader">name (編集可能)</span><br/>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
 鉛直原子の名前をここに記入します．</p>
-<p class="secondHeader">ボタン</p>
-<p class="mainSentence"><span class="thirdHeader">open</span><br/>
+<p class="thirdHeader">Button</p>
+<p class="mainSentence"><strong>open</strong><br/>
 CRSファイルをオープンします．</p>
-<p class="mainSentence"><span class="thirdHeader">save</span><br/>
+<p class="mainSentence"><strong>save</strong><br/>
 このページで定義されたCRSをセーブします．</p>
-<p class="mainSentence"><span class="thirdHeader">add</span><br/>
+<p class="mainSentence"><strong>add</strong><br/>
 座標軸を追加します．このボタンを押すと，新たな行が追加されるので，空のセルに名前，方向，転移が記入できます．</p>
-<p class="mainSentence"><span class="thirdHeader">delete</span><br/>
+<p class="mainSentence"><strong>delete</strong><br/>
 座標軸を削除します．削除する行を選択して，このボタンを押すと，その座標軸が削除されます．</p>
-<p class="mainSentence"><span class="thirdHeader">日本語</span><br />
+<p class="mainSentence"><strong>日本語</strong><br />
 今あなたが読んでいるドキュメントが表示されます．</p>
-<p class="mainSentence"><span class="thirdHeader">English</span><br />
+<p class="mainSentence"><strong>English</strong><br />
   You can read the tutorial written in English.</p>
 <p class="mainSentence"></p>
 <p class="mainSentence">&nbsp;</p>

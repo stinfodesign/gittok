@@ -29,7 +29,9 @@
   <buildTargets>
     <buildTarget buildTargetName="default">
       <airSettings airCertificatePath="/Users/morishigeota/Documents/Adobe Flash Builder 4.5.1/gittokR.p12" airTimestamp="false" version="1">
-        <airExcludes/>
+        <airExcludes>
+          <pathEntry path="documents/figures/ ListSchemaDesigner.png"/>
+        </airExcludes>
       </airSettings>
       <actionScriptSettings version="1"/>
     </buildTarget>

@@ -307,7 +307,20 @@
 					featureArray.addItem(feature);
 				}
 				trace("feature array");
-			}		
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/listViewer_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/listViewer_en.html");
+				navigateToURL(request);
+			}
 			
 		]]>
 	</fx:Script>
@@ -338,5 +351,9 @@
 			  click="openKitButton_clickHandler(event)"/>
 	<s:Button id="openListSchemaButton" x="155" y="64" width="55" height="20" label="open"
 			  click="openListSchemaButton_clickHandler(event)"/>
+	<s:Label x="207" y="7" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="248" y="9" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
 
 </s:Window>

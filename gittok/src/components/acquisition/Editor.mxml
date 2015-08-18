@@ -651,8 +651,12 @@
 				if (tp.search("SG_") > -1) {
 					if (geometryWindow == null) {
 						this.openGeometryWindow();
-						if (kitName.text != "" && kit.baseMapImageURL != "null") 
-							geometryWindow.opViewStack.selectedChild = geometryWindow.orientationView;
+						if (kitName.text != "") {
+							if (kit.baseMapImageURL != null) 
+								geometryWindow.opViewStack.selectedChild = geometryWindow.orientationView;
+							else
+								geometryWindow.opViewStack.selectedChild = geometryWindow.preparationView;								
+						}
 						geometryWindow.addEventListener(MouseEvent.MOUSE_DOWN, geometryWindowCheckFeature);
 					}
 				}
@@ -733,6 +737,14 @@
 				if (geometryWindow.searchedGM != null) {
 					var id:String = geometryWindow.searchedGM.featureID;
 					if (id != "") {
+						
+						if (fromRadio != null) {
+							if (fromRadio.selected)
+								featureSet = kit.featureSetArray[associationType.from.name] as FeatureSet;	
+							else 
+								featureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
+						}
+						
 						feature = featureSet.features[id] as Feature;
 						instanceIDList.selectedIndex = idList.getItemIndex(id);
 					}
@@ -887,7 +899,7 @@
 					
 					addressWindow.address.zipCode = addressWindow.zipInput.text;
 					addressWindow.address.location = addressWindow.addressInput.text;
-					addressWindow.address.country = addressWindow.countryLabel.text;
+					addressWindow.address.country = addressWindow.countryInput.text;
 					
 					var ad:Address = addressWindow.address;
 					attValueList.addItem(ad);
@@ -1475,13 +1487,15 @@
 					if (assoType.name == association.typeName) break;
 				}
 				
+				if (fromListWindow != null) fromListWindow.close();
+				if (toListWindow   != null) toListWindow.close(); 
+				
 				var fAttType:AttributeType = assoType.from.getAttributeTypeByName(assoType.from.proxyName);
 				var tAttType:AttributeType = assoType.to.getAttributeTypeByName(assoType.to.proxyName);
 				
 				if (showAssoButton.label == "show") {										
-					
 					if (fAttType.dataType == "CharacterString") {
-						if (fromListWindow == null) this.openFromListWindow();
+						this.openFromListWindow();
 						fromListWindow.selectedList = new ArrayList();
 						for (i = 0; i < fromFeatures.length; i++) {
 							var f:Feature = fromFeatures.getItemAt(i) as Feature;
@@ -1492,7 +1506,7 @@
 					}
 					
 					if (tAttType.dataType == "CharacterString") {
-						if (toListWindow == null) this.openToListWindow();
+						this.openToListWindow();
 						toListWindow.selectedList = new ArrayList();
 						for (i = 0; i < toFeatures.length; i++) {
 							f = toFeatures.getItemAt(i) as Feature;
@@ -1736,7 +1750,7 @@
 				}
 				
 				toListWindow.dataList = dataList;
-				toListWindow.typeNameLabel.text  = associationType.from.name;
+				toListWindow.typeNameLabel.text  = associationType.to.name;
 				toListWindow.proxyNameLabel.text = pxType.name;
 				toListWindow.fromToLabel.text = "TO";				
 			}

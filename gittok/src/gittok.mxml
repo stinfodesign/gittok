@@ -284,15 +284,7 @@
 				var request:URLRequest = new URLRequest("documents/en/index_en.html");
 				navigateToURL(request);
 			}
-			
-			protected function copyrightLabel_clickHandler(event:MouseEvent):void
-			{
-				/*
-				var request:URLRequest = new URLRequest("documents/jp/gittokCopyright_jp.html");
-				navigateToURL(request);
-				*/
-			}
-			
+						
 		]]>
 	</fx:Script>
 	<s:Image x="61" y="104" width="277" height="381" source="@Embed(source='documents/figures/GIT_Bok_Frame.png')"/>
@@ -365,6 +357,6 @@
 	<s:Label right="10" top="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
 	<s:Label id="copyrightlabel" right="13" bottom="10" text="Morishige Ota, 2014" fontSize="10"
-			 buttonMode="true" click="copyrightLabel_clickHandler(event)"/>
+			 buttonMode="true" />
 	
 </s:WindowedApplication>
