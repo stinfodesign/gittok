@@ -253,6 +253,7 @@
 				}
 				
 				kit.applicationSchemaURL = apsFile.name;
+				kit.applicationSchema    = applicationSchema;
 				
 				/*
 				Concrete Feature Types -----------
@@ -382,6 +383,10 @@
 				
 				//kit.featureSetArray = featureSetArray;
 				kit.associationSetArray = associationSetArray;
+				
+				// restructure the kit
+				kit.setXML(kit.getXML());
+
 				
 				if (crsLabel.text != "") 
 					kit.crsURL = crsLabel.text;
@@ -747,9 +752,11 @@
 						
 						feature = featureSet.features[id] as Feature;
 						instanceIDList.selectedIndex = idList.getItemIndex(id);
+						if (attValueList != null) attValueList.removeAll();
 					}
 					else {
 						instanceIDList.selectedIndex = -1;
+						valueGrid.selectedIndex = -1;
 					}
 				}
 			}

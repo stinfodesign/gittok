@@ -822,7 +822,7 @@
 							wf = association.relateFrom.getItemAt(i) as Feature;
 							attList = new ArrayList();
 							att = attValueList.getItemAt(i);
-							att.featureID = wf.id;
+							att.featureID = wf.id;							
 							attList.addItem(att);
 							attList.addItem(attValueList.getItemAt(i));
 							wf.attributes[operationType.returnAttributeName] = attList;

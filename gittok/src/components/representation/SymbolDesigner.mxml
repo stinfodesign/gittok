@@ -645,7 +645,15 @@
 					var p:Coordinate2 = new Coordinate2();
 					p.x = x;
 					p.y = y;
-					searchedElementIndex = searchElement(p, elements);
+					
+					var elementStyle:String;
+					if (circleRadioButton.selected) 
+						elementStyle = "circle";
+					else if (areaRadioButton.selected)
+						elementStyle = "area";
+					else if (lineRadioButton.selected)
+						elementStyle = "line";
+					searchedElementIndex = searchElement(elementStyle, p, elements);
 					
 					// Show selected lineString with thickness 3 times as wide as original
 					drawElement(searchedElementIndex, 3);
@@ -781,34 +789,36 @@
 				return c1;
 			}
 			
-			private function searchElement(p:Coordinate2, elements:ArrayList):int {
+			private function searchElement(elementStyle:String, p:Coordinate2, elements:ArrayList):int {
 				var n:int = elements.length;
 				if (n == 0) return -1;
 				
 				var i:int = -1;
-				var d:Number = Number.MAX_VALUE;
+				var minD:Number = Number.MAX_VALUE;
 				for (var iw:int = 0; iw < n; iw++) {
 					var element:* = elements.getItemAt(iw);
 					var style:* = styles.getItemAt(iw);
 					var dw:Number = Number.MAX_VALUE;
-					if (style is CircleSymbolStyle) {
+					
+					if (style is CircleSymbolStyle && elementStyle == "circle") {
 						var crcl:SG_Circle = new SG_Circle();
 						var crds:CoordinateArray = element as CoordinateArray;
-							
+						
 						crcl.center = crds.getItemAt(0) as Coordinate2;
 						var bcrd:Coordinate2 = crds.getItemAt(1) as Coordinate2;
 						crcl.radius = math.Distance.p2p(crcl.center, bcrd);
 						dw = math.Distance.p2clb(p, crcl);	
 					}
-					if (style is AreaSymbolStyle) {
+					else if (style is AreaSymbolStyle && elementStyle == "area") {
 						dw = math.Distance.p2ls(p, element as CoordinateArray); 							
 					}
-					else {  //element is linestring
+					else if (style is LineSymbolStyle && elementStyle == "line") {
 						dw = math.Distance.p2ls(p, element as CoordinateArray); 
 					}
-					if (dw >=0 && dw < d) {
+					
+					if (dw >=0 && dw < minD) {
 						i = iw;
-						d = dw;
+						minD = dw;
 					}
 				}
 				return i;	

@@ -1,0 +1,25 @@
+<dataTypes name="dataTypeList">
+			<node label="spatial">
+				<node label="SG_Point"/>
+				<node label="SG_Curve"/>
+				<node label="SG_Surface"/>
+				<node label="SG_Complex"/>
+			</node>
+			<node label="place">
+				<node label="Address"/>
+				<node label="URL"/>
+				<node label="ImageURL"/>
+				<node label="VideoURL"/>
+				<node label="SoundURL"/>
+			</node>
+			<node label="thematic">
+				<node label="Bool"/>
+				<node label="Integer"/>
+				<node label="Real"/>
+				<node label="CharacterString"/>
+				<node label="Memo"/>
+			</node>
+			<node label="others">
+				<node label="any"/>
+			</node>
+</dataTypes>

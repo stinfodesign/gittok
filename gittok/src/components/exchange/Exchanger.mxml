@@ -362,6 +362,8 @@
 				fileStream.writeMultiByte(_xml, "utf-8");
 				
 				fileStream.close();
+				
+				kit = null;
 			}
 			
 			private function saveFileClose(event:Event):void {

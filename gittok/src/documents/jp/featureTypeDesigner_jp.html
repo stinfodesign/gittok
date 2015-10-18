@@ -33,7 +33,7 @@ moveTo(750,20);
 <p class="mainSentence"><span class="mainSentence"><strong>inherited operations</strong></span><br/>
 より上位の地物型から継承された操作の一覧が表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>proxy</strong></span><br/>
-表現する上で，地物の代理になる属性をproxy属性といいます．この欄には選択されたproxy属性の型の名前が表示されます．具象地物型は必ず一つのproxy属性をもちます．本来そのデータ型は問いませんが，幾何属性や固有の名前などの文字列が当てられることが多いです．特に現在，gittok でproxy になれるのは幾何プリミティブと文字列だけです．これは，例えば数字だと値が重複する可能性があり，ブール値だと他と分別することが困難だからです．</p>
+地物の代理になる属性をproxy属性といいます．この欄には選択されたproxy属性の型の名前が表示されます．具象地物型は必ず一つのproxy属性をもちます．本来そのデータ型は問いませんが，幾何属性や固有の名前などの文字列が当てられることが多いです．特に現在，gittok でproxy になれるのは幾何プリミティブと文字列だけです．これは，例えば数字だと値が重複する可能性があり，ブール値だと他と分別することが困難だからです．Proxyは主に、関連インスタンスの生成時に使用します．関連は地物から別の地物への結びつきを表しますが，どの具体的にどの地物同士を結びつけるか決める時は，proxyが表現されている地図や一覧表などで指定します．詳しくは，<a href="editor_jp.html">Editorページ</a>にある説明（関連インスタンスの取得）をご覧ください．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>links</strong></span><br/>
   この地物型がリンクする関連型の名前の一覧です．関連型にとっては，この地物型は，関連元を示すことになります．関連型の定義は, Application Schema Designer から Association TypeDesigner を表示させ，その中で行います．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>inherited links</strong></span><br/>
