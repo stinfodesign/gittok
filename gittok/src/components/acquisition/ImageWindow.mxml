@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="740" height="502"
-		  backgroundColor="#c5c5c5"
+		  title="Image"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -252,16 +252,16 @@
 			 mouseUp="imagePanel_mouseUpHandler(event)" 
 			 dropShadowVisible="false">
 		<s:Group clipAndEnableScrolling="true" width="100%" height="100%" visible="true" id="imageBox">
-			<mx:Image id="imageView" source="{imageFilePath}"/>
+			<mx:Image id="imageView" source="{imageFilePath}" width="450" height="360"/>
 		</s:Group>
-		<s:Button x="408" y="-26" label="-" color="#000000" chromeColor="{chromeColor}" cornerRadius="0" width="35"
-				  id="resetButton" click="resetButton_clickHandler(event)"/>
-		<s:Button x="369" y="-26" label="&lt;" width="35" chromeColor="{chromeColor}" color="#000000" cornerRadius="2" 
-			  id="largerButton" click="largerButton_clickHandler(event)"/>
-		<s:Button x="330" y="-26" label="&gt;" id="smallerButton" chromeColor="{chromeColor}" color="#000000" 
-			  cornerRadius="2" width="35" click="smallerButton_clickHandler(event)"/>
-		<s:Button x="291" y="-26" label="off" id="dragButton" color="#000000" chromeColor="{chromeColor}" width="35" 
-			  cornerRadius="2" click="dragButton_clickHandler(event)"/>
+		<s:Button x="408" y="-26" label="-" width="35" id="resetButton" 
+				  click="resetButton_clickHandler(event)"/>
+		<s:Button x="369" y="-26" label="&lt;" width="35" id="largerButton" 
+				  click="largerButton_clickHandler(event)"/>
+		<s:Button x="330" y="-26" label="&gt;" id="smallerButton" width="35" 
+				  click="smallerButton_clickHandler(event)"/>
+		<s:Button x="291" y="-26" label="off" id="dragButton" width="35" 
+				  click="dragButton_clickHandler(event)"/>
 	</s:Panel>
 	
 	<s:Label id="openThumbnail" x="470" y="39" color="#595858" fontFamily="Arial" fontSize="32"
@@ -287,7 +287,7 @@
 			<fx:Component>
 				<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off"
 						 verticalAlign="middle" horizontalAlign="center">
-					<mx:Image source="{data.source}" width="100%"/>
+					<mx:Image source="{data.source}" width="100" height="100" />
 				</mx:VBox>
 			</fx:Component>
 		</mx:itemRenderer>

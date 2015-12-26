@@ -2,8 +2,8 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   width="386" height="388" title="Title Editor"
-			   backgroundColor="#c5c5c5"
+			   width="386" height="388" 
+			   title="Title Editor"
 			   creationComplete="initializeApp()">
 	<fx:Script>
 		<![CDATA[

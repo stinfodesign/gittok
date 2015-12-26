@@ -19,7 +19,4 @@
 				<node label="CharacterString"/>
 				<node label="Memo"/>
 			</node>
-			<node label="others">
-				<node label="any"/>
-			</node>
 </dataTypes>

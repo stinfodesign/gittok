@@ -23,7 +23,7 @@ package portrayal.symbolStyle
 		public function getXML():XML {
 			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
 			
-			str += '<SymbolStyleSchema>';
+			str += '<SymbolStyleDictionary>';
 			
 			str += '<pointSymStyles>';
 			for each(var pStyle:PointSymbolStyle in pointSymStyles) {
@@ -43,7 +43,7 @@ package portrayal.symbolStyle
 			}
 			str += '</areaSymStyles>';
 			
-			str += '</SymbolStyleSchema>';
+			str += '</SymbolStyleDictionary>';
 			
 			return XML(str);
 		}

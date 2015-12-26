@@ -3,7 +3,7 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx"
 		  width="598" height="697"
-		  backgroundColor="#c5c5c5"
+		  title="Feature Type Modeler"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -64,14 +64,10 @@
 			protected var childTypes:ArrayList = new ArrayList();
 			
 			private var color1:uint = 0x13233a;
-			private var color2:uint = 0xd9d9dc;
 			
 			[Bindable]
 			private var chrColor:uint = color1;
-			
-			[Bindable]
-			private var chromeColor:uint = color2;
-			
+						
 			private var atts:ArrayList;
 			private var opts:ArrayList;
 			
@@ -361,15 +357,16 @@
 					Alert.show("You shall enter feature type name before defining operation.", "Warning", 4, this);
 					return;
 				}
+				
+				operationWindow.open();
+				
 				featureType.name = featureTypeName.text;
 
 				operationWindow.featureType = featureType;
-				operationWindow.open();
 				operationWindow.title = "Feature Type >";
 				operationWindow.faSelection = true;
 				operationWindow.addEventListener(Event.CLOSING, operationWindowClosing);
-
-				
+								
 				//If the feature type relates to a parent, inherit attributes and operations. 
 				atts = new ArrayList();
 				opts = new ArrayList();
@@ -389,6 +386,7 @@
 				operationWindow.selectedOperations 			= opts;
 				
 				operationWindow.faSelection = true;
+				
 			}
 			
 			private function inheritProperties(fType:FeatureType):void {
@@ -583,28 +581,28 @@
 	<s:Label x="196" y="71" width="160" height="20" id="parentTypeName" backgroundColor="#dadada" verticalAlign="middle"/>
 	
 	<s:Button id="asParentButton" x="457" y="468" width="80" height="20" label="as parent"
-			  chromeColor="{chromeColor}" click="asParentButton_clickHandler(event)"/>
+			  click="asParentButton_clickHandler(event)"/>
 	<s:Button x="517" y="513" label="add" id="addFTypeButton" click="addFTypeButton_clickHandler(event)" width="60" 
-			  chromeColor="{chromeColor}" height="20"/>
+			  />
 	<s:Button x="517" y="599" label="delete" id="deleteFTypeButton" click="deleteFTypeButton_clickHandler(event)" width="60" 
-			  chromeColor="{chromeColor}" height="20"/>
-	<s:Button id="cancelParentButton" x="293" y="45" width="60" height="20" label="cancel"
-			  chromeColor="{chromeColor}" click="cancelParentButton_clickHandler(event)"/>
+			  />
+	<s:Button id="cancelParentButton" x="293" y="45" width="60" label="cancel"
+			  click="cancelParentButton_clickHandler(event)"/>
 	<s:Button x="517" y="542" label="edit" id="editFTButton" click="editFTButton_clickHandler(event)" width="60" 
-			  chromeColor="{chromeColor}" height="20"/>
+			  />
 	<s:Button x="517" y="571" label="update" id="updateButton" click="updateButton_clickHandler(event)" 
-			  chromeColor="{chromeColor}" width="60" height="20"/>	
-	<s:Button id="clearButton" x="295" y="106" width="60" height="20" label=" clear"
-			  chromeColor="{chromeColor}" click="clearButton_clickHandler(event)"/>
+			  width="60"/>	
+	<s:Button id="clearButton" x="295" y="106" width="60" label=" clear"
+			  click="clearButton_clickHandler(event)"/>
 	<s:Button x="208" y="222" label="edit »" id="editAttributeButton" click="editAttributeButton_clickHandler(event)" 
-			  width="55" chromeColor="{chromeColor}"/>
+			  width="55" />
 	<s:Button id="editOperationButton" x="209" y="440" width="55" label="edit »"
-			  chromeColor="{chromeColor}" click="editOperationButton_clickHandler(event)"/>
+			  click="editOperationButton_clickHandler(event)"/>
 	<s:Button id="selectProxyButton" x="382" y="299" width="55" height="20" label="select"
-			  chromeColor="{chromeColor}" click="selectProxyButton_clickHandler(event)"/>
+			  click="selectProxyButton_clickHandler(event)"/>
 	<s:Label x="381" y="326" width="127" height="20" verticalAlign="middle" backgroundColor="#DADADA" id="proxyLabel"/>
 	<s:Button id="cancelProxyButton" x="517" y="325" width="60" height="20" label="cancel"
-			  chromeColor="{chromeColor}" click="cancelProxyButton_clickHandler(event)"/>
+			  click="cancelProxyButton_clickHandler(event)"/>
 	<s:Label x="197" y="52" text="parent"/>
 	<s:Label x="16" y="117" text="definition"/>
 	<s:TextArea id="defArea" x="15" y="131" width="137" height="80"/>

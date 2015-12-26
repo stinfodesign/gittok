@@ -3,7 +3,6 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="608" height="716"
 		  title="Map Editor"
-		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 
 	<fx:Script>
@@ -67,8 +66,8 @@
 			private var syms:SymbolStyleDictionary;			
 			private var labels:LabelStyleDictionary;
 			private var portrayals:PortrayalSchema;
-			private var featurePortrayalPairDic:Dictionary = new Dictionary();
-			private var ftPtlPair:FeaturePortrayalUnit = new FeaturePortrayalUnit();
+			private var fpUnits:Dictionary = new Dictionary();
+			private var fpUnit:FeaturePortrayalUnit = new FeaturePortrayalUnit();
 			
 			private var curve:SG_Curve;
 			private var surface:SG_Surface;
@@ -112,7 +111,7 @@
 			protected  var colorSelector:ColorSelector;
 			
 			// Gazetteer
-			private var gazette:GazetteerType;
+			private var gazette:Gazetteer;
 			public var gazetteerWindow:GazetteerViewer;
 			private var oldOrigin:Coordinate2 = new Coordinate2();
 			
@@ -186,7 +185,9 @@
 				registerClassAlias("portrayal.labelStyle.LabelStyleDictionary", LabelStyleDictionary);
 				
 				// Portrayal Schema
-				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);								
+				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);
+				registerClassAlias("portrayal.portrayalStyle.AttributeSymbolPair", AttributeSymbolPair);
+				registerClassAlias("portrayal.portrayalStyle.AttributeLabelPair", AttributeLabelPair);				
 				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);								
 				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
 				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);
@@ -230,8 +231,8 @@
 				registerClassAlias("math.AffineParam", AffineParam);
 				
 				// Gazetteer
-				registerClassAlias("locationReference.GazetteItem", GazetteItem);
-				registerClassAlias("locationReference.Gazetteer", GazetteerType);
+				registerClassAlias("locationReference.LocationInstance", LocationInstance);
+				registerClassAlias("locationReference.Gazetteer", Gazetteer);
 				
 				scaleSpace.visible  = false;
 				
@@ -266,7 +267,7 @@
 					kit = stream.readObject() as Kit;
 					stream.close();
 				} catch(e:IOError) {
-					trace("kit open error:" + e);
+					Alert.show("kit open error:" + e, "Alert", 4, this);
 				}
 				
 				kitFileName = file.name;
@@ -296,7 +297,7 @@
 					appSchema = appStream.readObject();
 					appStream.close();
 				} catch(e:IOError) {
-					trace("application schema open error:" + e);
+					Alert.show("application schema open error:" + e, "Alert", 4, this);
 				}
 				
 				// make concrete types
@@ -458,7 +459,7 @@
 					portrayalSchemaFile.addEventListener(Event.SELECT, openPortrayalFiles);
 					portrayalSchemaFile.browseForOpen("Open file", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 			}
 			
@@ -477,7 +478,7 @@
 					appSchemaFile.nativePath    = path + portrayals.applicationSchema;
 					symbolStyleDicFile.nativePath = path + portrayals.symbolStyleDictionary;
 					labelStyleDicFile.nativePath  = path + portrayals.labelStyleDictionary;				
-					featurePortrayalPairDic = portrayals.fpUnits;
+					fpUnits = portrayals.fpUnits;
 					stream.close();
 					
 					stream.open(symbolStyleDicFile, FileMode.READ);
@@ -488,15 +489,14 @@
 					labels = stream.readObject();	// label schema
 					stream.close();				
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "ALert", 4, this);
+					return;
 				}
 				
 				drawMap();
 			}
 			
-			protected function drawMap():void 
-			//protected function drawMapButton_clickHandler(event:MouseEvent):void
-			{
+			protected function drawMap():void {
 				if (kit == null || portrayals == null) return;
 				
 				scaleSpace.visible  = true;
@@ -519,11 +519,11 @@
 				thematicProvider = new ArrayList();
 				
 				for each(featureSet in featureSetArray) {
-					ftPtlPair = featurePortrayalPairDic[featureSet.typeID] as FeaturePortrayalUnit;
-					if (ftPtlPair != null) {
-						var thematicModifier:ThematicCondition = ftPtlPair.thematicModifier;
+					fpUnit = fpUnits[featureSet.typeID] as FeaturePortrayalUnit;
+					if (fpUnit != null) {
+						var thematicModifier:ThematicCondition = fpUnit.thematicModifier;
 						
-						if (thematicModifier.attName != "") {
+						if (thematicModifier != null) {
 							// set Legend on the map
 							this.makeLegend(thematicModifier);
 						}
@@ -632,21 +632,18 @@
 							
 									/* general mapping
 									*/
-									var attributeModifiers:Dictionary = ftPtlPair.generalModifiers;
-									for (i = 0; i < attributeTypes.length; i++) {
-										var attType:AttributeType = attributeTypes.getItemAt(i) as AttributeType;
-										var attValueList:ArrayList = attributes[attType.name];
-										if (attValueList == null) {
-											fType = kit.applicationSchema.featureTypes[feature.typeName] as FeatureType;									}
-										else {
-											var asPair:AttributeStylePair = attributeModifiers[attType.name] as AttributeStylePair;
-											if (asPair != null) {
-												if (asPair.symLabName != "") {	
-													for (j = 0; j < attValueList.length; j++) {
-														if (asPair.symLabType == "Label")
-															this.drawLabel(attValueList, asPair.symLabName, refGeom);
-														else
-															this.drawSymbol(asPair.symLabName, refGeom);
+									if (fpUnit.generalModifiers != null) {
+										for (i = 0; i < attributeTypes.length; i++) {
+											var attType:AttributeType = attributeTypes.getItemAt(i) as AttributeType;
+											if (attType.name == refGeom.attributeName) {
+												var attValueList:ArrayList = attributes[attType.name];
+												if (attValueList != null) {
+													var asPair:AttributeSymbolPair = fpUnit.generalModifiers[attType.name] as AttributeSymbolPair;
+													if (asPair != null) {
+														if (asPair.symName != "") {
+															if (asPair.symType == "Point" || asPair.symType == "Line" || asPair.symType == "Area")
+																this.drawSymbol(asPair.symName, refGeom);
+														}
 													}
 												}
 											}
@@ -655,6 +652,22 @@
 								}
 							}
 						}
+						
+						for each(feature in featureSet.features) {
+							// Labeling
+							attributes = feature.attributes;
+							if (fpUnit.generalModifiers != null) {
+								for (i = 0; i < attributeTypes.length; i++) {
+									attType = attributeTypes.getItemAt(i) as AttributeType;
+									var alPair:AttributeLabelPair = fpUnit.generalModifiers[attType.name] as AttributeLabelPair;
+									if (alPair != null) {
+										attValueList = attributes[attType.name] as ArrayList;
+										var refGeomArray:ArrayList = attributes[alPair.refGeomAttName] as ArrayList;
+										drawLabel(attValueList, alPair.labelName, refGeomArray.getItemAt(0) as SG_Primitive);
+									}
+								}
+							}							
+						}												
 					}
 				}
 			}
@@ -739,12 +752,12 @@
 					attValues.addItem(attValue);
 					argObj = new Object();
 					argObj["surface"] = attValues;
-					rPos = geoOperations.Center.centerOfMIC(argObj).position;
+					rPos = geoOperations.Center.centerOfSurface(argObj).position;
 				}
 				
 				var lblStyle:LabelStyle = labels.labelStyles[labelName] as LabelStyle;
 				for (var i:int = 0; i < attValueList.length; i++) {
-					var element:* = attValueList.getItemAt(0);
+					var element:* = attValueList.getItemAt(i);
 					var value:String = element.value.toString();
 					
 					// Draw label
@@ -766,7 +779,7 @@
 				if (refGeom is SG_Point) {
 					var point:SG_Point = refGeom as SG_Point;
 					var pointSymbolStyle:PointSymbolStyle = syms.pointSymStyles[symbolName] as PointSymbolStyle;
-					var pSym:PointSymbol = new PointSymbol()
+					var pSym:PointSymbol = new PointSymbol();
 					var pObj:Object = new Object();
 					pObj.point = point
 					pObj.style = pointSymbolStyle;
@@ -895,9 +908,9 @@
 				}
 				
 				for each(featureSet in featureSetArray) {
-					ftPtlPair = featurePortrayalPairDic[featureSet.typeID] as FeaturePortrayalUnit;
-					if (ftPtlPair != null) {
-						var thematicModifier:ThematicCondition = ftPtlPair.thematicModifier;
+					fpUnit = fpUnits[featureSet.typeID] as FeaturePortrayalUnit;
+					if (fpUnit != null) {
+						var thematicModifier:ThematicCondition = fpUnit.thematicModifier;
 						
 						if (thematicModifier.attName != "") {
 							// set Legend on the map
@@ -1007,23 +1020,29 @@
 									
 									/* general mapping
 									*/
-									var attributeModifiers:Dictionary = ftPtlPair.generalModifiers;
+									var generalModifiers:Dictionary = fpUnit.generalModifiers;
 									for (i = 0; i < attributeTypes.length; i++) {
 										var attType:AttributeType = attributeTypes.getItemAt(i) as AttributeType;
 										var attValueList:ArrayList = attributes[attType.name];
 										if (attValueList == null) {
 											fType = kit.applicationSchema.featureTypes[feature.typeName] as FeatureType;									}
 										else {
-											var asPair:AttributeStylePair = attributeModifiers[attType.name] as AttributeStylePair;
+											var asPair:AttributeSymbolPair = generalModifiers[attType.name] as AttributeSymbolPair;
 											if (asPair != null) {
-												if (asPair.symLabName != "") {	
+												if (asPair.symName != "") {	
 													for (j = 0; j < attValueList.length; j++) {
-														if (asPair.symLabType == "Label")
-															this.drawLabel(attValueList, asPair.symLabName, refGeom);
-														else
-															this.drawSymbol(asPair.symLabName, refGeom);
+														this.drawSymbol(asPair.symName, refGeom);
 													}
 												}
+											}
+											else {
+												var alPair:AttributeLabelPair = generalModifiers[attType.name] as AttributeLabelPair;
+												if (alPair.labelName != "") {	
+													for (j = 0; j < attValueList.length; j++) {
+														this.drawLabel(attValueList, alPair.labelName, refGeom);
+													}
+												}
+												
 											}
 										}
 									}
@@ -1335,6 +1354,7 @@
 						for (i = 0; i < fType.attributeTypes.length; i++) {
 							var attType:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
 							
+							selectedAttArray = null;
 							var multiIndex:int = -1;
 							for (var j:int = 0; j < 6; j++) {
 								if (attType.dataType == multimediaType[j]) {
@@ -1343,12 +1363,12 @@
 								}
 							}
 							picts[multiIndex] = 1;
-							if (multiIndex == 0) memoButton.alpha 	= selected;
-							if (multiIndex == 1) urlButton.alpha 	= selected;
-							if (multiIndex == 2) imageButton.alpha 	= selected;
-							if (multiIndex == 3) videoButton.alpha 	= selected;
-							if (multiIndex == 4) soundButton.alpha 	= selected;
-							if (multiIndex == 5) addressButton.alpha= selected;
+							if (multiIndex == 0 && selectedAttArray != null) memoButton.alpha 	 = selected;
+							if (multiIndex == 1 && selectedAttArray != null) urlButton.alpha 	 = selected;
+							if (multiIndex == 2 && selectedAttArray != null) imageButton.alpha 	 = selected;
+							if (multiIndex == 3 && selectedAttArray != null) videoButton.alpha 	 = selected;
+							if (multiIndex == 4 && selectedAttArray != null) soundButton.alpha 	 = selected;
+							if (multiIndex == 5 && selectedAttArray != null) addressButton.alpha = selected;
 						}
 						
 						pictBox.x = p.x - 26./scale;
@@ -1371,7 +1391,7 @@
 					
 					kitStream.close();
 				} catch(e:IOError) {
-					trace("kit open error:" + e);
+					Alert.show("kit open error:" + e, "Alert", 4, this);
 				}
 				
 				kitNameLabel.text = kitFile.name;
@@ -1792,19 +1812,20 @@
 					file.addEventListener(Event.SELECT, openGazetteer);
 					file.browseForOpen("Open Gazetteer", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 			}
 			
 			private function openGazetteer(event:Event):void {
-				gazette = new GazetteerType();
+				gazette = new Gazetteer();
 				stream = new FileStream();
 				try {
 					stream.open(file,FileMode.READ);
 					gazette = stream.readObject();
 					stream.close();					
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
+					return;
 				}
 				
 				gazetteerLabel.text = file.name;
@@ -1825,10 +1846,10 @@
 			}
 			
 			private function jumpToPosition(event:Event):void {
-				var gazetteItem:GazetteItem = gazetteerWindow.gazetteItem as GazetteItem;
-				if (gazetteItem == null) return;
+				var li:LocationInstance = gazetteerWindow.locationInstance as LocationInstance;
+				if (li == null) return;
 				
-				var pos:Coordinate2 = gazetteItem.position;
+				var pos:Coordinate2 = li.position;
 								
 				drawingSpace.x = oldOrigin.x + (kitCenter.x - pos.x) * scale;
 				drawingSpace.y = oldOrigin.y + (kitCenter.y - pos.y) * scale;
@@ -1872,22 +1893,18 @@
 			 fontSize="11" verticalAlign="middle"/>
 	
 	<s:Panel id="mappingPanel" left="76" right="30" top="116" bottom="34"
-			 chromeColor="#444444" dropShadowVisible="false" fontSize="14" title="Map" color="#ffffff">
+			 dropShadowVisible="false" fontSize="14" title="Map">
 		<s:Button id="resetButton" y="-26" right="5" width="35" height="20" label="-"
-				  click="resetButton_clickHandler(event)" color="#000000" cornerRadius="2"
-				  fontSize="12" chromeColor="#dadada"/>
+				  click="resetButton_clickHandler(event)" />
 		<s:Button id="largerButton" y="-26" right="43" width="35" height="20" label="&lt;"
-				  click="largerButton_clickHandler(event)" color="#000000" cornerRadius="2"
-				  fontSize="12" chromeColor="#dadada"/>
+				  click="largerButton_clickHandler(event)" />
 		<s:Button id="smallerButton" y="-26" right="81" width="35" height="20" label="&gt;"
-				  click="smallerButton_clickHandler(event)" color="#000000" cornerRadius="2"
-				  fontSize="12" chromeColor="#dadada"/>
+				  click="smallerButton_clickHandler(event)" />
 		<s:Button id="dragButton" y="-26" right="119" width="35" height="20" label="off"
-				  click="dragButton_clickHandler(event)" color="#000000" cornerRadius="2"
-				  fontSize="12" chromeColor="#dadada"/>
+				  click="dragButton_clickHandler(event)" />
 		<s:DropDownList id="moveMarginalDropDown" y="-27" right="274" width="98" height="20"
 						change="moveMarginalDropDown_changeHandler(event)" fontSize="12"
-						labelField="item" prompt="annotation" color="#000000" chromeColor="#dadada">
+						labelField="item" prompt="annotation" >
 			<s:dataProvider>
 				<s:ArrayList>
 					<fx:Object item="title"/>

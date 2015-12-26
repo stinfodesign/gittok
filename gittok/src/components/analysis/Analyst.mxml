@@ -3,7 +3,6 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="700" height="608"
 		  creationComplete="initializeApp()"
-		  backgroundColor="#c5c5c5"
 		  title="Analyst">
 	
 	<s:layout>
@@ -247,7 +246,7 @@
 					kit = stream.readObject() as Kit;
 					stream.close();
 				} catch(e:IOError) {
-					trace("kit open error:" + e);
+					Alert.show("kit open error:" + e, "Alert", 4, this);
 				}	
 			}
 			
@@ -260,7 +259,7 @@
 					applicationSchema = stream.readObject() as ApplicationSchema;
 					stream.close();
 				} catch (e:IOError) {
-					trace("app schema open error:" + e);
+					Alert.show("app schema open error:" + e, "Alert", 4, this);
 				}	
 
 			}
@@ -275,7 +274,8 @@
 					var symbolStyles:SymbolStyleDictionary = stream.readObject() as SymbolStyleDictionary;   
 					stream.close();
 				} catch(e:IOError) {
-					trace("default symbol style open error:" + e);
+					Alert.show("default symbol style open error:" + e, "Alert", 4, this);
+					return;
 				}
 				
 				pointSymbolStyle = symbolStyles.pointSymStyles["defPoint"] 	as PointSymbolStyle;				
@@ -693,10 +693,10 @@
 							attValues.addItem(attList);
 						}
 						else { // toFeature
-							var toFType:FeatureType = argAttPair.targetType;
-							var toFSet:FeatureSet = featureSetArray[toFType.name] as FeatureSet;
+							var toFTypeName:String = argAttPair.targetTypeName;
+							var toFSet:FeatureSet = featureSetArray[toFTypeName] as FeatureSet;
 							for each(var toF:Feature in toFSet.features) {	// a feature may associate with more than one other features
-								if (toF.typeName == toFType.name) {
+								if (toF.typeName == toFTypeName) {
 									attList = toF.attributes[attName];	// arraylist of attribute values
 									toFeature = toF;
 								}
@@ -771,7 +771,7 @@
 				var valueObject:* = classRef[opName](argObj);
 				
 				
-				// Initialize the attribute value (it may be sequence, if multiplicity is true)
+				// Initialize the attribute value (it may be an array, if multiplicity is true)
 				attValueList = new ArrayList();
 				
 				if (tabBar.selectedIndex == 0) {	//feature	
@@ -809,13 +809,12 @@
 					var attType:AttributeType = fType.getAttributeTypeByName(aname);
 					
 					unitLabel.text = attType.unit;
-					
 				}
 					
 				else {	// tabBar.index == 1 : association	
 					var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;
 					if (assoType.from.name == operationType.returnFATypeName) {
-						// return value to "from"
+						// return value goes to "from"
 						attValueList = this.setAttValueList("f", valueObject, association.relateFrom);
 						
 						for (i = 0; i < association.relateFrom.length; i++) {
@@ -835,7 +834,7 @@
 						
 					}
 					else if (assoType.to.name == operationType.returnFATypeName) {
-						// return value to "to"
+						// return value goes to "to"
 						attValueList = this.setAttValueList("f", valueObject, association.relateTo);
 						
 						for (i = 0; i < association.relateTo.length; i++) {
@@ -854,6 +853,7 @@
 
 					}
 					else if (assoType.name == operationType.returnFATypeName) {
+						// return value goes to association itself
 						attValueList = this.setAttValueList("a", valueObject, null, association);
 						association.attributes[operationType.returnAttributeName] = attValueList;
 						for (i = 0; i < assoType.attributeTypes.length; i++) {
@@ -1383,8 +1383,8 @@
 	<s:Label x="161" y="95" text="Kit"/>
 	<s:Label x="39" y="117" width="157" height="20" verticalAlign="middle" backgroundColor="#DADADA" id="kitNameLabel"/>
 
-	<s:Panel id="geometryPanel" left="37" right="227" top="216" bottom="12" chromeColor="#444444"
-			 color="#ffffff" dropShadowVisible="false" title="Geometry view panel">
+	<s:Panel id="geometryPanel" left="37" right="227" top="216" bottom="12"
+			 dropShadowVisible="false" title="Geometry view panel">
 		<s:Group clipAndEnableScrolling="true" width="100%" height="100%" visible="true" id="geometryBox" x="0" y="0"
 				 mouseDown="geometryPanel_mouseDownHandler(event)"
 				 mouseUp="geometryPanel_mouseUpHandler(event)">
@@ -1395,16 +1395,16 @@
 			</s:Group>
 		</s:Group>
 		<s:Button id="resetButton" right="6" top="-26" width="35" height="20" label="-"
-				  chromeColor="#dadada" click="resetButton_clickHandler(event)" color="#000000"/>
+				  click="resetButton_clickHandler(event)" />
 		<s:Button id="largerButton" right="44" top="-26" width="35" height="20" label="&lt;"
-				  chromeColor="#dadada" click="largerButton_clickHandler(event)" color="#000000"/>
+				  click="largerButton_clickHandler(event)" />
 		<s:Button id="smallerButton" right="82" top="-26" width="35" height="20" label="&gt;"
-				  chromeColor="#dadada" click="smallerButton_clickHandler(event)" color="#000000"/>
+				  click="smallerButton_clickHandler(event)" />
 		<s:Button id="dragButton" right="120" top="-26" width="35" height="20" label="off"
-				  chromeColor="#ffffff" click="dragButton_clickHandler(event)" color="#000000"/>
+				  click="dragButton_clickHandler(event)" />
 		<s:HSlider id="alphaSlider" right="169" top="-20" width="68"
-				   change="alphaSlider_changeHandler(event)" chromeColor="#dadada" maximum="1"
-				   minimum="0" stepSize="0.05" value="1"/>
+				   change="alphaSlider_changeHandler(event)" maximum="1" minimum="0" 
+				   stepSize="0.05" value="1"/>
 	</s:Panel>
 	
 	<s:TabBar id="tabBar" right="295" top="17" height="20" change="tabBar_changeHandler(event)"

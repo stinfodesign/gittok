@@ -12,36 +12,42 @@ package portrayal.gpm
 		public var thematicModifier:ThematicCondition;	// for a thematic map
 		public var infoPages:Dictionary;				// for information pages on a map
 		
-		/* asPair is a attribute and style pair, element of generalModifiers
-		"attName" ---- Keyword of the dictionary
-		*/
+
 		public function FeaturePortrayalUnit()
 		{
 			generalModifiers = new Dictionary();
 			thematicModifier = new ThematicCondition();
-			infoPages    = new Dictionary();
+			infoPages		 = new Dictionary();
 		}
 		
 		public function getXML():XML {
-			var str:String = '<FeaturePortrayalPair featureTypeID="' + this.featureTypeID + '">';
-			str += '<generalModifier>';
-			for each(var asPair:AttributeStylePair in generalModifiers) {
-				str += asPair.getXML().toXMLString();
+			var str:String = '<FeaturePortrayalUnit featureTypeID="' + this.featureTypeID + '">';
+			str += '<generalModifiers>';
+			if (generalModifiers != null) {
+				for each(var aslPair:* in generalModifiers) {
+					if (aslPair is AttributeSymbolPair) {
+						var asPair:AttributeSymbolPair = aslPair as AttributeSymbolPair;
+						str += asPair.getXML().toXMLString();
+					}
+					else {
+						var alPair:AttributeLabelPair = aslPair as AttributeLabelPair;
+						str += alPair.getXML().toXMLString();
+					}
+				}
 			}
-			str += '</generalModifier>';
-			
+			str += '</generalModifiers>';
 			str += '<thematicModifier>';
-			str += thematicModifier.getXML().toXMLString();
+			if (thematicModifier != null)
+				str += thematicModifier.getXML().toXMLString();
 			str+= '</thematicModifier>';
 			
-			str += '<balloonsOnMap>';
+			str += '<infoPages>';
 			for each(var infoPageAttType:AttributeType in infoPages) {
 				str += infoPageAttType.getXML().toXMLString();
 			}
-			str += '</balloonsOnMap>';
+			str += '</infoPages>';
 			
-			
-			str += '</FeaturePortrayalPair>';
+			str += '</FeaturePortrayalUnit>';
 			return XML(str);
 		}
 		
@@ -49,22 +55,35 @@ package portrayal.gpm
 			this.featureTypeID = _xml.@featureTypeID;
 			
 			generalModifiers = new Dictionary();
-			var strXMLList:XMLList = _xml.generalModifier.children();
-			for each(var strXML:XML in strXMLList) {
-				var asPair:AttributeStylePair = new AttributeStylePair();
-				asPair.setXML(strXML);
-				generalModifiers[asPair.attName] = asPair;
-			}
+			var strXMLList:XMLList = _xml.generalModifiers.children();
+			if (strXMLList.length() > 0) {
+				for each(var strXML:XML in strXMLList) {
+					if (strXML.localName() == "AttributeSymbolPair") {
+						var asPair:AttributeSymbolPair = new AttributeSymbolPair();
+						asPair.setXML(strXML);
+						generalModifiers[asPair.attName] = asPair;
+					}
+					else {
+						var alPair:AttributeLabelPair = new AttributeLabelPair();
+						alPair.setXML(strXML);
+						generalModifiers[alPair.attName] = alPair;
+					}
+				}
+			}			
 			
 			thematicModifier = new ThematicCondition();
-			thematicModifier.setXML(_xml.thematicModifier);
+			var themaXMLList:XMLList = _xml.thematicModifier.children();
+			if (themaXMLList.length() > 0)
+				thematicModifier.setXML(themaXMLList[0]);
 			
 			infoPages = new Dictionary();
-			strXMLList = _xml.balloonsOnMap.children();
-			for each(strXML in strXMLList) {
-				var balloonAtt:AttributeType = new AttributeType();
-				balloonAtt.setXML(strXML);
-				infoPages[balloonAtt.name] = balloonAtt;
+			strXMLList = _xml.fpUnits.balloonsOnMap.children();
+			if (strXMLList.length() > 0) {
+				for each(strXML in strXMLList) {
+					var infoPageAtt:AttributeType = new AttributeType();
+					infoPageAtt.setXML(strXML);
+					infoPages[infoPageAtt.name] = infoPageAtt;
+				}
 			}
 
 		}

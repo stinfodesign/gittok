@@ -3,8 +3,7 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
 		  width="458" height="494"
-		  title="Symbol Designer"
-		  backgroundColor="#c5c5c5"
+		  title="Symbol Style Designer"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -99,6 +98,7 @@
 				registerClassAlias("portrayal.symbol.LineSymbol", LineSymbol);
 				registerClassAlias("portrayal.symbol.PointSymbol", PointSymbol);
 				
+				
 				// Basic Types
 				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
 				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
@@ -132,8 +132,6 @@
 
 			protected function saveSymbolStylesButton_clickHandler(event:MouseEvent):void
 			{
-				//if (symbolStyles.name == null) return;
-					
 				// Save instance set
 				try {
 					symbolFile = new File();
@@ -332,6 +330,9 @@
 					Alert.show("Select and edit symbol style before.", "Error", 4, this);
 					return;
 				}
+				
+				delete symbolStyles.lineSymStyles[lStyle.name];
+
 				
 				lStyle.name 	= lineSymName.text;
 				lStyle.color 	= selectedLineColor;
@@ -537,6 +538,9 @@
 					return;
 				}
 				editFlag = false;
+				
+				delete symbolStyles.areaSymStyles[aStyle.name];
+				
 				
 				var index:int = areaSymArray.getItemIndex(aStyle);
 				aStyle.name = areaSymName.text;
@@ -1007,10 +1011,13 @@
 				}
 				editFlag = false;
 				
+				delete 	symbolStyles.pointSymStyles[pStyle.name];
+				
 				pStyle.name = pointSymName.text;
 				pStyle.size = Number(pointSizeInput.text);
 				pStyle.elements = elements;
 				pStyle.styles = styles;
+				
 				var index:int = pointSymArray.getItemIndex(pStyle);
 				pointSymArray.setItemAt(pStyle, index);
 				symbolStyles.pointSymStyles[pStyle.name] = pStyle;
@@ -1226,11 +1233,11 @@
 				<s:Label x="112" y="101" text="pixel"/>
 				<s:Label x="26" y="20" text="name"/>
 				<s:TextInput x="79" y="13" width="106" id="lineSymName"/>
-				<s:Button x="325" y="136" label="add" width="60" id="addLineSymButton" click="addLineSymButton_clickHandler(event)" chromeColor="{chromeColor}"/>
-				<s:Button x="325" y="191" label="update" width="60" id="updateLineSymButton" click="updateLineSymButton_clickHandler(event)" chromeColor="{chromeColor}"/>
-				<s:Button x="325" y="218" label="delete" width="60" id="deleteLineSymButton" click="deleteLineSymButton_clickHandler(event)" chromeColor="{chromeColor}"/>
-				<s:Button x="325" y="164" label="edit" width="60" id="editLineSymButton" click="editLineSymButton_clickHandler(event)" chromeColor="{chromeColor}"/>
-				<s:Button x="214" y="14" label="show" width="50" chromeColor="{chromeColor}" color="#000000" cornerRadius="2" 
+				<s:Button x="325" y="136" label="add" width="62" id="addLineSymButton" click="addLineSymButton_clickHandler(event)"/>
+				<s:Button x="325" y="191" label="update" width="62" id="updateLineSymButton" click="updateLineSymButton_clickHandler(event)"/>
+				<s:Button x="325" y="218" label="delete" width="62" id="deleteLineSymButton" click="deleteLineSymButton_clickHandler(event)" />
+				<s:Button x="325" y="164" label="edit" width="62" id="editLineSymButton" click="editLineSymButton_clickHandler(event)" />
+				<s:Button x="214" y="14" label="show" width="50"
 						  id="showLineButton" click="showLineButton_clickHandler(event)" height="20"/>
 				<s:Label x="26" y="222" text="dash"/>
 				<mx:DataGrid x="214" y="134" id="lineSymGrid" width="101" height="130" dataProvider="{lineSymArray}">
@@ -1268,7 +1275,7 @@
 						<s:SolidColor id="lineColor" color="0x000000"/>
 					</s:fill>
 				</s:Rect>			
-				<s:Button id="selectLineColorButton" x="89" y="58" width="50" height="16" label="select"
+				<s:Button id="selectLineColorButton" x="89" y="58" width="50" label="select"
 						  click="selectLineColorButton_clickHandler(event)" fontSize="11"/>
 			</s:Group>
 		</s:NavigatorContent>
@@ -1303,7 +1310,7 @@
 						<s:SolidColor id="areaColor" color="0x000000"/>
 					</s:fill>
 				</s:Rect>			
-				<s:Button id="selectAreaColorButton" x="89" y="58" width="50" height="16"
+				<s:Button id="selectAreaColorButton" x="89" y="58" width="50"
 						  label="select" click="selectAreaColorButton_clickHandler(event)"
 						  fontSize="11"/>
 
@@ -1328,8 +1335,7 @@
 				<s:Label x="11" y="20" text="name" fontSize="12"/>
 				<s:TextInput x="46" y="15" width="100" id="pointSymName" borderVisible="true"/>
 				<s:Panel x="10" y="86" width="200" height="232" id="pointPanel" title="Edit Panel" 
-						 click="pointPanel_clickHandler(event)" dropShadowVisible="false"
-						 color="#ffffff" chromeColor="#444444">
+						 click="pointPanel_clickHandler(event)" dropShadowVisible="false">
 					<mx:Image id="GridImage" source="@Embed(source='images/grid.png')"  width="200" height="200" x="-1" y="0"/>
 					<mx:Image id="samplePointView" width="200" height="200" x="-1" y="0"/>
 					
@@ -1361,9 +1367,9 @@
 	<s:Label x="287" y="72" id="symbolStylesLabel" backgroundColor="#DADADA" width="140" height="20" 
 			 verticalAlign="middle"/>
 	<s:Button x="287" y="20" label="open" width="55" id="openSymbolStylesButton" 
-			  click="openSymbolStylesButton_clickHandler(event)" color="{chrColor}" chromeColor="{chromeColor}"/>
+			  click="openSymbolStylesButton_clickHandler(event)"/>
 	<s:Button x="287" y="46" label="save" width="55" id="saveSymbolStylesButton" 
-			  click="saveSymbolStylesButton_clickHandler(event)" color="{chrColor}" chromeColor="{chromeColor}"/>
+			  click="saveSymbolStylesButton_clickHandler(event)"/>
 	<s:Label x="364" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="405" y="12" text="English" color="#969696"

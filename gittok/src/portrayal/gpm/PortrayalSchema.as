@@ -18,13 +18,15 @@ package portrayal.gpm
 		public function getXML():XML {
 			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
 
-			str += '<PortrayalDic applicationSchema="' + this.applicationSchema + '" ';
+			str += '<PortrayalSchema applicationSchema="' + this.applicationSchema + '" ';
 			str += 'symbolStyleDictionary="' + this.symbolStyleDictionary + '" ';
 			str += 'labelStyleDictionary="' + this.labelStyleDictionary + '">';
+			str += '<fpUnits>';
 			for each(var fpPair:FeaturePortrayalUnit in fpUnits) {
 				str += fpPair.getXML().toString();
 			}
-			str += '</PortrayalDic>';
+			str += '</fpUnits>';
+			str += '</PortrayalSchema>';
 			return XML(str);
 		}
 		
@@ -32,7 +34,7 @@ package portrayal.gpm
 			this.applicationSchema = _xml.@applicationSchema;
 			this.symbolStyleDictionary = _xml.@symbolStyleDictionary;
 			this.labelStyleDictionary  = _xml.@labelStyleDictionary;
-			var strXMLList:XMLList = _xml.children();
+			var strXMLList:XMLList = _xml.fpUnits.children();
 			for each(var strXML:XML in strXMLList) {
 				var fpPair:FeaturePortrayalUnit = new FeaturePortrayalUnit();
 				fpPair.setXML(strXML);

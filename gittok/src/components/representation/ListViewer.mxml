@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="300" height="424"
-		  title="Cartographer &gt;&gt;" backgroundColor="#c5c5c5"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="342" height="424"
+		  title="List Viewer"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import components.acquisition.GeometryWindow;
 			import components.acquisition.ImageWindow;
 			
 			import dataTypes.place.*;
@@ -26,7 +27,7 @@
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
 			
-			import portrayal.list.ListSchema;
+			import portrayal.gpm.list.*;
 			
 			import spark.events.IndexChangeEvent;
 			
@@ -43,12 +44,16 @@
 			public var memoViewer:MemoViewer;
 			public var addressViewer:AddressViewer;
 			public var webSiteViewer:WebsiteViewer;
+			public var geometryWindow:GeometryWindow;
 			
 			[Bindable]
 			protected var selectedAttributeList:ArrayList;
 			
 			private var file:File;
 			private var stream:FileStream;
+			
+			[Bindable]
+			private var featureTypeArray:ArrayList;
 			
 			[Bindable]
 			protected var proxyValueArray:ArrayList;
@@ -104,14 +109,18 @@
 				registerClassAlias("math.AffineParam", AffineParam);
 				
 				//List Schema
-				registerClassAlias("portrayalSchema.list.ListSchema", ListSchema);	
-
+				registerClassAlias("portrayal.gpm.list.ListSchema", ListSchema);	
+				registerClassAlias("portrayal.gpm.list.FeatureTypeForListing", FeatureTypeForListing);	
 				
 								
 			}
 			
 			protected function attributeList_clickHandler(event:MouseEvent):void {
 				var fid:int = proxyValueList.selectedIndex;
+				if (fid < 0) {
+					Alert.show("Select feature before the selection of attribute.", "Alert", 4, this);
+					return;
+				}
 				selectedFeature = featureArray.getItemAt(fid) as Feature;
 
 				var aid:int = attributeList.selectedIndex;
@@ -175,7 +184,25 @@
 					webSiteViewer.urlArray = selectedFeature.attributes[atType.name] as ArrayList;
 					webSiteViewer.setUrlArray();
 				} 
+				
+				if (daType.search("SG_") > -1) { // It means daType is spatial geometry.
+					if (geometryWindow == null) {
+						geometryWindow = new GeometryWindow();
+						geometryWindow.kit = kit;
+						geometryWindow.kitURL = kitURL;
+						geometryWindow.applicationSchema = kit.applicationSchema;
+						geometryWindow.open();
+						geometryWindow.title = "Editor >";
+						geometryWindow.clearAnnotationLayer();
+						geometryWindow.addEventListener(Event.CLOSE, geometryWindowClose);				
+					}
+				}
 			} 
+			
+			protected function geometryWindowClose(event:Event):void {
+				geometryWindow = null;
+				Mouse.cursor = "arrow";
+			}
 			
 			protected function imageViewerClose(event:Event):void {
 				imageViewer = null;	
@@ -223,7 +250,7 @@
 					kit = stream.readObject() as Kit;
 					stream.close();
 				} catch(e:IOError) {
-					trace("kit open error:" + e);
+					Alert.show("kit open error:" + e, "Alert", 4, this);
 				}
 				
 				kitLabel.text = file.name;
@@ -250,7 +277,7 @@
 					appSchema = appStream.readObject();
 					appStream.close();
 				} catch(e:IOError) {
-					trace("application schema open error:" + e);
+					Alert.show("application schema open error:" + e, "Alert", 4, this);
 				}
 				
 				// make concrete types
@@ -275,7 +302,7 @@
 					file.addEventListener(Event.SELECT, openListSchema);
 					file.browseForOpen("Open file  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 			}
 			
@@ -287,26 +314,11 @@
 					stream.open(file,FileMode.READ);
 					listSchema = stream.readObject();					
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 				
-				featureType = listSchema.featureType;
-				featureTypeLabel.text = featureType.name;
-				
-				proxyType = featureType.getAttributeTypeByName(featureType.proxyName);
-				proxyTypeLabel.text = proxyType.name;
-				
-				selectedAttributeList = listSchema.selectedAttributeTypes;
-				
-				var featureSet:FeatureSet = kit.featureSetArray[featureType.name] as FeatureSet;
-				proxyValueArray = new ArrayList();
-				featureArray = new ArrayList();
-				for each (var feature:Feature in featureSet.features) {
-					var attList:ArrayList = feature.attributes[proxyType.name] as ArrayList;
-					proxyValueArray.addItem(attList.getItemAt(0) as CharacterString);
-					featureArray.addItem(feature);
-				}
-				trace("feature array");
+				featureTypeArray = listSchema.selectedFeatureTypes;
+
 			}
 			
 			// Text and instruction  Controls
@@ -322,38 +334,62 @@
 				navigateToURL(request);
 			}
 			
+			protected function featureTypeDropDownList_changeHandler(event:IndexChangeEvent):void
+			{
+				if (featureTypeDropDownList.selectedIndex < 0) return;
+				
+				var featureTypeForListing:FeatureTypeForListing 
+					= featureTypeDropDownList.selectedItem as FeatureTypeForListing;
+					
+					proxyType = featureTypeForListing.getAttributeTypeByName(featureTypeForListing.proxyName);
+					proxyTypeLabel.text = proxyType.name;
+					
+					selectedAttributeList = featureTypeForListing.selectedAttributeTypes;
+					
+					var featureSet:FeatureSet = kit.featureSetArray[featureTypeForListing.name] as FeatureSet;
+					proxyValueArray = new ArrayList();
+					featureArray = new ArrayList();
+					for each (var feature:Feature in featureSet.features) {
+						var attList:ArrayList = feature.attributes[proxyType.name] as ArrayList;
+						proxyValueArray.addItem(attList.getItemAt(0) as CharacterString);
+						featureArray.addItem(feature);
+					}
+				
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="List Viewer" fontSize="16"/>
-	<s:Label x="27" y="118" text="Feature type"/>
-	<s:Label id="featureTypeLabel" x="27" y="133" width="120" height="20" backgroundColor="#DADADA"
+	<s:Label x="23" y="123" text="Feature type list"/>
+	<s:Label x="178" y="124" text="Proxy"/>
+	<s:Label id="proxyTypeLabel" x="178" y="138" width="142" height="20" backgroundColor="#DADADA"
 			 verticalAlign="middle"/>
-	<s:Label x="155" y="121" text="Proxy"/>
-	<s:Label id="proxyTypeLabel" x="155" y="135" width="120" height="20" backgroundColor="#DADADA"
-			 verticalAlign="middle"/>
-	<s:Label x="28" y="182" text="Proxy value list"/>
-	<s:List id="proxyValueList" x="26" y="196" width="120" height="173" borderVisible="false"
+	<s:Label x="23" y="182" text="Proxy value list"/>
+	<s:List id="proxyValueList" x="23" y="196" width="142" height="173" borderVisible="false"
 			contentBackgroundColor="#DADADA" dataProvider="{proxyValueArray}" labelField="value"></s:List>
-	<s:Label x="158" y="181" text="Attributes"/>
-	<s:List id="attributeList" x="156" y="196" width="119" height="173" borderVisible="false"
+	<s:Label x="178" y="181" text="Attributes"/>
+	<s:List id="attributeList" x="178" y="196" width="142" height="173" borderVisible="false"
 			click="attributeList_clickHandler(event)"
 			contentBackgroundColor="#DADADA"
 		    dataProvider="{selectedAttributeList}" labelField="name"></s:List>
-	<s:Label id="kitLabel" x="27" y="88" width="120" height="20" backgroundColor="#DADADA" lineBreak="explicit"
+	<s:Label id="kitLabel" x="23" y="88" width="142" height="20" backgroundColor="#DADADA" lineBreak="explicit"
 			 verticalAlign="middle"/>
-	<s:Label x="87" y="68" text="Kit"/>
-	<s:Label x="215" y="69" text="List schema"/>
-	<s:Label id="listSchemaLabel" x="155" y="89" width="120" height="20" backgroundColor="#DADADA"
+	<s:Label x="85" y="68" text="Kit"/>
+	<s:Label x="241" y="69" text="List schema"/>
+	<s:Label id="listSchemaLabel" x="178" y="89" width="142" height="20" backgroundColor="#DADADA"
 			 verticalAlign="middle" lineBreak="explicit"/>
-	<s:Button id="openKitButton" x="27" y="63" width="55" height="20" label="open"
+	<s:Button id="openKitButton" x="23" y="63" width="55" height="20" label="open"
 			  click="openKitButton_clickHandler(event)"/>
-	<s:Button id="openListSchemaButton" x="155" y="64" width="55" height="20" label="open"
+	<s:Button id="openListSchemaButton" x="178" y="64" width="55" height="20" label="open"
 			  click="openListSchemaButton_clickHandler(event)"/>
-	<s:Label x="207" y="7" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+	<s:Label x="249" y="7" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
-	<s:Label x="248" y="9" text="English" color="#969696"
+	<s:Label x="290" y="9" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:DropDownList id="featureTypeDropDownList" x="23" y="138" width="142"
+					change="featureTypeDropDownList_changeHandler(event)"
+					dataProvider="{featureTypeArray}" labelField="name"></s:DropDownList>
 
 </s:Window>

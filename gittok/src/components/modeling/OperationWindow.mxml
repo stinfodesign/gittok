@@ -2,9 +2,8 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
-		  title="Operation Type Designer"
+		  title="Operation Type Modeler"
 		  width="575" height="682"
-		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -50,9 +49,6 @@
 			
 			[Bindable]
 			private var chrColor:uint = color1;
-			
-			[Bindable]
-			private var chromeColor:uint = color2;	
 			
 			[Bindable]
 			private var atts:ArrayList;
@@ -193,13 +189,14 @@
 					argAttNamePair.argumentName = argAttPair.argumentType.name;
 					argAttNamePair.fromTo = argAttPair.fromTo;
 					argAttNamePair.attributeName = argAttPair.attributeType.name;
-					if (argAttPair.targetType != null)
-						argAttNamePair.targetTypeName = argAttPair.targetType.name;
+					if (argAttPair.targetTypeName != null)
+						argAttNamePair.targetTypeName = argAttPair.targetTypeName;
 					argAttArray.addItem(argAttNamePair);
 				}
 				
 				returnTypeLabel.text = opType.returnAttributeType;
 				returnAttributeLabel.text = opType.returnAttributeName;
+				faTypeNameLabel.text = opType.returnFATypeName;
 
 			}
 
@@ -224,7 +221,7 @@
 						return;	
 					}
 				} catch (error:Error) {
-					trace("Return type shall be selected before.");
+					Alert.show("Return type shall be selected before.", "Alert", 4, this);
 					return;						
 				}
 				
@@ -254,6 +251,7 @@
 					else if (aToRadio.selected)
 						opType.returnFATypeName = associationType.to.name;
 				}
+				faTypeNameLabel.text = opType.returnFATypeName;
 			}
 
 
@@ -268,7 +266,7 @@
 						argAttPair.fromTo = "to";
 						if (typeNameList.selectedIndex == -1) typeNameList.selectedIndex = 0;
 						var toFType:FeatureType = faTypeArray.getItemAt(typeNameList.selectedIndex) as FeatureType;
-						argAttPair.targetType = toFType;
+						argAttPair.targetTypeName = toFType.name;
 					}
 					
 					if (aFromRadio.selected) argAttPair.fromTo = "from";
@@ -283,8 +281,8 @@
 					argAttNamePair.argumentName  = argAttPair.argumentType.name as String;
 					argAttNamePair.fromTo = argAttPair.fromTo as String;
 					argAttNamePair.attributeName = argAttPair.attributeType.name as String;
-					if (argAttPair.targetType != null)
-						argAttNamePair.targetTypeName = argAttPair.targetType.name as String;
+					if (argAttPair.targetTypeName != null)
+						argAttNamePair.targetTypeName = argAttPair.targetTypeName as String;
 					argAttArray.addItem(argAttNamePair);				
 				}
 				else
@@ -543,10 +541,10 @@
 	<s:Label x="268" y="123" text="attribute types"/>
 	<s:Label x="88" y="545" width="139" height="19" text="return attribute name"/>
 	<s:Label x="40" y="564" width="187" height="20" backgroundColor="#DADADA" id="returnAttributeLabel" verticalAlign="middle"/>
-	<s:Button x="40" y="539" label="set" width="43" chromeColor="{chromeColor}" id="setReturnAttributeButton" click="setReturnAttributeButton_clickHandler(event)"/>
+	<s:Button x="40" y="539" label="set" width="43" id="setReturnAttributeButton" click="setReturnAttributeButton_clickHandler(event)"/>
 	<s:Label x="396" y="478" text="argument attribute pair " width="148" height="11"/>
-	<s:Button x="269" y="473" label="add" width="53" chromeColor="{chromeColor}" id="addAttArgPair" click="addAttArgPair_clickHandler(event)"/>
-	<s:Button x="330" y="473" label="delete" width="56" chromeColor="{chromeColor}" id="deleteAttArgPair" click="deleteAttArgPair_clickHandler(event)"/>
+	<s:Button x="269" y="473" label="add" width="53" id="addAttArgPair" click="addAttArgPair_clickHandler(event)"/>
+	<s:Button x="330" y="473" label="delete" width="56" id="deleteAttArgPair" click="deleteAttArgPair_clickHandler(event)"/>
 	<s:Label x="40" y="121" text="provided operations"/>
 	<mx:Tree x="40" y="138" width="189" id="operationTree" dataProvider="{operationDef}" labelField="@label" 
 			 change="operationTree_clickHandler(event)"
@@ -561,7 +559,7 @@
 		</mx:columns>
 	</mx:DataGrid>
 	
-	<s:Button x="173" y="426" label="delete" id="deleteOperation" chromeColor="{chromeColor}" width="54" click="deleteOperation_clickHandler(event)"/>
+	<s:Button x="173" y="426" label="delete" id="deleteOperation" width="54" click="deleteOperation_clickHandler(event)"/>
 	<s:Group id="selfToTypeGroup" x="0" y="6" visible="false">
 		<s:RadioButton x="315" y="45" label="self" groupName="featureTypeSelection" id="fSelfRadio" click="fSelfRadio_clickHandler(event)"/>
 		<s:RadioButton x="360" y="45" label="to" groupName="featureTypeSelection" id="fToRadio" click="fToRadio_clickHandler(event)"/>
@@ -569,14 +567,19 @@
 	<s:Group id="fromSelfToTypeGroup" x="0" y="6" visible="false">
 		<s:RadioButton x="266" y="45" label="from" groupName="featureTypeSelection" id="aFromRadio" click="aFromRadio_clickHandler(event)"/>
 		<s:RadioButton x="315" y="45" label="self" groupName="featureTypeSelection" id="aSelfRadio" click="aSelfRadio_clickHandler(event)"/>
-		<s:RadioButton x="360" y="45" label="to" groupName="featureTypeSelection" id="aToRadio" click="aToRadio_clickHandler(event)"/>
+		<s:RadioButton x="360" y="45" label="to"   groupName="featureTypeSelection" id="aToRadio"   click="aToRadio_clickHandler(event)"/>
 		<s:Label x="398" y="30" text="type name"/>
 	</s:Group>
+		
 	<s:DropDownList id="typeNameList" x="398" y="50" width="148" height="20"
 					change="typeNameList_changeHandler(event)" dataProvider="{faTypeArray}"
 					labelField="name"></s:DropDownList>
+	
 	<s:Label id="roleTitle" x="397" y="83" text="role name"/>
 	<s:Label id="roleNameLabel" x="397" y="97" width="148" height="20" backgroundColor="#DADADA"
 				 verticalAlign="middle"/>
 	<s:Label id="multiLabel" x="514" y="82" fontSize="13" text="multi"/>
+	<s:Label x="40" y="596" fontSize="11" text="Feature/Association Type Name"/>
+	<s:Label id="faTypeNameLabel" x="40" y="610" width="187" height="20" backgroundColor="#DADADA"
+			 verticalAlign="middle"/>
 </s:Window>

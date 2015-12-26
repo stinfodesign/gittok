@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="323" height="360"
-		  title="Cartographer" backgroundColor="#c5c5c5"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="321" height="372"
+		  title="Cartographer"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -18,7 +18,7 @@
 			public var portrayalDesigner:PortrayalDesigner;
 			public var gazetteerDesigner:GazetteerDesigner;
 			public var mapEditor:MapEditor;
-			public var listSchemaDesgner:ListSchemaDesigner;
+			public var listSchemaDesigner:ListSchemaDesigner;
 			public var listViewer:ListViewer;
 						
 			protected function initializeApp():void {
@@ -84,13 +84,13 @@
 			
 			protected function ListDesignButton_clickHandler(event:MouseEvent):void
 			{
-				listSchemaDesgner = new ListSchemaDesigner();
-				listSchemaDesgner.open();
-				listSchemaDesgner.title = "Cartographer >";
-				listSchemaDesgner.addEventListener(Event.CLOSING, listClose);
+				listSchemaDesigner = new ListSchemaDesigner();
+				listSchemaDesigner.open();
+				listSchemaDesigner.title = "Cartographer >";
+				listSchemaDesigner.addEventListener(Event.CLOSING, listDesignClose);
 			}
 			
-			private function listClose(event:Event):void {
+			private function listDesignClose(event:Event):void {
 				
 			}
 			
@@ -121,11 +121,11 @@
 			}
 			
 			protected function listViewerClose(event:Event):void {
-				if (listViewer.imageViewer != null) listViewer.imageViewer.close();
+				if (listViewer.imageViewer 		!= null) listViewer.imageViewer.close();
 				if (listViewer.simpleDataViewer != null) listViewer.simpleDataViewer.close();
-				if (listViewer.memoViewer != null) listViewer.memoViewer.close();
-				if (listViewer.addressViewer != null) listViewer.addressViewer.close();
-				if (listViewer.webSiteViewer!= null) listViewer.webSiteViewer.close();
+				if (listViewer.memoViewer 		!= null) listViewer.memoViewer.close();
+				if (listViewer.addressViewer 	!= null) listViewer.addressViewer.close();
+				if (listViewer.webSiteViewer	!= null) listViewer.webSiteViewer.close();
 				
 				listViewer = null;
 			}
@@ -139,33 +139,35 @@
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="Cartographer" fontSize="16"/>
 	
-	<s:Rect x="10" y="70" width="300" height="156" >
+	<s:Rect x="10" y="80" width="300" height="156" >
 		<s:fill>
 			<s:SolidColor color="0x888888"/>
 		</s:fill>
 	</s:Rect>
-	<s:Rect x="10" y="245" width="300" height="62" >
+	<s:Rect x="10" y="261" width="300" height="60" >
 		<s:fill>
 			<s:SolidColor color="0x888888"/>
 		</s:fill>
 	</s:Rect>
 
-	<s:Button x="26" y="86" label="Symbol Style Design " width="165" height="20" id="symbolButton" 
+	<s:Button x="26" y="96" label="Symbol Style Design " width="165" height="20" id="symbolButton" 
 			  click="symbolButton_clickHandler(event)" />
-	<s:Button x="26" y="121" label="Label Style Design " width="165" height="20" id="labelButton" 
+	<s:Button x="26" y="131" label="Label Style Design " width="165" height="20" id="labelButton" 
 			  click="labelButton_clickHandler(event)" />
-	<s:Button id="portrayalDesignButton" x="26" y="153" width="165" height="20" label="Portrayal Schema Design"
+	<s:Button id="portrayalDesignButton" x="26" y="163" width="165" height="20" label="Portrayal Schema Design"
 			  click="portrayalDesignButton_clickHandler(event)"/>
-	<s:Button id="gazetteerButton" x="27" y="187" width="164" height="20" label="Gazetteer Design"
+	<s:Button id="gazetteerButton" x="27" y="197" width="164" height="20" label="Gazetteer Design"
 			  click="gazetteerButton_clickHandler(event)"/>
-	<s:Button id="mapEditingButton" x="206" y="132" width="91" height="30" label="Mapping"
+	<s:Button id="mapEditingButton" x="206" y="142" width="91" height="30" label="Mapping"
 			  click="mapEditingButton_clickHandler(event)"/>
 	<s:Label x="220" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="261" y="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:Button id="ListDesignButton" x="27" y="266" width="164" height="20" label="List Schema Design"
+	<s:Button id="ListDesignButton" x="27" y="281" width="164" height="20" label="List Schema Design"
 			  click="ListDesignButton_clickHandler(event)"/>
-	<s:Button id="listingButton" x="205" y="261" width="91" height="30" label="Listing"
+	<s:Button id="listingButton" x="205" y="276" width="91" height="30" label="Listing"
 			  click="listingButton_clickHandler(event)"/>
+	<s:Label x="10" y="66" text="Mapping tools"/>
+	<s:Label x="10" y="247" text="Listing tools"/>
 </s:Window>

@@ -2,17 +2,17 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="368" height="232"
-		  title="Color Selector">
+		  title="Color Selecter">
 
 	<fx:Script>
 		<![CDATA[
 			import spark.events.TextOperationEvent;
 			
-			public var color:uint = 0xffffff;
+			public var color:uint = 0x000000;
 			public var cAlpha:Number = 1.0;
-			protected var r:Number = 255;
-			protected var g:Number = 255;
-			protected var b:Number = 255;
+			protected var r:Number = 0;
+			protected var g:Number = 0;
+			protected var b:Number = 0;
 			
 			public function initializeWindow(_color:uint, _cAlpha:Number):void {
 				color  = _color;

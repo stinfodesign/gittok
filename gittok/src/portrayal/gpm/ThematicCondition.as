@@ -15,6 +15,8 @@ package portrayal.gpm
 		}
 		
 		public function getXML():XML {
+			if (attName == "") return XML("");
+			
 			var str:String = '<ThematicCondition attName="' + this.attName
 				+ '" attType="' + this.attType + '">';
 			
@@ -24,15 +26,15 @@ package portrayal.gpm
 				var md:Modifier = elements.getItemAt(i) as Modifier;
 				if (md is BooleanModifier) {
 					var bmd:BooleanModifier = md as BooleanModifier;
-					str += bmd.getXML().toString();
+					str += bmd.getXML().toXMLString();
 				}
 				else if (md is QualitativeModifier) {
 					var qlmd:QualitativeModifier = md as QualitativeModifier;
-					str += qlmd.getXML().toString();
+					str += qlmd.getXML().toXMLString();
 				}
 				else {
 					var qnmd:QuantitativeModifier = md as QuantitativeModifier;
-					str += qnmd.getXML().toString();
+					str += qnmd.getXML().toXMLString();
 				}
 			}
 			str += '</elements>';
@@ -46,7 +48,7 @@ package portrayal.gpm
 			this.attType = _xml.@attType.toString();
 			
 			elements = new ArrayList();
-			var elementXMLList:XMLList = _xml.elements(BooleanModifier);
+			var elementXMLList:XMLList = _xml.elements.children();
 			if (elementXMLList != null) {
 				for each (var element:XML in elementXMLList) {
 					var bmd:BooleanModifier = new BooleanModifier();

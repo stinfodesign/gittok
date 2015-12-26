@@ -14,22 +14,15 @@ window.moveTo(750,20);
 <p id="Top" class="FirstHeader">Modeler<br/>
 応用スキーマ設計</p>
 <p class="secondHeader">はじめに</p>
-<p class="mainSentence">ここでは，応用スキーマの設計法を学びます．皆さんの研究や調査の対象になる，実世界に起きるものごとを抽象化して，それを一定のルールに従って形式的に表現すると，応用スキーマができます．応用スキーマが公開されることによって，データの多目的な活用が可能になります．地理情報標準では，応用スキーマを以下のように定義しています．つまり「一つ以上の応用システムによって要求されるデータのための概念スキーマ」です．gittok では，そのルールは統一モデリング言語 (UML) というグラフィック言語を使って表現します．言語というと，文章を思い浮かべるかもしれませんが，他者との間で意志の疎通をはかるための道具が言語であるとすれば，それは文章，つまり文字の配列とは限りません．漢字はもともと象形文字であり，それはグラフィックだったということも思い出してみましょう．グラフィック言語とは，一定の規則に基づいて作る図 (diagram) によって情報を伝達する言語です．機械の設計図や地図も，一定の規則に則って作られる言語表現と考えられます．</p>
-<p class="mainSentence">ここでは，まずUMLを使ったスキーマ表現法として，クラス図を紹介します．次に，一般地物モデルという，応用スキーマが守るべき規則を説明します．そして応用スキーマの詳細を解説します．さらに，Modeller ページの操作法を示します．しかし最初に，このページに関係する講義用スライドを読みましょう．</p>
-<p id="slide" class="secondHeader">講義用スライド</p>
-<p class="mainSentence"><a href="../../lectureNotes/jp_pdf/01jpSpatialThinking.pdf" target="_new">01 空間思考</a><br/>
-  <a href="../../lectureNotes/jp_pdf/02jpModelFormalisation.pdf" target="_new">02 モデルとその形式表現</a><br/>
-<a href="../../lectureNotes/jp_pdf/03jpGFMAndApplicationSchema.pdf" target="_new">03 一般地物モデルと応用スキーマ</a></p>
-<p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
-<p class="mainSentence">&nbsp;</p>
-<p id="UML" class="secondHeader">UMLとクラス図</p>
+<p class="mainSentence">このページでは，応用スキーマの設計法を学びます．皆さんの研究や調査の対象になる，実世界に起きるものごとを抽象化して，それを一定のルールに従って形式的に表現すると，応用スキーマができます．応用スキーマが公開されることによって，データの多目的な活用が可能になります．地理情報標準では，応用スキーマを以下のように定義しています．つまり「一つ以上の応用システムによって要求されるデータのための概念スキーマ」です．gittok では，そのルールは統一モデリング言語 (UML) というグラフィック言語を使って表現します．言語というと，文章を思い浮かべるかもしれませんが，他者との間で意志の疎通をはかるための道具が言語であるとすれば，それは文章，つまり文字の配列とは限りません．漢字はもともと象形文字であり，それはグラフィックだったということも思い出してみましょう．グラフィック言語とは，一定の規則に基づいて作る図 (diagram) によって情報を伝達する言語です．機械の設計図や地図も，一定の規則に則って作られる言語表現と考えられます．</p>
+<p class="mainSentence">ここでは，まずUMLを使ったスキーマ表現法として，クラス図を紹介します．次に，一般地物モデルという，応用スキーマが守るべき規則を説明します．そして応用スキーマの詳細を解説します．さらに，Modeller ページの操作法を示します．</p>
+<p id="slide" class="secondHeader">UMLとクラス図</p>
 <p class="mainSentence">UML (Unified Modeling Language) は，応用スキーマのような，モデルの形式表現のために開発されたグラフィック言語として，今日では情報システム開発の現場で広く使用されています．<a href="http://www.uml.org" target="_new">その仕様</a>はOMGという非営利の標準化団体が提供しています．私たちは，応用スキーマの記述を行うためのルール（つまりスキーマのスキーマ）もUMLで記述します．gittok で使用している UML は Version 1.4 に準拠するものですが，これは著者がArgo UMLというフリーのソフトを使用しているためです．皆さんも UML で図を描くときは，<a href="http://argouml.tigris.org" target="_new">ArgoUML</a>や，<a href="http://astah.change-vision.com/ja/product/astah-community.html" target="_new">astah* community</a> などのフリーソフトを使うことができますし，お金を払えば，より高機能なソフトを使うこともできます．</p>
 <p class="mainSentence">UML の知識を得たい人は，上に示す講義用スライドを見たり，参考書を手に取ってみるといいでしょう．ちなみに「クラス図」の書き方が理解できれば，gittok が理解しやすくなります．</p>
 <p class="mainSentence">なぜ，応用スキーマを UML で記述するのでしょうか．地理情報の記述や交換は，可能な限り，世界で共通に使用されている方式を使うといいということは，ご理解いただけると思います．独善的な方法を使うと，関係者がデータを共有するのが，困難になります．幸い，ISOが定めている地理情報の国際標準や，それに準拠する日本のJIS規格では，UMLで応用スキーマを記述することとしています．ただし，gittok では若干独自の規則を導入していますので，その部分は講義用スライドを参照してください．また，このテキストでも個々に説明します．</p>
 <p class="mainSentence">例えば下の図１の例は，建物 (Building) というものは，名称 (name)，所有者 (owner)，形状 (shape)，底地の面積 (area) で説明でき，形状 (shape) を入力して面積を出力する操作 (getArea) をもち，その結果は面積 (area) になる，と言っています．図中の属性欄にある area についている / は，値が別の所で作られるということを示しています．このような属性は派生属性といいます．操作の結果がareaに入ることは，gittok では応用スキーマを設計するときに，対応関係を宣言して示します．この部分は gittok 独自のルールといっても良いでしょう．このようなクラス図を記述するためには、UMLに加えて，地理情報のモデルの形式化について，下に示す一般地物モデルが示しているルールを，理解する必要があります．</p>
 <p class="mainSentence"><img src="../figures/simpleClassDiagram.png" width="179" height="117" alt="classDiagram" /></p>
 <p class="mainSentence">図１．UMLによる簡単なクラス図の例</p>
-<p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="GFM" class="secondHeader">一般地物モデル (General Feature Model)</p>
 <p class="mainSentence">実世界の現象の抽象概念を地物といいます．例えば台風や津波のような自然現象，道路や建物のような人工構造物，そして国境や土地利用規制の範囲など，人間が考えた想像上の線や領域などが上げられます．ところで地物は，大きく分けて２つの側面からみることができます．１つは型 (type) として見ること，もう１つは個物としてみることです．例えば，「あれは橋だ」という表現は，目の前にあるものはどのような種類のものか，つまり目の前にあるものの型（種類）を述べたことになります．次に，「あれはレインボーブリッジだ」というときは，目にに見えるものは，どの個物であるかを，ものがもつ名称という性質をつかって述べたことになります．個物は，型で分類される，型の実例とも考えられるので，インスタンス (instance)といわれます． ここでは地物型とその記述のためのルールである一般地物モデル (General Feature Model: GFM) について説明します．インスタンスの記述法については，Editor ページで説明します．</p>
@@ -38,7 +31,6 @@ window.moveTo(750,20);
 <p class="mainSentence"><img src="../figures/GeneralFeatureModel.png" width="690" height="559" alt="GFM" /></p>
 <p class="mainSentence">図２．gittok で使用する一般地物モデルの全体構成 </p>
 <p class="mainSentence">一般地物モデルは，応用スキーマを記述するためのモデル，言い換えれば規則です．この規則は，ISO 19109 - Rules for Application Schemaを単純化し，さらに gittok 用に設計し直したものです．図2の中心に位置するクラスは地物型と関連型です．また，これらを保持する応用スキーマ型があります．地物型と関連型は,個々の地物や関連を特徴付ける属性型と操作型を持ちます．ここで属性とは，ものがもつ固有の性質のことです．また操作とは，適当なアルゴリズム，つまり計算の手順を実行して属性を得る行為（もしくは方法）のことです．また，属性と操作をまとめてプロパティといいます．操作を実行するためには入力データとしての属性が必要になりますが，それは特に操作の引数 (argument) と呼ばれます．その引数が，既存の地物型や関連型のどの属性と対応するかを示すのが，引数・属性ペア (ArgAttPair) です．以後，GFM に含まれるクラスとそれらの関係について解説します．</p>
-<p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="APS" class="secondHeader">応用スキーマ (ApplicationSchema)</p>
 <p class="mainSentence">上記の図２で示したクラス図で一番上に表示されているクラスはApplicationSchemaという名前をもっています．このクラスは応用スキーマを記述するためのルールを示しており，そのインスタンスとなるクラスが応用スキーマです．AppliationSchema のように，クラスを記述するためのルールを示すクラスは，メタクラスといいます．応用スキーマは複数の地物型 (FeatureType) と，複数の地物関連型 (AssociationType) をもつことができます．いま，「複数の」と言いましたが，これは「一つ以上の」と同じ意味です．また，「ことができる」と言いましたが，これは「そうではない」場合があることを認める表現です．例えば地物同士に関連がなければ，AssociationTypeは応用スキーマには含まれません．</p>
@@ -167,7 +159,7 @@ window.moveTo(750,20);
 <p class="mainSentence">操作の種類や空間解析については Analyst ページで、より詳細の説明を行います．</p>
 <p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
-<p class="secondHeader">Modeler ページ </p>
+<p class="secondHeader">Modeler </p>
 <p><img src="../figures/Modeler.png" width="469" height="292" alt="modeler" /></p>
 <p class="mainSentence">図３．Modeler ページの操作画面</p>
 <p class="mainSentence">上に示した図3は，GFMの中心となる地物型及び関連型，言い換えれば，地物及び関連を定義する上でのルールの骨子を示しています．地物型は親子の継承関係をもつことができ，親がある場合は一つに限るけれど，子となる地物型は複数あってもよいことが，地物型の自己関連によって，示されています．また，地物型は関連型を通じて別の地物型と関連の関係をもつことができます．そのことは，linksとlinkedByという役割で明示されています．一方関連型は，一つの地物型から (from) 別の一つの地物型に (to)関連することを示すことができます．</p>
@@ -189,7 +181,6 @@ window.moveTo(750,20);
 今あなたが読んでいるドキュメントが表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
 You can read the tutorial written in English.</p>
-<p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 </body>
 </html>

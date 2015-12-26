@@ -12,7 +12,7 @@ package portrayal.gpm
 		public override function getXML():XML {
 			var str:String = '<BooleanModifier boolValue="' + boolValue.toString() + '">';
 			str += '<inheritance>';
-			str += super.getXML().toString();
+			str += super.getXML().toXMLString();
 			str += '</inheritance>';
 			str += '</BooleanModifier>';
 			
@@ -22,8 +22,8 @@ package portrayal.gpm
 		public override function setXML(_xml:XML):void {
 			var bv:String = _xml.@boolValue.toString();
 			boolValue = (bv == "true") ? true : false;
-			var md:XML = _xml.inheritance;
-			super.setXML(md);
+			var mdList:XMLList = _xml.inheritance.children();
+			super.setXML(mdList[0]);
 		}
 	}
 }

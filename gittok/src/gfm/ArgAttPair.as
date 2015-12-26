@@ -1,9 +1,11 @@
 package gfm
 {
+	import instanceModel.Kit;
+
 	public class ArgAttPair
 	{
 		public var fromTo:String;				// "self", "from" or "to"
-		public var targetType:FeatureType;
+		public var targetTypeName:String;
 		public var attributeType:AttributeType; // corresponding attribute with the argument
 		public var argumentType:AttributeType;	// argument of the operation
 		
@@ -15,11 +17,11 @@ package gfm
 		
 		public function getXML():XML {
 			var str:String 	= '<ArgAttPair '
-							+ 'fromTo="' + this.fromTo + '">';
+							+ 'fromTo="' + this.fromTo 
+							+ '" targetTypeName="' + this.targetTypeName 
+							+ '">';
 			str += '<argumentType>'  + argumentType.getXML().toXMLString() + '</argumentType>';
 			str += '<attributeType>' + attributeType.getXML().toXMLString() + '</attributeType>';
-			if (targetType != null)
-				str += '<targetType>' + targetType.getXML().toXMLString() + '</targetType>';
 			str += '</ArgAttPair>';
 			
 			return XML(str);
@@ -27,13 +29,14 @@ package gfm
 
 		public function setXML(_xml:XML):void {
 			this.fromTo = _xml.@fromTo;
-			var aList:XMLList = _xml.argumentType.AttributeType;			
+			this.targetTypeName = _xml.@targetTypeName;
+			
+			var aList:XMLList = _xml.argumentType.children();			
 			this.argumentType.setXML(aList[0]);
+			
 			aList = _xml.attributeType.AttributeType;
 			this.attributeType.setXML(aList[0]);
-			aList = _xml.targetType;
-			if (aList != null) 
-				this.targetType.setXML(aList[0]);
+
 		}
 		
 	}

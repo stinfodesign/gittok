@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="450" height="362"
-		  title="Cartographer &gt;&gt;" backgroundColor="#c5c5c5"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="450" height="506"
+		  title="List Schema Designer"
 		  creationComplete="initializeApp()">
 
 	<fx:Declarations>
@@ -25,7 +25,10 @@
 			
 			import mx.controls.Alert;
 			
-			import portrayal.list.ListSchema;
+			import portrayal.gpm.list.*;
+			
+			import spark.events.GridSelectionEvent;
+			import spark.events.IndexChangeEvent;
 			
 			private var file:File;
 			private var stream:FileStream = new FileStream();
@@ -33,18 +36,25 @@
 			private var featureTypes:Dictionary = new Dictionary();
 			private var listSchema:ListSchema;
 			private var featureType:FeatureType;
+			private var applicationSchema:ApplicationSchema;
 			
 			[Bindable]
-			private var attributeTypes4List:ArrayList = new ArrayList();
+			private var selectedFeatureTypeArray:ArrayList = new ArrayList();
+			
+			[Bindable]
+			private var selectedFeatureTypeForListing:FeatureTypeForListing;
 			
 			[Bindable]
 			public var featureTypeArray:ArrayList = new ArrayList();
 			
 			[Bindable]
+			private var selectedAtTypeArray:ArrayList;
+			
+			[Bindable]
 			public var attributeTypeArray:ArrayList = new ArrayList();
 
 			protected function initializeApp():void {
-				this.move(300, 400);
+				this.move(300, 300);
 				
 				// Basic Types
 				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
@@ -110,9 +120,8 @@
 				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);	
 				
 				//List Schema
-				registerClassAlias("portrayalSchema.list.ListSchema", ListSchema);	
-				
-
+				registerClassAlias("portrayal.gpm.list.ListSchema", ListSchema);	
+				registerClassAlias("portrayal.gpm.list.FeatureTypeForListing", FeatureTypeForListing);	
 			}
 			
 			protected function openAPSButton_clickHandler(event:MouseEvent):void
@@ -123,27 +132,29 @@
 					file.addEventListener(Event.SELECT, openAps);
 					file.browseForOpen("Open ApplicationSchema  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}												
 			}
 			
 			private function openAps(event:Event):void {
-				var apps:ApplicationSchema = new ApplicationSchema();
-				
 				stream.open(file, FileMode.READ);
 				
-				apps = stream.readObject();
-				featureTypes = apps.featureTypes;
+				applicationSchema = stream.readObject();
+				featureTypes = applicationSchema.featureTypes;
 				stream.close();
 				applicationSchemaLabel.text = file.name;
 				
 				for each(var fType:FeatureType in featureTypes) {
-					if (!fType.isAbstract) featureTypeArray.addItem(fType);
+					if (!fType.isAbstract) {
+						var proxyType:AttributeType = fType.getAttributeTypeByName(fType.proxyName) as AttributeType;
+						var dType:String = proxyType.dataType;
+						if (!(dType == "SG_Point" || dType == "SG_Curve" || dType == "SG_Surface" || dType == "SG_Complex"))
+							featureTypeArray.addItem(fType);
+					}
 				}
 				
 				applicationSchemaFile = file;
 				
-				attributeTypes4List = new ArrayList();
 			}			
 			
 			protected function featureTypeList_changeHandler(event:Event):void
@@ -151,36 +162,22 @@
 				var idx:int = featureTypeList.selectedIndex;
 				if (idx < 0) return;
 				
-				featureType = featureTypeArray.getItemAt(idx) as FeatureType;		
-				proxyLabel.text = featureType.proxyName;
-				
-				attributeTypeArray = featureType.attributeTypes;
+				featureType = featureTypeArray.getItemAt(idx) as FeatureType;
 			}
 			
-			protected function addAttributeButton_clickHandler(event:MouseEvent):void
-			{
-				var idx:int = attributeGrid.selectedIndex;
-				if (idx < 0) {
-					Alert.show("Select attribute before addition.", "Error", 4, this);
-					return;
-				}
-				
-				var atype:AttributeType = attributeTypeArray.getItemAt(idx) as AttributeType;
-				
-				if (proxyLabel.text == atype.name) {
-					Alert.show("This is proxy.", "Error", 4, this);
-					return;
-				}
-
-				for (var i:int = 0; i < attributeTypes4List.length; i++) {
-					var watype:AttributeType = attributeTypes4List.getItemAt(i) as AttributeType;
-					if (atype.name == watype.name) {
-						Alert.show("Double selection", "Alert", 4, this);
-						return;
+			protected function findConcreteToFTypes(_toFType:FeatureType):ArrayList {
+				var tFTypes:ArrayList = new ArrayList();
+				for (var i:int = 0; i < _toFType.children.length; i++) {
+					var toFType:FeatureType = _toFType.children.getItemAt(i) as FeatureType;
+					if (toFType.isAbstract) {
+						var cTypes:ArrayList = findConcreteToFTypes(toFType);
+						if (cTypes.length > 0) tFTypes.addAll(cTypes);	
+					}
+					else {
+						tFTypes.addItem(toFType);
 					}
 				}
-				
-				attributeTypes4List.addItem(atype);
+				return tFTypes;
 			}
 			
 			protected function saveSchemaButton_clickHandler(event:MouseEvent):void
@@ -206,12 +203,12 @@
 				var stream:FileStream = new FileStream();
 				
 				stream.open(file, FileMode.WRITE);
-				listSchema = new ListSchema(); 
+				listSchema = new ListSchema();
 				listSchema.applicationSchemaURL = applicationSchemaFile.name;
-				listSchema.featureType = featureType;
-				listSchema.selectedAttributeTypes = attributeTypes4List;
+				listSchema.selectedFeatureTypes = selectedFeatureTypeArray;
 				stream.writeObject(listSchema);
 				stream.close();
+				
 			}
 			
 			protected function openListSchemaButton_clickHandler(event:MouseEvent):void
@@ -222,7 +219,7 @@
 					file.addEventListener(Event.SELECT, openFile);
 					file.browseForOpen("Open file  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 			}
 			
@@ -241,18 +238,35 @@
 				try {
 					stream.open(file,FileMode.READ);
 					listSchema = stream.readObject();
+					stream.close();
 					
 					applicationSchemaFile.nativePath    = path + listSchema.applicationSchemaURL;
+					stream.open(applicationSchemaFile,FileMode.READ);
+					applicationSchema = stream.readObject();
+					stream.close();
 					
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 				
 				applicationSchemaLabel.text = applicationSchemaFile.name;
-				featureType = listSchema.featureType;
-				attributeTypeArray = featureType.attributeTypes;
-				attributeTypes4List = listSchema.selectedAttributeTypes;
-				proxyLabel.text = featureType.name;
+				selectedFeatureTypeArray = listSchema.selectedFeatureTypes;
+				
+				for each(var fType:FeatureType in applicationSchema.featureTypes) {
+					if (!fType.isAbstract) {
+						var proxyType:AttributeType = fType.getAttributeTypeByName(fType.proxyName) as AttributeType;
+						var dType:String = proxyType.dataType;
+						if (!(dType == "SG_Point" || dType == "SG_Curve" || dType == "SG_Surface" || dType == "SG_Complex"))
+							featureTypeArray.addItem(fType);
+					}
+				}
+				
+				/*
+				var listXML:XML = listSchema.getXML();
+				listSchema.setXML(listXML);
+				listXML = listSchema.getXML();
+				trace(listXML.toXMLString());
+				*/
 			}	
 			
 			// Text and instruction  Controls
@@ -268,51 +282,186 @@
 				navigateToURL(request);
 			}
 			
+			protected function addFeatureTypeButton_clickHandler(event:MouseEvent):void
+			{
+				var idx:int = featureTypeList.selectedIndex;
+				if (idx < 0) {
+					Alert.show("Select feature type before", "Alert", 4, this);
+					return;
+				}
+				
+				var fTypeForListing:FeatureTypeForListing = new FeatureTypeForListing();
+				var fType:FeatureType =	featureTypeArray.getItemAt(idx) as FeatureType;
 
+				fTypeForListing.name = fType.name;
+				fTypeForListing.isAbstract = fType.isAbstract;
+				fTypeForListing.attributeTypes = fType.attributeTypes;
+				fTypeForListing.links = fType.links;
+				fTypeForListing.linkedBy = fType.linkedBy;
+				fTypeForListing.parent = fType.parent;
+				fTypeForListing.children = fType.children;
+				fTypeForListing.definition = fType.definition;
+				fTypeForListing.operationTypes = fType.operationTypes;
+				fTypeForListing.proxyName = fType.proxyName;
+				
+				fTypeForListing.selectedAttributeTypes = new ArrayList();
+				selectedAtTypeArray = fTypeForListing.selectedAttributeTypes;
+				
+				// Double selection check
+				var n:int = selectedFeatureTypeArray.length;
+				for (var i:int = 0; i < n; i++) {
+					var sft:FeatureTypeForListing = selectedFeatureTypeArray.getItemAt(i) as FeatureTypeForListing;
+					if (sft.name == fTypeForListing.name) {
+						Alert.show("Double selection", "Alert", 4, this);
+						return;
+					}
+				}
+				
+				selectedFeatureTypeForListing = fTypeForListing;
+				
+				selectedFeatureTypeArray.addItem(fTypeForListing);
+				
+			}
+			
+			protected function deleteFeatureTypeButton_clickHandler(event:MouseEvent):void
+			{
+				var idx:int = featureTypeGrid.selectedIndex;
+				if (idx < 0) {
+					Alert.show("Select feature type before delete.", "Alert", 4, this);
+					return;
+				}
+				
+				selectedFeatureTypeArray.removeItemAt(idx);	
+				selectedFeatureTypeForListing = null;
+				
+				/*
+				You have to clear both attribute list and selected attribute list.
+				*/
+				attributeTypeArray = new ArrayList();				
+				
+			}
+			
+			protected function featureTypeGrid_selectionChangeHandler(event:GridSelectionEvent):void
+			{
+				selectedFeatureTypeForListing = featureTypeGrid.selectedItem as FeatureTypeForListing;
+				
+				if (selectedFeatureTypeForListing != null) {
+					// show attribute list on the Attrobute Grid.
+					attributeTypeArray = new ArrayList();
+					var pName:String = selectedFeatureTypeForListing.proxyName;
+					
+					// Proxy type cannot be selected
+					var proxyType:AttributeType = selectedFeatureTypeForListing.getAttributeTypeByName(pName);
+					
+					// You must use applicationSchema.featureTypes,
+					// because the attribute types might be added to improve feature type definition.
+					
+					var fType:FeatureType = applicationSchema.featureTypes[selectedFeatureTypeForListing.name] as FeatureType;					
+					var n:int = fType.attributeTypes.length;
+					for (var i:int = 0; i < n; i++) {
+						var atType:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+						if (atType.name != pName) {
+							attributeTypeArray.addItem(atType);	
+						}
+					}
+					
+					var atTypeArray:ArrayList = selectedFeatureTypeForListing.selectedAttributeTypes;
+					if (atTypeArray.length > 0)
+						selectedAtTypeArray = atTypeArray;
+				}
+			}
+			
+			protected function addAttributeButton_clickHandler(event:MouseEvent):void
+			{
+				var idx:int = attributeGrid.selectedIndex;
+				if (idx < 0) {
+					Alert.show("Select attribute before addition.", "Error", 4, this);
+					return;
+				}
+				
+				var aType:AttributeType = attributeTypeArray.getItemAt(idx) as AttributeType;
+				
+				var n:int = selectedAtTypeArray.length;
+				for (var i:int = 0; i < n; i++) {
+					var waType:AttributeType = selectedAtTypeArray.getItemAt(i) as AttributeType;
+					if (aType.name == waType.name) {
+						Alert.show("Double selection", "Alert", 4, this);
+						return;
+					}
+				}
+				selectedAtTypeArray.addItem(aType);
+			}
+			
+			protected function deleteAttributeButton_clickHandler(event:MouseEvent):void
+			{
+				var i:int = selectedAttributeList.selectedIndex;
+				if (i >= 0) 
+					selectedFeatureTypeForListing.selectedAttributeTypes.removeItemAt(i);
+				else {
+					Alert.show("Select attribute before delete.", "Alert", 4, this);
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="77" y="15" text="List Schema Designer" fontSize="16"/>
-	<s:Button id="openAPSButton" x="33" y="87" width="55" height="20" label="open"
-			  click="openAPSButton_clickHandler(event)" fontSize="11"/>
-	<s:Label x="94" y="86" width="71" height="28" fontSize="11" text="Application schema"/>
-	<s:Label id="applicationSchemaLabel" x="33" y="114" width="120" height="20"
+	<s:Button id="openAPSButton" x="76" y="50" width="55" height="20" label="open"
+			  click="openAPSButton_clickHandler(event)"/>
+	<s:Label x="137" y="47" width="71" height="28" text="Application schema"/>
+	<s:Label id="applicationSchemaLabel" x="76" y="78" width="165" height="20"
 			 backgroundColor="#DADADA" verticalAlign="middle"/>
-	<s:Label x="300" y="100" fontSize="11" text="Proxy"/>
-	<s:Label id="proxyLabel" x="300" y="114" width="120" height="20" backgroundColor="#DADADA"
-			 verticalAlign="middle"/>
-	<s:Label x="33" y="153" fontSize="11" text="Attributes"/>
-	<s:DataGrid id="attributeGrid" x="28" y="168" width="240" requestedRowCount="4" dataProvider="{attributeTypeArray}">
+	<s:Label x="24" y="316" text="Attribute types without proxy"/>
+	<s:DataGrid id="attributeGrid" x="23" y="331" width="261" requestedRowCount="4" dataProvider="{attributeTypeArray}">
 		<s:columns>
 			<s:ArrayList>
-				<s:GridColumn width="100" dataField="name" headerText="name"></s:GridColumn>
-				<s:GridColumn width="80" dataField="dataType" headerText="type"></s:GridColumn>
-				<s:GridColumn width="60" dataField="multiplicity" headerText="multi."></s:GridColumn>
+				<s:GridColumn width="100" dataField="name" headerText="name" resizable="false"></s:GridColumn>
+				<s:GridColumn width="100" dataField="dataType" headerText="type" resizable="false"></s:GridColumn>
+				<s:GridColumn width="56" dataField="multiplicity" headerText="multi."
+							  resizable="false"></s:GridColumn>
 			</s:ArrayList>
 		</s:columns>
 
 	</s:DataGrid>
-	<s:Label x="300" y="155" fontSize="11" text="Selected attributes"/>
-	<s:List id="selectedAttributeList" x="300" y="169" width="120" 
-			dataProvider="{attributeTypes4List}" labelField="name"></s:List>
-	<s:Label x="172" y="100" fontSize="11" text="Feature types"/>
-	<s:DropDownList id="featureTypeList" x="172" y="113" height="20" dataProvider="{featureTypeArray}"
-					fontSize="11" prompt="Select type" labelField="name" change="featureTypeList_changeHandler(event)"></s:DropDownList>
-	<s:Button id="addAttributeButton" x="300" y="291" width="55" height="20" label="add"
+	<s:Label x="360" y="315" width="60" height="33" text="Selected attributes"/>
+	<s:List id="selectedAttributeList" x="300" y="357" width="120" height="102"
+			dataProvider="{selectedAtTypeArray}" labelField="name"></s:List>
+	<s:Label x="49" y="121" width="144" height="41" text="Feature types with which proxies are non-geometry"/>
+	<s:DropDownList id="featureTypeList" x="49" y="160" width="126" height="20"
+					change="featureTypeList_changeHandler(event)" dataProvider="{featureTypeArray}"
+					fontSize="11" labelField="name" prompt="Select type"></s:DropDownList>
+	<s:Button id="addAttributeButton" x="301" y="310" width="55" height="20" label="add"
 			  click="addAttributeButton_clickHandler(event)" fontSize="11"/>
-	<s:Button x="365" y="291" width="55" height="20" label="delete" fontSize="11"/>
-	<s:Button id="openListSchemaButton" x="251" y="34" width="55" height="20" label="open"
+	<s:Button id="deleteAttributeButton" x="301" y="333" width="55" height="20" label="delete"
+			  click="deleteAttributeButton_clickHandler(event)" fontSize="11"/>
+	<s:Button id="openListSchemaButton" x="254" y="31" width="55" height="20" label="open"
 			  click="openListSchemaButton_clickHandler(event)" fontSize="11"/>
-	<s:Button id="saveSchemaButton" x="314" y="34" width="55" height="20" label="save"
+	<s:Button id="saveSchemaButton" x="254" y="54" width="55" height="20" label="save"
 			  click="saveSchemaButton_clickHandler(event)" fontSize="11"/>
-	<s:Label x="375" y="40" fontSize="11" text="List schema"/>
-	<s:Label id="listSchemaLabel" x="252" y="62" width="168" height="20" backgroundColor="#DADADA"
+	<s:Label x="314" y="40" width="59" height="28" text="List schema"/>
+	<s:Label id="listSchemaLabel" x="254" y="78" width="165" height="20" backgroundColor="#DADADA"
 			 verticalAlign="middle" maxDisplayedLines="1"/>
 	<s:Label x="359" y="7" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="400" y="9" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-
+	<s:DataGrid id="featureTypeGrid" x="207" y="161" height="131"
+				dataProvider="{selectedFeatureTypeArray}" requestedRowCount="4"
+				selectionChange="featureTypeGrid_selectionChangeHandler(event)">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn width="110" dataField="name" headerText="FeatureType" resizable="false"></s:GridColumn>
+				<s:GridColumn width="100" dataField="proxyName" headerText="proxy" resizable="false"></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>
+		<s:typicalItem>
+			<fx:Object dataField1="サンプルデータ" dataField2="サンプルデータ" dataField3="サンプルデータ"></fx:Object>
+		</s:typicalItem>
+	</s:DataGrid>
+	<s:Label x="268" y="121" width="99" height="25" text="Selected feature types"/>
+	<s:Button x="208" y="112" width="55" label="add" click="addFeatureTypeButton_clickHandler(event)"/>
+	<s:Button id="deleteFeatureTypeButton" x="208" y="136" width="55" label="delete"
+			  click="deleteFeatureTypeButton_clickHandler(event)"/>
 
 </s:Window>

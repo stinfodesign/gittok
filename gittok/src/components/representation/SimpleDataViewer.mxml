@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="294" height="274"
-		  backgroundColor="#c5c5c5"
+		  title="Simple Data Viewer"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
@@ -30,7 +30,19 @@
 			
 			protected function initializeApp():void {
 				move(500,400);
-			}			
+			}
+			
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/simpleDataViewer_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/simpleDataViewer_en.html");
+				navigateToURL(request);
+			}
 			
 		]]>
 	</fx:Script>
@@ -40,4 +52,9 @@
 	<s:List id="simpleDataList" x="30" y="88" width="232" height="128" borderVisible="false"
 			contentBackgroundColor="#DADADA" dataProvider="{simpleDataArray}" labelField="value"></s:List>
 	<s:Label id="attributeTypeLabel" x="32" y="66" width="232" height="20" verticalAlign="middle"/>
+	<s:Label x="202" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="243" y="12" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+
 </s:Window>

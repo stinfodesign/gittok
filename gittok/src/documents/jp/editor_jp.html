@@ -14,24 +14,7 @@ window.moveTo(750,20);
 <p id="Top" class="FirstHeader">Editor<br/>
 データ編集</p>
 <p class="secondHeader">はじめに</p>
-<p class="mainSentence">Editor ページは，応用スキーマに従って地物及び関連のインスタンスを取得し，編集するためにあります．そして地理データセット（gittok では kit といいます）を出力します．ここでは，まず地物インスタンスとその属性値を取得するときの規則であるインスタンスモデルを解説します．次に，実際に地理データをつくる手順を説明します．さらに，取得できる属性の種類とその概要について解説します．最後に，このページの操作法を示します．インスタンスモデルについては，以下の講義用スライドを最初に見ると良いでしょう．</p>
-<p class="mainSentence">
-<a href="#lecture">講義用スライド</a><br/>
-<a href="#instanceModel">インスタンスモデル</a><br/>
-<a href="#kit">....キット</a><br/>
-<a href="#featureSet">....地物集合</a><br/>
-<a href="#associationSet">....関連集合</a><br/>
-<a href="#feature">....地物</a><br/>
-<a href="#association">....関連</a><br/>
-<a href="#acquisition">地理データの取得とその手順<br/></a>
-<a href="#CRS">座標参照系と地図投影法の指定</a><br/>
-<a href="#editor">Editorの操作法</a></p>
-<p class="mainSentence">&nbsp;</p>
-<p id="lecture" class="secondHeader">講義用スライド</p>
-<p class="mainSentence"><a href="../../lectureNotes/jp_pdf/04jpIntroductionToXML.pdf" target="_new">04 XML入門</a><br/>
-<a href="../../lectureNotes/jp_pdf/05jpFeatureInstance.pdf" target="_new">05 インスタンスの表現</a></p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
-<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">Editor ページは，応用スキーマに従って地物及び関連のインスタンスを取得し，編集するためにあります．そして地理データセット（gittok では kit といいます）を出力します．ここでは，まず地物インスタンスとその属性値を取得するときの規則であるインスタンスモデルを解説します．次に，実際に地理データをつくる手順を説明します．さらに，取得できる属性の種類とその概要について解説します．最後に，このページの操作法を示します．</p>
 <p id="instanceModel" class="secondHeader">インスタンスモデル (Instance Model)</p>
 <p class="mainSentence">インスタンスの構造は，インスタンスモデルというスキーマで定義されています．応用スキーマには，地物型及び関連型が定義されていますので，インスタンスモデルは，インスタンス（オブジェクトまたは単純にデータという場合もある）の集まりである地理データセットを取得するための仕様書という役割をもちます (図１参照)．</p>
 <p><img src="../figures/Instance Model and Instance.png" width="166" height="197" alt="InstanceModeAndDatal" /></p>
@@ -40,7 +23,7 @@ window.moveTo(750,20);
 <p class="mainSentence"><img src="../figures/InstanceModel.png" width="589" height="426" alt="instance model" /></p>
 <p class="mainSentence">図2．gittokで使用するインスタンスモデル</p>
 <p class="mainSentence">インスタンスモデルは，どのような地物型，関連型であっても，一定の構造をもった地理データとして実装できるようにするためのスキーマです．</p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
+<p class="mainSentence">&nbsp;</p>
 <p id="kit" class="secondHeader">Kit (地理空間データセット)</p>
 <p><span class="mainSentence">gittokではインスタンスの集合と，関連するデータの集まりを統合した地理空間データセットのことをキット(kit) と呼びます．Kit は応用スキーマに従って作成されます．Kit は，地物インスタンスの集合 (FeatureSet)と関連インスタンスの集合 (AssociationSet) を含みます．キットはそれぞれ複数の種類の地物の集合（例えば，建物，道路，街路樹）と関連の集合（例えば，建物ー道路，道路ー街路樹）をもちます．この構造を，インスタンスモデルでは，キットはfeatureSetArrayという役割をもつ複数の地物集合(FreatureSet)及び，associationSetArrayという役割名をもつ，複数の関連集合 (AssociationSet) をもつ，と表現しています．そして，上の例でいえば，FeatureSet 及び AssociationSetそれぞれは，建物であれば，100棟の</span><span class="mainSentence">インスタンス (features)，道路ー街路樹関連であれば50件の関連インスタンス(associations) をもつでしょう．地物インスタンス，関連インスタンスは，Feature, Associationという型をとりますが，それらは，地物型 (FeatureType)，関連型 (AssociationType)のIDを属性にするので，インスタンスがどの型に従うかがわかります</span><span class="mainSentence">．</span></p>
 <p class="mainSentence"><span class="thirdHeader">属性</span><br/>
@@ -78,7 +61,6 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 </strong>地物型ごとに作られる，地物インスタンスの集合featureSetを集めて作られるDictionary型をとるデータです．インデックスとしては，地物型の型名が使われます．</p>
 <p class="mainSentence"><strong>associationSetArray<br />
 </strong>関連型ごとに作られる，関連インスタンスに集合associationSetを集めて作られるDictionary型をとるデータです．インデックスとしては，関連型の型名が使われます．</p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="featureSet" class="mainSentence"><span class="secondHeader">FeatureSet (地物集合)</span><br/>
 </p>
@@ -91,7 +73,6 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 </p>
 <p class="mainSentence"><strong>features</strong><br /> 
 地物インスタンスはFeatureという型を取ります．featuresはその集まりで，実質的にインスタンスの集まりを表現します．</p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="associationSet" class="secondHeader"> AssociationSet (関連集合)</p>
 <p class="mainSentence">関連型ごとにまとめた関連インスタンスの集合を，関連集合と呼びますが，その型はAssociationSetです．以下の属性をもちます．</p>
@@ -101,7 +82,6 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 <p class="mainSentence"><span class="thirdHeader">関連</span><br/>
 </p>
 <p class="mainSentence"><strong>associations:</strong> 関連インスタンスはAssociationという型を取ります．associationsはその集まりで，実質的に関連インスタンスの集まりを表現します．</p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="feature" class="secondHeader">Feature (地物)</p>
 <p class="mainSentence">これは地物インスタンスがとる型です．地物インスタンスは地物型に従って作られますので，そのインスタンスが従う地物型FeatureTypeを参照し，二つの属性と二つの関連から成り立ちます．</p>
@@ -117,7 +97,6 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 </strong>地物インスタンスが，他の地物インスタンスと関連するときは，関連インスタンスを通して行います．connectsを使えば，複数の関連インスタンスと関連することができます．</p>
 <p class="mainSentence"><strong>connectedBy<br />
 </strong>地物インスタンスが，別のインスタンスから関連されるときは，関連インスタンスを通して行います．connectedByを使えば，１つの関連インスタンスからの関連を受けることができます．</p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="association" class="secondHeader">Association (関連)</p>
 <p class="mainSentence">これは関連インスタンスがとる型です．関連型AssociationTypeを参照し，二つの属性と二つの関連から成り立ちます．</p>
@@ -129,7 +108,6 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 </p>
 <p class="mainSentence"><strong>relateFrom:</strong> 関連インスタンスは関連元の地物インスタンスと，関連先の地物インスタンスを結ぶ働きをもっています．relateFromという役割は，関連元の地物インスタンスを示すためにあります．</p>
 <p class="mainSentence"><strong>relateTo: </strong>この役割は，関連先の地物インスタンスを示すためにあります．関連先の地物インスタンスは，複数になる場合があります．</p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="acquisition" class="secondHeader">データの取得</p>
 <p class="mainSentence"><span class="thirdHeader">データの取得とは</span><br/>
@@ -198,11 +176,9 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
   セーブしたキットを再度呼び出す行為はオープンと呼ばれます．オープンするためには，Editor page のオープンボタンを押します．すると，オープンするキットが入っているフォルダとキットの名前を指定することができ，それによって，キットがオープンされます．オープンしたキットの名前は，オープンボタンの下にあるラベルで見ることができます．</p>
 <p class="thirdHeader">Kit の併合</p>
 <p class="mainSentence">複数の人々が，共同でインスタンスの入力作業を行うとき，Gittok ではそれらを併合 (merge) して，一つの kit にすることができます．ただし，同じ地物や関連を別の人が入力しても，現状では重複のチェックは行っていません．したがって，重複が起きないように，作業領域の境界を明確にしておく必要があります．Editor 上のmerge ボタンを押して，併合するkitを指定すれば，併合が実行されます．</p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="CRS" class="secondHeader">座標参照系パラメータの指定</p>
 <p class="mainSentence">Gittok の空間属性に含まれる座標は，Geometry ページでデジタイズされた地図座標です．これを地上の平面座標に換算するためにはアフィン変換を使います．さらに，地上平面座標と経緯度の換算には，gittokの場合，ガウス・クリューガー投影が用いられます．この投影法を使用するには，地球の形状や，座標の原点などで定義される座標参照系 (Coordinate Reference System: CRS) を指定する必要があります．そのために，Editor ページには、edit CRS というボタンが含まれており，これを押すと，上記のパラメータの指定ができ，そのパラメータとキットを関連づけることができます．詳細については，edit CRS ボタンを押すと現れる CRS Definition ページのテキストを読んで下さい．</p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="editor" class="secondHeader">Editor の操作画面</p>
 <p class="mainSentence">Editor を使用するためには，最初は応用スキーマの指定，一度キットを作成した場合は，そのオープンを行います．</p>
@@ -308,7 +284,6 @@ proxy 属性のデータ型が示されます．</p>
 今あなたが読んでいるドキュメントが表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
   You can read the tutorial written in English.</p>
-<p class="mainSentence"><a href="#Top">ページのTopに戻る．</a></p>
 <p class="secondHeader"></p>
 <p class="secondHeader">&nbsp;</p>
 <p class="secondHeader">&nbsp;</p>

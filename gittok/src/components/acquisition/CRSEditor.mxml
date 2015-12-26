@@ -2,7 +2,6 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="714"
-		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -59,7 +58,7 @@
 					file.addEventListener(Event.SELECT, openCRS);
 					file.browseForOpen("Open file", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}												
 			}
 			
@@ -69,7 +68,7 @@
 					crs = stream.readObject();
 					stream.close();
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 				
 				this.setDisplay();
@@ -141,7 +140,7 @@
 					file.addEventListener(Event.SELECT, saveCRS);
 					file.browseForSave("Save file");					
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				} 				
 			}
 			
@@ -155,7 +154,7 @@
 					stream.writeObject(crs);
 					stream.close();
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 				crsFileLabel.text = file.name;
 			}

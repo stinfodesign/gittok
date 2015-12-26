@@ -5,6 +5,7 @@
 					   width="402" height="600"
 					   backgroundColor="0xfcffff"
 					   creationComplete="initializeApp()">
+	<fx:Style source="gittok.css"/>
 	<fx:Script>
 		<![CDATA[
 			import components.acquisition.*;
@@ -161,6 +162,8 @@
 				if (repOperationWindow.portrayalDesigner 	!= null) repOperationWindow.portrayalDesigner.close();
 				if (repOperationWindow.gazetteerDesigner	!= null) repOperationWindow.gazetteerDesigner.close();
 				if (repOperationWindow.mapEditor		 	!= null) repOperationWindow.mapEditor.close();
+				if (repOperationWindow.listSchemaDesigner	!= null) repOperationWindow.listSchemaDesigner.close();
+				if (repOperationWindow.listViewer		 	!= null) repOperationWindow.listViewer.close();
 				
 								
 				repOperationWindow = null;

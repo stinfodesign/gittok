@@ -17,13 +17,15 @@ package portrayal.labelStyle
 		public function getXML():XML {
 			var str:String = '<?xml version=“1.1” encoding="UTF-8"?>';
 			
-			str += '<LabelStyleSchema name="';
+			str += '<LabelStyleDictionary name="';
 			str += this.name + '">';
+			str += '<labelStyles>';
 			
 			for each(var lblStyle:LabelStyle in labelStyles) {
 				str += lblStyle.getXML().toXMLString();
 			}
-			str += '</LabelStyleSchema>';
+			str += '</labelStyles>';
+			str += '</LabelStyleDictionary>';
 			
 			return XML(str);
 		}
@@ -33,7 +35,7 @@ package portrayal.labelStyle
 			
 			this.name = _xml.@name;
 			
-			var strXMLList:XMLList = _xml.children();
+			var strXMLList:XMLList = _xml.labelStyles.children();
 			for each(var strXML:XML in strXMLList) {
 				var lblStyle:LabelStyle = new LabelStyle();
 				lblStyle.setXML(strXML);

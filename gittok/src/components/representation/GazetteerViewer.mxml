@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
-		 backgroundColor="#c5c5c5"
+		 title="Gazetteer Viewer"
 		 creationComplete="initializeApp()"		 
 		 width="310" height="330">
 	<fx:Declarations>
@@ -13,33 +13,33 @@
 		<![CDATA[
 			import gfm.AttributeType;
 			
-			import locationReference.GazetteItem;
-			import locationReference.GazetteerType;
+			import locationReference.LocationInstance;
+			import locationReference.Gazetteer;
 			
 			import mx.collections.ArrayList;
 			
-			public var gazetteer:GazetteerType;
-			public var gazetteItem:GazetteItem;
+			public var gazetteer:Gazetteer;
+			public var locationInstance:LocationInstance;
 			
 			[Bindable]
 			private var geoNameList:ArrayList = new ArrayList();
 						
 			private function initializeApp():void {
-				var m:int = gazetteer.gazetteItemList.length;
+				var m:int = gazetteer.locationInstances.length
 				for (var i:int = 0; i < m; i++) {
-					var locItem:GazetteItem = gazetteer.gazetteItemList.getItemAt(i) as GazetteItem;
+					var locItem:LocationInstance = gazetteer.locationInstances.getItemAt(i) as LocationInstance;
 					geoNameList.addItem(locItem.geoName);
 				}
 				
 				this.move(900, 50);
-				gazetteItem = null;
+				locationInstance = null;
 			}
 			
 			protected function locList_clickHandler(event:MouseEvent):void
 			{
 				var index:int = locList.selectedIndex;
-				if (index < 0 || index > gazetteer.gazetteItemList.length) return;
-				gazetteItem = gazetteer.gazetteItemList.getItemAt(index) as GazetteItem;
+				if (index < 0 || index > gazetteer.locationInstances.length) return;
+				locationInstance = gazetteer.locationInstances.getItemAt(index) as LocationInstance;
 			}
 			
 			// Text and instruction  Controls

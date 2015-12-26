@@ -2,9 +2,9 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
-		  width="610" height="730"
-		  backgroundColor="#c5c5c5"
 		  xmlns:os="http://openscales.org"
+		  width="610" height="730"
+		  title="Manager"
 		  creationComplete="initializeApp()">
 	
 	<fx:Script>
@@ -653,10 +653,10 @@
 							var pubTime:Number = mtd.publicationDate.getTime();
 							var beginTime:Number = pubBegin.selectedDate.getTime();
 							var endTime:Number = pubEnd.selectedDate.getTime();
-							if (beginTime < pubTime) trace("b yes:" + beginTime + ", " + pubTime);
-							if (pubTime < endTime) trace("e yes:" + pubTime + ", " + endTime);
+							//if (beginTime < pubTime) trace("b yes:" + beginTime + ", " + pubTime);
+							//if (pubTime < endTime) trace("e yes:" + pubTime + ", " + endTime);
 							if (!(beginTime < pubTime && pubTime < endTime)) {
-								trace("pub:" + pubTime);
+								//trace("pub:" + pubTime);
 								mtdList.removeItemAt(i);
 								fileNameList.removeItemAt(i);
 								i--;	
@@ -887,7 +887,7 @@
 	<s:Label x="75" y="15" text="Manager" fontSize="16"/>
 	
 	<s:Panel id="mapPanel" left="25" top="335" right="25" bottom="25" title="Geographic Extent" 
-			 dropShadowVisible="false" chromeColor="#444444" color="#000000">
+			 dropShadowVisible="false">
 		<os:Map id="fxMap" width="100%" height="100%"  maxExtent="-180,-90,180,90" center="139.73945, 35.701394" 
 				projection="EPSG:900913" addedToStage="onMapAddedToStage(event)"
 			    mouseMove="_mouseMoveHandler(event)"
@@ -903,9 +903,10 @@
 			<os:DragHandler />
 			<os:ClickHandler />
 		</os:Map>
-		<s:Button id="mapButton" right="10" top="160" width="55" height="20" label="GSI"
+		
+		<s:Button id="mapButton" right="12" top="159" width="50" label="GSI" fontSize="11"
 					  click="mapButton_clickHandler(event)"/>
-		<s:Label id="coordinateLabel" left="10" bottom="10" width="170" height="16" color="0x000000"
+		<s:Label id="coordinateLabel" left="10" bottom="10" width="170" color="0x000000"
 				 backgroundColor="0xffffff" fontSize="11" verticalAlign="middle"/>
 		<s:VGroup top="10" right="20" horizontalAlign="center">
 			<s:Button id="zoomInButton" width="30" height="15" label="+" click="zoomInButton_clickHandler(event)"/>
@@ -952,7 +953,7 @@
 			<s:Group width="100%" height="100%" id="metadataSearch" x="0" y="0">
 				<s:Rect x="432" y="82" width="118" height="156" >
 					<s:fill>
-						<s:SolidColor color="0x888888"/>
+						<s:SolidColor color="0xc5c5cf"/>
 					</s:fill>
 				</s:Rect>
 				<s:TextInput x="92" y="83" id="titleInput2" width="138"/>

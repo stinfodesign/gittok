@@ -15,47 +15,72 @@ window.moveTo(750,20);
 </p>
 <p class="mainSentence">&nbsp;</p>
 <p class="secondHeader">Introduction</p>
-<p class="mainSentence">The relationship between symbol or label style and an attribute of a feature is required to draw a graphic object on a map. Such a relationship is registered in a portrayal schema and it enables automatical drawing of maps by gittok. The users can design portrayal schema by using Portrayal Schema Designer. </p>
-<p class="mainSentence">The user should understand about portrayal schema  beforehand. This page explains what is a portrayal schema , and how to use Portrayal Schema Designer. </p>
+<p class="mainSentence">Mutual relationshipa between symbol or label style and an attribute of a feature are required to draw a graphic object on a map. Such relationships are registered in a portrayal schema for enabling automatical drawing of maps. Portrayal Schema Designer is prepared in gittok for the creation of protrayal schemas through the definitions of mutual relationships between feature attributes and symbol or label styles. </p>
+<p class="mainSentence">The user who wishs to design a portrayal schema should understand about portrayal schema  beforehand. This page explains what is a portrayal schema , and how to use Portrayal Schema Designer. </p>
 <p class="secondHeader">Portrayal Schema</p>
-<p class="mainSentence">Portrayal schema is a schema to specify a collection of relationships between drawing styles and feature attributes.The class diagram below is a structure of portrayal schema that is called General Portrayal Model (GPM) in gittok. The relationship between portrayal schema and GPM is similar to the relatioship between application schema and GFM. </p>
+<p class="mainSentence">Portrayal schema is a schema for the specification to define relationships between feature attributes and drawing styles.The class diagram shown below is a model (or rules) for portrayal schema that is a part of General Portrayal Model (GPM). The relationship between portrayal schema and GPM is similar to the relatioship between application schema and GFM. Both takes similar structure as described below.</p>
+
+<table width="320px">
+	<tr>
+    	<th class="mainSentence"><strong>Instance</strong></th>
+        <th class="mainSentence"><strong>Model</strong></th>
+        <th class="mainSentence"><strong>Meta-model</strong></th>
+    </tr>
+	<tr>
+    	<th class="mainSentence">map</th>
+        <th class="mainSentence">portrayal schema</th>
+        <th class="mainSentence">GPM</th>
+    </tr>
+    <tr>
+    	<th class="mainSentence">geographic data</th>
+        <th class="mainSentence">application schema</th>
+        <th class="mainSentence">GFM</th>
+    </tr>
+</table>
+
+<p class="mainSentence">&nbsp;</p>
 <p class="mainSentence"><img src="../figures/GPM.png" width="650" height="523" alt="GPM" /></p>
-<p class="mainSentence">Figure 1. Class diagram of General Portrayal Model (GPM).</p>
+<p class="mainSentence">Figure 1. Class diagram for portrayal schemas.</p>
 <p class="thirdHeader">CLASSES</p>
 <p class="mainSentence"><strong>PortrayalSchema</strong><br />
-  This class is the root class of the portrayal schema.This class has names of application schema, symbol style dictionary, and label style dictionary. This class also has an association to a collection of feature portrayal pairs, which roll name is fpPairs.</p>
-<p class="mainSentence"><strong>FeaturePortrayalPair</strong><br />
-This class represents a combination of a feature and its modifiers. GeneralModifier is a modifier to present a feature in general-purpose maps. ThematicModifier is a modifier to present ranks of given modifier values in choropleth maps. Modifier is information to translate attributes into graphics on maps. </p>
+  This class is the root class of a portrayal schema.This class has names of application schema, symbol style dictionary, and label style dictionary. This class also has an association to an array of feature portrayal units, which roll name is fpUnits.</p>
+<p class="mainSentence"><strong>FeaturePortrayalUnit</strong><br />
+FeaturePortrayalUnit represents a combination of a feature and its modifiers. GeneralModifier is a modifier to present a feature in general-purpose maps. ThematicModifier is a modifier to present ranks of given modifier values in choropleth maps. Modifier is an information to translate attributes into graphics on maps. FeaturePortrayallUnit also associates with infoPages. It is a page for the representation of information on ifferent medias such as image, audio, video and URL.</p>
 <p class="mainSentence"><strong>AttributeStylePair</strong><br />
-This class keeps a combination of an attribute type (its name and data type) and symbol or label style (its name and style). This is used to specify which style is selected to draw a feature attribute. </p>
+AttributeStylePair keeps a pair of a name of attribute type and and its data type. This is an abstract class as a parent of AttributeSymbolPair and AttributeLabelPair having symbol / label style name and its data type . These classes are called genral modifiers, as they are modifiers for the general purpose map.</p>
+<p class="mainSentence"><strong>AttributeSymbolPair</strong><br />
+AttributeSymbolPair is a pair of attribute type and a style. It is a class to show how to portray the feature attrribute. AttributeSymbolPair has symbol name (symName) and a symbol type(symType), and attribute type name (attName) and its data type name (attType) inherited from AttributeStylePair .</p>
+<p class="mainSentence"><strong>AttributeLabelPair</strong><br />
+AttributeLabelPair is a pair of attribute type and a style. It is a class to show how to portray the feature label. AttributeLabllPair has a label name (labelName) and a label type(labelType), and attribute type name (attName)and its data type name (attType) inherited from AttributeStylePair. Meanwhile, a label needs a poisition for the drawing. It is indicated by refGeomAttName. It is one of the geometric attributes comprised in the feature.</p>
 <p class="mainSentence"><strong>ThematicCondition</strong><br />
-This class is used to draw a chpropleth map. It has feature attribute name and data type as attName and attType. It associates with a collection of modifiers. If the attribute data type is Boolean, then boolean modifiers to show true, false and null will be elements. If the attribute data type is character string, the qualitative modifiers to show each string will be included in elements. If the attribute data type is number, the quantitative modifier to show ranks of data collection units will be included in elements. </p>
+This class is used to draw a thematic map. It has feature attribute name and data type as attName and attType. It associates with an arrayof modifiers. If the attribute data type is Boolean, then boolean modifiers to show true, false and null will be elements. If the attribute data type is character string, the qualitative modifiers to show each string will be included in elements. If the attribute data type is number, the quantitative modifier to show ranks of data collection units will be included in elements. </p>
 <p class="mainSentence"><strong>Modifier</strong><br />
-This is an abstract class and the children, BooleanModifier, QualitativeModifier and QunatitativeModifier are used as modifiers of feature attributes. It keeps a feature attribute name and its data type. Thus all children classes have these parameters.</p>
+Modifier is an abstract class and its children, BooleanModifier, QualitativeModifier and QunatitativeModifier are used as general modifiers for the feature attributes. Modifier keeps a symbol name (symName) and its data type (symType). It means that all child classes have these parameters.</p>
 <p class="mainSentence"><strong>BooleanModifier</strong><br />
-  A modifier for Boolean values (true, false, or null). It has Boolean value (boolValue), symbol name (symName) and symbol type (symType) as attributes.</p>
+  BooleanModifier modifes a symbol by  Boolean value (true, false, or null). It has Boolean value (boolValue), and symbol name (symName) and symbol type (symType) modified by a boolean value.</p>
 <p class="mainSentence"><strong>QualitativeModifier</strong><br />
-  A modifier for character strings. It has a string (stringValue), symbol name (symName) and symbol type (symType) as attributes.</p>
+  QualitativeModifiee modifies a symbol by using character strings. It has a character string (stringValue), symbol name (symName) and symbol type (symType) as attributes. Diferent symbol representationis realized by diferent character string.</p>
 <p class="mainSentence"><strong>QuantitativeModifier</strong><br />
-  A modifier for numbers. It has an value extent (lowerValue and upperValue), symbol name (symName) and symbol type (symType) as attributes.  Symbol is represented if the attribute value is inside of the extent.</p>
+  QuantitativeModifier A modifier for numbers. It has an value extent (lowerValue and upperValue), symbol name (symName) and symbol type (symType) as attributes.  Symbol is represented if the attribute value is inside of the extent.</p>
 <p class="mainSentence"><strong>gfm:AttributeType</strong><br />
-A feature attribute type for representation on the information page.</p>
+Amultinedia feature attribute type for the representation on the information page in the interactive emvironment.</p>
 <p class="thirdHeader">ROLL NAMES</p>
 <p class="mainSentence"><strong>fpUnits</strong><br />
   A collection of feature portrayal units for visualization of features.</p>
 <p class="mainSentence"><strong>generalModifiers</strong><br />
   A collection of general-purpose modifiers specifying the visualization of featues by symbols.</p>
 <p class="mainSentence"><strong>thematicModifiers</strong><br />
-  A collection of thematic modifiers specifying  the visualization of ranks by symbols for choropleth mapping.</p>
+  A collection of thematic modifiers specifying  the visualization of ranks by symbols for choropleth mapping of the proxy feature attribute. Gittok allows the single thematic representation.</p>
 <p class="mainSentence"><strong>infoPages</strong><br />
-  A collection of attribute types for visualization of information pages. Attribute name and type indicate which information page is visualized.</p>
-<p class="secondHeader">&nbsp;</p>
+  An array of attribute types defined in GFM is used for the visualization of information pages. Attribute name and type indicate which information page is visualized.</p>
 <p class="secondHeader">Portrayal Schema Designer</p>
-<p class="thirdHeader">Open and save of portrayal schema files.</p>
-<p class="mainSentence">See Figure 2.</p>
+<p class="thirdHeader">Open and save of files used in portrayal schema designing</p>
+<p class="thirdHeader"><img src="../figures/PortrayalSchemaDesigner_files.png" width="600" height="163" alt="portrayalFiles" /></p>
+<p class="mainSentence">Figure 2. Files used in the portrayal designing</p>
+<p class="mainSentence">Portrayal schema designder is used for the design of portrayal schemas by the adoption of aplication schema, symbol style dictionary and label tyle dictionary. The result of the design is saved in the auxiliary storage as portyala schema file. it can be edited by opening on this page.</p>
 <p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><strong>Application Schema</strong><br />
-  A file name of the kit is displayed in this field.</p>
+  A file name of the application schema is displayed in this field.</p>
 <p class="mainSentence"><strong>Symbol Style Dictionary</strong><br />
   A file name of the symbol style dictionary is displayed in this field.</p>
 <p class="mainSentence"><strong>Label Style Dictionary</strong><br />
@@ -78,10 +103,14 @@ The application schema is opened.</p>
 <p class="mainSentence"><strong>English</strong><br />
   You can read the tutorial written in English</p>
 <p class="thirdHeader">Modification for General-purpose Maps</p>
-<p class="mainSentence">General-reference map is used to emphasize the location of spatial phenomena (Slocum et al., 2005 ). It portrays phenomena on the earth for general purpose. Typical examples are national base maps published by national mapping agencies. </p>
+<p class="mainSentence">General-reference map is used to emphasize the location of spatial phenomena (Slocum et al., 2005 ). It portrays phenomena on the earth for general purpose. Typical examples are national base maps published by national mapping organizations. </p>
 <p class="mainSentence">The figure shown under is a page for portrayal schema design, and the tab at the middle part is selected 'general'. This means the box under the tab is provided for the portrayal of general-purpose use. Here, the association between feature attribute and symbol or label style for attribute modification. </p>
-<p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_general.png" width="600" height="722" alt="psDesigner_general" /></p>
-<p class="mainSentence">Figure 2. Page for portrayal schema design of features for general purpose.</p>
+<p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_general1.png" width="600" height="710" alt="portrayalGenera1" /></p>
+<p class="mainSentence">Figure 3-1. Symbol style assigning on Portrayal Schema Designer (general) </p>
+<p class="mainSentence">Symbol style is assigned for graphic representation of geometric attribute. Assigned symbol style is shown in Symbol Style table on the box of general tab (Figure 3-1) by the selection of appropiate style from Symbol Styles list located at the below of the page.</p>
+<p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_general2.png" width="600" height="710" alt="portrayalGeneral2" /> </p>
+<p class="mainSentence">Figure 3-2. Label style assigning on Portrayal Schema Designer (general) </p>
+<p class="mainSentence">Thematic attribute can be represented as a label on a map. Assigned label style is displayed on the Label Styles located in the box of general tab as shown in Figure 3-2. A reference position of the label isalso selected from the dropdown list of Reference geometry. The reason to select geometry is that a feature may have moe than one geometric attributes, but the reference position of a label shall be unique. The position will be a center of geometry. If a surface is selected, the position will be gravity center. It a curve is selected, the position will be located at a half distance from the start point of the curve.</p>
 <p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><strong>Feature Types (editable)</strong><br />
   Feature type list for the selection of a feature to be portrayed. The selection is possible on this drop down list. </p>
@@ -89,14 +118,19 @@ The application schema is opened.</p>
   Attribute type list for the selection of a feature attribute to be portrayed. The selection is possible on this drop down list. </p>
 <p class="mainSentence"><strong>Type</strong><br />
   The data type of selected attribute.</p>
-<p class="mainSentence"><strong>Symbol/label style for the attribute modification</strong><br />
-  Symbol or label style that is assigned by the selection of the symbol or label  in the lists located under the box.</p>
-<p class="mainSentence"><strong>Symbol styles</strong><br />
-  Symbol style list for the selection of the symbol style associating a feature attribute. The sample is drown at the right hand side.</p>
-<p class="mainSentence"><strong>Label styles</strong><br />
+<p class="mainSentence"><strong>general &gt; Symbol style<br />
+</strong>Symbol style that is assigned by the selection of the symbol style shown in the Symbol style list located under part of the page.</p>
+<p class="mainSentence"><strong>general &gt; Label style<br />
+</strong>Label style that is assigned by the selection of the label style shown in the Label style list located under part of the page.</p>
+<span class="mainSentence"><strong>Symbol styles</strong><br />
+Symbol style list for the selection of the symbol style associating a feature attribute. The sample is drown at the right hand side.
+</span>
+<p class="mainSentence"><span class="mainSentence"><strong></strong></span><strong>Label styles</strong><br />
   Label style list for the selection of the label style associating a feature attribute. The sample is drawn at the right hand side.</p>
 <p class="mainSentence"><strong>Sample</strong><br />
-  A sample of symbol or label style is drawn at this area．</p>
+  A sample of symbol or label style is drawn at this area</p>
+<p class="mainSentence"><strong>Reference geometry</strong><br />
+  Geometric attribute as a reference position of a label is selected at this dropdown list．</p>
 <p class="thirdHeader">BUTTONS</p>
 <p class="mainSentence"><strong>general</strong><br />
   This tab is selected for the general-purpose feature modification.</p>
@@ -104,11 +138,25 @@ The application schema is opened.</p>
   The style selected in the symbol or label style lists is signed as a modifier of the attribute．</p>
 <p class="mainSentence"><strong>clear</strong><br />
   The style assigned as a modifier is released.</p>
-<p class="mainSentence"><span class="thirdHeader">Modification for Choropleth Maps</span></p>
+<p class="thirdHeader">Modification for thematic (choropleth) maps</p>
 <p class="mainSentence">Thematic maps (or statistical maps) are used to emphasize the spatial pattern of one or more geographic attributes (or variables), such as population density, familiy income, and daily temparature maximums (Slocum et al., 2005 ).</p>
-<p class="mainSentence">In other words, choropleth map  is a map focusing on the spatial pattern of geographic attributes such as population density, family income, and maximum temperature of each day.  it is drawn by paying attention to ranks of the attribute values.</p>
+<p class="mainSentence">In other words, thematic map  is a map focusing on the spatial pattern of geographic attributes such as population density, family income, and maximum temperature of each day.  it is drawn by paying attention to ranks of the attribute values.</p>
 <p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_thematic.png" width="600" height="722" alt="PSDeginer_thematic" /></p>
-<p class="mainSentence">Figure 3. Page for portrayal schema design of features for choropleth mapping.</p>
+<p class="mainSentence">Figure 4-1. Page for portrayal schema design of features for thematic mapping.</p>
+<p class="mainSentence">Thematic map can be designed by the following proceduer.</p>
+<p class="mainSentence">1. Select an appropriate feature type.<br />
+2. Select the attribute type that is modified.<br />
+3. Select thematic tab.<br />
+4. Select the thematic attribute which will be a modifier, on the Modifier drop down list.</p>
+<p class="mainSentence">5-1. In case the type of modifier is boolean, select symbols for true, false and null from Symbol Styles list (Figure 4-2). Where, &quot;null&quot; means that boolean value is not assignd as the thematic attribute. For example, the feature located outside of the investogation area does not have an attribute vale. In such a case, attribute value is null.</p>
+<p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_thematicBool.png" width="581" height="322" alt="thematic_boolean" /></p>
+<p class="mainSentence">Figure 4-2. Modification by boolean value</p>
+<p class="mainSentence">5-2. In case the type of modifier is character string, select symbols for each string from Symbol Styles list (Figure 4-3). General speaking, chatacer strings for the use of predefined purpose is called &quot;code&quot;. The variation of codes represented as a list is called a &quot;code list&quot;. For example, {low, middle, high} and {&quot;oak&quot;, &quot;quercus&quot;, &quot;maple&quot;} may be code lists. Currently, multiple code selection, for exampl,e &quot;low&quot; + &quot;maple&quot; can not be selected in gittok. This is a furture issue.</p>
+<p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_thematicString.png" width="589" height="326" alt="thematic_string" /></p>
+<p class="mainSentence">Figure 4-3. Modification by character strings</p>
+<p class="mainSentence">5-3.  In case the type of modifier is numerical value, select symbols for each extent of numbers from Symbol Styles list (Figure 4-4). Mostly modified geometries are surfaces. Quantitative modifier indicates a color filled in the surface. Color is selected in order to clarify the diference of the rank. And be carefull at the color selection to avoid the confusion bythe map users.<strong> <a href="http://colorbrewer2.org">Color Brewer</a></strong> is an useful  softwere tool developed to assist the selection of the color combination.</p>
+<p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_thematicNumeric.png" width="574" height="322" alt="thematic_Numeric" /></p>
+<p class="mainSentence">Figure 4-4. Modificartion by numeric vakues</p>
 <p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><strong>Feature Types (editable)</strong><br />
   Feature type list for the selection of a feature to be portrayed. The selection is possible on this drop down list. </p>
@@ -116,10 +164,15 @@ The application schema is opened.</p>
   Attribute type list for the selection of a feature attribute to be portrayed. The selection is possible on this drop down list. </p>
 <p class="mainSentence"><strong>Type (geometric attribute)</strong><br />
   The data type of selected geometric attribute.</p>
-<p class="mainSentence"><strong>Modifier (editable)</strong><br />
-  The name of attribute to use as a thematic modifier for the geometric attribute.</p>
-<p class="mainSentence"><strong>Type (thematic attribute)</strong><br />
-  The data type of selected thematic attribute.</p>
+<p class="mainSentence"><strong>thematic &gt; Modifier (editable)</strong><br />
+  The name of attribute to use as a thematic modifier for the geometric attribute is displayed by the selection.</p>
+<p class="mainSentence"><strong>thematic &gt; Type </strong><strong> (thematic attribute)</strong><br />
+The data type of selected thematic attribute.</p>
+<p class="mainSentence"><strong>Data collection units (editable)</strong><br />
+This table is used to assign symbols for modification.</p>
+<p class="mainSentence">In tha case modifier is boolean, push assign button after the selection of a row and symbol to show true, false or null.</p>
+<p class="mainSentence">In the case modifier is character string, key-in appropriate string at a cell of value field, then select a symbol, then push assign button.</p>
+<p class="mainSentence">In the case modifier is numeric value, key-in lower and upper value at first, then select a symbol for filling an area, and finally push assign button.</p>
 <p class="thirdHeader">BUTTONS</p>
 <p class="mainSentence"><strong>thematic</strong><br />
   This tab is selected for the thematic modification.</p>
@@ -127,12 +180,13 @@ The application schema is opened.</p>
   The style selected in the symbol or label style lists is signed as a modifier of the attribute．</p>
 <p class="mainSentence"><strong>clear</strong><br />
   The style assigned as a modifier is released.</p>
-<p class="thirdHeader">Selection of thematic attributes shown on the information pages</p>
+<p class="thirdHeader">Selection of thematic attributes shown on the info. pages</p>
 <p class="mainSentence">Map is mainly a graphic representation of geometric attributes and text string attributes of features.  However, gittok provides pages to show multimedia information, because features have multimedia attributes such as image and movie. Gittok enables the selection of attributes that are presented on the appropriate information pages according to their characteristics. </p>
 <p class="mainSentence">Thematic attribute is shown on the information page is possible by selection of a feature, check 'for info. page' button, and selection of a thematic attribute by the dropdown list. Selected thematic attributes are added in the list at the right hand side.</p>
 <p class="thirdHeader"></p>
 <p class="mainSentence"><img src="../figures/PortrayalSchemaDesigner_infoPage.png" width="570" height="136" alt="infoPage" /></p>
-<p class="mainSentence">Figure 4. Thematic attribute selection for the representation by information pages.</p>
+<p class="mainSentence">Figure 5. Thematic attribute selection for the representation by info. pages.</p>
+<p class="mainSentence">Attribute representation by info.pages is realized by the selection of thematic attribute after selecting a feature type, checking of &quot;for info. pages&quot;. </p>
 <p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><strong>Feature Types (editable)</strong><br />
 Feature type list for the selection of a feature to be portrayed on the information page. The selection is possible on this drop down list. </p>
@@ -140,7 +194,7 @@ Feature type list for the selection of a feature to be portrayed on the informat
   Attribute type list for the selection of a feature attribute to be portrayed on the information pages. The selection is possible on this drop down list. </p>
 <p class="mainSentence"><strong>Selected att. for info. pages</strong><br />
 Selected attributes to show information pages are listed on this list.</p>
-<p class="mainSentence"><span class="thirdHeader">BUTTONS</span></p>
+<p class="thirdHeader">BUTTONS</p>
 <p class="mainSentence"><strong>for info. pages</strong><br />
 If you check this check box, the attribute displayed on the information page is listed.</p>
 <p class="mainSentence"><strong>cancel</strong><br />

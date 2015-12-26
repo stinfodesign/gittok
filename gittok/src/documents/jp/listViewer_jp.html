@@ -13,28 +13,37 @@ window.moveTo(750,20);
 <body>
 <p class="FirstHeader">List Viewer<br />
 リスト表示</p>
-<p class="mainSentence">リストとはこの場合，実世界に存在する現象を抽象化して示す，一次元表現である．リストスキーマによって示されるルールに従って，地物のproxyをキーワードとして，様々な属性を表示することができます．</p>
+<p class="mainSentence">リストとはこの場合，実世界に存在する現象を抽象化して示す，一次元の離散的な値をとるproxy属性の一覧表，つまりリストです．これは，実世界に起きる現象を１次元の空間にマッピングした結果と捉えることができるので，一次元地図ということもできます．GittokのList Viewer では，地物のproxy属性をキーワードとして，地物の様々な属性を表示することもできます．</p>
 <p class="secondHeader">List Viewer</p>
-<p class="mainSentence"><img src="../figures/ListViewer.png" width="650" height="643" alt="listViewer" /></p>
-<p class="mainSentence">図１．Cartographer のページ，リスト表示 (List Viewer) のページ及び，属性表示ページ（画像，住所）</p>
+<p class="mainSentence"><img src="../figures/ListViewer.png" width="650" height="848" alt="listVieweer" /></p>
+<p class="mainSentence">図１．Cartographer のページ，リスト表示 (List Viewer) のページ及び，info. page</p>
+<p class="mainSentence">List Viewer では，以下の手順で情報の表示を行います．</p>
+<p class="mainSentence">１．情報表示を行う kit の選択<br />
+２．表示のルールを示すリストスキーマの選択<br />
+３．表示を行う地物型の選択．これによって，poxy value list に地物インスタンスの一覧が表示される．<br />
+４．info. pageやgeometry page を使って表示を行う属性の選択．これによって，地物インスタンスの属性が表示される．</p>
 <p class="thirdHeader">Fields</p>
 <p class="mainSentence"><strong>Kit</strong><br />
 リスト表示の対象となる kit のファイル名が表示されます．</p>
 <p class="mainSentence"><strong>List schema</strong><br />
 kitをのリスト表示ルールを示すリストスキーマの名前がここに示されます．</p>
-<p class="mainSentence"><strong>Feature type</strong><br />
-Kitの中にある，リストの対象となる地物型の名前がここに示されます．</p>
+<p class="mainSentence"><strong>Feature type list</strong><br />
+Kitの中にある，リストの表示対象候補となる地物型の名前がここに示されます．</p>
 <p class="mainSentence"><strong>Proxy</strong><br />
-リストの対象になる地物型のproxyの名前がここに示されます．</p>
-<p class="mainSentence"><strong>Proxy value list (selectable)</strong><br />
+リストの対象になる地物型の proxy の名前がここに示されます．</p>
+<p class="mainSentence"><strong>Proxy value list （選択可能）</strong><br />
   Proxyの値の一覧がここに示されます．このリストが，地物の一次元地図です．このリスト上で，地物を選択すると，その地物の属性値を表示することができます．</p>
-<p class="mainSentence"><strong>Attributes (selectable)</strong><br />
+<p class="mainSentence"><strong>Attributes （選択可能）</strong><br />
 地物属性の一覧から，一つ選択すると，その属性の値を示すページが現れます．</p>
 <p class="thirdHeader">Buttons</p>
 <p class="mainSentence"><strong>open (Kit)</strong><br />
 このボタンを押すと，リスト表示の対象となる kit がオープンします．</p>
 <p class="mainSentence"><strong>open (List schema)</strong><br />
 このボタンを押すと，リスト表示の規則を示すリストスキーマ がオープンします．</p>
+<p class="mainSentence"><strong>Proxy value list</strong><br />
+この一覧から地物インスタンスを選択すると，その他の地物属性の表示が可能になります．</p>
+<p class="mainSentence"><strong>Attributes</strong><br />
+この一覧から地物属性を選択すると，info. pageが表示されます．幾何属性の場合は，geometry pageが表示されます．</p>
 <p class="mainSentence"><strong>日本語</strong><br />
 今あなたが読んでいるドキュメントが表示されます．</p>
 <p class="mainSentence"><strong>English</strong><br />

@@ -76,6 +76,12 @@ package portrayal.symbolStyle
 					aStyle.setXML(strXML, lStyleDic);
 					this.styles.addItem(aStyle);
 				}
+				if (strXML.name().toString() == "CircleSymbolStyle") {
+					var cStyle:CircleSymbolStyle = new CircleSymbolStyle();
+					cStyle.setXML(strXML, lStyleDic);
+					this.styles.addItem(cStyle);
+				}
+
 			}
 		}
 		

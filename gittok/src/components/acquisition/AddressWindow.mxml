@@ -2,9 +2,8 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
-		  title="Address Editor"
+		  title="Address"
 		  width="354" height="374"
-		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 
 	<fx:Declarations>

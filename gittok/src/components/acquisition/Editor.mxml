@@ -4,7 +4,7 @@
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
 		  title="Editor"
 		  width="524" height="628"
-		  creationComplete="initializeApp()" backgroundColor="#c5c5c5">
+		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
@@ -221,7 +221,7 @@
 					apsFile.addEventListener(Event.SELECT, callAppStream);
 					apsFile.browseForOpen("Open file    [キャンセル:CANCEL  選択:SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 			}
 			
@@ -249,7 +249,7 @@
 					applicationSchema = apsStream.readObject();
 					apsStream.close();
 				} catch (e:IOError) {
-					trace("application schema open error:" + e);					
+					Alert.show("Application schema open error:" + e, "Alert", 4, this);
 				}
 				
 				kit.applicationSchemaURL = apsFile.name;
@@ -315,7 +315,8 @@
 					kit = kitStream.readObject();
 					kitStream.close();
 				} catch(e:IOError) {
-					trace("kit open error:" + e);
+					Alert.show("kit open error:" + e, "Alert", 4, this);
+					return;
 				}
 				
 				var pathURL:String = kitFile.url;
@@ -337,7 +338,7 @@
 					applicationSchema = apsStream.readObject();
 					apsStream.close();
 				} catch (e:IOError) {
-					trace("application schema open error:" + e);
+					Alert.show("Application schema open error:" + e, "Alert", 4, this);
 				}
 				
 				//Set parameters
@@ -407,7 +408,7 @@
 					kitStream.writeObject(kit);
 					kitStream.close();
 				} catch (e:IOError) {
-					trace("kit close error:" + e);
+					Alert.show("kit close error:" + e, "Alert", 4, this);
 				}
 				
 				kitName.text = kitFile.name;
@@ -432,6 +433,10 @@
 						m++;
 					}
 				}
+				else {
+					idList = new ArrayList();
+				}
+				
 				instanceIDList.selectedIndex = -1;
 				instanceIDList.prompt = "";
 				attValueList = new ArrayList();
@@ -752,7 +757,7 @@
 						
 						feature = featureSet.features[id] as Feature;
 						instanceIDList.selectedIndex = idList.getItemIndex(id);
-						if (attValueList != null) attValueList.removeAll();
+						if (attValueList != null) attValueList = new ArrayList();
 					}
 					else {
 						instanceIDList.selectedIndex = -1;
@@ -1833,7 +1838,8 @@
 						crsStream.open(crsFile, FileMode.READ);
 						crsEditor.crs = crsStream.readObject();
 					} catch (e:IOError) {
-						trace(e.message);
+						Alert.show(e.message, "Alert", 4, this);
+						return;
 					}
 					crsEditor.setDisplay();
 					
@@ -1909,7 +1915,8 @@
 					mkit = kitStream.readObject();
 					kitStream.close();
 				} catch(e:IOError) {
-					trace("Merge kit open error:" + e);
+					Alert.show("Merge kit open error:" + e, "Alert", 4, this);
+					return;
 				}
 				
 				var pathURL:String = kitFile.url;
@@ -2238,7 +2245,7 @@
 	<s:Label x="469" y="11" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
 	<s:Button id="editCRSButton" x="364" y="56" width="55" height="20" label="edit »"
-			  click="openCRSButton_clickHandler(event)"/>
+			  click="openCRSButton_clickHandler(event)"  />
 	<s:Label id="crsLabel" x="363" y="106" width="142" height="20" backgroundColor="#DADADA"
 			 verticalAlign="middle"/>
 	<s:Label x="426" y="62" text="CRS"/>

@@ -14,27 +14,17 @@ window.moveTo(750,20);
 <body>
 <p id="#Top" class="FirstHeader">Geometry<br/>
   幾何の編集</p>
-<p class="mainSentence">このページは，Editor との連携のもとで，幾何属性や地物同士の関連データの取得と編集を行うためにあります．ここでは，幾何属性について解説し，さらに，このページの操作手順を説明します．最後に表示欄とボタンそれぞれについて，説明します．なお，このテキストを読む前に，関連する講義用スライドを一読することをお勧めします．なお，地物同士の関連については，主としてEditor ページで行いますので，そちらのテキストを読んで下さい．</p>
-<p class="mainSentence"><a href="#slide">講義用スライド</a><br/>
-<a href="#geometry">幾何属性</a><br/>
-<a href="#spatialSchema">空間スキーマ</a><br/>
-<a href="#geomEditing">幾何編集</a><br/>
-<a href="#operation">操作画面</a></p>
-<p class="mainSentence">&nbsp;</p>
-<p id="slide" class="FirstHeader">講義用スライド</p>
-<p class="mainSentence"><a href="../../lectureNotes/jp_pdf/07jpSpatialSchema.pdf" target="_new" class="mainSentence">07 空間スキーマ</a><br/>
-<a href="../../lectureNotes/jp_pdf/09jpReferenceSystem.pdf">09 参照系</a></p>
+<p class="mainSentence">このページは，Editor との連携のもとで，幾何属性や地物同士の関連データの取得と編集を行うためにあります．ここでは，幾何属性について解説し，さらに，このページの操作手順を説明します．最後に表示欄とボタンそれぞれについて，説明します．なお，地物同士の関連については，主としてEditor ページで行いますので，そちらのテキストを読んで下さい．</p>
 <p class="mainSentence">&nbsp;</p>
 <p id="geometry" class="secondHeader">幾何属性</p>
 <p class="mainSentence">幾何属性は，地物がもつ空間的な性質を記述するためにあります．地球上に存在する地物の多くは，点，線または面で表現することができます．例えば，一本一本の樹木は点で代表させることができるでしょうし，海岸線や行政界は線で代表させることができるでしょう．また，田畑や植生の分布範囲は面で表現できるでしょう．ところで一般に地形には凹凸があります．その凹凸を等高線で表すとすれば，高さと関連づけた線が使われます．また，ランダムに分布する，高さをもつ点群を元にして，内挿法で任意の高さを求めるということもあります．つまり，幾何属性は，地図として地物をグラフィックに表現するために使われますが，空間解析を行うためのデータとしても，使われます．</p>
 <p class="mainSentence">それでは，点，線，そして面はどのように記述するのでしょうか．また，幾何属性は点，線，そして面だけなのでしょうか．これから，幾何属性について，説明します．なお，gittokでは2次元までの幾何属性を扱います．ここでいう2次元とは，もとの図形を平面に変形できる，という意味です．例えば，球面を平面に変形することはできません．従って，球面は2次元ではないことになります．しかし，お椀のようなかたちは，伸ばして平面にすることができます．これは2次元です．細かい所を無視すれば，地表も2次元の平面に投影できます．つぎに，直線に変形できる単純な曲線は1次元です．さらに，点はそのまま0次元です．このような次元は位相次元と呼ばれます．これに対して (x, y, z)は３次元座標だ，というときの次元は，座標成分の数を示すことから，座標次元といわれます．</p>
-<p class="mainSentence">2次元までの空間に投影できる図形は点（０次元），曲線（1次元），曲面（２次元），そして，それらの組み合わせです．ここで，点，そして単純な線や面のことを単体 (simplex) と呼ぶことがあります．線の場合は交差箇所がないこと，面の場合は，さきほど説明したように，平面に投影できることが条件になります．単体を組み合わせた図形は複体 (complex) といわれます．水道管のネットワークなどは，複数の交点と複数の線でできる図形（グラフといいます）なので，1次元複体です．gittokでは，単体のことを幾何プリミティブ (geometric primitive)，複体のことを幾何複体(geometric complex)と呼んでいます．また，幾何属性は相互に関連性をもちます．このような，幾何属性のスキーマのことをgittokでは空間スキーマと呼んでいます．また，gittokでは地理情報標準 『JIS X 7107 空間スキーマ』にならって，単体は，自分の範囲を規定する境界を含まない（開いた単体），としています．そして複体は境界も含むと考えます．したがって，最も簡単な複体は両端点が一致する曲線と端点の組み合わせです（講義用スライド「<a href="../../lectureNotes/jp_pdf/07jpSpatialSchema.pdf" target="_new">07 空間スキーマ</a>」に図示を含む説明があります）．</p>
-<p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
+<p class="mainSentence">2次元までの空間に投影できる図形は点（０次元），曲線（1次元），曲面（２次元），そして，それらの組み合わせです．ここで，点，そして単純な線や面のことを単体 (simplex) と呼ぶことがあります．線の場合は交差箇所がないこと，面の場合は，さきほど説明したように，平面に投影できることが条件になります．単体を組み合わせた図形は複体 (complex) といわれます．水道管のネットワークなどは，複数の交点と複数の線でできる図形（グラフといいます）なので，1次元複体です．gittokでは，単体のことを幾何プリミティブ (geometric primitive)，複体のことを幾何複体(geometric complex)と呼んでいます．また，幾何属性は相互に関連性をもちます．このような，幾何属性のスキーマのことをgittokでは空間スキーマと呼んでいます．また，gittokでは地理情報標準 『JIS X 7107 空間スキーマ』にならって，単体は，自分の範囲を規定する境界を含まない（開いた単体），としています．そして複体は境界も含むと考えます．したがって，最も簡単な複体は両端点が一致する曲線と端点の組み合わせです．</p>
 <p class="mainSentence">&nbsp;</p>
 <p id="spatialSchema" class="secondHeader">空間スキーマ</p>
 <p class="mainSentence">空間スキーマは，幾何プリミティブと幾何複体からなりますが，それ以外に，プリミティブや複体を成り立たせるために必要な補助的なプリミティブを含みます．実際にgittokが使用している空間スキーマのなかで，基本となる構造を以下に示します．</p>
-<p class="mainSentence"><img src="../figures/SpatialSchema_Basic.png" width="600" height="382" alt="spatial schema" /></p>
-<p class="mainSentence">図1.gittok の空間スキーマの概要</p>
+<p class="mainSentence"><img src="../figures/SpatialSchema.png" width="650" height="462" alt="spatialSchema" /></p>
+<p class="mainSentence">図1.gittok の空間スキーマ</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="secondHeader">SG_Object（空間幾何オブジェクト ）</p>
 <p class="mainSentence">SG_Object は，幾何プリミティブ及び幾何複体の親になる空間スキーマ全体のルートクラスです．このクラスには，幾何要素であればおしなべてもたなければいけない属性が含まれています．</p>
@@ -110,7 +100,7 @@ y軸上の原点からの長さ．</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="secondHeader">CoordinateArray（座標列）</p>
 <p class="mainSentence">座標列は一つ以上の座標の配列です．gittokでは，ArrayListという型を継承して表現しています．ArrayListは可変長の配列なので，任意の数の座標を入れることができます．</p>
-<p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
+<p class="mainSentence">&nbsp;</p>
 <p id="geomEditing" class="secondHeader">幾何編集</p>
 <p class="mainSentence">Geometry and Association ページは，幾何データ及び地物間の関連の取得と編集を行うためにある．Editor で生成される地物インスタンスと結びつけることによって，幾何データはインスタンスの空間属性になります．ここでは，幾何データの取得及び編集のための手順を解説します．</p>
 <p class="mainSentence"><span class="thirdHeader">データ取得の準備</span><br/>
@@ -195,7 +185,6 @@ y軸上の原点からの長さ．</p>
 </p>
 <p class="mainSentence">一度取得した幾何属性を地物インスタンスから削除する場合は，以下の手順で行います．</p>
 <p class="mainSentence">1. Attribute ID ValueList の，該当する属性の行を選択し，delete ボタンを押す．すると，その行が削除される．さらに，幾何データも削除する場合は，<span class="thirdHeader">幾何データの削除</span>を参照すること．</p>
-<p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p id="operation" class="secondHeader">Geometry</p>
 <p class="mainSentence">Geometry ページ の操作画面は，大きく，標定ボックスと，Geometry Editing Panel に分けられる．標定ボックスは標定準備のための Preparation box と標定に使う Orientation boxからなる．これらは画面座標と平面座標の換算を可能にする標定を行うためにある．一方，Geometry Editing Panel は幾何データの取得と編集を行うためにある．</p>
@@ -261,7 +250,6 @@ y軸上の原点からの長さ．</p>
 今あなたが読んでいるドキュメントが表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
   You can read the tutorial written in English.</p>
-<p class="mainSentence"><a href="#Top">このページのTopに戻る．</a></p>
 <p class="mainSentence">&nbsp;</p>
 <p class="mainSentence">&nbsp;</p>
 <p class="mainSentence">&nbsp;</p>

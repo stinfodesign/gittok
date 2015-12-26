@@ -12,7 +12,7 @@ package portrayal.gpm
 		public override function getXML():XML {
 			var str:String = '<QualitativeModifier stringValue="' + stringValue + '">';
 			str += '<inheritance>';
-			str += super.getXML().toString();
+			str += super.getXML().toXMLString();
 			str += '</inheritance>';
 			str += '</QualitativeModifier>';
 			

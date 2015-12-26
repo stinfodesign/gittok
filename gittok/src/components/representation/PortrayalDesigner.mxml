@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="700"
-		  title="Cartographer &gt;&gt;" backgroundColor="#c5c5c5"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="688"
+		  title="Portrayal Schema Designer"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
 		<s:RadioButtonGroup id="attSelectGroup"/>
@@ -28,8 +28,8 @@
 			import mx.controls.Image;
 			import mx.events.FlexEvent;
 			
-			import portrayal.labelStyle.*;
 			import portrayal.gpm.*;
+			import portrayal.labelStyle.*;
 			import portrayal.symbol.*;
 			import portrayal.symbolStyle.*;
 			
@@ -59,6 +59,8 @@
 			private var fpUnits:Dictionary = new Dictionary();
 			private var ftPtlUnit:FeaturePortrayalUnit;
 			
+			private var selectedAttType:AttributeType;
+			
 			private var thematicModifier:ThematicCondition;
 			
 			[Bindable]
@@ -72,6 +74,18 @@
 			
 			[Bindable]
 			public var attributeNameArray:ArrayList = new ArrayList();
+			
+			[Bindable]
+			public var geomAttributeArray:ArrayList;
+			
+			[Bindable]
+			public var refGeomPrompt:String = "";
+			
+			[Bindable]
+			public var sagVisible:Boolean;
+			
+			[Bindable]
+			public var lagVisible:Boolean;
 			
 			[Bindable]
 			public var symStyleArray:ArrayList;
@@ -95,7 +109,10 @@
 			public var generalModifierArray:ArrayList;
 			
 			[Bindable]
-			public var symLabArray:ArrayList;
+			public var symbolArray:ArrayList;
+			
+			[Bindable]
+			public var labelArray:ArrayList;
 			
 			[Bindable]
 			public var balloonAttList:ArrayList;
@@ -125,6 +142,8 @@
 				
 				// Portrayal Dictionary
 				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);	
+				registerClassAlias("portrayal.portrayalStyle.AttributeSymbolPair", AttributeSymbolPair);
+				registerClassAlias("portrayal.portrayalStyle.AttributeLabelPair", AttributeLabelPair);				
 				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);								
 				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);				
 				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
@@ -167,7 +186,7 @@
 					file.addEventListener(Event.SELECT, openAps);
 					file.browseForOpen("Open ApplicationSchema  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}												
 			}
 			
@@ -198,7 +217,7 @@
 					file.addEventListener(Event.SELECT, openSym);
 					file.browseForOpen("Open SymbolStyleDictionary  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}												
 			}
 			
@@ -248,7 +267,7 @@
 					file.addEventListener(Event.SELECT, openLabelStyle);
 					file.browseForOpen("Open labelStyleDicFile  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}																
 			}
 			
@@ -533,6 +552,17 @@
 			{
 				var attType:AttributeType = attributeNameDropDown.selectedItem as AttributeType;
 				
+				if (attType.dataType.search("SG_") > -1) {
+					sagVisible = true;
+					lagVisible = false;					
+				}
+				else {
+					sagVisible = false;
+					lagVisible = true;
+				}
+				
+				selectedAttType = attType;  // this variable is prepared for the tabBar - general.
+				
 				var fType:FeatureType    = featureTypeDropDown.selectedItem as FeatureType;
 				
 				attributeTypeLabel.text = attType.dataType;
@@ -558,16 +588,44 @@
 					thematicModifierTypeArray.addItem(aType);
 				}
 				thematicModifierDropDownList.prompt = "Select att";
-
+				
+				// if generalModifiers were already defined, then
+				if (ftPtlUnit.generalModifiers == null) return;
+				
 				var asPair:AttributeStylePair = ftPtlUnit.generalModifiers[attType.name] as AttributeStylePair;
+				
+				if (asPair is AttributeSymbolPair) {
+					symbolArray = new ArrayList();
+					symbolArray.addItem(asPair);
+				}
+				else {
+					labelArray = new ArrayList();
+					labelArray.addItem(asPair);
 					
-				symLabArray = new ArrayList();
-				symLabArray.addItem(asPair);				
+					var n:int = fType.attributeTypes.length;
+					geomAttributeArray = new ArrayList();
+					for (i = 0; i < n; i++) {
+						var wattType:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+						if (wattType.dataType.search("SG_") > -1) {
+							geomAttributeArray.addItem(wattType);
+						}
+					}
+					
+					var alPair:AttributeLabelPair = asPair as AttributeLabelPair;
+					if (alPair == null) return;
+					
+					var refGeomType:AttributeType = fType.getAttributeTypeByName(alPair.refGeomAttName);
+					refGeomPrompt = refGeomType.name;
+				}
 			}
 			
 			protected function setAttributeTypeAsBalloon(attType:AttributeType):void {
 				if (balloonAttList == null) {
 					balloonAttList = new ArrayList();
+				}
+				if (attType.dataType.search("SG_") > -1) {
+					Alert.show("Geometry cannot be represented on the info. page.", "Alert", 4, this);
+					return;
 				}
 				balloonAttList.addItem(attType);
 				ftPtlUnit.infoPages[attType.name] = attType;
@@ -593,9 +651,11 @@
 				var fType:FeatureType = featureTypeArray.getItemAt(featureTypeDropDown.selectedIndex) as FeatureType;
 				
 				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
-				if (ftPtlUnit != null) {
+				
+				thematicModifierTypeLabel.text = atType.dataType;
+
+				if (ftPtlUnit.thematicModifier != null) {
 					thematicModifier = ftPtlUnit.thematicModifier;
-					thematicModifierTypeLabel.text = atType.dataType;
 					
 					if (atType.dataType == "Bool") {
 						thematicViewStack.selectedIndex = 0;
@@ -796,7 +856,7 @@
 				try {
 					file = new File();
 					var filter:FileFilter = new FileFilter("Portrayal Schema", "*.psc");
-					file.addEventListener(Event.SELECT, saveFile);
+					file.addEventListener(Event.SELECT, savePortrayalSchema);
 					file.browseForSave("Save file");
 					
 				} catch (error:IOError) {
@@ -804,7 +864,7 @@
 				} 
 			}
 			
-			private function saveFile(event:Event):void {
+			private function savePortrayalSchema(event:Event):void {
 				var startIndex:int = file.nativePath.length - 4;
 				var suffix:String = file.nativePath.slice(startIndex);
 				if (suffix != ".psc") file.nativePath += ".psc";
@@ -814,10 +874,10 @@
 				
 				stream.open(file, FileMode.WRITE);
 				portrayalSch = new PortrayalSchema();
-				portrayalSch.applicationSchema = applicationSchemaFile.name;
-				portrayalSch.symbolStyleDictionary = symbolStyleDicFile.name;
-				portrayalSch.labelStyleDictionary  = labelStyleDicFile.name;
-				portrayalSch.fpUnits		   = fpUnits;
+				portrayalSch.applicationSchema 		= applicationSchemaFile.name;
+				portrayalSch.symbolStyleDictionary 	= symbolStyleDicFile.name;
+				portrayalSch.labelStyleDictionary  	= labelStyleDicFile.name;
+				portrayalSch.fpUnits		   		= fpUnits;
 				stream.writeObject(portrayalSch);
 				stream.close();
 			}
@@ -827,14 +887,14 @@
 				try {
 					file = new File();
 					var filter:FileFilter = new FileFilter("Portrayal Schema", "*.psc");
-					file.addEventListener(Event.SELECT, openFile);
+					file.addEventListener(Event.SELECT, openPortrayalSchema);
 					file.browseForOpen("Open file  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 			}
 			
-			private function openFile(event:Event):void {
+			private function openPortrayalSchema(event:Event):void {
 				dictionaryLabel.text = file.name;
 				var url:String = file.url;
 				var pathArray:Array = url.split("/");
@@ -860,7 +920,7 @@
 					
 					//portrayals.setXML(portrayals.getXML());					stream.close();
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}
 				
 				apsNameLabel.text = applicationSchemaFile.name;
@@ -910,7 +970,7 @@
 				}
 				
 				var fid:int = featureTypeDropDown.selectedIndex
-				var fType:FeatureType = featureTypeArray.getItemAt(fid) as FeatureType;
+				var fType:FeatureType = featureTypeArray.getItemAt(fid) as FeatureType;		
 				
 				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
 				if (ftPtlUnit == null) {
@@ -921,33 +981,59 @@
 				var aid:int = attributeNameDropDown.selectedIndex;
 				
 				var attType:AttributeType = attributeNameArray.getItemAt(aid) as AttributeType;
-				var asPair:AttributeStylePair = new AttributeStylePair();
-				asPair.attName = attType.name;
-				asPair.attType = attType.dataType;
-					
+				
+				if (attType.dataType.search("SG_") > -1) {
+					symbolAssignGroup.visible = true;
+					labelAssignGroup.visible = false;
+				}
+				else {
+					symbolAssignGroup.visible = false;
+					labelAssignGroup.visible = true;	
+				}
+	
 				if (symGrid.selectedIndex > -1) {
+					var asPair:AttributeSymbolPair = new AttributeSymbolPair();
+					asPair.attName = attType.name;
+					asPair.attType = attType.dataType;
+
 					var symObj:Object = symStyleArray.getItemAt(symGrid.selectedIndex) as Object;
-					asPair.symLabName = symObj["name"];
-					asPair.symLabType = symObj["type"];
+					asPair.symName = symObj["name"];
+					asPair.symType = symObj["type"];
+					
+					if (ftPtlUnit.generalModifiers == null) ftPtlUnit.generalModifiers = new Dictionary();
+					ftPtlUnit.generalModifiers[attType.name] = asPair;	
+					
+					symbolArray = new ArrayList();	// Becasue data provider shall be an array.
+					symbolArray.addItem(asPair);
+					
+					symGrid.selectedIndex = -1;
 				}
 					
 				if (labelGrid.selectedIndex > -1) {
+					var alPair:AttributeLabelPair = new AttributeLabelPair();
+					alPair.attName = attType.name;
+					alPair.attType = attType.dataType;
+					
 					var labelObj:Object = labelStyleArray.getItemAt(labelGrid.selectedIndex) as Object;
-					asPair.symLabName = labelObj["name"];
-					asPair.symLabType = "Label"; 
+					alPair.labelName = labelObj["name"];
+					alPair.labelType = "Label"; 
+					
+					if (ftPtlUnit.generalModifiers == null) ftPtlUnit.generalModifiers = new Dictionary();					
+					ftPtlUnit.generalModifiers[attType.name] = alPair;	
+					
+					labelArray = new ArrayList();	// Becasue data provider shall be an array.
+					labelArray.addItem(alPair);
+					
+					labelGrid.selectedIndex = -1;
 				}
 				
-				ftPtlUnit.generalModifiers[attType.name] = asPair;						
-				fpUnits[ftPtlUnit.featureTypeID] = ftPtlUnit;
-				
-				symLabArray = new ArrayList();
-				symLabArray.addItem(asPair);				
+				fpUnits[ftPtlUnit.featureTypeID] = ftPtlUnit;				
 			}
 			
 
 			protected function clearGeneralButton_clickHandler(event:MouseEvent):void
 			{
-				symLabArray.removeItemAt(0);
+				symbolArray.removeItemAt(0);
 				
 				var aid:int = attributeNameDropDown.selectedIndex;
 				var attType:AttributeType = attributeNameArray.getItemAt(aid) as AttributeType;
@@ -967,6 +1053,23 @@
 				navigateToURL(request);
 			}
 						
+			protected function refGeomAttList_changeHandler(event:IndexChangeEvent):void
+			{
+				var geomAttType:AttributeType = geomAttributeArray.getItemAt(refGeomAttList.selectedIndex) as AttributeType;
+				var alPair:AttributeLabelPair = ftPtlUnit.generalModifiers[selectedAttType.name] as AttributeLabelPair;
+				if (alPair == null) {
+					Alert.show("Select label style before setting location.", "Alert", 4, this);
+					return;
+				}
+				alPair.refGeomAttName = geomAttType.name;
+				ftPtlUnit.generalModifiers[selectedAttType.name] = alPair;
+			}
+			
+			protected function tabBar_clickHandler(event:MouseEvent):void
+			{
+
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -1012,7 +1115,7 @@
 		</s:columns>
 	</s:DataGrid>
 	<s:Label x="261" y="458" text="Label Styles"/>
-	<mx:Image id="symbolImage" x="389" y="472" width="180" height="180"/>
+	<mx:Image id="symbolImage" x="389" y="472" width="165" height="165"/>
 	<s:Label x="392" y="457" text="Sample"/>
 	<s:DropDownList id="featureTypeDropDown" x="31" y="158" width="143"
 					change="featureTypeDropDown_changeHandler(event)"
@@ -1020,7 +1123,7 @@
 					prompt="Select Type"></s:DropDownList>
 	<s:Label x="30" y="145" fontSize="10" text="Feature Types"/>
 	
-	<s:TabBar id="tabBar" x="30" y="225" height="20" dataProvider="{myViewStack}"/>	
+	<s:TabBar id="tabBar" x="30" y="225" height="20" dataProvider="{myViewStack}" click="tabBar_clickHandler(event)"/>	
 	
 	<mx:ViewStack id="myViewStack" 
 				  borderStyle="solid" width="536" height="197" x="30" y="244" backgroundColor="#fefee5"> 
@@ -1049,7 +1152,7 @@
 					<s:Label x="99" y="96" text="Null"/>
 				</s:NavigatorContent>
 				<s:NavigatorContent id="stringStack" width="100%" height="100%" label="characterString">
-					<s:DataGrid id="qualitativeModifierGrid" x="18" y="19" width="325" height="95"
+					<s:DataGrid id="qualitativeModifierGrid" x="18" y="19" width="325" height="101"
 								dataProvider="{qualitativeModifierArray}" editable="true"
 								requestedRowCount="4" fontSize="11">
 						<s:columns>
@@ -1060,7 +1163,7 @@
 											  headerText="sym name" resizable="false"
 											  sortable="false"></s:GridColumn>
 								<s:GridColumn width="100" dataField="symType" editable="false"
-											  headerText="sym type" resizable="false"
+											  headerText="sym type" resizable="true"
 											  sortable="false"></s:GridColumn>
 							</s:ArrayList>
 						</s:columns>
@@ -1101,20 +1204,44 @@
 				  label="assign" click="assignGeneralButton_clickHandler(event)"/>
 			<s:Button id="clearGeneralButton" x="448" y="30" width="60" height="20" label="clear"
 					  click="clearGeneralButton_clickHandler(event)"/>
+						
+			<s:Group id="symbolAssignGroup" visible="{sagVisible}">
+				<s:Label x="66" y="23" width="165" height="20" text="Symbol style "/>
+				<s:DataGrid id="symbolAssignGrid" x="65" y="42" width="240" height="48" fontSize="11"
+							dataProvider="{symbolArray}"
+							requestedRowCount="1">
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="symName" headerText="symbol name"></s:GridColumn>
+							<s:GridColumn dataField="symType" headerText="symbol type"></s:GridColumn>
+							
+						</s:ArrayList>
+					</s:columns>
+				</s:DataGrid>				
+			</s:Group>
 			
-			<s:DataGrid id="symLabGrid" x="140" y="80" width="240" height="45" fontSize="11"
-						dataProvider="{symLabArray}"
-						requestedRowCount="1">
-				<s:columns>
-					<s:ArrayList>
-						<s:GridColumn dataField="symLabName" headerText="sym/lab Name"></s:GridColumn>
-						<s:GridColumn dataField="symLabType" headerText="sym/lab Type"></s:GridColumn>
+			<s:Group id="labelAssignGroup" x="0" y="94" height="100" visible="{lagVisible}">
+				<s:Label x="65" y="10" text="Label style"/>
+				<s:DataGrid id="labelAssignGrid" x="65" y="23" width="240" height="48"
+							dataProvider="{labelArray}"
+							requestedRowCount="1">
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="labelName" headerText="label name"></s:GridColumn>
+							<s:GridColumn dataField="labelType" headerText="label type" resizable="false"
+										  sortable="false"></s:GridColumn>
+						</s:ArrayList>
+					</s:columns>					
+				</s:DataGrid>
+				
+				<s:Label x="320" y="31" text="Reference geometry"/>
+				<s:DropDownList id="refGeomAttList" x="320" y="48" width="124"
+								change="refGeomAttList_changeHandler(event)"
+								dataProvider="{geomAttributeArray}" 
+								prompt="{refGeomPrompt}"
+							 	labelField="name"></s:DropDownList>			
+			</s:Group>
 
-					</s:ArrayList>
-				</s:columns>
-			</s:DataGrid>
-			<s:Label x="140" y="52" width="165" height="27" fontSize="11"
-					 text="Symbol/label style &#xd;for the attribute modification"/>
 		</s:NavigatorContent>
 		
 	</mx:ViewStack>

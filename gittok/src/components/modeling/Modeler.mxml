@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="470" height="270" 
-		  backgroundColor="#c5c5c5"
+		  title="Application Schema Modeler"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -75,7 +75,7 @@
 					//file.addEventListener(Event.CANCEL, openClose);
 					file.browseForOpen("Open file    [キャンセル:CANCEL  選択:SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}												
 			}
 			
@@ -85,7 +85,6 @@
 			
 			private function openAps(event:Event):void {
 				var apps:ApplicationSchema = new ApplicationSchema();
-				
 				stream.open(file, FileMode.READ);
 				apps = stream.readObject();
 				featureTypes = apps.featureTypes;
@@ -115,7 +114,7 @@
 					file.addEventListener(Event.SELECT, saveAps);
 					file.browseForSave("Save file    [キャンセル:CANCEL  保存:SAVE]");
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				} 				
 			}
 			

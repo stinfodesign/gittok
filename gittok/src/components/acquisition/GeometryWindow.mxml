@@ -2,7 +2,6 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="637" height="638" minWidth="637" minHeight="638" 
-		  backgroundColor="#c5c5c5"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -1439,14 +1438,26 @@
 					}
 					
 					// open accuracy window
-					accuracyWindow = new AccuracyWindow();
-					accuracyWindow.ap = affineParam;
-					accuracyWindow.open();
-					accuracyWindow.addEventListener(Event.CLOSE, accuracyWindowClose);
-					return;
+					try {
+						accuracyWindow = new AccuracyWindow();
+						accuracyWindow.ap = affineParam;
+						accuracyWindow.open();
+						//accuracyWindow.addEventListener(AIREvent.WINDOW_ACTIVATE, accuracyWindowActivated);
+						accuracyWindow.addEventListener(Event.CLOSE, accuracyWindowClose);
+					} 
+					catch (error:Error) {
+						Alert.show("Accuracy window did not open: " + error.message, "Alert", 4, this);
+					}
+
 				}
 				
 			}
+			
+			/*
+			protected function accuracyWindowActivated(event:Event):void {
+				trace(event.toString());
+			}
+			*/
 			
 			protected function accuracyWindowClose(event:Event):void {
 				if (accuracyWindow.isAccepted) {
@@ -1474,12 +1485,16 @@
 					Alert.show("Get parameters before.", "Error", 4, this);
 					return;
 				}
-				
-				accuracyWindow = new AccuracyWindow();
-				accuracyWindow.ap = kit.affineParam;
-				affineParam = kit.affineParam;
-				accuracyWindow.open();
-				accuracyWindow.addEventListener(Event.CLOSE, accuracyWindowClose);
+				try {
+					accuracyWindow = new AccuracyWindow();
+					accuracyWindow.ap = kit.affineParam;
+					affineParam = kit.affineParam;
+					accuracyWindow.open();
+					accuracyWindow.addEventListener(Event.CLOSE, accuracyWindowClose);
+				} 
+				catch (error:Error) {
+					Alert.show("Quality window did not open: " + error.message, "Alert", 4, this);
+				}
 			}
 			
 			public function showAssociation(association:Association):void
@@ -1606,25 +1621,25 @@
 					</s:fill>
 				</s:Rect>
 				<s:TextInput x="193" y="31" width="76" id="controlIDInput"/>
-				<s:Button x="373" y="15" label="get parameters »" id="getParamButton" chromeColor="#dadada" 
+				<s:Button x="373" y="15" id="getParamButton" label="get parameters »"
 						  click="getParamButton_clickHandler(event)" enabled="{getParamEnable}"/>
-				<s:Button id="qualityButton" x="373" y="42" width="111" label=" show quality »"
+				<s:Button x="373" y="42" id="qualityButton" width="111" label="show quality »"
 						  click="qualityButton_clickHandler(event)"/>
 				
 			</s:Group>
 		</s:NavigatorContent> 		
 	</mx:ViewStack> 	
 	
-	<s:Panel id="geometryPanel" left="21" right="112" top="168" bottom="38" chromeColor="#444444"
-			 dropShadowVisible="false" title="Geometry Editing Panel" color="#ffffff">
+	<s:Panel id="geometryPanel" left="21" right="112" top="168" bottom="38"
+			 dropShadowVisible="false" title="Geometry Editing Panel">
 		<s:Button id="resetButton" x="460" y="-26" width="35" height="20" label="-"
-				  click="resetButton_clickHandler(event)" chromeColor="#dadada" color="#000000" cornerRadius="2"/>
+				  click="resetButton_clickHandler(event)" />
 		<s:Button id="largerButton" x="422" y="-26" width="35" height="20" label="&lt;"
-				  click="largerButton_clickHandler(event)" chromeColor="#dadada" color="#000000" cornerRadius="2"/>
+				  click="largerButton_clickHandler(event)" />
 		<s:Button id="smallerButton" x="384" y="-26" width="35" height="20" label="&gt;"
-				  click="smallerButton_clickHandler(event)" chromeColor="#dadada" color="#000000" cornerRadius="2"/>
+				  click="smallerButton_clickHandler(event)" />
 		<s:Button id="dragButton" x="346" y="-26" width="35" height="20" label="off"
-				  click="dragButton_clickHandler(event)" chromeColor="#dadada" color="#000000" cornerRadius="2"/>
+				  click="dragButton_clickHandler(event)" />
 		<s:HSlider x="264" y="-20" width="68" id="alphaSlider" minimum="0" maximum="1" stepSize="0.05" value="1" 
 				   change="alphaSlider_changeHandler(event)" chromeColor="#dadada"/>
 		<s:Group clipAndEnableScrolling="true" width="100%" height="100%" visible="true" id="geometryBox" 

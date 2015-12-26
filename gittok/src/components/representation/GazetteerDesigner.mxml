@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
-		  backgroundColor="#c5c5c5"
+		  title="Gazetteer Designer"
 		  creationComplete="initializeApp()"
 		  width="360" height="466">
 	<fx:Declarations>
@@ -26,8 +26,8 @@
 			
 			import instanceModel.*;
 			
-			import locationReference.GazetteItem;
-			import locationReference.GazetteerType;
+			import locationReference.LocationInstance;
+			import locationReference.Gazetteer;
 			
 			import gfm.*;
 			import math.*;
@@ -51,7 +51,7 @@
 			private var applicationSchema:ApplicationSchema;
 			private var featureTypes:Dictionary = new Dictionary();
 			
-			private var gazetteer:GazetteerType;			
+			private var gazetteer:Gazetteer;			
 			private var fType:FeatureType;
 			private var	geoNameType:AttributeType;
 			private var positionType:AttributeType;
@@ -138,8 +138,8 @@
 				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);	
 				
 				// Gazetteer
-				registerClassAlias("locationReference.GazetteItem", GazetteItem);
-				registerClassAlias("locationReference.Gazetteer", GazetteerType);
+				registerClassAlias("locationReference.LocationInstance", LocationInstance);
+				registerClassAlias("locationReference.Gazetteer", Gazetteer);
 				
 			
 				this.move(350, 460);
@@ -153,7 +153,7 @@
 					file.addEventListener(Event.SELECT, openKit);
 					file.browseForOpen("Open Kit  [キャンセル: CANCEL, 選択: SELECT]", [filter]);
 				} catch (error:IOError) {
-					trace(error.message);
+					Alert.show(error.message, "Alert", 4, this);
 				}												
 			}
 			
@@ -279,6 +279,16 @@
 					var posList:ArrayList = feature.attributes[positionType.name] as ArrayList;
 					var argObj:Object = new Object();
 					
+					if (posList == null) {
+						Alert.show("There is no position list in the kit.", "Alert", 4, this);
+						return;
+					}
+					
+					if (posList.length == 0) {
+						Alert.show("No position in the position list", "Alert", 4 , this);
+						return;
+					}
+					
 					var pos:* = posList.getItemAt(0);
 					if (pos is SG_Point) positionArray = posList;
 					if (pos is SG_Curve) {
@@ -306,7 +316,7 @@
 						point = Center.centerOfPoints(argObj);
 					}
 					
-					var gazetteItem:GazetteItem = new GazetteItem;
+					var gazetteItem:LocationInstance = new LocationInstance;
 					gazetteItem.geoName = geoName;
 					gazetteItem.position = point.position;
 					gazetteArray.addItem(gazetteItem);
@@ -324,13 +334,13 @@
 			}
 			
 			private function saveGazet(event:Event):void {	
-				var gazetteer:GazetteerType = new GazetteerType();
+				var gazetteer:Gazetteer = new Gazetteer();
 				gazetteer.kitURL = kitURL; // the name of the kit file
 				gazetteer.featureType = fType;
 				gazetteer.geoNameType = geoNameType;
 				gazetteer.positionType = positionType;
-				gazetteer.gazetteItemList = gazetteArray;
-				trace(gazetteer.getXML().toXMLString());
+				gazetteer.locationInstances = gazetteArray;
+				//trace(gazetteer.getXML().toXMLString());
 				
 				var startIndex:int = file.nativePath.length - 4;
 				var suffix:String = file.nativePath.slice(startIndex);
@@ -342,7 +352,7 @@
 					stream.writeObject(gazetteer);
 					stream.close();
 				} catch (e:IOError) {
-					trace("Gazetteer close error:" + e);
+					Alert.show("Gazetteer close error:" + e, "Alert", 4, this);
 				}
 				
 				gazetteerLabel.text = file.name;
@@ -372,7 +382,7 @@
 					gazetteer = stream.readObject();
 					stream.close();
 				} catch(e:IOError) {
-					trace("gazetteer open error:" + e);
+					Alert.show("gazetteer open error:" + e, "Alert", 4, this);
 				}
 				
 				gazetteerLabel.text = file.name;

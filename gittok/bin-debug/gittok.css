@@ -1,0 +1,40 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+
+global
+{
+	font-family: Arial;
+	vertical-align: middle;
+}
+
+s|Label
+{
+	fontSize: 12px;
+}
+
+s|Window {
+	backgroundColor: #c5c5ca;
+}
+
+s|TextArea {
+	vertical-align: top;
+}
+
+s|Button {
+	fontSize: 12px; 
+	color: White;
+	chromeColor: #50505f;
+	height: 20px;
+}
+
+s|Panel {
+	color: Black;
+	chromeColor: #c5c5cf;
+}
+
+s|DropDownList {
+	contentBackgroundColor: #9a9a9f;
+	color: White;
+}

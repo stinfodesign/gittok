@@ -2,7 +2,6 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" width="480" height="434"
-		  backgroundColor="#c5c5c5" 
 		  title="Label Designer" 
 		  creationComplete="initializeApp()">
 	<s:layout>
@@ -286,6 +285,7 @@
 				}
 				
 				colorSelector.open();
+				colorSelector.initializeWindow(0x000000, 1);
 				colorSelector.addEventListener(Event.CLOSE, setColor);
 			}
 			
@@ -364,11 +364,6 @@
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="428" y="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:Rect x="86" y="176" width="141" height="50">
-		<s:fill>
-			<s:SolidColor color="0xffffff"/>
-		</s:fill>
-	</s:Rect>
 	<s:Rect id="colorRect" x="92" y="182" width="128" height="38">
 		<s:fill>
 			<s:SolidColor id="fillRect" color="0xdadada"/>
