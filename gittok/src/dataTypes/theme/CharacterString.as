@@ -1,6 +1,6 @@
-package dataTypes.simpleDataTypes
+package dataTypes.theme
 {
-	public class CharacterString extends SimpleDataType
+	public class CharacterString extends ThematicDataType
 	{
 		
 		//Constructor

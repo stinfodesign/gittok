@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="286" height="126"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="312" height="164"
 		  title="Web Site Viewer"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
@@ -17,13 +17,29 @@
 			import spark.events.IndexChangeEvent;
 			
 			[Bindable]
+			public var urlObjectArray:ArrayList = new ArrayList();
+			
+			private var urlArrayArray:ArrayList;
+			
+			[Bindable]
 			public var urlArray:ArrayList;
 			
 			public function initializeApp():void {
 				this.move(300, 400);
-				setUrlArray();
+				
+				urlArrayArray = new ArrayList();
+				
+				for (var i:int = 0; i < urlObjectArray.length; i++) {
+					var urlObj:Object = urlObjectArray.getItemAt(i) as Object;
+					urlArrayArray.addItem(urlObj.urlArray);
+				}
+				
+				attributesDropdown.prompt = "Select attribute";
+				urlList.prompt = "Select url";
+
 			}
 			
+			/*
 			public function setUrlArray():void {
 				if (urlArray == null) {
 					urlList.prompt = "";
@@ -37,6 +53,7 @@
 					navigateToURL(new URLRequest(url.value));
 				}					
 			}
+			*/
 			
 			protected function urlList_changeHandler(event:IndexChangeEvent):void
 			{
@@ -61,6 +78,14 @@
 				navigateToURL(request);
 			}
 						
+			protected function attributesDropdown_changeHandler(event:IndexChangeEvent):void
+			{
+				var index:int = attributesDropdown.selectedIndex;
+				
+				var urlObj:Object = urlObjectArray.getItemAt(index) as Object;
+				urlArray = urlObj.urlArray as ArrayList;
+			}
+			
 		]]>
 	</fx:Script>
 	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
@@ -69,9 +94,13 @@
 			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
 	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
 			 color="#969696" text="English"/>
-	<s:DropDownList id="urlList" x="73" y="65" width="205" height="20" 
+	<s:DropDownList id="urlList" x="93" y="92" width="200" height="20" 
 					dataProvider="{urlArray}" labelField="value"
 					change="urlList_changeHandler(event)">
 	</s:DropDownList>
-	<s:Label x="31" y="70" fontSize="11" text="URL list"/>
+	<s:Label x="68" y="97" fontSize="12" text="List"/>
+	<s:Label x="37" y="69" text="Attributes"/>
+	<s:DropDownList id="attributesDropdown" x="93" y="63" width="200"
+				    dataProvider="{urlObjectArray}" labelField="attName"
+					change="attributesDropdown_changeHandler(event)"></s:DropDownList>
 </s:Window>

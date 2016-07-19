@@ -1,6 +1,6 @@
-package dataTypes.simpleDataTypes
+package dataTypes.theme
 {
-	public class Real extends SimpleDataType
+	public class Real extends ThematicDataType
 	{
 		
 		//Constructor

@@ -11,7 +11,7 @@ global
 
 s|Label
 {
-	fontSize: 12px;
+	font-size: 12px;		/* It affects both label and label on a button */
 }
 
 s|Window {
@@ -23,7 +23,6 @@ s|TextArea {
 }
 
 s|Button {
-	fontSize: 12px; 
 	color: White;
 	chromeColor: #50505f;
 	height: 20px;

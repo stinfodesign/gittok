@@ -6,7 +6,7 @@ package instanceModel
 
 	public class FeatureSet
 	{
-		public var typeID:String;
+		public var typeName:String;
 		public var features:Dictionary;
 		
 		public function FeatureSet()
@@ -15,7 +15,7 @@ package instanceModel
 		}
 		
 		public function getXML():XML {
-			var str:String = '<FeatureSet typeID="' + this.typeID + '">';
+			var str:String = '<FeatureSet typeName="' + this.typeName + '">';
 			str += '<features';
 			var flag:Boolean = false;
 			var fids:String = ' idref="';
@@ -34,7 +34,7 @@ package instanceModel
 		}
 		
 		public function setXML(_xml:XML, kit:Kit):void {
-			this.typeID = _xml.@typeID.toString();
+			this.typeName = _xml.@typeName.toString();
 			this.features = new Dictionary();
 			var fsXMLList:XMLList = _xml.features;
 			var fsXML:XML = fsXMLList[0];

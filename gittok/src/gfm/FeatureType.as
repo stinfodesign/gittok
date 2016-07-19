@@ -39,7 +39,7 @@ package gfm
 			links		= new ArrayList();
 			linkedBy 	= new ArrayList();
 			
-			proxyName 		= null;
+			proxyName 		= "";
 		}
 		
 		public function getAttributeTypeByName(attName:String):AttributeType {
@@ -67,7 +67,7 @@ package gfm
 		}
 		
 		public function getProxyType():AttributeType {
-			if (proxyName == null) return null;
+			if (proxyName == "") return null;
 			
 			return getAttributeTypeByName(proxyName);
 		}
@@ -77,7 +77,7 @@ package gfm
 							+ 'definition="' + this.definition + '" '
 							+ 'isAbstract="' + this.isAbstract + '">';
 			
-			if (proxyName != null) {
+			if (proxyName != "") {
 				str += '<proxy idref="';
 				str += proxyName;
 				str += '" />';
@@ -164,16 +164,8 @@ package gfm
 			}
 			
 			// proxy
-			this.proxyName = null;
+			this.proxyName = "";
 			this.proxyName = _xml.proxy.@idref;
-			/*
-			this.proxy = new AttributeType();
-			var proxyXMLList:XMLList = _xml.proxy.AttributeType;
-			if (proxyXMLList.length() > 0) {
-				this.proxy.setXML(proxyXMLList[0]);
-			}
-			else this.proxy = null;
-			*/
 			
 			// operationTypes
 			this.operationTypes = new ArrayList();

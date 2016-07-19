@@ -21,7 +21,7 @@
 			
 			private var appModeller:Modeler;
 			private var manWindow:Manager;
-			private var repOperationWindow:Cartographer;
+			private var cartographerWindow:Cartographer;
 			private var editor:Editor;
 			private var analysisWindow:Analyst;
 			private var exchangeWindow:Exchanger;
@@ -37,6 +37,20 @@
 				management0.visible 	= true;
 				exchange0.visible 		= true;
 				representation0.visible	= true;
+				
+				this.addEventListener(Event.CLOSE, gittokClose);
+				
+			}
+			
+			protected function gittokClose(event:Event):void {
+
+				if (appModeller 		!= null) {appModeller.close(); appModeller = null;}
+				if (manWindow 			!= null) {manWindow.close(); manWindow = null;}
+				if (cartographerWindow	!= null) {cartographerWindow.close(); cartographerWindow = null;}
+				if (editor 				!= null) {editor.close(); editor = null;}
+				if (analysisWindow 		!= null) {analysisWindow.close(); analysisWindow = null;}
+				if (exchangeWindow 		!= null) {exchangeWindow.close(); exchangeWindow = null;}
+				if (actionWindow 		!= null) {actionWindow.close(); actionWindow = null;}
 				
 			}
 			
@@ -58,6 +72,8 @@
 			// Modeling Label Controls
 			protected function modelingLabel_clickHandler(event:MouseEvent):void
 			{
+				if (appModeller != null) return;
+				
 				appModeller = new Modeler();
 				appModeller.title = "gittok >";
 				appModeller.addEventListener(Event.CLOSE, appModellerClose);
@@ -65,10 +81,7 @@
 			}
 			
 			protected function appModellerClose(event:Event):void {
-				if (appModeller.featureWindow != null) {
-					appModeller.featureWindow.close();
-				}
-				if (appModeller.associationWindow != null) 	appModeller.associationWindow.close();
+				if (appModeller == null) return;
 				
 				appModeller = null;
 				modeling0.visible = true;
@@ -78,6 +91,8 @@
 			// Acquisition Label  Controls
 			protected function acquisitionLabel_clickHandler(event:MouseEvent):void
 			{
+				if (editor != null) return;
+				
 				editor = new Editor();
 				editor.open();
 				editor.title = "gittok >";
@@ -85,18 +100,8 @@
 			}
 			
 			protected function editorClose(event:Event):void {
-				if (editor.geometryWindow != null) editor.geometryWindow.close();
-				if (editor.imageWindow 	  != null) editor.imageWindow.close();
-				if (editor.videoWindow 	  != null) editor.videoWindow.close();
-				if (editor.soundWindow 	  != null) editor.soundWindow.close();
-				if (editor.urlWindow 	  != null) editor.urlWindow.close();
-				if (editor.addressWindow  != null) editor.addressWindow.close();
-				if (editor.crsEditor	  != null) editor.crsEditor.close();
-				if (editor.memoWindow     != null) editor.memoWindow.close();
-				if (editor.fromListWindow != null) editor.fromListWindow.close();
-				if (editor.toListWindow	  != null) editor.toListWindow.close();
-				
-				
+				if (editor == null) return;
+								
 				editor = null;
 				acquisition0.visible = true;
 				acquisition1.visible = false;
@@ -105,6 +110,8 @@
 			// Analysis LabelControls
 			protected function analysisLabel_clickHandler(event:MouseEvent):void
 			{
+				if (analysisWindow != null) return;
+				
 				analysisWindow = new Analyst;
 				analysisWindow.open();
 				analysisWindow.title = "gittok >";
@@ -120,6 +127,8 @@
 			// Management Label Conctrols
 			protected function managementLabel_clickHandler(event:MouseEvent):void
 			{
+				if (manWindow != null) return;
+				
 				manWindow = new Manager();
 				manWindow.open();
 				manWindow.title = "gittok >";
@@ -127,6 +136,14 @@
 			}
 			
 			protected function managementWindowClose(event:Event):void {
+				if (manWindow == null) return;
+				
+				if (manWindow.editor 	!= null) manWindow.editor.close();
+				if (manWindow.exchanger != null) manWindow.exchanger.close();
+				if (manWindow.analyst 	!= null) manWindow.analyst.close();
+				if (manWindow.mapEditor != null) manWindow.mapEditor.close();
+				
+				manWindow.editor.close();
 				manWindow = null;
 				management0.visible = true;
 				management1.visible = false;	
@@ -135,6 +152,8 @@
 			// Exchange label controls
 			protected function exchangeLabel_clickHandler(event:MouseEvent):void
 			{
+				if (exchangeWindow != null) return;
+				
 				exchangeWindow = new Exchanger();
 				exchangeWindow.open();
 				exchangeWindow.title = "gittok >";
@@ -142,6 +161,10 @@
 			}
 			
 			protected function exchangeWindowClose(event:Event):void {
+				if (exchangeWindow == null) return;
+				
+				exchangeWindow.close();
+				
 				exchangeWindow = null;
 				exchange0.visible = true;
 				exchange1.visible = false;
@@ -150,23 +173,18 @@
 			// Representation Label Controls
 			protected function representationLabel_clickHandler(event:MouseEvent):void
 			{
-				repOperationWindow = new Cartographer();
-				repOperationWindow.open();
-				repOperationWindow.title = "gittok >";
-				repOperationWindow.addEventListener(Event.CLOSE, repOperationWindowClose);
+				if (cartographerWindow != null) return;
+				
+				cartographerWindow = new Cartographer();
+				cartographerWindow.open();
+				cartographerWindow.title = "gittok >";
+				cartographerWindow.addEventListener(Event.CLOSE, cartographerWindowClose);
 			}
 			
-			protected function repOperationWindowClose(event:Event):void {
-				if (repOperationWindow.symbolDesigner 		!= null) repOperationWindow.symbolDesigner.close(); 
-				if (repOperationWindow.labelDesigner		!= null) repOperationWindow.labelDesigner.close();				
-				if (repOperationWindow.portrayalDesigner 	!= null) repOperationWindow.portrayalDesigner.close();
-				if (repOperationWindow.gazetteerDesigner	!= null) repOperationWindow.gazetteerDesigner.close();
-				if (repOperationWindow.mapEditor		 	!= null) repOperationWindow.mapEditor.close();
-				if (repOperationWindow.listSchemaDesigner	!= null) repOperationWindow.listSchemaDesigner.close();
-				if (repOperationWindow.listViewer		 	!= null) repOperationWindow.listViewer.close();
+			protected function cartographerWindowClose(event:Event):void {
+				if (cartographerWindow == null) return;
 				
-								
-				repOperationWindow = null;
+				cartographerWindow = null;
 				representation0.visible = true;
 				representation1.visible = false;
 				Mouse.cursor = "arrow";
@@ -269,7 +287,7 @@
 			}
 			
 			private function representationMouseOut(event:Event):void {
-				if (repOperationWindow == null && representation1.visible) {
+				if (cartographerWindow == null && representation1.visible) {
 					representation0.visible = true;
 					representation1.visible = false;
 				}
@@ -323,8 +341,7 @@
 			 mouseOut="analysisMouseOut(event)"/>
 	
 	<s:Image id="management0" source="@Embed(source='documents/pictgrams/pictManagement0.png')" x="191" y="338" visible="false"/>
-	<s:Image id="management1" source="@Embed(source='documents/pictgrams/pictManagement1.png')" x="191" y="338" visible="false"/>
-	
+	<s:Image id="management1" source="@Embed(source='documents/pictgrams/pictManagement1.png')" x="191" y="338" visible="false"/>	
 	<s:Label id="managementLabel" x="191" y="338" width="60" height="60" text="" alpha="0"
 			 click="managementLabel_clickHandler(event)"
 			 mouseOver="managementMouseOver(event)"

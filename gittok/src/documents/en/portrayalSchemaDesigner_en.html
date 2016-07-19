@@ -112,27 +112,40 @@ The application schema is opened.</p>
 <p class="mainSentence">Figure 3-2. Label style assigning on Portrayal Schema Designer (general) </p>
 <p class="mainSentence">Thematic attribute can be represented as a label on a map. Assigned label style is displayed on the Label Styles located in the box of general tab as shown in Figure 3-2. A reference position of the label isalso selected from the dropdown list of Reference geometry. The reason to select geometry is that a feature may have moe than one geometric attributes, but the reference position of a label shall be unique. The position will be a center of geometry. If a surface is selected, the position will be gravity center. It a curve is selected, the position will be located at a half distance from the start point of the curve.</p>
 <p class="thirdHeader">FIELDS</p>
-<p class="mainSentence"><strong>Feature Types (editable)</strong><br />
+<p class="mainSentence"><strong>Feature Types (selectable)</strong><br />
   Feature type list for the selection of a feature to be portrayed. The selection is possible on this drop down list. </p>
-<p class="mainSentence"><strong>Attribute Name (editable)</strong><br />
+<p class="mainSentence"><strong>Selected feature types (selectable)</strong><br />
+When the feature type is selected at the Feature Types dropdown list, the selected feature types are shown to this list.</p>
+<p class="mainSentence"><strong>Attribute Name (selectable)</strong><br />
   Attribute type list for the selection of a feature attribute to be portrayed. The selection is possible on this drop down list. </p>
 <p class="mainSentence"><strong>Type</strong><br />
   The data type of selected attribute.</p>
-<p class="mainSentence"><strong>general &gt; Symbol style<br />
+<p class="mainSentence"><strong>general tab &gt; Symbol style (Figure 3-1)<br />
 </strong>Symbol style that is assigned by the selection of the symbol style shown in the Symbol style list located under part of the page.</p>
-<p class="mainSentence"><strong>general &gt; Label style<br />
+<p class="mainSentence"><strong>general tab &gt; Label style (Figure 3-2)<br />
 </strong>Label style that is assigned by the selection of the label style shown in the Label style list located under part of the page.</p>
+<p class="mainSentence"><strong>Selected att. for info. pages</strong><br />
+When the check box 'att. for info. page' is checked, if an attrbute is selected on 'Attribute name' dropdown list, the selected attribute name is listed  on this list so that it is displayed as the information page.</p>
 <span class="mainSentence"><strong>Symbol styles</strong><br />
 Symbol style list for the selection of the symbol style associating a feature attribute. The sample is drown at the right hand side.
 </span>
 <p class="mainSentence"><span class="mainSentence"><strong></strong></span><strong>Label styles</strong><br />
-  Label style list for the selection of the label style associating a feature attribute. The sample is drawn at the right hand side.</p>
-<p class="mainSentence"><strong>Sample</strong><br />
-  A sample of symbol or label style is drawn at this area</p>
+  Label style list for the selection of the label style associating a feature attribute. The sample is drawn at the right hand side.
+</p>
 <p class="mainSentence"><strong>Reference geometry</strong><br />
   Geometric attribute as a reference position of a label is selected at this dropdown list．</p>
+<p class="mainSentence"><strong>Sample</strong><br />
+A sample of symbol or label style is drawn at this area</p>
 <p class="thirdHeader">BUTTONS</p>
-<p class="mainSentence"><strong>general</strong><br />
+<p class="mainSentence"><img src="../figures/upButton.png" width="20" height="20" alt="upButton" /><br />
+When this button is pressed after the selection of the feature type name on the 'Selected feature types' list, the feature type name goes up one line. features at upper line are drown on the map firster than featurea at lower lines.</p>
+<p class="mainSentence"><img src="../figures/downButton.png" width="20" height="20" alt="downButton" /><br />
+When this button is pressed after the selection of the feature type name on the 'Selected feature types' list, the feature type name goes down one line. features at lower line are drown on the map later than featurea at upper lines.</p>
+<p class="mainSentence"><strong>cancel</strong><br />
+An attriute name shown to 'Selected att. for info. page' is removed, when this button is pressed after the selection of the attribute name.</p>
+<p class="mainSentence"><strong>att. for info. page</strong><br />
+When this check box is checked, if an attribute shown to 'Attribute name' drop down list is selected, it is added in 'Selected att. for info. page' list as an attribute to display its information page.</p>
+<p class="mainSentence"><strong>general tab</strong><br />
   This tab is selected for the general-purpose feature modification.</p>
 <p class="mainSentence"><strong>assign</strong><br />
   The style selected in the symbol or label style lists is signed as a modifier of the attribute．</p>

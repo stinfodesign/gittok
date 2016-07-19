@@ -19,7 +19,7 @@
 			
 			import spark.events.TextOperationEvent;
 			
-			public var attWindow:AttributeWindow;
+			public var attributeWindow:AttributeWindow;
 			public var operationWindow:OperationWindow;
 			
 			public var featureTypes:Dictionary;
@@ -77,6 +77,13 @@
 				for each(var fType:FeatureType in featureTypes) {
 					fTypeArray.addItem(fType);
 				}
+				
+				this.addEventListener(Event.CLOSE, featureWindowClose);
+			}
+			
+			protected function featureWindowClose(event:Event):void {
+				if (this.attributeWindow != null) this.attributeWindow.close();
+				if (this.operationWindow != null) this.operationWindow.close();				
 			}
 									
 			protected function isAbstract_clickHandler(event:MouseEvent):void
@@ -167,7 +174,7 @@
 				featureType.attributeTypes = attributeList;
 				
 				//Check proxy definition
-				if (featureType.proxyName == null && isAbstract.selected == false) {
+				if (featureType.proxyName == "" && isAbstract.selected == false) {
 					Alert.show("You need the proxy definition", "Warning", 4, this);
 					return;
 				}
@@ -244,6 +251,7 @@
 				featureType.name = featureTypeName.text;
 				featureType.definition = defArea.text;
 				featureType.isAbstract = isAbstract.selected;
+				featureType.proxyName = proxyLabel.text;
 				
 				featureType.attributeTypes = attributeList;
 				featureType.operationTypes = operationList;
@@ -321,31 +329,36 @@
 			
 			protected function editAttributeButton_clickHandler(event:MouseEvent):void
 			{
-				attWindow = new AttributeWindow();
-				attWindow.open();
-				attWindow.title = "Feature Type >";
-				attWindow.addEventListener(Event.CLOSING, attWindowClosing);
+				if (attributeWindow != null) return;
 				
-				attWindow.attributeList = featureType.attributeTypes;
+				attributeWindow = new AttributeWindow();
+				attributeWindow.open();
+				attributeWindow.title = "Feature Type >";
+				attributeWindow.addEventListener(Event.CLOSING, attributeWindowClosing);
 				
-				attWindow.dataTypeTree.dataProvider = dataTypeMenu;
-				attWindow.featureTypeList = fTypeArray;
+				attributeWindow.attributeList = featureType.attributeTypes
+				
+				attributeWindow.dataTypeTree.dataProvider = dataTypeMenu;
+				attributeWindow.featureTypeList = fTypeArray;
 				
 				//Collect attrubute types
 				if (featureType.parent != null) inheritProperties(featureType.parent);
 				
 				if (inheritedAttList.length > 0)
-					attWindow.inheritedAttGrid.dataProvider = inheritedAttList;
+					attributeWindow.inheritedAttGrid.dataProvider = inheritedAttList;
 			}
 			
-			protected function attWindowClosing(event:Event):void
+			protected function attributeWindowClosing(event:Event):void
 			{
-				attributeList = attWindow.attributeList;
-				//featureType.attributeTypes = attributeList;
+				attributeList = attributeWindow.attributeList;
+				
+				attributeWindow = null;
 			}
 			
 			protected function editOperationButton_clickHandler(event:MouseEvent):void
 			{
+				if (operationWindow != null) return;
+				
 				if (featureType == null) {
 					Alert.show('Select feature type before editing.', 'Warning', Alert.OK, this);
 					return;
@@ -392,7 +405,7 @@
 			private function inheritProperties(fType:FeatureType):void {
 				
 				// inherit proxy
-				if (fType.proxyName != null) featureType.proxyName = fType.proxyName;
+				if (fType.proxyName != "") featureType.proxyName = fType.proxyName;
 				
 				// If parent class already be concerte, it inherits properties of upper classes.
 				// In this case, the inheritance will be duplicated without the check shown below.
@@ -464,15 +477,10 @@
 			protected function operationWindowClosing(event:Event):void 
 			{
 				featureType.operationTypes = operationWindow.selectedOperations;
-
-				/*
-				var m:int = featureType.operationTypes.length;
-				for (var i:int = 0; i < m; i++) {
-					var opType:OperationType = featureType.operationTypes.getItemAt(i) as OperationType;
-				}
-				*/
 				
 				operationList = featureType.operationTypes;
+				
+				operationWindow = null;
 
 			}
 
@@ -512,7 +520,7 @@
 
 			protected function cancelProxyButton_clickHandler(event:MouseEvent):void
 			{
-				featureType.proxyName = null;
+				featureType.proxyName = "";
 				proxyLabel.text = "";
 			}
 			

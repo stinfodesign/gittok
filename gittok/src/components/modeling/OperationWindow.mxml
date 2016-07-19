@@ -105,7 +105,7 @@
 				
 				roleTitle.visible     = false;
 				roleNameLabel.visible = false;
-				multiLabel.visible = false;
+				multiLabel.visible 　　= false;
 			}
 		
 			protected function operationTree_clickHandler(event:ListEvent):void

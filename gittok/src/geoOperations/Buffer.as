@@ -1,6 +1,6 @@
 package geoOperations
 {
-	import dataTypes.simpleDataTypes.*;
+	import dataTypes.theme.*;
 	import dataTypes.spatialGeometry.*;
 	
 	import math.*;

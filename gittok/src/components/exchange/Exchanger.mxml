@@ -14,7 +14,7 @@
 			import coordinateReference.*;
 			
 			import dataTypes.place.*;
-			import dataTypes.simpleDataTypes.*;
+			import dataTypes.theme.*;
 			import dataTypes.spatialGeometry.*;
 			
 			import flash.filesystem.*;
@@ -60,7 +60,7 @@
 				this.move(300, 350);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
 				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
 				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
 				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);

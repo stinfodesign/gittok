@@ -4,6 +4,7 @@ package instanceModel
 	
 	import dataTypes.place.Address;
 	import dataTypes.spatialGeometry.*;
+	import dataTypes.theme.*;
 	
 	import flash.display.Loader;
 	import flash.errors.IOError;
@@ -57,6 +58,9 @@ package instanceModel
 		//address
 		public var addressList:Dictionary;
 		
+		//memo
+		public var memoList:Dictionary;
+		
 		// list of feature and association instances
 		public var featureList:Dictionary;
 		public var associationList:Dictionary;
@@ -84,6 +88,7 @@ package instanceModel
 			ringList			= new Dictionary();
 			
 			addressList			= new Dictionary();
+			memoList			= new Dictionary();
 			
 			/*
 			you cannot create affine param, 
@@ -433,7 +438,8 @@ package instanceModel
 			str += '</ringList>';
 			
 			str += '<addressList>';
-			for each(var addrsObj:Address in this.addressList) {
+			for each(var addrs:Address in this.addressList) {
+				/*
 				var addrs:Address = new Address();
 				
 				if (addrsObj is Object) {
@@ -443,15 +449,23 @@ package instanceModel
 					addrs.zipCode = addrsObj["zipCode"];
 				}
 				else addrs = addrsObj as Address;
+				*/
 				
 				str += addrs.getXML().toXMLString();
 			}
 			str += '</addressList>';
 			
+			str += '<memoList>';
+			for each(var memo:Memo in this.memoList) {				
+				str += memo.getXML().toXMLString();
+			}
+			str += '</memoList>';
+			
+			
 			var fTypes:Dictionary = applicationSchema.featureTypes;
-			var aTypes:Dictionary = applicationSchema.associationTypes;
+			var assoTypes:Dictionary = applicationSchema.associationTypes;
 			var fType:FeatureType;
-			var aType:AssociationType;
+			var assoType:AssociationType;
 			
 			str += '<featureList>';
 			for each(var ft:Feature in this.featureList) {
@@ -462,8 +476,8 @@ package instanceModel
 
 			str += '<associationList>';
 			for each(var asso:Association in this.associationList) {
-				aType = aTypes[asso.typeName] as AssociationType;
-				str += asso.getXML(aType).toXMLString();
+				assoType = assoTypes[asso.typeName] as AssociationType;
+				str += asso.getXML(assoType).toXMLString();
 			}
 			str += '</associationList>';
 
@@ -564,6 +578,17 @@ package instanceModel
 				ad.setXML(adXML);
 				this.addressList[ad.id] = ad;
 			}
+			
+			//memoList
+			this.memoList = new Dictionary();
+			var mmXMLList:XMLList = xml.memoList;
+			var mmListXML:XMLList = mmXMLList[0].child("Memo");
+			for each(var mmXML:XML in mmListXML) {
+				var mm:Memo = new Memo();
+				mm.setXML(mmXML);
+				this.memoList[mm.id] = mm;
+			}
+			
 		
 			//featureList
 			this.featureList = new Dictionary();
@@ -584,7 +609,7 @@ package instanceModel
 			for each(var ftSetXML:XML in ftSetListXML) {
 				var featureSet:FeatureSet = new FeatureSet();
 				featureSet.setXML(ftSetXML, this);
-				featureSetArray[featureSet.typeID] = featureSet;
+				featureSetArray[featureSet.typeName] = featureSet;
 			}
 		
 			// association list
@@ -606,7 +631,7 @@ package instanceModel
 			for each(var assSetXML:* in assSetListXML) {
 				var associationSet:AssociationSet = new AssociationSet();
 				associationSet.setXML(assSetXML, this);
-				associationSetArray[associationSet.typeID] = associationSet;
+				associationSetArray[associationSet.typeName] = associationSet;
 			}
 
 		}

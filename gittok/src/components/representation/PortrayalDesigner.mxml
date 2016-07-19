@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="600" height="688"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="654" height="708"
 		  title="Portrayal Schema Designer"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
@@ -13,8 +13,8 @@
 	<fx:Script>
 		<![CDATA[
 			import dataTypes.place.*;
-			import dataTypes.simpleDataTypes.*;
 			import dataTypes.spatialGeometry.*;
+			import dataTypes.theme.*;
 			
 			import flash.filesystem.*;
 			import flash.utils.Dictionary;
@@ -42,8 +42,11 @@
 			private var symbolStyleDicFile:File;
 			private var labelStyleDicFile:File;
 			
-			public var featureTypes:Dictionary 		= new Dictionary();
-			public var associationTypes:Dictionary 	= new Dictionary();
+			private var applicationSchema:ApplicationSchema;
+			
+			private var featureType:FeatureType;
+			private var featureTypes:Dictionary 		= new Dictionary();
+			private var associationTypes:Dictionary 	= new Dictionary();
 			
 			private var atts:ArrayList;
 			
@@ -65,6 +68,9 @@
 			
 			[Bindable]
 			public var featureTypeArray:ArrayList = new ArrayList();
+			
+			[Bindable]
+			private var selectedFeatureTypeArray:ArrayList = new ArrayList();
 			
 			[Bindable]
 			public var attributeTypeArray:ArrayList = new ArrayList();
@@ -154,7 +160,7 @@
 				registerClassAlias("portrayal.portrayalStyle.QuantitativeModifier", QuantitativeModifier);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
 				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
 				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
 				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
@@ -191,13 +197,11 @@
 			}
 			
 			private function openAps(event:Event):void {
-				var apps:ApplicationSchema = new ApplicationSchema();
-
 				stream.open(file, FileMode.READ);
 
-				apps = stream.readObject();
-				featureTypes = apps.featureTypes;
-				associationTypes = apps.associationTypes; 
+				applicationSchema = stream.readObject();
+				featureTypes = applicationSchema.featureTypes;
+				associationTypes = applicationSchema.associationTypes; 
 				stream.close();
 				apsNameLabel.text = file.name;
 				
@@ -510,30 +514,52 @@
 				symbolImage.addChild(textField);
 			}
 			
-			protected function featureTypeDropDown_changeHandler(event:IndexChangeEvent):void
+			protected function editPortrayalRuleButton_clickHandler(event:MouseEvent):void
 			{
-				var fType:FeatureType = featureTypeDropDown.selectedItem as FeatureType;
+				if (selectedFeatureTypesList.selectedIndex == -1) {
+					Alert.show("Select feature type before.", "Alert", 4, this);
+					return;
+				}
 				
-				var m:int = fType.attributeTypes.length;
+				featureType = selectedFeatureTypesList.selectedItem as FeatureType;
+				
+				if (featureType == null) {
+					Alert.show("Select feature type before.", "Alert", 4, this);
+					return;					
+				}
+				
+				var m:int = featureType.attributeTypes.length;
 				
 				attributeNameArray = new ArrayList();
 				
 				for (var i:int = 0; i < m; i++) {
-					var attType:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+					var attType:AttributeType = featureType.attributeTypes.getItemAt(i) as AttributeType;
 					attributeNameArray.addItem(attType);
 				}
-				if (fType.parent != null) inheritAttributes(fType.parent);				
+				if (featureType.parent != null) inheritAttributes(featureType.parent);				
 								
 				if (attributeTypeLabel != null)
 					attributeTypeLabel.text = "";
 				
-				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
+				ftPtlUnit = fpUnits[featureType.name] as FeaturePortrayalUnit;
 				balloonAttList = new ArrayList();
 				if (ftPtlUnit != null) {
 					for each(attType in ftPtlUnit.infoPages) {
 						balloonAttList.addItem(attType);	
 					}
 				}
+			}
+			
+			protected function featureTypeDropDown_changeHandler(event:IndexChangeEvent):void
+			{
+				var fType:FeatureType = featureTypeDropDown.selectedItem as FeatureType;
+				
+				if (selectedFeatureTypeArray == null) selectedFeatureTypeArray = new ArrayList();
+				
+				selectedFeatureTypeArray.addItem(fType);
+				
+				featureTypeDropDown.selectedIndex = -1;
+				featureTypeDropDown.prompt = "Select type";
 			}
 			
 			private function inheritAttributes(fType:FeatureType):void {
@@ -563,17 +589,17 @@
 				
 				selectedAttType = attType;  // this variable is prepared for the tabBar - general.
 				
-				var fType:FeatureType    = featureTypeDropDown.selectedItem as FeatureType;
+				//var fType:FeatureType    = featureTypeDropDown.selectedItem as FeatureType;
 				
 				attributeTypeLabel.text = attType.dataType;
 				
-				if (fpUnits[fType.name] == null) {
+				if (fpUnits[featureType.name] == null) {
 					ftPtlUnit = new FeaturePortrayalUnit();
-					ftPtlUnit.featureTypeID = fType.name;
-					fpUnits[fType.name] = ftPtlUnit;
+					ftPtlUnit.featureTypeID = featureType.name;
+					fpUnits[featureType.name] = ftPtlUnit;
 				}
 				else {
-					ftPtlUnit = fpUnits[fType.name];
+					ftPtlUnit = fpUnits[featureType.name];
 				}
 				
 				if (balloonCheckBox.selected) {
@@ -602,10 +628,10 @@
 					labelArray = new ArrayList();
 					labelArray.addItem(asPair);
 					
-					var n:int = fType.attributeTypes.length;
+					var n:int = featureType.attributeTypes.length;
 					geomAttributeArray = new ArrayList();
 					for (i = 0; i < n; i++) {
-						var wattType:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+						var wattType:AttributeType = featureType.attributeTypes.getItemAt(i) as AttributeType;
 						if (wattType.dataType.search("SG_") > -1) {
 							geomAttributeArray.addItem(wattType);
 						}
@@ -614,8 +640,8 @@
 					var alPair:AttributeLabelPair = asPair as AttributeLabelPair;
 					if (alPair == null) return;
 					
-					var refGeomType:AttributeType = fType.getAttributeTypeByName(alPair.refGeomAttName);
-					refGeomPrompt = refGeomType.name;
+					var refGeomType:AttributeType = featureType.getAttributeTypeByName(alPair.refGeomAttName);
+					refGeomPrompt = refGeomType.name; 
 				}
 			}
 			
@@ -648,7 +674,12 @@
 				
 				var atType:AttributeType = thematicModifierTypeArray.getItemAt(i) as AttributeType;
 				
-				var fType:FeatureType = featureTypeArray.getItemAt(featureTypeDropDown.selectedIndex) as FeatureType;
+				if (selectedFeatureTypesList.selectedIndex == -1) {
+					Alert.show("Select feature type at 'Selected feature types list before.", "Alert", 4, this);
+					return;
+				}
+				
+				var fType:FeatureType = featureTypeArray.getItemAt(selectedFeatureTypesList.selectedIndex) as FeatureType;
 				
 				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
 				
@@ -876,8 +907,15 @@
 				portrayalSch = new PortrayalSchema();
 				portrayalSch.applicationSchema 		= applicationSchemaFile.name;
 				portrayalSch.symbolStyleDictionary 	= symbolStyleDicFile.name;
-				portrayalSch.labelStyleDictionary  	= labelStyleDicFile.name;
+				portrayalSch.labelStyleDictionary  	= labelStyleDicFile.name;				
 				portrayalSch.fpUnits		   		= fpUnits;
+				
+				portrayalSch.representationOrder = new ArrayList();
+				for (var i:int = 0; i < selectedFeatureTypeArray.length; i++) {
+					var fType:FeatureType = selectedFeatureTypeArray.getItemAt(i) as FeatureType;
+					portrayalSch.representationOrder.addItem(fType.name);
+				}
+				
 				stream.writeObject(portrayalSch);
 				stream.close();
 			}
@@ -907,18 +945,17 @@
 				applicationSchemaFile    = new File();
 				symbolStyleDicFile = new File();
 				labelStyleDicFile  = new File();
-				
+								
 				try {
 					stream.open(file,FileMode.READ);
 					portrayalSch = stream.readObject();
 					
-					applicationSchemaFile.nativePath    = path + portrayalSch.applicationSchema;
+					applicationSchemaFile.nativePath = path + portrayalSch.applicationSchema;
 					symbolStyleDicFile.nativePath = path + portrayalSch.symbolStyleDictionary;
 					labelStyleDicFile.nativePath  = path + portrayalSch.labelStyleDictionary;
 					
 					fpUnits = portrayalSch.fpUnits;
 					
-					//portrayals.setXML(portrayals.getXML());					stream.close();
 				} catch (error:IOError) {
 					Alert.show(error.message, "Alert", 4, this);
 				}
@@ -935,6 +972,18 @@
 				
 				file = labelStyleDicFile;
 				this.openLabelStyle(null);
+				
+				selectedFeatureTypeArray = new ArrayList();
+				for (i = 0; i < portrayalSch.representationOrder.length; i++) {
+					var typeName:String = portrayalSch.representationOrder.getItemAt(i) as String;
+					var fType:FeatureType = applicationSchema.featureTypes[typeName] as FeatureType;
+					selectedFeatureTypeArray.addItem(fType);
+				}
+				/*
+				for each (fType in applicationSchema.featureTypes) {
+					featureTypeArray.addItem(fType);
+				}
+				*/
 			}
 			
 			protected function sortQuantitativeModifierButton_clickHandler(event:MouseEvent):void
@@ -964,6 +1013,7 @@
 			
 			protected function assignGeneralButton_clickHandler(event:MouseEvent):void
 			{
+				/*
 				if (featureTypeDropDown.selectedIndex == -1) {
 					Alert.show("Select styles before.", "Error", 4, this);
 					return;
@@ -971,11 +1021,12 @@
 				
 				var fid:int = featureTypeDropDown.selectedIndex
 				var fType:FeatureType = featureTypeArray.getItemAt(fid) as FeatureType;		
+				*/
 				
-				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
+				ftPtlUnit = fpUnits[featureType.name] as FeaturePortrayalUnit;
 				if (ftPtlUnit == null) {
 					ftPtlUnit = new FeaturePortrayalUnit();
-					ftPtlUnit.featureTypeID = fType.name;
+					ftPtlUnit.featureTypeID = featureType.name;
 				}
 				
 				var aid:int = attributeNameDropDown.selectedIndex;
@@ -1033,7 +1084,13 @@
 
 			protected function clearGeneralButton_clickHandler(event:MouseEvent):void
 			{
-				symbolArray.removeItemAt(0);
+				if (symbolArray != null) 
+					symbolArray.removeItemAt(0);
+				
+				if (labelArray != null) {
+					labelArray.removeItemAt(0);
+					refGeomPrompt = "";
+				}	
 				
 				var aid:int = attributeNameDropDown.selectedIndex;
 				var attType:AttributeType = attributeNameArray.getItemAt(aid) as AttributeType;
@@ -1069,28 +1126,111 @@
 			{
 
 			}
+			/*
+			protected function featureTypeSpinner_changeHandler(event:Event):void {
+				
+				var index:int = featureTypeSpinner.maximum - featureTypeSpinner.value;
+				if (index < selectedFeatureTypesList.selectedIndex) {
+					var i:int = selectedFeatureTypesList.selectedIndex;
+					var fType:FeatureType = selectedFeatureTypeArray.getItemAt(i) as FeatureType;
+					trace("index:" + index + "  i:" + i);
+					if (index < i) {
+						var nType:FeatureType = selectedFeatureTypeArray.getItemAt(i - 1) as FeatureType;
+						selectedFeatureTypeArray.setItemAt(fType, i - 1);
+						selectedFeatureTypeArray.setItemAt(nType, i);
+						return;
+					}
+					if (index > i) {
+						nType = selectedFeatureTypeArray.getItemAt(i + 1) as FeatureType;
+						selectedFeatureTypeArray.setItemAt(fType, i + 1);
+						selectedFeatureTypeArray.setItemAt(nType, i);
+						return;						
+					}	
+				}
+				selectedFeatureTypesList.selectedIndex = -1;
+			}
+			*/
+				
+			protected function deleteSelectedFeatureTypeButton_clickHandler(event:MouseEvent):void
+			{
+				if (selectedFeatureTypeArray == null) {
+					Alert.show("No feature type is selected.", "Alert", 4, this);
+					return;
+				}
+				
+				if (selectedFeatureTypesList.selectedIndex == -1) {
+					Alert.show("No feature type is selected.", "Alert", 4, this);
+					return;
+				}
+				
+				var index:int = selectedFeatureTypesList.selectedIndex;
+				selectedFeatureTypeArray.removeItemAt(index);
+				
+				//featureTypeSpinner.maximum = selectedFeatureTypeArray.length - 1;
+				
+			}
+						
+			
+			protected function upButton_clickHandler(event:MouseEvent):void
+			{
+
+				
+			}
+			
+			protected function downButton_clickHandler(event:MouseEvent):void
+			{
+
+			}
+			
+			protected function upButtonImage_clickHandler(event:MouseEvent):void
+			{
+				var index:int = selectedFeatureTypesList.selectedIndex;
+				if (index > 0) {
+					var ft:FeatureType = selectedFeatureTypeArray.getItemAt(index) as FeatureType;
+					var ut:FeatureType = selectedFeatureTypeArray.getItemAt(index - 1) as FeatureType;
+					selectedFeatureTypeArray.setItemAt(ut, index);
+					selectedFeatureTypeArray.setItemAt(ft, index - 1);
+					selectedFeatureTypesList.selectedIndex--;
+				}	
+			}
+			
+			protected function downButtonImage_clickHandler(event:MouseEvent):void
+			{
+				var index:int = selectedFeatureTypesList.selectedIndex;
+				if (index < (selectedFeatureTypeArray.length - 1)) {
+					var ft:FeatureType = selectedFeatureTypeArray.getItemAt(index) as FeatureType;
+					var dt:FeatureType = selectedFeatureTypeArray.getItemAt(index + 1) as FeatureType;
+					selectedFeatureTypeArray.setItemAt(dt, index);
+					selectedFeatureTypeArray.setItemAt(ft, index + 1);
+					selectedFeatureTypesList.selectedIndex++;					
+				}
+			}
 			
 		]]>
 	</fx:Script>
 	
 	<s:Image x="12" y="7" source="@Embed(source='images/pictRepresentation1.png')"/>
+	<s:Image id="upButtonImage" x="279" y="194" source="@Embed(source='images/upButton.png')" 
+			 click="upButtonImage_clickHandler(event)"/>
+	<s:Image id="downButtonImage" x="279" y="218" source="@Embed(source='images/downButton.png')" 
+			 click="downButtonImage_clickHandler(event)"/>	
 	<s:Label x="75" y="15" fontFamily="Arial" fontSize="16" text="Portrayal Schema Designer"/>
-	<s:Label id="apsNameLabel" x="31" y="98" width="120" height="20" backgroundColor="#DADADA"
+	<s:Label id="apsNameLabel" x="31" y="94" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
-	<s:Button id="openAPSButton" x="33" y="71" width="55" label="open"
+	<s:Button id="openAPSButton" x="33" y="67" width="55" label="open"
 			  click="openAPSButton_clickHandler(event)"/>
-	<s:Label x="93" y="70" width="56" height="24" fontSize="10" text="Application Schema"/>
-	<s:Button id="openSymButton" x="161" y="71" width="55" label="open"
+	<s:Label x="93" y="66" width="56" height="24" fontSize="10" text="Application Schema"/>
+	<s:Button id="openSymButton" x="176" y="67" width="55" label="open"
 			  click="openSymButton_clickHandler(event)"/>
-	<s:Label x="220" y="71" width="62" height="21" fontSize="10" text="Symbol Style Dictionary"/>
-	<s:Label id="symLabel" x="159" y="98" width="120" height="20" backgroundColor="#DADADA"
+	<s:Label x="236" y="67" width="62" height="21" fontSize="10" text="Symbol Style Dictionary"/>
+	<s:Label id="symLabel" x="175" y="94" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
-	<s:Line x="-2" y="31" xFrom="100" xTo="500" yFrom="100" yTo="100">
+	<s:Line x="-2" y="31" xFrom="30" xTo="600" yFrom="100" yTo="100">
 		<s:stroke>
 			<s:SolidColorStroke color="#ffffff" weight="1" />		
 		</s:stroke>
 	</s:Line> 
-	<s:DataGrid id="symGrid" x="30" y="472" width="210" height="165" fontSize="11" dataProvider="{symStyleArray}"
+	<s:DataGrid id="symGrid" x="44" y="502" width="210" height="165" fontSize="11" dataProvider="{symStyleArray}"
 				requestedRowCount="4" selectionChange="symGrid_selectionChangeHandler(event)">
 		<s:columns>
 			<s:ArrayList>
@@ -1099,13 +1239,13 @@
 			</s:ArrayList>
 		</s:columns>
 	</s:DataGrid>
-	<s:Label x="29" y="457" text="Symbol Styles"/>
-	<s:Button id="openLabelButton" x="290" y="71" width="55" label="open"
+	<s:Label x="43" y="487" fontSize="11" text="Symbol Styles"/>
+	<s:Button id="openLabelButton" x="305" y="67" width="55" label="open"
 			  click="openLabelButton_clickHandler(event)"/>
-	<s:Label id="labelLabel" x="288" y="98" width="120" height="20" backgroundColor="#DADADA"
+	<s:Label id="labelLabel" x="304" y="94" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
-	<s:Label x="351" y="71" width="56" height="21" fontSize="10" text="Label Style Dictionary"/>
-	<s:DataGrid id="labelGrid" x="261" y="472" width="107" height="165" fontSize="11"
+	<s:Label x="366" y="67" width="56" height="21" fontSize="10" text="Label Style Dictionary"/>
+	<s:DataGrid id="labelGrid" x="275" y="502" width="107" height="165" fontSize="11"
 			 	dataProvider="{labelStyleArray}"
 				requestedRowCount="4" selectionChange="labelGrid_selectionChangeHandler(event)">
 		<s:columns>
@@ -1114,19 +1254,20 @@
 			</s:ArrayList>
 		</s:columns>
 	</s:DataGrid>
-	<s:Label x="261" y="458" text="Label Styles"/>
-	<mx:Image id="symbolImage" x="389" y="472" width="165" height="165"/>
-	<s:Label x="392" y="457" text="Sample"/>
-	<s:DropDownList id="featureTypeDropDown" x="31" y="158" width="143"
+	<s:Label x="275" y="488" fontSize="11" text="Label Styles"/>
+	<mx:Image id="symbolImage" x="403" y="502" width="165" height="165"/>
+	<s:Label x="406" y="487" fontSize="11" text="Sample"/>
+	<s:DropDownList id="featureTypeDropDown" x="30" y="152" width="121"
 					change="featureTypeDropDown_changeHandler(event)"
 					dataProvider="{featureTypeArray}" fontSize="11" labelField="name"
-					prompt="Select Type"></s:DropDownList>
-	<s:Label x="30" y="145" fontSize="10" text="Feature Types"/>
+					prompt="Select type"></s:DropDownList>
+	<s:Label x="30" y="138" fontSize="11" text="Feature types"/>
+	<s:Label x="276" y="256" fontSize="11" text="Feature type"/>
 	
-	<s:TabBar id="tabBar" x="30" y="225" height="20" dataProvider="{myViewStack}" click="tabBar_clickHandler(event)"/>	
+	<s:TabBar id="tabBar" x="44" y="264" height="20" dataProvider="{myViewStack}" click="tabBar_clickHandler(event)"/>	
 	
 	<mx:ViewStack id="myViewStack" 
-				  borderStyle="solid" width="536" height="197" x="30" y="244" backgroundColor="#fefee5"> 
+				  borderStyle="solid" width="536" height="197" x="44" y="283" backgroundColor="#fefee5"> 
 		
 		<s:NavigatorContent id="thematicTab" label="thematic"> 
 			<!--
@@ -1147,9 +1288,9 @@
 						</s:columns>
 					</s:DataGrid>
 					<s:Label x="3" y="3" text="Data collection units" fontSize="11" />
-					<s:Label x="99" y="51" fontWeight="normal" text="True"/>
-					<s:Label x="99" y="73" fontWeight="normal" text="False"/>
-					<s:Label x="99" y="96" text="Null"/>
+					<s:Label x="99" y="51" fontSize="11" fontWeight="normal" text="True"/>
+					<s:Label x="99" y="73" fontSize="11" fontWeight="normal" text="False"/>
+					<s:Label x="99" y="96" fontSize="11" text="Null"/>
 				</s:NavigatorContent>
 				<s:NavigatorContent id="stringStack" width="100%" height="100%" label="characterString">
 					<s:DataGrid id="qualitativeModifierGrid" x="18" y="19" width="325" height="101"
@@ -1187,7 +1328,7 @@
 					<s:Label x="3" y="3" text="Data collection units" fontSize="11" />
 				</s:NavigatorContent>
 			</mx:ViewStack>
-			<s:Label x="13" y="22" text="Modifier"/>
+			<s:Label x="13" y="22" fontSize="11" text="Modifier"/>
 			<s:DropDownList id="thematicModifierDropDownList" x="64" y="16" change="thematicModifierDropDownList_changeHandler(event)"
 							dataProvider="{thematicModifierTypeArray}" labelField="name"></s:DropDownList>
 			<s:Button id="assignThematicButton" x="397" y="17" width="60" height="20" label="assign"
@@ -1196,7 +1337,7 @@
 					  click="clearThematicButton_clickHandler(event)"/>
 			<s:Label id="thematicModifierTypeLabel" x="219" y="17" width="110" height="20"
 					 backgroundColor="#DADADA" verticalAlign="middle"/>
-			<s:Label x="187" y="21" text="Type"/>
+			<s:Label x="187" y="21" fontSize="11" text="Type"/>
 		</s:NavigatorContent>
 		
 		<s:NavigatorContent id="generalTab" label="general">
@@ -1245,33 +1386,51 @@
 		</s:NavigatorContent>
 		
 	</mx:ViewStack>
-	<s:Label id="attributeTypeLabel" x="230" y="203" width="120" height="20"
+	<s:Label id="attributeTypeLabel" x="364" y="235" width="120" height="20"
 			 backgroundColor="#DADADA" fontSize="11" verticalAlign="middle"/>
-	<s:DropDownList id="attributeNameDropDown" x="201" y="177" width="149"
+	<s:DropDownList id="attributeNameDropDown" x="335" y="210" width="149"
 					prompt="Select Attribute"
 					change="attributeNameDropDown_changeHandler(event)"
 					dataProvider="{attributeNameArray}" fontSize="11" labelField="name"></s:DropDownList>
-	<s:Label x="201" y="146" fontSize="10" text="Attribute Name"/>
-	<s:Label x="201" y="207" fontSize="10" text="Type"/>
-	<s:Button id="saveButton" x="425" y="96" width="55" height="20" label="save"
+	<s:Label x="335" y="239" fontSize="11" text="Type"/>
+	<s:Button id="saveButton" x="446" y="93" width="55" height="20" label="save"
 			  click="saveButton_clickHandler(event)"/>
-	<s:Label id="dictionaryLabel" x="484" y="97" width="100" height="20" backgroundColor="#DADADA"
+	<s:Label id="dictionaryLabel" x="507" y="94" width="100" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle" lineBreak="explicit" />
-	<s:Button id="openButton" x="425" y="71" width="55" height="20" label="open"
+	<s:Button id="openButton" x="446" y="67" width="55" height="20" label="open"
 			  click="openButton_clickHandler(event)"/>
-	<s:Label x="485" y="71" width="51" height="29" fontSize="10" text="Portrayal Schema"/>
+	<s:Label x="508" y="65" width="51" height="29" fontSize="10" text="Portrayal Schema"/>
 	
 	<s:Label x="507" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="548" y="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:List id="balloonList" x="380" y="157" width="120" height="79" 
+	<s:List id="balloonList" x="492" y="158" width="120" height="83" 
 			fontSize="10" dataProvider="{balloonAttList}" labelField="name">
 	</s:List>
-	<s:Label x="380" y="143" fontSize="10" text="Selected att. for info. pages"/>
-	<s:CheckBox id="balloonCheckBox" x="202" y="158" label="for info. pages" fontSize="10"/>
-	<s:Button id="cancelBalloonButton" x="505" y="216" width="60" height="20" label="cancel"
+	<s:Label x="492" y="131" width="139" height="34" fontSize="11"
+			 text="Selected att. for info. pages"/>
+	<s:CheckBox id="balloonCheckBox" x="364" y="175" label="attr. for info. pages" fontSize="11"/>
+	<s:Button id="cancelBalloonButton" x="492" y="244" width="60" height="20" label="cancel"
 			  click="cancelBalloonButton_clickHandler(event)"/>
+	<s:Label x="156" y="138" fontSize="11" text="Selected feature types"/>
+	
+	<!--
+	<s:Spinner id="featureTypeSpinner" x="134" y="217" width="16"
+			   change="featureTypeSpinner_changeHandler(event)" />
+	-->
+	
+	<s:Button id="deleteSelectedFeatureTypeButton" x="211" y="245" width="62" label="delete"
+			  click="deleteSelectedFeatureTypeButton_clickHandler(event)"/>
+	<s:List id="selectedFeatureTypesList" x="156" y="153" width="118" height="88"
+				 requireSelection="false"
+				 dataProvider="{selectedFeatureTypeArray}"
+				 labelField="name"></s:List>
+	<s:Button id="editPortrayalRuleButton" x="278" y="153" width="50" label="edit"
+			  click="editPortrayalRuleButton_clickHandler(event)"/>
+	<s:Label x="332" y="158" fontSize="11" text="Portrayal rules"/>
+	<s:Label x="553" y="253" fontSize="11" text=" Attribute type"/>
+	<s:Label x="335" y="198" fontSize="11" text="Attribute name"/>
 
 
 </s:Window>

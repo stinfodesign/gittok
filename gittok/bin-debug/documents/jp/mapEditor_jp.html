@@ -40,6 +40,8 @@ window.moveTo(750,20);
 表題や注記などを平行移動させたいときは，事前に何を移動させるかを，ここに指定します．すると，現在行える操作の名前が表示されます．指定した後，カーソルを地図上でドラッグすると，指定された要素が移動します．注記の場合は，事前にカーソルを，移動の対象となる注記に合わせてからドラッグします．</p>
 <p class="mainSentence"><strong>Map</strong><br />
 地図データのオープン，セーブをすると，ここにファイル名が表示されます．</p>
+<p class="mainSentence"><strong>Select Feature Type</strong><br />
+ここで地物の型を指定し，Show attributes チェックボックスをチェックすると，インスタンスがもつ属性の情報ページを表示することができます．詳細についてはShow attributesを参照してください．</p>
 <p class="thirdHeader">BUTTONS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>open (Kit)</strong></span><br/>
 キットをオープンします．</p>
@@ -51,16 +53,18 @@ window.moveTo(750,20);
 地図データをオープンします．</p>
 <p class="mainSentence"><strong>save (Map)</strong><br />
 地図データをセーブします．</p>
-<p class="mainSentence"><strong>View attributes</strong><br />
-このチェックボックスをチェックすると，地図に表示されたシンボルに関連する地物属性が，対応するメディアの情報ページ上に表示されます．</p>
+<p class="mainSentence"><strong>Show attributes</strong><br />
+Select feature typeドロップダウンリストで地物型を指定し，次にこのチェックボックスをチェックして，カーソルを地図上に表示された地物に近づけると，地物が保持している属性の種類を示すピクトグラムボックスが表示されます．その中から適当なメディアのピクトグラムを指定すると，そのメディアに応じた情報ページが表示されます．</p>
+<p class="mainSentence"><img src="../figures/PictogramBox.png" width="244" height="204" alt="pictgram box" /></p>
+<p class="mainSentence">図１．地図上に表示されたピクトグラムボックス</p>
 <p class="mainSentence"><span class="mainSentence"><strong>&gt;</strong></span><br/>
 このボタンを押すと表示縮尺が小さくなります．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>&lt;</strong></span><br/>
   このボタンを押すと，表示縮尺が大きくなります．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>-</strong></span><br/>
   このボタンを押すと，表示される画面縮尺が，初期化されます．</p>
-<p class="mainSentence"><span class="mainSentence"><strong>on/off</strong></span><br/>
-このボタンを押すと，地図のドラッグが可能になり　(on)，もう一度押すと不可能になります (off)．</p>
+<p class="mainSentence"><strong>fix / pan</strong><br/>
+このボタンを押すと，地図のドラッグが可能になり　(pan)，もう一度押すと不可能になります (fix)．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>スライダー</strong></span><br/>
 ベースマップの透明度を調整することができます．ベースマップの表示を目立たせないようにするときに，使用します．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />

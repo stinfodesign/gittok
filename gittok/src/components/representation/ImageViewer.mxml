@@ -2,7 +2,7 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   width="464" height="454"
+			   width="464" height="522"
 			   title="Image Viewer"
 			   creationComplete="initializeApp()">
 	<fx:Declarations>
@@ -20,36 +20,38 @@
 			public var kitURL:String = null;
 			
 			[Bindable]
+			public var imageObjectArray:ArrayList = new ArrayList();
+			
+			private var imageArrayArray:ArrayList;
+			
+			[Bindable]
 			public var imageArray:ArrayList;
 						
 			protected function initializeApp():void {
 				this.move(500, 400);
-				setImageArray();
+				
+				imageArrayArray = new ArrayList();
+				
+				for (var i:int = 0; i < imageObjectArray.length; i++) {
+					var imageObj:Object = imageObjectArray.getItemAt(i) as Object;
+					imageArrayArray.addItem(imageObj.imageArray);
+				}
+				
+				attributesDropdown.prompt = "Select attribute";
+				imageList.prompt = "Select image";
+				
 			}
-			
-			public function setImageArray():void {
-				if (imageArray == null) return;
-				if (imageArray.length > 0) {
-					var imageFilePath:Object = imageArray.getItemAt(0) as Object;
-					var imageURL:String = kitURL + imageFilePath.value;
-					var wiFile:File = new File(imageURL);
-					imageView.load(imageURL);
-					imageView.addEventListener(Event.RESIZE, onResize);	
-					imageList.prompt = imageFilePath.value;
-					imageList.selectedIndex = 0;
-				}				
-			}
-
+						
 			protected function imagePanel_mouseDownHandler(event:MouseEvent):void
 			{
-				if (dragButton.label == "on") {
+				if (dragButton.label == "fix") {
 					imageView.startDrag(false);					
 				}
 			}
 			
 			protected function imagePanel_mouseUpHandler(event:MouseEvent):void
 			{
-				if (dragButton.label == "on") {
+				if (dragButton.label == "fix") {
 					imageView.stopDrag();									
 				}
 			}	
@@ -112,12 +114,12 @@
 			
 			protected function dragButton_clickHandler(event:MouseEvent):void
 			{
-				if (dragButton.label == "on") { 
-					dragButton.label = "off";
+				if (dragButton.label == "fix") { 
+					dragButton.label = "pan";
 					Mouse.cursor = "arrow";
 				}
 				else {
-					dragButton.label = "on";
+					dragButton.label = "fix";
 					Mouse.cursor = "hand";
 				}
 			}
@@ -132,6 +134,7 @@
 				var wiFile:File = new File(imageURL);
 				imageView.load(imageURL);
 				imageView.addEventListener(Event.RESIZE, onResize);	
+
 			}
 			
 			private function onResize(event:Event):void {
@@ -152,6 +155,14 @@
 				navigateToURL(request);
 			}
 			
+			protected function attributesDropdown_changeHandler(event:IndexChangeEvent):void
+			{
+				var index:int = attributesDropdown.selectedIndex;
+				
+				var imageObj:Object = imageObjectArray.getItemAt(index) as Object;
+				imageArray = imageObj.imageArray as ArrayList;
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -162,7 +173,7 @@
 	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
 			 color="#969696" text="English"/>
 
-	<s:Panel id="imagePanel" left="6" right="6" top="63" bottom="-2" chromeColor="#444444"
+	<s:Panel id="imagePanel" left="6" right="6" top="100" bottom="6" chromeColor="#444444"
 			 color="#FFFFFF" dropShadowVisible="false"
 			 mouseDown="imagePanel_mouseDownHandler(event)"
 			 mouseUp="imagePanel_mouseUpHandler(event)" title="Image Panel">
@@ -177,11 +188,15 @@
 		<s:Button id="smallerButton" right="83" top="-26" width="35" label="&gt;"
 				  chromeColor="#dadada" click="smallerButton_clickHandler(event)" color="#000000"
 				  cornerRadius="2"/>
-		<s:Button id="dragButton" right="122" top="-26" width="35" label="off" chromeColor="#dadada"
+		<s:Button id="dragButton" right="122" top="-26" width="42" label="pan" chromeColor="#dadada"
 				  click="dragButton_clickHandler(event)" color="#000000" cornerRadius="2"/>
 	</s:Panel>
-	<s:DropDownList id="imageList" right="5" top="37" width="224" height="20"
+	<s:DropDownList id="imageList" right="5" top="71" width="220" height="20"
 					change="imageList_changeHandler(event)" dataProvider="{imageArray}"
 					labelField="value"></s:DropDownList>
-	<s:Label right="234" top="43" fontSize="11" text="List"/>
+	<s:DropDownList id="attributesDropdown" right="5" top="40" width="220"
+					change="attributesDropdown_changeHandler(event)"
+					dataProvider="{imageObjectArray}" labelField="attName"></s:DropDownList>
+	<s:Label right="234" top="77" fontSize="12" text="List"/>
+	<s:Label right="234" top="45" text="Attributes"/>
 </s:Window>

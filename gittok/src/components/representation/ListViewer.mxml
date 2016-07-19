@@ -11,10 +11,11 @@
 		<![CDATA[
 			import components.acquisition.GeometryWindow;
 			import components.acquisition.ImageWindow;
+			import components.acquisition.SoundWindow;
 			
 			import dataTypes.place.*;
-			import dataTypes.simpleDataTypes.*;
 			import dataTypes.spatialGeometry.*;
+			import dataTypes.theme.*;
 			
 			import flash.filesystem.*;
 			
@@ -45,6 +46,8 @@
 			public var addressViewer:AddressViewer;
 			public var webSiteViewer:WebsiteViewer;
 			public var geometryWindow:GeometryWindow;
+			public var soundListener:SoundListener;
+			public var videoViewer:VideoViewer;
 			
 			[Bindable]
 			protected var selectedAttributeList:ArrayList;
@@ -62,7 +65,7 @@
 				move(400,400);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
 				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
 				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
 				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
@@ -112,7 +115,19 @@
 				registerClassAlias("portrayal.gpm.list.ListSchema", ListSchema);	
 				registerClassAlias("portrayal.gpm.list.FeatureTypeForListing", FeatureTypeForListing);	
 				
+				this.addEventListener(Event.CLOSE, listViewerClose);
+				
 								
+			}
+			
+			protected function listViewerClose(event:Event): void {
+				if (this.videoViewer	 	!= null)	this.videoViewer.close();
+				if (this.memoViewer 		!= null) 	this.memoViewer.close();				
+				if (this.webSiteViewer 		!= null) 	this.webSiteViewer.close();
+				if (this.imageViewer 		!= null) 	this.imageViewer.close();
+				if (this.soundListener 		!= null) 	this.soundListener.close();
+				if (this.addressViewer 		!= null) 	this.addressViewer.close();
+				if (this.simpleDataViewer 		!= null) 	this.simpleDataViewer.close();
 			}
 			
 			protected function attributeList_clickHandler(event:MouseEvent):void {
@@ -126,18 +141,22 @@
 				var aid:int = attributeList.selectedIndex;
 				var atType:AttributeType = selectedAttributeList.getItemAt(aid) as AttributeType;
 				var daType:String = atType.dataType;
+				var attName:String = atType.name;
 				
 				if (daType == "ImageURL") {
 					if (imageViewer == null) {
 						imageViewer = new ImageViewer();
 						imageViewer.open();
 						imageViewer.title = "ListViewer >";
-						imageViewer.kitURL = kitURL;					
+						imageViewer.kitURL = kitURL;	
+						
+						var obj:Object = new Object();
+						obj.attName = attName;
+						obj.imageArray = selectedFeature.attributes[attName] as ArrayList;
+						imageViewer.imageObjectArray.addItem(obj);
+						
 						imageViewer.addEventListener(Event.CLOSE, imageViewerClose);
 					}
-					
-					imageViewer.imageArray = selectedFeature.attributes[atType.name] as ArrayList;
-					imageViewer.setImageArray();
 				}
 				
 				if (daType == "CharacterString" || daType == "Real" || 
@@ -145,11 +164,16 @@
 					if (simpleDataViewer == null) {
 						simpleDataViewer = new SimpleDataViewer();
 					}
-					simpleDataViewer.open();
+					
 					simpleDataViewer.title = "ListViewer >";
-					simpleDataViewer.attributeTypeLabel.text = atType.name;
-					simpleDataViewer.simpleDataArray = selectedFeature.attributes[atType.name] as ArrayList;
-					simpleDataViewer.addEventListener(Event.CLOSE, simpleDataViewerClose);
+					simpleDataViewer.addEventListener(Event.CLOSE, simpleDataViewerClose);	
+					
+					obj = new Object();
+					obj.attName = attName;
+					obj.simpleDataArray = selectedFeature.attributes[attName] as ArrayList;
+					simpleDataViewer.simpleObjectArray.addItem(obj);
+					simpleDataViewer.open();
+
 				}
 				
 				if (daType == "Memo") {
@@ -159,8 +183,11 @@
 						memoViewer.title = "ListViewer >";
 						memoViewer.addEventListener(Event.CLOSE, memoViewerClose);
 					}
-					memoViewer.memoArray = selectedFeature.attributes[atType.name] as ArrayList;
-					memoViewer.setMemoArray();
+					obj = new Object();
+					obj.attName = attName;
+					obj.memoArray = selectedFeature.attributes[attName] as ArrayList;
+					memoViewer.memoObjectArray.addItem(obj);
+
 				}
 				
 				if (daType == "Address") {
@@ -170,20 +197,62 @@
 						addressViewer.title = "ListViewer >";
 						addressViewer.addEventListener(Event.CLOSE, addressViewerClose);
 					}
-					addressViewer.addressArray = selectedFeature.attributes[atType.name] as ArrayList;
-					addressViewer.setAddressArray();
+					
+					obj = new Object();
+					obj.attName = atType.name;
+					obj.addressArray = selectedFeature.attributes[atType.name] as ArrayList;
+					addressViewer.addressObjectArray.addItem(obj);
+					addressViewer.setAddressObjectArray();
 				}
 				
 				if (daType == "URL") {
 					if (webSiteViewer == null) {
 						webSiteViewer = new WebsiteViewer();
-						webSiteViewer.open();
-						webSiteViewer.title = "ListViewer >";
-						webSiteViewer.addEventListener(Event.CLOSE, webSiteViewerClose);
 					}
-					webSiteViewer.urlArray = selectedFeature.attributes[atType.name] as ArrayList;
-					webSiteViewer.setUrlArray();
+					webSiteViewer.open();
+					webSiteViewer.title = "ListViewer >";
+					
+					obj = new Object();
+					obj.attName = attName;
+					obj.urlArray = selectedFeature.attributes[attName] as ArrayList;
+					webSiteViewer.urlObjectArray.addItem(obj);
+					
+					webSiteViewer.addEventListener(Event.CLOSE, webSiteViewerClose);
+
 				} 
+				
+				if (daType == "SoundURL") {
+					if (soundListener == null) {
+						soundListener = new SoundListener();
+					}
+					soundListener.open();
+					soundListener.title = "ListViewer >";
+					soundListener.kitURL = kitURL;
+						
+					obj = new Object();
+					obj.attName = attName;
+					obj.soundArray = selectedFeature.attributes[attName] as ArrayList;
+					soundListener.soundObjectArray.addItem(obj);
+						
+					soundListener.addEventListener(Event.CLOSE, soundListenerClose);
+				} 
+				
+				if (daType == "VideoURL") {
+					if (videoViewer == null) {
+						videoViewer = new VideoViewer();
+					}
+					videoViewer.open();
+					videoViewer.title = "ListViewer >";
+					videoViewer.kitURL = kitURL;
+					
+					obj = new Object();
+					obj.attName = attName;
+					obj.videoArray = selectedFeature.attributes[attName] as ArrayList;
+					videoViewer.videoObjectArray.addItem(obj);
+					
+					videoViewer.addEventListener(Event.CLOSE, videoViewerClose);						
+				} 
+
 				
 				if (daType.search("SG_") > -1) { // It means daType is spatial geometry.
 					if (geometryWindow == null) {
@@ -194,8 +263,14 @@
 						geometryWindow.open();
 						geometryWindow.title = "Editor >";
 						geometryWindow.clearAnnotationLayer();
-						geometryWindow.addEventListener(Event.CLOSE, geometryWindowClose);				
+						geometryWindow.addEventListener(Event.CLOSE, geometryWindowClose);	
+						
 					}
+					var primiList:ArrayList = selectedFeature.attributes[attName] as ArrayList;
+					var primi:SG_Primitive = primiList.getItemAt(0) as SG_Primitive;
+					
+					geometryWindow.displaySGPrimitive("circle", primi);	
+
 				}
 			} 
 			
@@ -224,6 +299,16 @@
 				webSiteViewer = null;
 			}
 			
+			protected function soundListenerClose(event:Event):void {
+				soundListener = null;
+			}	
+			
+			protected function videoViewerClose(event:Event):void {
+				videoViewer = null;
+			}
+			
+			
+			
 			//Open Kit 			
 			public function openKitButton_clickHandler(event:MouseEvent):void
 			{
@@ -235,7 +320,7 @@
 					file.browseForOpen("Open kit file", [filter]);
 					
 				} catch (error:IOError) {
-					Alert.show(error.message);
+					Alert.show("File open error: " + error.message);
 				}
 			}
 			
@@ -351,8 +436,13 @@
 					featureArray = new ArrayList();
 					for each (var feature:Feature in featureSet.features) {
 						var attList:ArrayList = feature.attributes[proxyType.name] as ArrayList;
-						proxyValueArray.addItem(attList.getItemAt(0) as CharacterString);
-						featureArray.addItem(feature);
+						/* If proxy has more than one items, 
+						   each item should be used to access a feature through the list.
+						   FeatureArray may contain same features in the array.*/
+						for (var i:int = 0; i < attList.length; i++) {
+							proxyValueArray.addItem(attList.getItemAt(i) as CharacterString);
+							featureArray.addItem(feature);
+						}
 					}
 				
 			}

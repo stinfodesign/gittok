@@ -26,6 +26,7 @@ Instance is an object acquired in accordance with the application schema.  Geosp
 <p class="secondHeader">Kit</p>
 <p class="thirdHeader">Introduction</p>
 <p class="mainSentence">Kit is a geospatial dataset which includes a set of instances and related information. Kit is constructed in compliance with the application schema. A kit includes a set of feature instances (FeatureSet) following one feature type and a set of association instances (AssociationSet) following one association type. Usually application schema may includes more than one feature types and more than one association types. An array of feature sets is called featureSetArray, and an array of association sets is called associationSetArray. Both arrays are parts of a kit. For example, if an application schema includes feature types such as Building, Road and Bridge, and association types such as BuildingToRoad and RoadToBridge, then there are three feature sets included in the feature set array and two association sets included in the association set array.  In Instance Model, Kit associates with featureSetArray: an array of FeatureSet, and Kit associates with assciationSetArray: an array of AssociationSet (Figure 2).</p>
+<p class="mainSentence">In gittok, the UID (Unique Identifier) is automatically given to the instance when it is created.  UID is constant as long as the instance exists,  even though attributes without id are updated. Never change  UID, for example IDs in the XML document, because there is a possibility the inconsistency will happen.</p>
 <p class="thirdHeader">attributes</p>
 <p class="mainSentence"><strong>applicationSchemaURL</strong><br />
   Kit has URL of application schema to show where it is stored.</p>
@@ -141,6 +142,10 @@ Instance is an object acquired in accordance with the application schema.  Geosp
   3. The attribute id is displayed in &quot;id&quot; field in Value Grid by clicking add button located at lower right of Editor page.<br />
   4. If multiplicity is true, repeat 2 and 3 until all values are added.<br />
   Click delete button after the selection of appropriate id, if it is un-necessary. Remember the attribute value on the editing page is not deleted. If it is not needed, Attribute value shall be deleted on the editing page.</p>
+<p class="mainSentence"><strong>Geometry editing</strong><br />
+  1. The operator selects a geometric primitive as a spatial attribute of the object feature instance on the Geometry page. Then the prompt &quot;Selected&quot; is shown on the Selected IDs dropdown list. The list includes ids of feature instances, which keep the geometric primitive. It means that gittok allows different features share one geometry as their spatial attribute.<br />
+  2. The operator selects an instance on Selected IDs list. Then the id will appear as the prompt of Instance IDs list.<br />
+3. Editing of attributes will be possible by following the sequence shown at &quot;Attributes of complex data type&quot;.</p>
 <p class="thirdHeader">Acquisition of association instances</p>
 <p class="mainSentence">Association instances are acquired after the acquisition of feature instances. The procedure of the acquisition of association instances is as follows.<br />
   1. Open Editor page by clicking acquisition icon on the title page of gittok.<br />
@@ -190,8 +195,10 @@ Input a kit file in gittok by clicking &quot;open&quot; button in Editor page. T
 <p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><strong>Feature Type (selectable)</strong><br />
   The list of feature attributes is shown in Attribute Grid field by selecting feature type for editing using this dropdown list.</p>
-<p class="mainSentence"><strong>Instance ID (selectable)</strong><br />
-  A list of instance ids is shown in this dropdown list. Feature instance can be selected at this list when attributes of a feature instance will be edited.</p>
+<p class="mainSentence"><strong>Instance IDs (selectable)</strong><br />
+  A list of instance ids is shown as this dropdown list. Feature instance can be selected at this list  before the attributes of the feature instance is edited.</p>
+<p class="mainSentence"><strong>Selected IDs（selectable）</strong><br />
+  The list of the feature instance IDs is shown as the dropdown list. Features in this list have the geometric attribute selected on the geometry page. If the selected geometry is an attribute of feature instances, &quot;Selected&quot; is shown as the prompt. Which instances keep the geometry is displayed as this list. Then, the feature instance id is displayed on Instance IDs dropdown list by the selection of instance on this list. The editing of attributes kept in the selected instance will be possible by this action.</p>
 <p class="mainSentence"><strong>Attribute Type List (selectable)</strong><br />
   The list of attributes with its data type, multiplicity and unit of measure and so on is listed here. &quot;dr&quot; means whether the attribute is derived or not. If it is derived attribute, then &quot;/&quot; is shown as the value of this item. The attribute is selected before opening pages for editing. However if the data type is simple such as integer, real, bool or string, the attribute value can be keyed-in in Value field. The value of derived attribute cannot be input editor pages, because it is a result of an operation executed on 'Analyst' page.</p>
 <p class="mainSentence"><strong>Value (editable)</strong><br />
@@ -229,6 +236,8 @@ Input a kit file in gittok by clicking &quot;open&quot; button in Editor page. T
   The style of association (association or composition) is shown in this field.</p>
 <p class="mainSentence"><strong>Feature type</strong><br />
   The type of from and to-feature are shown in these fields.</p>
+<p class="mainSentence"><strong>Candidates</strong><br />
+When a geometry is selected on the Geometry Editing Panel in the Geometry page, the list of feature instances which share the geometry is shown to this dropdown list. The feature type of candidate instances is determined by the association type. As gittok allows different features have one geometry, it is required the selection which  will be a from- or to- feature instance.</p>
 <p class="mainSentence"><strong>Role name</strong><br />
   The role name of to-feature is shown in this field.</p>
 <p class="mainSentence"><strong>Correspondence</strong><br />

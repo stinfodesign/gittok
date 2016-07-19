@@ -17,7 +17,7 @@
 			import coordinateReference.*;
 			
 			import dataTypes.place.*;
-			import dataTypes.simpleDataTypes.*;
+			import dataTypes.theme.*;
 			import dataTypes.spatialGeometry.*;
 			
 			import flash.filesystem.*;
@@ -107,7 +107,7 @@
 				this.move(300,150);			
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
 				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
 				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
 				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
@@ -173,6 +173,17 @@
 				zoomSlider.value = 0;
 				zoomSlider.stepSize = 0.25;
 				zoomDelta = 0.5;
+				
+				this.addEventListener(Event.CLOSE, managerClose);
+			}
+			
+			protected function managerClose(event:Event):void {
+				
+				if (this.editor 	!= null) 	this.editor.close();
+				if (this.exchanger 	!= null) 	this.exchanger.close();
+				if (this.analyst 	!= null) 	this.analyst.close();
+				if (this.mapEditor 	!= null)	this.mapEditor.close();
+				
 			}
 			
 			/*
@@ -526,9 +537,10 @@
 				fxMap.map.addLayer(dLayer);
 				
 				var reso:Number = Math.log(fxMap.map.resolution.value) / Math.LN2;
-				if (reso >18) reso = 18;
+
+				if (reso >17.5) reso = 17.5;
 				if (reso <  0) reso =  0;
-				zoomSlider.value = 18.0 - reso;
+				zoomSlider.value = 17.5 - reso;
 			}
 			
 			protected function metadataButton_clickHandler(event:MouseEvent):void
@@ -562,6 +574,8 @@
 			}
 			
 			protected function editorClose(event:Event):void {
+				if (editor == null) return;
+				
 				if (editor.geometryWindow 	!= null)	editor.geometryWindow.close();
 				if (editor.imageWindow 		!= null)	editor.imageWindow.close();
 				if (editor.videoWindow 		!= null)	editor.videoWindow.close();
@@ -569,7 +583,7 @@
 				if (editor.urlWindow 		!= null)	editor.urlWindow.close();
 				if (editor.addressWindow 	!= null)	editor.addressWindow.close();
 				
-				editor.close();
+				editor = null;
 			}
 			
 			protected function analysisButton_clickHandler(event:MouseEvent):void　{
@@ -586,7 +600,9 @@
 			}
 			
 			protected function analystClose(event:Event):void {
-				analyst.close();
+				if (analyst == null ) return;
+				
+				analyst = null;
 			}
 			
 			protected function refineButton_clickHandler(event:MouseEvent):void
@@ -691,7 +707,8 @@
 			}
 			
 			protected function exchangerClose(event:Event):void {
-				exchanger.close();
+				if (exchanger == null) return;
+				exchanger = null;
 			}
 			
 			protected function mappingButton_clickHandler(event:MouseEvent):void
@@ -710,7 +727,8 @@
 			}
 			
 			protected function mappingClose(event:Event):void {
-				mapEditor.close();
+				if (mapEditor == null) return;
+				mapEditor = null;
 			}
 
 			/*
@@ -731,19 +749,19 @@
 			
 			protected function mapButton_clickHandler(event:MouseEvent):void
 			{
-				if (mapButton.label == "OSM") {
+				if (mapButton.label == "toOSM") {
 					fxMap.map.removeLayer(gsiMap);
 					fxMap.map.addLayer(osmMap);	
 					gsiTerms.visible = false;
 					osmTerms.visible = true;
-					mapButton.label = "GSI";
+					mapButton.label = "toGSI";
 				}
 				else {
 					fxMap.map.removeLayer(osmMap);
 					fxMap.map.addLayer(gsiMap);
 					gsiTerms.visible = true;
 					osmTerms.visible = false;
-					mapButton.label = "OSM";
+					mapButton.label = "toOSM";
 				}
 				
 				//redraw geographic extent of the kit
@@ -848,7 +866,8 @@
 			}
 			
 			protected function setResolution():void {
-				var power:Number = 18. - zoomSlider.value;
+				var power:Number = 17.5 - zoomSlider.value;
+				trace("power:" + power);
 				var reso:Number = Math.pow(2., power);
 				//if (reso < 1.195) reso = 1.195;  // 1.195 is the minimum resoluton for GSI Map
 				fxMap.map.resolution = new Resolution(reso, fxMap.map.projection);	
@@ -903,16 +922,15 @@
 			<os:DragHandler />
 			<os:ClickHandler />
 		</os:Map>
-		
-		<s:Button id="mapButton" right="12" top="159" width="50" label="GSI" fontSize="11"
-					  click="mapButton_clickHandler(event)"/>
 		<s:Label id="coordinateLabel" left="10" bottom="10" width="170" color="0x000000"
 				 backgroundColor="0xffffff" fontSize="11" verticalAlign="middle"/>
 		<s:VGroup top="10" right="20" horizontalAlign="center">
-			<s:Button id="zoomInButton" width="30" height="15" label="+" click="zoomInButton_clickHandler(event)"/>
+			<s:Button id="zoomInButton" width="30" height="15" label="&lt;" click="zoomInButton_clickHandler(event)"/>
 			<s:VSlider id="zoomSlider"
-					   change="zoomSlider_changeHandler(event)" minimum="0" maximum="18"/>
-			<s:Button id="zoomOutButton" width="30" height="15" label="-" click="zoomOutButton_clickHandler(event)"/>		
+					   change="zoomSlider_changeHandler(event)" minimum="0.5" maximum="17.5"/>
+			<s:Button id="zoomOutButton" width="30" height="15" label="&gt;" click="zoomOutButton_clickHandler(event)"/>		
+			<s:Button id="mapButton" width="60" height="15" label="toGSI"
+					  click="mapButton_clickHandler(event)"/>
 		</s:VGroup>
 	</s:Panel>
 	
@@ -989,6 +1007,6 @@
 	<s:Label x="553" y="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
 	<s:CheckBox id="planeCheckBox" left="35" bottom="5" label="Plane Coordinate"
-				click="planeCheckBox_clickHandler(event)" fontSize="11"/>
-
+				click="planeCheckBox_clickHandler(event)" fontSize="11" />
+	
 </s:Window>

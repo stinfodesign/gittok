@@ -1,6 +1,6 @@
-package dataTypes.simpleDataTypes
+package dataTypes.theme
 {
-	public class Bool extends SimpleDataType
+	public class Bool extends ThematicDataType
 	{
 		
 		

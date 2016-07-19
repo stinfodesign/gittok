@@ -47,7 +47,15 @@
 				fonts.sortOn("fontName", Array.CASEINSENSITIVE);
 				for(var j:int=0; j < fonts.length; j++){
 					fontArray.addItem(fonts[j]);
-				}				
+				}
+				
+				this.addEventListener(Event.CLOSE, labelDesignerClose);
+				
+			}
+			
+			protected function labelDesignerClose(event:Event): void {
+				
+				if(colorSelector != null) colorSelector.close();
 				
 			}
 			
@@ -290,6 +298,8 @@
 			}
 			
 			protected function setColor(event:Event):void {
+				if (colorSelector == null) return;
+				
 				selectedColor = colorSelector.color;
 				selectedAlpha = colorSelector.cAlpha;
 				
@@ -369,7 +379,7 @@
 			<s:SolidColor id="fillRect" color="0xdadada"/>
 		</s:fill>
 	</s:Rect>
-	<s:Button id="selectColorButton" x="98" y="193" width="50" height="16" label="select"
+	<s:Button id="selectColorButton" x="98" y="193" width="55" height="16" label="select"
 			  click="selectColorButton_clickHandler(event)" fontSize="11"/>
 
 </s:Window>

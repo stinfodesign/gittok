@@ -133,13 +133,13 @@ y軸上の原点からの長さ．</p>
 <p class="mainSentence">以上の前提のもとで，標定の手順を説明します．</p>
 <p class="mainSentence">1. Control Point ID欄に，これから指定するコントロールポイントのidをキーインします．</p>
 <p class="mainSentence">2. Geometry Editing Panelの右上にある，３つのボタンとスライダーを使って，指定するIDをもつコントロールポイントに位置を表示させます．ボタンとスライダーは，以下の能力をもちます．</p>
-<p class="mainSentence"><span class="thirdHeader">off</span>/on: このボタンを押すと，ボタンの表示がonになり，画面のスクロールが可能になります．onの間は，スクロールはできますが，位置の指定はできません．</p>
+<p class="mainSentence">fix / pan: このボタンを押すと，ボタンの表示が pan になり，画面のスクロール （平行移動）が可能になります．pan の間は，スクロールはできますが，位置の指定はできません</p>
 <p class="mainSentence"><span class="thirdHeader">&gt;</span>: このボタンを押すと表示縮尺が小さくなります．</p>
 <p class="mainSentence"><span class="thirdHeader">&lt;</span>: このボタンを押すと，表示縮尺が大きくなります．</p>
 <p class="mainSentence"><span class="thirdHeader">-</span> : このボタンを押すと，表示される画面縮尺が，初期化されます．</p>
 <p class="mainSentence"><span class="thirdHeader">スライダー</span>: ベースマップの透明度を調整することができます．ベースマップの表示を目立たせないようにするときに，使用します．</p>
-<p class="mainSentence">3. スクロールボタンが off になっていることを確認して，コントロールポイントの位置にカーソルを合わせ，ポインティングデバイスのボタンを押します．すると，点のデフォルト記号が表示されます．もしその位置が気に入らない場合は，番号をキーインして位置を指定するという動作を，何度でもやり直しできます．</p>
-<p class="mainSentence">4. スクロールボタンを on にして，2.に戻ります．コントロールポイントの数だけこの操作を繰り返します．</p>
+<p class="mainSentence">3. スクロールボタンが fix になっていることを確認して，コントロールポイントの位置にカーソルを合わせ，ポインティングデバイスのボタンを押します．すると，点のデフォルト記号が表示されます．もしその位置が気に入らない場合は，番号をキーインして位置を指定するという動作を，何度でもやり直しできます．</p>
+<p class="mainSentence">4. スクロールボタンを pan にして，2.に戻ります．コントロールポイントの数だけこの操作を繰り返します．</p>
 <p class="mainSentence">5. get parameters ボタンを押します．すると以下に示すAccuracy Evaluation ページに，標定の正確度を示す分散共分散行列，x，yの平均二乗誤差, および，それぞれのコントロールポイントにおける誤差が表示されます．正確度評価の詳細については，Accuracy Evaluation ページのテキストを参照して下さい．これを見て，充分な正確度で変換パラメータが求められていると判断する場合は，accept，そうでない場合はrejectボタンを押します．acceptを選択すると、get pamameters ボタンは，使用できなくなります．rejectを選択した場合，標定作業を最初から繰り返すことができます．</p>
 <p class="mainSentence">6. get parameters ボタンの右に show ボタンがありますが，これを押すと，標定の結果を，再度見ることができます．</p>
 <p class="mainSentence"><img src="../figures/AccuracyEvaluation.png" width="368" height="476" alt="qualityEvaluation" /></p>
@@ -236,8 +236,8 @@ y軸上の原点からの長さ．</p>
 このボタンを押すと，あらかじめ指定した位置に，点又は曲線の中間点が移動する．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>delete</strong></span><br/>
 このボタンを押すと，検索された幾何データが削除される．ただし，幾何データは地物の属性になっていてはいけない．また，より高次元の幾何データの境界になっていてはいけない．</p>
-<p class="mainSentence"><span class="mainSentence"><strong>off/on</strong></span><br/>
-ベースマップの移動を可能にするときはon，そうでないときはoffにする．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>fix / pan</strong></span><br/>
+ベースマップの移動を可能にするときは pan，そうでないときは fix にする．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>&gt;</strong></span><br/>
 このボタンを押すと表示縮尺が小さくなる．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>&lt;</strong></span><br/>

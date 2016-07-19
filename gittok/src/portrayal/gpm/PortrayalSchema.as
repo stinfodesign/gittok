@@ -1,6 +1,11 @@
 package portrayal.gpm
 {
 	import flash.utils.Dictionary;
+	
+	import gfm.FeatureType;
+	
+	import mx.collections.ArrayList;
+	
 	import portrayal.gpm.FeaturePortrayalUnit;
 
 	public class PortrayalSchema
@@ -8,6 +13,7 @@ package portrayal.gpm
 		public var applicationSchema:String;
 		public var symbolStyleDictionary:String;
 		public var labelStyleDictionary:String;
+		public var representationOrder:ArrayList;
 		public var fpUnits:Dictionary;
 		
 		public function PortrayalSchema()
@@ -20,7 +26,15 @@ package portrayal.gpm
 
 			str += '<PortrayalSchema applicationSchema="' + this.applicationSchema + '" ';
 			str += 'symbolStyleDictionary="' + this.symbolStyleDictionary + '" ';
-			str += 'labelStyleDictionary="' + this.labelStyleDictionary + '">';
+			str += 'labelStyleDictionary="' + this.labelStyleDictionary + '"';
+			
+			str += 'representationOrder="';
+			var rOrder:String = representationOrder.getItemAt(0) as String;
+			for (var i:int = 1; i < representationOrder.length; i++) {
+				rOrder += "," + representationOrder.getItemAt(i) as String;
+			}
+			str += rOrder + '">'				
+			
 			str += '<fpUnits>';
 			for each(var fpPair:FeaturePortrayalUnit in fpUnits) {
 				str += fpPair.getXML().toString();
@@ -34,6 +48,11 @@ package portrayal.gpm
 			this.applicationSchema = _xml.@applicationSchema;
 			this.symbolStyleDictionary = _xml.@symbolStyleDictionary;
 			this.labelStyleDictionary  = _xml.@labelStyleDictionary;
+			
+			var rStr:String = _xml.@representationOrder;
+			var rOrder:Array = rStr.split(",");
+			this.representationOrder = new ArrayList(rOrder); 
+			
 			var strXMLList:XMLList = _xml.fpUnits.children();
 			for each(var strXML:XML in strXMLList) {
 				var fpPair:FeaturePortrayalUnit = new FeaturePortrayalUnit();

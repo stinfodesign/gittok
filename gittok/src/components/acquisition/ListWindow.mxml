@@ -12,7 +12,7 @@
 		<![CDATA[
 			import com.google.maps.geom.Attitude;
 			
-			import dataTypes.simpleDataTypes.CharacterString;
+			import dataTypes.theme.CharacterString;
 			
 			import instanceModel.FeatureSet;
 			

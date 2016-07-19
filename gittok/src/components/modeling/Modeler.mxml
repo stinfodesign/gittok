@@ -44,6 +44,13 @@
 				registerClassAlias("gfm.ApplicationSchema", ApplicationSchema);
 				registerClassAlias("gfm.ArgAttPair", ArgAttPair);
 				
+				this.addEventListener(Event.CLOSE, modelerClose);
+				
+			}
+			
+			protected function modelerClose(event:Event):void {
+				if (this.featureWindow 		!= null) this.featureWindow.close();
+				if (this.associationWindow 	!= null) this.associationWindow.close();
 			}
 			
 			protected function openFileButton_clickHandler(event:MouseEvent):void
@@ -152,6 +159,8 @@
 			
 			protected function featureLabel_clickHandler(event:MouseEvent):void
 			{
+				if (featureWindow != null) return;
+				
 				featureWindow = new FeatureWindow();
 				featureWindow.open();
 				featureWindow.title = "Modeller >";
@@ -176,14 +185,15 @@
 					var fType:FeatureType = featureWindow.fTypeArray.getItemAt(i) as FeatureType;
 					featureTypes[fType.name] = fType;
 				}
-				
-				if (featureWindow.attWindow != null) featureWindow.attWindow.close();
-				if (featureWindow.operationWindow != null) featureWindow.operationWindow.close();
+								
+				featureWindow = null;
 				
 			}
 			
 			protected function associationLabel_clickHandler(event:MouseEvent):void
 			{
+				if (associationWindow != null) return;
+				
 				associationWindow = new AssociationWindow();
 				associationWindow.open();
 				associationWindow.title = "Modeller >";
@@ -209,8 +219,7 @@
 					associationTypes[aType.name] = aType;
 				}
 				
-				if (associationWindow.attWindow != null) associationWindow.attWindow.close();
-				if (associationWindow.operationWindow != null) associationWindow.operationWindow.close();
+				associationWindow = null;
 			}
 			
 

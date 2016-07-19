@@ -11,10 +11,12 @@
 
 	<fx:Script>
 		<![CDATA[
+			import com.google.maps.Color;
+			
 			import components.representation.ColorSelector;
 			
 			import dataTypes.place.*;
-			import dataTypes.simpleDataTypes.*;
+			import dataTypes.theme.*;
 			import dataTypes.spatialGeometry.*;
 			
 			import flash.filesystem.*;
@@ -71,7 +73,7 @@
 			protected var lineSymArray:ArrayList = new ArrayList();
 			[Bindable]
 			protected var areaSymArray:ArrayList = new ArrayList();
-			
+						
 			private var color1:uint = 0x13233a;
 			private var color2:uint = 0xd9d9dc;
 			
@@ -100,7 +102,7 @@
 				
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
 				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
 				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
 				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
@@ -128,6 +130,15 @@
 				registerClassAlias("dataTypes.spatialGeometry.SG_Ring", SG_Ring);				
 				registerClassAlias("dataTypes.spatialGeometry.SG_Surface", SG_Surface);
 				
+				this.addEventListener(Event.CLOSE, symbolStyleDesignerClose);
+				
+			}
+			
+			protected function symbolStyleDesignerClose(event:Event): void {
+				if (colorSelector == null) return; 
+					
+				colorSelector.close();
+				colorSelector = null;
 			}
 
 			protected function saveSymbolStylesButton_clickHandler(event:MouseEvent):void
@@ -383,6 +394,7 @@
 				lineSymName.text = "";
 				lineColor.color = selectedLineColor = 0x000000;
 				lineColor.alpha = selectedLineAlpha = 1;
+				
 				capsList.selectedItem = "";
 				jointsList.selectedItem = "";
 				dashInput.text = "-1";
@@ -1175,6 +1187,8 @@
 			}
 			
 			protected function setLineColor(event:Event):void {
+				if (colorSelector == null) return;
+				
 				lineColor.color = selectedLineColor = colorSelector.color;
 				lineColor.alpha = selectedLineAlpha = colorSelector.cAlpha;
 				
@@ -1192,6 +1206,8 @@
 			}
 			
 			protected function setAreaColor(event:Event):void {
+				if (colorSelector == null) return;
+				
 				areaColor.color = selectedAreaColor = colorSelector.color;
 				areaColor.alpha = selectedAreaAlpha = colorSelector.cAlpha;
 				
@@ -1275,7 +1291,7 @@
 						<s:SolidColor id="lineColor" color="0x000000"/>
 					</s:fill>
 				</s:Rect>			
-				<s:Button id="selectLineColorButton" x="89" y="58" width="50" label="select"
+				<s:Button id="selectLineColorButton" x="88" y="56" width="55" label="select"
 						  click="selectLineColorButton_clickHandler(event)" fontSize="11"/>
 			</s:Group>
 		</s:NavigatorContent>

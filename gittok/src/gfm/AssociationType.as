@@ -13,7 +13,7 @@ package gfm
 		public var attributeTypes:ArrayList;	// of AttributeType
 		public var operationTypes:ArrayList;	// of OperationType
 		
-		public var style:String;				// associate or composite
+		public var style:String;				// association or composition
 		public var roleName:String;
 		public var correspondence:String;		// "1:1", "1:n", "m:1", or "m:n"
 		public var from:FeatureType;

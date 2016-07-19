@@ -1,6 +1,6 @@
-package dataTypes.simpleDataTypes
+package dataTypes.theme
 {
-	public class Integer extends SimpleDataType
+	public class Integer extends ThematicDataType
 	{
 
 		//Constructor

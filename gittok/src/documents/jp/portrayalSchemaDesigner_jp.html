@@ -120,27 +120,41 @@ You can read the tutorial written in English.</p>
 <p class="mainSentence">主題属性には注記スタイルを割り当てます．Label Stylesから主題属性に対応させる注記スタイルを選択し，assign buttonを押すと，図３−２に示すように，general tab中のLabel Stylesに，割り当てた注記スタイルが表示されます．<br />
 ところで，注記を置く位置がわからなければ表示はできません．そこでLabel style欄の右側に，Reference geometry ドロップダウンリストが表示されます．これは，対象としている地物がもつ幾何属性の一覧です．この一覧の中から適当な幾何属性を指定し，それを注記の表示位置にします．線や面を選ぶと，それらの中心（面の場合は重心，線の場合は線上の中間地点）に注記が配置されます．</p>
 <p class="thirdHeader">FIELDS</p>
-<p class="mainSentence"><strong>Feature Types (編集可能）</strong><br/>
+<p class="mainSentence"><strong>Feature Types (選択可能）</strong><br/>
   どの地物型を地図表示の対象とするか選択するための地物一覧が表示されます．</p>
-<p class="mainSentence"><strong>Attribute Name（編集可能）</strong><br/>
+<p class="mainSentence"><strong>Selected feature types （選択可能）</strong><br />
+Feature types ドロップダウンリストで地物型を選択すると，ここに，地図表示される地物型の一覧が表示されます．</p>
+<p class="mainSentence"><strong>Attribute Name（選択可能）</strong><br/>
   選択した地物型のどの属性型を表示の対象にするか選択すると，その属性型の名前が表示されます．</p>
 <p class="mainSentence"><strong>Type</strong><br/>
   選択された属性の型名が表示されます．</p>
-<p class="mainSentence"><strong>general &gt; Symbol style</strong><br />
+<p class="mainSentence"><strong>general tab &gt; Symbol style</strong> (図 3-1)<br />
 下にある Symbol Styes リストで，幾何属性を修飾する記号スタイルを選択し，assign ボタンを押すと，それがここに表示されます．</p>
-<p class="mainSentence"><strong>general &gt; Label style</strong><br />
-下にある Label Styes リストで，主題属性を修飾する注記スタイルを選択し，assign ボタンを押すと，それがここに表示されます．</p>
+<p class="mainSentence"><strong>general tab &gt; Label style</strong> (図 3-2)<br />
+下にある Label Styes リストで，主題属性を修飾する注記スタイルを選択し，assign ボタンを押すと，それがここに表示されます．さらに，このラベルの参照位置をきめるための幾何属性を選択することによって，ラベルの地図表示が可能になります．</p>
+<p class="mainSentence"><strong>Selected att. for info. pages</strong><br />
+att. for info. page がチェックされているときに，Attribute name ドロップダウンリストから属性を選択すると，情報ページとして表示する属性として，このリストに属性名が付け加えられます．</p>
 <p class="mainSentence"><strong>Symbol styles</strong><br />
 記号スタイル辞書に含まれているスタイルの一覧です．スタイルを選択すると，サンプルが右に示されます．</p>
 <p class="mainSentence"><strong>Label styles</strong><br />
 注記スタイル辞書に含まれているスタイルの一覧です．スタイルを選択すると，サンプルが右に示されます．</p>
+<p class="mainSentence"><strong>Reference geometry</strong> (図 3-2)<br />
+ラベル表示を行うための基準となる幾何属性が表示されます．この中から選択すると，その中心を参照位置としてラベルが表示されます．</p>
 <p class="mainSentence"><strong>Sample</strong><br />
 選択された記号または注記スタイルのサンプルを表示します．</p>
 <p class="mainSentence"><strong>Reference geometry</strong><br />
   注記の参照位置を指定するための幾何属性をここで選択します．<br />
 </p>
 <p class="thirdHeader">BUTTONS</p>
-<p class="mainSentence"><strong>general</strong><br />
+<p class="mainSentence"><img src="../figures/upButton.png" width="20" height="20" alt="upButton" /><br />
+'Selected feature types' リスト上の地物名を選択してからこのボタンを押すと，地物名が一行上に移動する．この機能は地図上の表示順位を示す．上にある地物型ほど，先に表示される．</p>
+<p class="mainSentence"><img src="../figures/downButton.png" width="20" height="20" alt="downButton" /><br />
+'Selected feature types' リスト上の地物名を選択してからこのボタンを押すと，地物名が一行下に移動する．この機能は地図上の表示順位を示す．下にある地物型ほど，後に表示される．</p>
+<p class="mainSentence"><strong>cancel</strong><br />
+'Slected att. for info. page' に表示されている属性名を選択してからこのボタンを押すと，削除される．</p>
+<p class="mainSentence"><strong>att. for info. page</strong><br />
+このチェックボックスをチェックしているとき，Attribute name ドロップダウンリストに表示された属性を選択すると，情報ページとして表示する属性として，Selected att. for info. page に追加表示されます．  </p>
+<p class="mainSentence"><strong>general tab</strong><br />
 この tab を選択すると，一般図用の修飾が可能になります．</p>
 <p class="mainSentence"><strong>assign</strong><br />
 下のリストで選択されているスタイルを，地物属性を修飾するスタイルとして指定します．</p>

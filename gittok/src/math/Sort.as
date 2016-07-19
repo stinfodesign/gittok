@@ -1,6 +1,6 @@
 package math
 {
-	import dataTypes.simpleDataTypes.Bool;
+	import dataTypes.theme.Bool;
 	import dataTypes.spatialGeometry.Coordinate2;
 	
 	import mx.collections.ArrayList;

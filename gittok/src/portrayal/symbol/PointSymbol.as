@@ -1,6 +1,6 @@
 package portrayal.symbol
 {
-	import dataTypes.simpleDataTypes.*;
+	import dataTypes.theme.*;
 	import dataTypes.spatialGeometry.*;
 	
 	import flash.display.*;

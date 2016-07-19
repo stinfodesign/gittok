@@ -1,6 +1,6 @@
 package geoOperations
 {
-	import dataTypes.simpleDataTypes.Real;
+	import dataTypes.theme.Real;
 	import dataTypes.spatialGeometry.Coordinate2;
 	import dataTypes.spatialGeometry.CoordinateArray;
 	import dataTypes.spatialGeometry.SG_Ring;

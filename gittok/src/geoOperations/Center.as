@@ -1,7 +1,7 @@
 package geoOperations
 {
-	import dataTypes.simpleDataTypes.*;
 	import dataTypes.spatialGeometry.*;
+	import dataTypes.theme.*;
 	
 	import math.*;
 	
@@ -20,7 +20,10 @@ package geoOperations
 			var points:ArrayList = new ArrayList();
 			
 			var pointValues:ArrayList = argObj["points"] as ArrayList;
-			points.addAll(pointValues);	
+			for (var i:int = 0; i < pointValues.length; i++) {
+				var elementValues:ArrayList = pointValues.getItemAt(i) as ArrayList;
+				points.addAll(elementValues);	
+			}
 			
 			var wp:SG_Point = points.getItemAt(0) as SG_Point;
 			
@@ -30,7 +33,7 @@ package geoOperations
 			var x:Number = 0;
 			var y:Number = 0;
 			var coord:Coordinate2;
-			for (var i:int = 0; i < m; i++) {
+			for (i = 0; i < m; i++) {
 				wp = points.getItemAt(i) as SG_Point;
 				coord = wp.position;
 				x += coord.x;

@@ -6,7 +6,7 @@ package instanceModel
 	
 	public class AssociationSet
 	{
-		public var typeID:String;
+		public var typeName:String;
 		public var associations:Dictionary;
 		
 		public function AssociationSet()
@@ -16,7 +16,7 @@ package instanceModel
 		}
 		
 		public function getXML():XML {
-			var str:String = '<AssociationSet typeID="' + this.typeID + '">';
+			var str:String = '<AssociationSet typeName="' + this.typeName + '">';
 			str += '<associations';
 			var flag:Boolean = false;
 			var aids:String = ' idref="';
@@ -33,7 +33,7 @@ package instanceModel
 		}
 		
 		public function setXML(_xml:XML, kit:Kit):void {
-			this.typeID = _xml.@typeID.toString();
+			this.typeName = _xml.@typeName.toString();
 			this.associations = new Dictionary();
 			var asXMLList:XMLList = _xml.associations;
 			var asXML:XML = asXMLList[0];

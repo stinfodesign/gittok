@@ -10,7 +10,7 @@
 	<fx:Script>
 		<![CDATA[
 			import dataTypes.place.*;
-			import dataTypes.simpleDataTypes.*;
+			import dataTypes.theme.*;
 			
 			import flash.display.*;
 			import flash.filesystem.*;
@@ -171,26 +171,26 @@
 
 			protected function dragButton_clickHandler(event:MouseEvent):void
 			{
-				if (dragButton.label == "on") { 
-					dragButton.label = "off";
+				if (dragButton.label == "fix") { 
+					dragButton.label = "pan";
 					Mouse.cursor = "arrow";
 				}
 				else {
-					dragButton.label = "on";
+					dragButton.label = "fix";
 					Mouse.cursor = "hand";
 				}
 			}
 
 			protected function imagePanel_mouseDownHandler(event:MouseEvent):void
 			{
-				if (dragButton.label == "on") {
+				if (dragButton.label == "fix") {
 					imageView.startDrag(false);					
 				}
 			}
 			
 			protected function imagePanel_mouseUpHandler(event:MouseEvent):void
 			{
-				if (dragButton.label == "on") {
+				if (dragButton.label == "fix") {
 					imageView.stopDrag();									
 				}
 			}
@@ -198,13 +198,13 @@
 			// Text and instruction  Controls
 			protected function text_jp_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/imageWindow_jp.html");
+				var request:URLRequest = new URLRequest("documents/jp/imageWindow_jp.html");
 				navigateToURL(request);
 			}
 			
 			protected function text_en_clickHandler(event:MouseEvent):void
 			{
-				var request:URLRequest = new URLRequest("documents/imageWindow_en.html");
+				var request:URLRequest = new URLRequest("documents/en/imageWindow_en.html");
 				navigateToURL(request);
 			}
 			
@@ -260,7 +260,7 @@
 				  click="largerButton_clickHandler(event)"/>
 		<s:Button x="330" y="-26" label="&gt;" id="smallerButton" width="35" 
 				  click="smallerButton_clickHandler(event)"/>
-		<s:Button x="291" y="-26" label="off" id="dragButton" width="35" 
+		<s:Button x="284" y="-26" label="pan" id="dragButton" width="42" 
 				  click="dragButton_clickHandler(event)"/>
 	</s:Panel>
 	

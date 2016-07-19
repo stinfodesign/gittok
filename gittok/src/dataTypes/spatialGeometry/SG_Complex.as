@@ -17,8 +17,7 @@ package dataTypes.spatialGeometry
 		
 		public function SG_Complex()
 		{
-			id = UIDUtil.createUID();
-			featureID = "";
+			super();
 			
 			pointSet   = new ArrayList();
 			curveSet   = new ArrayList();

@@ -15,8 +15,8 @@
 			import coordinateReference.*;
 			
 			import dataTypes.place.*;
-			import dataTypes.simpleDataTypes.*;
 			import dataTypes.spatialGeometry.*;
+			import dataTypes.theme.*;
 			
 			import flash.filesystem.*;
 			
@@ -26,13 +26,10 @@
 			
 			import instanceModel.*;
 			
-			import locationReference.LocationInstance;
 			import locationReference.Gazetteer;
+			import locationReference.LocationInstance;
 			
-			import gfm.*;
 			import math.*;
-			
-			import instanceModel.*;
 			
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
@@ -68,7 +65,7 @@
 			protected function initializeApp():void {
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
 				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
 				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
 				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
@@ -166,16 +163,34 @@
 				kit = stream.readObject() as Kit;
 				stream.close();
 				
-				
-				featureTypes = kit.applicationSchema.featureTypes;
-				stream.close();
 				kitNameLabel.text = file.name;
 				
-				applicationSchema = kit.applicationSchema;		
+				var apsStream:FileStream = new FileStream();
+				var apsFile:File = new File();
 				
+				var filePath:String = file.nativePath;
+				var idx:int = filePath.search(file.name);
+				filePath = "file://" + filePath.substring(0, idx) + kit.applicationSchemaURL;
+				apsFile.url = filePath; 
+				
+				try {
+					apsStream.open(apsFile, FileMode.READ);
+					applicationSchema = apsStream.readObject();
+					apsStream.close();
+				} catch (e:IOError) {
+					Alert.show("Application schema open error:" + e, "Alert", 4, this);
+				}
+				kit.applicationSchema = applicationSchema;
+				
+				featureTypeArray = applicationSchema.constructConcreteTypes();	
+
+				/*
+				featureTypes = kit.applicationSchema.featureTypes;
 				for each(var ffType:FeatureType in featureTypes) {
 					if (!ffType.isAbstract) featureTypeArray.addItem(ffType);
 				}
+				*/
+								
 			}
 			
 			protected function featureTypeDropDown_changeHandler(event:IndexChangeEvent):void
@@ -310,9 +325,9 @@
 					}
 					else {
 						argObj = new Object();
-						//attValues = new ArrayList();
-						//attValues.addItem(positionArray);
-						argObj["points"] = positionArray;
+						attValues = new ArrayList();
+						attValues.addItem(positionArray);
+						argObj["points"] = attValues;
 						point = Center.centerOfPoints(argObj);
 					}
 					

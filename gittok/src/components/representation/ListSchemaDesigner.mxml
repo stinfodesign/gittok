@@ -14,7 +14,7 @@
 			import coordinateReference.*;
 			
 			import dataTypes.place.*;
-			import dataTypes.simpleDataTypes.*;
+			import dataTypes.theme.*;
 			import dataTypes.spatialGeometry.*;
 			
 			import gfm.*;
@@ -57,7 +57,7 @@
 				this.move(300, 300);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
 				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
 				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
 				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
@@ -427,26 +427,26 @@
 	<s:Label x="360" y="315" width="60" height="33" text="Selected attributes"/>
 	<s:List id="selectedAttributeList" x="300" y="357" width="120" height="102"
 			dataProvider="{selectedAtTypeArray}" labelField="name"></s:List>
-	<s:Label x="49" y="121" width="144" height="41" text="Feature types with which proxies are non-geometry"/>
-	<s:DropDownList id="featureTypeList" x="49" y="160" width="126" height="20"
+	<s:Label x="47" y="116" width="144" height="41" text="Feature types of which proxies are non-geometry"/>
+	<s:DropDownList id="featureTypeList" x="47" y="155" width="126" height="20"
 					change="featureTypeList_changeHandler(event)" dataProvider="{featureTypeArray}"
 					fontSize="11" labelField="name" prompt="Select type"></s:DropDownList>
 	<s:Button id="addAttributeButton" x="301" y="310" width="55" height="20" label="add"
 			  click="addAttributeButton_clickHandler(event)" fontSize="11"/>
 	<s:Button id="deleteAttributeButton" x="301" y="333" width="55" height="20" label="delete"
 			  click="deleteAttributeButton_clickHandler(event)" fontSize="11"/>
-	<s:Button id="openListSchemaButton" x="254" y="31" width="55" height="20" label="open"
+	<s:Button id="openListSchemaButton" x="254" y="50" width="55" height="20" label="open"
 			  click="openListSchemaButton_clickHandler(event)" fontSize="11"/>
-	<s:Button id="saveSchemaButton" x="254" y="54" width="55" height="20" label="save"
+	<s:Button id="saveSchemaButton" x="314" y="50" width="55" height="20" label="save"
 			  click="saveSchemaButton_clickHandler(event)" fontSize="11"/>
-	<s:Label x="314" y="40" width="59" height="28" text="List schema"/>
+	<s:Label x="376" y="46" width="54" height="28" text="List schema"/>
 	<s:Label id="listSchemaLabel" x="254" y="78" width="165" height="20" backgroundColor="#DADADA"
 			 verticalAlign="middle" maxDisplayedLines="1"/>
 	<s:Label x="359" y="7" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="400" y="9" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:DataGrid id="featureTypeGrid" x="207" y="161" height="131"
+	<s:DataGrid id="featureTypeGrid" x="207" y="156" height="131"
 				dataProvider="{selectedFeatureTypeArray}" requestedRowCount="4"
 				selectionChange="featureTypeGrid_selectionChangeHandler(event)">
 		<s:columns>
@@ -459,9 +459,9 @@
 			<fx:Object dataField1="サンプルデータ" dataField2="サンプルデータ" dataField3="サンプルデータ"></fx:Object>
 		</s:typicalItem>
 	</s:DataGrid>
-	<s:Label x="268" y="121" width="99" height="25" text="Selected feature types"/>
-	<s:Button x="208" y="112" width="55" label="add" click="addFeatureTypeButton_clickHandler(event)"/>
-	<s:Button id="deleteFeatureTypeButton" x="208" y="136" width="55" label="delete"
+	<s:Label x="328" y="125" width="99" height="25" text="Selected feature types"/>
+	<s:Button x="208" y="127" width="55" label="add" click="addFeatureTypeButton_clickHandler(event)"/>
+	<s:Button id="deleteFeatureTypeButton" x="266" y="127" width="55" label="delete"
 			  click="deleteFeatureTypeButton_clickHandler(event)"/>
 
 </s:Window>

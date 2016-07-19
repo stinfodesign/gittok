@@ -12,8 +12,8 @@
 			import coordinateReference.IdentifiedCoordinateDic;
 			
 			import dataTypes.place.*;
-			import dataTypes.simpleDataTypes.*;
 			import dataTypes.spatialGeometry.*;
+			import dataTypes.theme.*;
 			
 			import flash.filesystem.*;
 			import flash.utils.Dictionary;
@@ -117,7 +117,7 @@
 				this.move(780, 150);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", SimpleDataType);
+				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
 				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
 				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
 				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
@@ -198,6 +198,10 @@
 					opViewStack.selectedChild = orientationView;
 					orTitle = "Operable";
 					getParamEnable = false;
+					if (controlIDLabel != null) {		// For example, these lines are un-neccesary for association
+						controlIDLabel.visible = false;
+						controlIDInput.visible = false;
+					}
 				}
 				else {
 					//Alert.show("control point file is required.", "Alert", 4, this);					
@@ -390,13 +394,13 @@
 			{
 				if (dragFlag) { 
 					dragFlag = false;
-					dragButton.label = "off";
+					dragButton.label = "pan";
 					Mouse.cursor = "arrow";
 					
 				}
 				else {
 					dragFlag = true;
-					dragButton.label = "on";
+					dragButton.label = "fix";
 					Mouse.cursor = "hand";
 				}
 				
@@ -648,10 +652,10 @@
 								}
 							}
 								
-								if (point.featureID != "") {
-									var f:Feature = kit.featureList[point.featureID];
+								if (point.featureID.length > 0) {
+									var f:Feature = kit.featureList[point.featureID.getItemAt(0) as String];
 									var fType:FeatureType = applicationSchema.featureTypes[f.typeName] as FeatureType;
-									var aType:AttributeType = fType.getAttributeTypeByName(point.attributeName);
+									var aType:AttributeType = fType.getAttributeTypeByName(point.attributeName.getItemAt(0) as String);
 									
 									if (aType.derived == "/") {
 										Alert.show("Be carefull to change the position, as it is the derived attribute.", "Warning", 4, this);
@@ -685,10 +689,10 @@
 								}
 							}
 								
-								if (curve.featureID != "") {
-									f = kit.featureList[curve.featureID];
+								if (curve.featureID.length > 0) {
+									f = kit.featureList[curve.featureID.getItemAt(0) as String];
 									fType = applicationSchema.featureTypes[f.typeName] as FeatureType;
-									aType = fType.getAttributeTypeByName(curve.attributeName);
+									aType = fType.getAttributeTypeByName(curve.attributeName.getItemAt(0) as String);
 									if (aType.derived == "/") {
 										Alert.show("You should not change position, as it is derived attribute.", "Error", 4, this);
 									}
@@ -740,10 +744,10 @@
 								
 								if (surface == null) break;
 								
-								if (surface.featureID != "") {
-									f = kit.featureList[surface.featureID];
+								if (surface.featureID.length > 0) {
+									f = kit.featureList[surface.featureID.getItemAt(0) as String];
 									fType = applicationSchema.featureTypes[f.typeName] as FeatureType;
-									aType = fType.getAttributeTypeByName(surface.attributeName);
+									aType = fType.getAttributeTypeByName(surface.attributeName.getItemAt(0) as String);
 									if (aType.derived == "/") {
 										Alert.show("You should not change position, as it is derived attribute.", "Error", 4, this);
 									}
@@ -1201,8 +1205,8 @@
 							return;									
 						}
 						
-						if (point.featureID != "") {
-							Alert.show("The point is an attribute of feature.", "Alert", 4, this);
+						if (point.featureID.length > 0) {
+							Alert.show("The point is an attribute of a feature.", "Alert", 4, this);
 							return;
 						}
 						
@@ -1219,8 +1223,8 @@
 							return;									
 						}
 						
-						if (curve.featureID != "") {
-							Alert.show("The curve is an attribute of feature.", "Alert", 4, this);
+						if (curve.featureID.length > 0) {
+							Alert.show("The curve is an attribute of a feature.", "Alert", 4, this);
 							return;
 						}
 						
@@ -1235,8 +1239,8 @@
 					
 					case "SG_Surface":
 						// delete searched surface
-						if (surface.featureID != "") {
-							Alert.show("The surface is an attribute of feature.", "Alert", 4, this);
+						if (surface.featureID.length > 0) {
+							Alert.show("The surface is an attribute of a feature.", "Alert", 4, this);
 							return;
 						}
 						
@@ -1283,6 +1287,7 @@
 			}
 			
 			public function displaySGPrimitive(_name:String, gm:SG_Primitive):Coordinate2 {
+				
 				var center:Coordinate2;
 				
 				searchedGM = gm;
@@ -1438,32 +1443,30 @@
 					}
 					
 					// open accuracy window
-					try {
-						accuracyWindow = new AccuracyWindow();
-						accuracyWindow.ap = affineParam;
-						accuracyWindow.open();
-						//accuracyWindow.addEventListener(AIREvent.WINDOW_ACTIVATE, accuracyWindowActivated);
-						accuracyWindow.addEventListener(Event.CLOSE, accuracyWindowClose);
-					} 
-					catch (error:Error) {
-						Alert.show("Accuracy window did not open: " + error.message, "Alert", 4, this);
-					}
-
+					this.openAccuracyWindow();
 				}
 				
 			}
 			
-			/*
-			protected function accuracyWindowActivated(event:Event):void {
-				trace(event.toString());
+			protected function openAccuracyWindow():void {
+				try {
+					accuracyWindow = new AccuracyWindow();
+					accuracyWindow.ap = affineParam;
+					accuracyWindow.open();
+					accuracyWindow.addEventListener(Event.CLOSE, accuracyWindowClose);
+				} 
+				catch (error:Error) {
+					Alert.show("Accuracy window did not open: " + error.message, "Alert", 4, this);
+				}				
 			}
-			*/
-			
+						
 			protected function accuracyWindowClose(event:Event):void {
 				if (accuracyWindow.isAccepted) {
 					convertable = true;
 					orTitle = "Operable";
 					getParamEnable = false;
+					controlIDLabel.visible = false;
+					controlIDInput.visible = false;
 				}
 				else if (accuracyWindow.isRejected) {
 					var scp:IdentifiedCoordinate;
@@ -1474,8 +1477,12 @@
 					geomFlag = "control";
 					getParamEnable = true;
 				}
+				else {
+					this.openAccuracyWindow();
+					accuracyWindow.illigalClose = true;
+					return;
+				}
 				accuracyWindow = null;
-				
 			}
 			
 			
@@ -1504,6 +1511,13 @@
 					return;
 				}
 				
+				var numChi:int = annotationLayer.numChildren;
+				if (numChi > 0) {
+					for (var i:int = 0; i < numChi; i++) {
+						annotationLayer.removeChildAt(i);
+					}
+				}
+				
 				// from geometry
 				this.clearAnnotationLayer();
 				var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;
@@ -1515,7 +1529,7 @@
 					var dt:String = attType.dataType;
 					if (dt == "SG_Point" || dt == "SG_Curve" || dt == "SG_Surface") {
 						var fromFeatures:ArrayList = association.relateFrom;	// instances
-						for (var i:int = 0; i < fromFeatures.length; i++) {
+						for (i = 0; i < fromFeatures.length; i++) {
 							var fromFeature:Feature = fromFeatures.getItemAt(i) as Feature;
 							var primiList:ArrayList   = fromFeature.attributes[attType.name] as ArrayList;
 							for (var j:int = 0; j < primiList.length; j++) {
@@ -1567,7 +1581,7 @@
 				*/
 				
 			}
-			
+						
 			// Text and instruction  Controls
 			protected function text_jp_clickHandler(event:MouseEvent):void
 			{
@@ -1580,8 +1594,7 @@
 				var request:URLRequest = new URLRequest("documents/en/geometry_en.html");
 				navigateToURL(request);
 			}
-			
-			
+						
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -1614,7 +1627,7 @@
 		<s:NavigatorContent id="orientationView" label="Orientation" backgroundColor="#fefee5"> 
 			<s:Group width="500" height="100%" x="0" y="0">
 				<s:Label id="orientationLabel" x="15" y="15" text="{orTitle}" fontSize="16"/>
-				<s:Label x="104" y="38" text="Control Point ID"/>
+				<s:Label id="controlIDLabel" x="104" y="38" text="Control Point ID"/>
 				<s:Rect x="369" y="9" width="120" height="60">
 					<s:fill>
 						<s:SolidColor color="#dadada"/>
@@ -1638,7 +1651,7 @@
 				  click="largerButton_clickHandler(event)" />
 		<s:Button id="smallerButton" x="384" y="-26" width="35" height="20" label="&gt;"
 				  click="smallerButton_clickHandler(event)" />
-		<s:Button id="dragButton" x="346" y="-26" width="35" height="20" label="off"
+		<s:Button id="dragButton" x="339" y="-26" width="42" height="20" label="pan"
 				  click="dragButton_clickHandler(event)" />
 		<s:HSlider x="264" y="-20" width="68" id="alphaSlider" minimum="0" maximum="1" stepSize="0.05" value="1" 
 				   change="alphaSlider_changeHandler(event)" chromeColor="#dadada"/>
@@ -1686,7 +1699,7 @@
 	</s:Group>
 	
 	<s:Group x="530" y="336" width="92" height="101" right="15" top="336">
-		<s:Rect x="0" y="0" width="100%" height="100%">
+		<s:Rect x="0" y="0" width="100%" height="101">
 			<s:stroke>
 				<s:SolidColorStroke color="0xc8c8c8"/>
 			</s:stroke>
@@ -1695,10 +1708,10 @@
 			</s:fill>
 		</s:Rect>
 		
-		<s:RadioButton x="8" y="7" label="add" id="addGeomButton" groupName="operationGroup" click="addGeomButton_clickHandler(event)"/>
-		<s:RadioButton x="8" y="30" label="search" id="searchGeomButton" groupName="operationGroup" click="searchGeomButton_clickHandler(event)"/>
-		<s:RadioButton x="8" y="53" label="move" id="moveGeomButton" groupName="operationGroup" click="moveGeomButton_clickHandler(event)" />
-		<s:RadioButton x="8" y="75" label="delete" id="deleteGeomButton" groupName="operationGroup" click="deleteGeomButton_clickHandler(event)"/>
+		<s:RadioButton x="4" y="7" label="add" id="addGeomButton" groupName="operationGroup" click="addGeomButton_clickHandler(event)"/>
+		<s:RadioButton x="4" y="30" label="search" id="searchGeomButton" groupName="operationGroup" click="searchGeomButton_clickHandler(event)"/>
+		<s:RadioButton x="4" y="52" label="move" id="moveGeomButton" groupName="operationGroup" click="moveGeomButton_clickHandler(event)" />
+		<s:RadioButton x="4" y="75" label="delete" id="deleteGeomButton" groupName="operationGroup" click="deleteGeomButton_clickHandler(event)"/>
 	</s:Group>
 	
 	<s:Group left="21" bottom="7" width="280" height="20">

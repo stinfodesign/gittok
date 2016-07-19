@@ -17,6 +17,8 @@
 			import coordinateReference.IdentifiedCoordinate;
 			
 			import math.AffineParam;
+			import mx.controls.Alert;
+			
 			private var color1:uint = 0x13233a;
 
 			[Bindable]
@@ -28,6 +30,7 @@
 			public var ap:AffineParam;
 			public var isAccepted:Boolean;
 			public var isRejected:Boolean;
+			public var illigalClose:Boolean;
 			
 			public function initializeApp():void {
 				var a:Number = ap.variance[0][0];
@@ -56,6 +59,9 @@
 				
 				isAccepted = false;
 				isRejected = false;
+				if (illigalClose) {
+					Alert.show("Select accept or reject", "Alert", 4, this);
+				}
 			}
 			
 			protected function acceptButton_clickHandler(event:MouseEvent):void

@@ -11,7 +11,7 @@ package dataTypes.place
 		
 		// Constructor
 		public function Address() {
-			this.id = UIDUtil.createUID();			
+		  id = UIDUtil.createUID();	
 		}
 		
 		public override function getXML():XML {

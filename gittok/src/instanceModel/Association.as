@@ -1,7 +1,7 @@
 package instanceModel
 {
 	import dataTypes.place.*;
-	import dataTypes.simpleDataTypes.*;
+	import dataTypes.theme.*;
 	import dataTypes.spatialGeometry.*;
 	
 	import flash.filesystem.*;
@@ -30,15 +30,16 @@ package instanceModel
 			this.relateTo   = new ArrayList();
 		}
 		
-		public function getXML(aType:AssociationType):XML {
+		public function getXML(assoType:AssociationType):XML {
 			var str:String 	= '<Association id="' + this.id + '" ';
-			str += 'typeName="' + aType.name + '"';
+			str += 'typeName="' + assoType.name + '"';
 					
 			var strGeom:String = '';
 			var strAddr:String = "";
-			var m:int = aType.attributeTypes.length;
+			var strMemo:String = "";
+			var m:int = assoType.attributeTypes.length;
 			for (var i:int = 0; i < m; i++) {
-				var attType:AttributeType  = aType.attributeTypes.getItemAt(i) as AttributeType;
+				var attType:AttributeType  = assoType.attributeTypes.getItemAt(i) as AttributeType;
 				var attValueList:ArrayList = this.attributes[attType.name] as ArrayList;
 				if (attValueList != null) {
 					var n:int = attValueList.length;
@@ -46,8 +47,7 @@ package instanceModel
 						if (attType.dataType == "Integer" 		|| attType.dataType == "Real"				||
 							attType.dataType == "Bool" 			|| attType.dataType == "CharacterString" 	||
 							attType.dataType == "URL" 			|| attType.dataType == "ImageLocation" 		||
-							attType.dataType == "VideoLocation"	|| attType.dataType == "SoundLocation"		||
-							attType.dataType == "Memo") {
+							attType.dataType == "VideoLocation"	|| attType.dataType == "SoundLocation") {
 							str += ' ' + attType.name + '="';
 							var element:* = attValueList.getItemAt(0);
 							str += element.value.toString();
@@ -69,6 +69,18 @@ package instanceModel
 								strAddr += '"/>';
 							}							
 						}
+						else if (attType.dataType == "Memo") {
+							element = attValueList.getItemAt(0);
+							if (element != null) {
+								strMemo += '<' + attType.name + ' idref="';
+								strMemo += element;
+								for (j = 1; j < n; j++) {
+									element = attValueList.getItemAt(j);
+									strMemo += ',' + element;
+								}
+								strMemo += '"/>';
+							}							
+						}
 						else {
 							element = attValueList.getItemAt(0);
 							if (element != null) {
@@ -87,6 +99,7 @@ package instanceModel
 			
 			str += '>';
 			str += strAddr;
+			str += strMemo;
 			str += strGeom;
 			
 			m = relateFrom.length;
@@ -126,18 +139,18 @@ package instanceModel
 			
 			this.id = _xml.@id.toString();
 			var tn:String = _xml.@typeName.toString();
-			var aType:AssociationType = appSchema.associationTypes[tn] as AssociationType;
+			var assoType:AssociationType = appSchema.associationTypes[tn] as AssociationType;
 
 			this.attributes = new Dictionary();
-			var m:int = aType.attributeTypes.length;
+			var m:int = assoType.attributeTypes.length;
 			
 			for (var i:int = 0; i < m; i++) {
-				var attType:AttributeType = aType.attributeTypes.getItemAt(i) as AttributeType;
+				var attType:AttributeType = assoType.attributeTypes.getItemAt(i) as AttributeType;
 				this.attributes[attType.name] = new ArrayList();
 			}
 			
 			for (i = 0; i < m; i++) {
-				attType = aType.attributeTypes.getItemAt(i) as AttributeType;
+				attType = assoType.attributeTypes.getItemAt(i) as AttributeType;
 				var attStr:String = _xml.attribute(attType.name);
 				if (attStr != "") {
 					var attArray:Array = attStr.split(",");
@@ -175,11 +188,6 @@ package instanceModel
 							chr.value = value;
 							attList.addItem(chr);
 						}
-						else if (attType.dataType == "Memo") {
-							var mm:Memo = new Memo();
-							mm.value = value;
-							attList.addItem(mm);
-						}
 
 					}
 					this.attributes[attType.name] = attList;
@@ -187,7 +195,7 @@ package instanceModel
 			}
 			
 			for (i = 0; i < m; i++) {
-				attType = aType.attributeTypes.getItemAt(i) as AttributeType;
+				attType = assoType.attributeTypes.getItemAt(i) as AttributeType;
 				var attXMLList:XMLList = _xml.child(attType.name);
 				if (attXMLList.length() > 0) {
 					attStr = attXMLList[0].@idref.toString();
@@ -200,7 +208,8 @@ package instanceModel
 							attType.dataType == "SG_Curve" 	 ||
 							attType.dataType == "SG_Surface" ||
 							attType.dataType == "SG_Complex" ||
-							attType.dataType == "Address") {
+							attType.dataType == "Address"	 ||
+							attType.dataType == "Memo") {
 							this.attributes[attType.name].addItem(attID);
 						}
 					}
@@ -228,7 +237,6 @@ package instanceModel
 				this.relateTo.addItem(tof);
 				kit.featureList[tid] = tof;
 			}
-			
 		}
 	}
 		

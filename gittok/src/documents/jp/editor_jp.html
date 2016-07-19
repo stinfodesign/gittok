@@ -19,15 +19,15 @@ window.moveTo(750,20);
 <p class="mainSentence">インスタンスの構造は，インスタンスモデルというスキーマで定義されています．応用スキーマには，地物型及び関連型が定義されていますので，インスタンスモデルは，インスタンス（オブジェクトまたは単純にデータという場合もある）の集まりである地理データセットを取得するための仕様書という役割をもちます (図１参照)．</p>
 <p><img src="../figures/Instance Model and Instance.png" width="166" height="197" alt="InstanceModeAndDatal" /></p>
 <p class="mainSentence">図１．インスタンスモデルとデータセット</p>
-<p><span class="mainSentence">では，インスタンスはどのような構造をもつのでしょうか．以下に，gittok で使用しているインスタンスモデルを示します（図２参照）．</span></p>
+<p class="mainSentence">では，インスタンスはどのような構造をもつのでしょうか．以下に，gittok で使用しているインスタンスモデルを示します（図２参照）．</p>
 <p class="mainSentence"><img src="../figures/InstanceModel.png" width="589" height="426" alt="instance model" /></p>
 <p class="mainSentence">図2．gittokで使用するインスタンスモデル</p>
 <p class="mainSentence">インスタンスモデルは，どのような地物型，関連型であっても，一定の構造をもった地理データとして実装できるようにするためのスキーマです．</p>
 <p class="mainSentence">&nbsp;</p>
 <p id="kit" class="secondHeader">Kit (地理空間データセット)</p>
-<p><span class="mainSentence">gittokではインスタンスの集合と，関連するデータの集まりを統合した地理空間データセットのことをキット(kit) と呼びます．Kit は応用スキーマに従って作成されます．Kit は，地物インスタンスの集合 (FeatureSet)と関連インスタンスの集合 (AssociationSet) を含みます．キットはそれぞれ複数の種類の地物の集合（例えば，建物，道路，街路樹）と関連の集合（例えば，建物ー道路，道路ー街路樹）をもちます．この構造を，インスタンスモデルでは，キットはfeatureSetArrayという役割をもつ複数の地物集合(FreatureSet)及び，associationSetArrayという役割名をもつ，複数の関連集合 (AssociationSet) をもつ，と表現しています．そして，上の例でいえば，FeatureSet 及び AssociationSetそれぞれは，建物であれば，100棟の</span><span class="mainSentence">インスタンス (features)，道路ー街路樹関連であれば50件の関連インスタンス(associations) をもつでしょう．地物インスタンス，関連インスタンスは，Feature, Associationという型をとりますが，それらは，地物型 (FeatureType)，関連型 (AssociationType)のIDを属性にするので，インスタンスがどの型に従うかがわかります</span><span class="mainSentence">．</span></p>
-<p class="mainSentence"><span class="thirdHeader">属性</span><br/>
-</p>
+<p class="mainSentence">gittokではインスタンスの集合と，関連するデータの集まりを統合した地理空間データセットのことをキット(kit) と呼びます．Kit は応用スキーマに従って作成されます．Kit は，地物インスタンスの集合 (FeatureSet)と関連インスタンスの集合 (AssociationSet) を含みます．キットはそれぞれ複数の種類の地物の集合（例えば，建物，道路，街路樹）と関連の集合（例えば，建物ー道路，道路ー街路樹）をもちます．この構造を，インスタンスモデルでは，キットはfeatureSetArrayという役割をもつ複数の地物集合(FreatureSet)，及び，associationSetArrayという役割名をもつ，複数の関連集合 (AssociationSet) をもつ，と表現しています．そして，上の例でいえば，FeatureSet 及び AssociationSetそれぞれは，建物であれば，100棟のインスタンス (features)，道路ー街路樹関連であれば50件の関連インスタンス(associations) をもつでしょう．地物インスタンス，関連インスタンスは，Feature, Associationという型をとりますが，それらは，地物型 (FeatureType)，関連型 (AssociationType)のIDを属性にするので，インスタンスがどの型に従うかがわかります．</p>
+<p class="mainSentence">gittokでは，Kitの内部で，他からの参照が起こりうるインスタンスのidとして，UID  (Unique Identifier) が，インスタンス発生時に自動的に付加されます．KitをXMLで符号化して交換するときも，このidが使用されますので，id以外の属性の更新が行われても，インスタンスが存在する限り，同じidが使われます．ただし，XMLファイル上で，故意にidを改変してしまうと，矛盾が発生する可能性があるので，改変してはいけません．</p>
+<p class="thirdHeader">属性</p>
 <p class="mainSentence"><span class="mainSentence"><strong>applicationSchemaURL</strong></span><br />
 Kitは応用スキーマに従って作成されますが，kit自身，自分がどの応用スキーマに従うかを示す情報を持っています．それがこのURLです．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>baseMapImageURL</strong></span><br />
@@ -136,7 +136,7 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 <p class="mainSentence">1．gittokのタイトルページから，Acquisitionアイコンを選択します．<br />
   2．Editor ページが開いたら，Modellerで作成した応用スキーマをオープンします．<br />
   3．Feature タブを選択して，FeatueTypeのドロップダウンリストの中から，編集する地物型を選択します．すると，Attribute Type List の中に，この地物型がもつべき属性の名前，データ型及び多重度の有無のリストが表示されます．<br />
-  4．Instance ID の斜め上のaddボタンを押すと instance のリストを表示するドロップダウンリストInstance IDに新たな識別子が表示されます．これが地物インスタンスを追加する行為です．<br />
+  4．Instance IDs ラベルの斜め上のaddボタンを押すと地物インスタンスのリストを表示するドロップダウンリストに新たな識別子が表示されます．これが地物インスタンスを追加する行為です．<br />
 5．Attribute Type List に表示された属性の中から，一つ選んで，マウス等でクリックすると，それぞれのデータ型に合わせた属性編集ページが表示されます．ただし，文字列や数値等の単純データ型を取る属性の場合は以下の説明を読んで下さい．<br />
 <p class="mainSentence"><span class="thirdHeader">地物属性の取得</span><br />
 </p>
@@ -146,10 +146,14 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 3. もし属性に多重度がある場合は，1.と2.を繰り返すことによって，複数の属性値をValue Gridに追加することができます．<br />
 もし，追加した属性値が不要の場合は，Value Gridの該当する行を指定して，deleteボタンを押します．すると，Value Gridの中のその行が消去されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>複雑な属性の場合</strong></span><br/>
-  1. 属性編集用のページ（Geometry や Address など）で属性を作成し，追加する属性を選択します．<br />
+  1. 属性編集用のページ（Geometry，Memo そして Address など）で属性を作成し，追加する属性を選択します．<br />
   2. この状態で，ページ右下にあるaddボタンを押すと，Attribute Gridの右にあるValue Gridのid欄に属性のidが表示され，値がMemo型の場合はvalue欄に文字列が表示されます．これで，地物インスタンスに一つの属性が追加されたことになります．<br />
   3. もし属性値が複数ある場合は，1．と2．を繰り返すことによって，複数の属性idをValue Gridに追加することができます．<br />
-4. もし，追加した属性idや属性値が不要の場合は，Value Gridの該当する行を指定して，deleteボタンを押します．すると，Value Gridの中のその行が消去されます．ただし，属性編集ページ上の値は消去されない．その消去は，それぞれの属性編集ページで行わなければいけない．<br />
+4. もし，追加した属性idや属性値が不要の場合は，Value Gridの該当する行を指定して，deleteボタンを押します．すると，Value Gridの中のその行が消去されます．ただし，属性編集ページ上の値は消去されません．その消去は，それぞれの属性編集ページで行わなければいけません．</p>
+<p class="mainSentence"><strong>幾何属性の加除修正（編集）</strong><br />
+  1.Geometryページ上で，対象となる地物インスタンスの空間属性になっている空間プリミティブを一つ，選択します．すると，その空間プリミティブを含む地物インスタンスのリストが，Selected IDsドロップダウンリストに入れられ，&quot;Selected&quot;というプロンプトが現れます．<br />
+2.選択されたインスタンスの中から，編集対象になるインスタンスを選択します．すると，そのインスタンスのIDが，Instance IDsドロップダウンリストのプロンプトとして，表示されます．<br />
+3.あとは，「複雑な属性の場合」で示した作業を行えば，属性の加除修正を行うことができます．<br />
 </p>
 <p class="mainSentence"><span class="thirdHeader">関連インスタンスの取得</span><br/>
 </p>
@@ -199,13 +203,15 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 <p class="mainSentence"><span class="mainSentence"><strong>get (CRS)</strong></span><br/>
 このボタンを押すと，CRS Editor 上にある座標参照系ファイルを kit に付加することができます．</p>
 <p class="thirdHeader">Feature Tab</p>
-<p class="mainSentence">Feature タブを押してでてくるパネルはFeatureEditor です．これは，地物インスタンスの作成を行うためにあります．インスタンスの生成を行い，Attribute Type List 各行で示された属性型ごとに開くページを使って属性を取得し，キットに追加して行きます．</p>
+<p class="mainSentence">Feature タブを押してでてくるパネルはFeature Editor です．これは，地物インスタンスの作成を行うためにあります．インスタンスの生成を行い，Attribute Type List 各行示にされた属性型ごとに開くページを使って，属性値を取得し，キットに追加したり，削除したりします．</p>
 <p class="thirdHeader"><img src="../figures/Editor_Feature.png" width="520" height="650" alt="AcqFeature" /></p>
 <p class="mainSentence">図2. 地物インスタンスとその属性の編集のための画面</p>
 <p class="thirdHeader">FIELDS</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Feature Type（選択可能）</strong></span><br/>このドロップダウンリストで，取得する地物の型を指定します．指定すると，Attribute Grid欄に地物属性の一覧が表示されます．</p>
-<p class="mainSentence"><strong>Instance ID（選択可能）</strong><br/>
-  このドロップダウンリストには，生成されたインスタンスのIDの一覧が表示されます．既に生成されたインスタンスの属性を編集する場合は，ここで，該当するインスタンスを選択します．</p>
+<p class="mainSentence"><strong>Instance IDs（選択可能）</strong><br/>
+  このドロップダウンリストには，生成された地物インスタンスのIDの一覧が表示されます．既に生成された地物インスタンスの属性を加除修正する場合は，ここで，該当するインスタンスを選択します．</p>
+<p class="mainSentence"><strong>Selected IDs（選択可能）</strong><br />
+このドロップダウンリストには，geometryページ上で選択された幾何属性を，属性値として保持する地物インスタンスの識別子の一覧が，表示されます．選択された幾何属性が，地物インスタンスの属性になっている場合は，プロンプトに&quot;Selected&quot;と表示されます．Gittokは，一つの幾何属性値を複数の地物インスタンスが保持することを許していますので，このリストをみることによって，どの地物インスタンスの属性かがわかります．また，このリストの中から適当な地物インスタンスを選択すると，Instance IDsにそのインスタンスの識別子が表示されます．これによって，その地物インスタンスがもつ属性の加除修正が可能になります．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Attribute Type List（選択可能）</strong></span><br/>
 指定された地物型に含まれる属性の名前，データ型,多重度そして計量の単位が，一覧として表示されます．最初のdr は derived の略で，派生属性の場合は，/ が表示されます．属性の編集を行うためには，この中から対象の行を選択します．すると，該当するデータ型のためのページが表示されます．基本データ型の場合は，Value欄から入力します．派生属性は，別の場所で値が求められますので，ここでは指定することはできません．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Value（編集可能）</strong></span><br/>
@@ -213,11 +219,11 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 <p class="mainSentence"><span class="mainSentence"><strong>Attribute ID-Value List（選択可能）</strong></span><br/>
   属性が取得されると，それが単純データ型を撮る場合はvalue欄に値が入ります．複合データ型をとる場合は，その属性値のidが ID 欄に表示されます．多重度がある属性の場合，複数の行に表示が行われます．</p>
 <p class="thirdHeader">BUTTONS</p>
-<p class="mainSentence"><span class="mainSentence"><strong>add (Instance ID)</strong></span><br/>
-地物インスタンスの属性を取得するためには，まず，このボタンを押して，インスタンスの生成を行わなければ行けません．生成が行われると，下のドロップダウンリストに，インスタンスのidが一覧表示されます．</p>
-<p class="mainSentence"><span class="mainSentence"><strong>delete (Instance ID)</strong></span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>add (Feature)</strong></span><br/>
+地物インスタンスの属性を取得するためには，その前に，このボタンを押して，インスタンスの生成を行わなければ行けません．生成が行われると，下のドロップダウンリストに，インスタンスのidが一覧表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>delete (Feature)</strong></span><br/>
 取得されたインスタンスを削除するときは，下のドロップダウンリストから該当するインスタンスのidを選択し，このボタンを押します．インスタンスは削除され，ドロップダウンリストからidが消えます．</p>
-<p class="mainSentence"><span class="mainSentence"><strong>add (Attribute ID-Value List)</strong></span><br/>
+<p class="mainSentence"><span class="mainSentence"><strong>add (Attribute ID Value List)</strong></span><br/>
 属性の取得が行われるたとき，このボタンをを押すと，複合データ型の場合は属性値の id が ID 欄に，単純データ型の場合は，属性値が value 欄に追加されます．多重度が指定されているときは，複数の行が使われますが，多重度がないときは，一つ以上の値を追加しようとすると警告が表示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>delete (Attribute ID Value List)</strong></span><br/>
 取得された属性を削除するときは，削除する行を指定して，このボタンを押します．指定された行の値が消去されます．</p>
@@ -242,6 +248,8 @@ affineParamは地図座標と地上の平面座標の換算のためにありま
 指定された関連が，通常の関連 (association)か，合成 (composition)か，が示されます．本来であれば，合成が選択されると，from 側のインスタンスが消去されると， to 側のインスタンスも自動的に消去されなければいけませんが，現在はまだ，実装していません．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Feature type</strong></span><br/>
 from 地物とto 地物の型が表示されます．</p>
+<p class="mainSentence"><strong>Candidates</strong><br />
+Geometry ページ上で幾何属性を選択すると，その属性をもつ地物インスタンスの一覧がここに示される．地物インスタンスの型は，association type で規定されている．gittok では，異なる地物インスタンスが一つの幾何属性を共有することを認めているので，どの地物インスタンスを，from または to 地物にするかの選択が，求められる．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Role name</strong></span><br/>
 to 地物の役割名が示されます．</p>
 <p class="mainSentence"><span class="mainSentence"><strong>Correspondence</strong></span><br/>

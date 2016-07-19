@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
-		  xmlns:mx="library://ns.adobe.com/flex/mx" width="270" height="312"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="268" height="378"
 		  title="Memo Viewer"
 		  creationComplete="initializeApp()">
 	<fx:Declarations>
@@ -10,36 +10,67 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import dataTypes.simpleDataTypes.Memo;
+			import dataTypes.theme.Memo;
 			
 			import mx.collections.ArrayList;
 			
 			import spark.events.IndexChangeEvent;
 			
+			public var memoObjectArray:ArrayList = new ArrayList();
+			
 			[Bindable]
-			public var memoArray:ArrayList;
+			protected var attNameArray:ArrayList;
+			
+			protected var memoArrayArray:ArrayList;
+			
+			[Bindable]
+			protected var memoTitleArray:ArrayList;
+			
+			[Bindable]
+			protected var memoArray:ArrayList;
 			
 			protected function initializeApp():void {
 				this.move(300, 400);
-				setMemoArray();
+				setMemoObjectArray();
+				
 			}
 			
-			public function setMemoArray():void {
-				if (memoArray == null) {
-					memoList.prompt = "";
+			public function setMemoObjectArray():void {
+				if (memoObjectArray == null) {
+					memoTitles.prompt = "";
 					memoArea.text = "";
 					return;
 				}
-				if (memoArray.length > 0) {
-					var memo:Memo = memoArray.getItemAt(0) as Memo;
-					memoList.prompt = memo.value;
-					memoArea.text = memo.value;
-				}				
+				if (memoObjectArray.length > 0) {
+					memoArrayArray = new ArrayList();
+					attNameArray = new ArrayList();
+					for (var i:int = 0; i < memoObjectArray.length; i++) {
+						var obj:Object = memoObjectArray.getItemAt(i) as Object;
+						attNameArray.addItem(obj.attName);
+						memoArrayArray.addItem(obj.memoArray);
+					}
+
+				}
+				attNameList.prompt = "Select attribute";
+				memoTitles.prompt = "Select title";
+				
 			}
 			
-			protected function memoList_changeHandler(event:IndexChangeEvent):void
+			protected function attNameList_changeHandler(event:IndexChangeEvent):void
 			{
-				var memoIndex:int = memoList.selectedIndex;
+				var attIndex:int = attNameList.selectedIndex;
+				
+				memoArray = memoArrayArray.getItemAt(attIndex) as ArrayList;
+				memoTitleArray = new ArrayList();
+				for (var i:int = 0; i < memoArray.length; i++) {
+					var memo:Memo = memoArray.getItemAt(i) as Memo;
+					memoTitleArray.addItem(memo.title);
+				}
+			}
+			
+			protected function memoTitles_changeHandler(event:IndexChangeEvent):void
+			{
+				var memoIndex:int = memoTitles.selectedIndex;
 				if (memoIndex == -1) return;
 				
 				var memo:Memo = memoArray.getItemAt(memoIndex) as Memo;
@@ -57,7 +88,6 @@
 				var request:URLRequest = new URLRequest("documents/en/memoViewer_en.html");
 				navigateToURL(request);
 			}
-
 			
 		]]>
 	</fx:Script>
@@ -70,11 +100,15 @@
 	<s:Label right="10" top="12" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
 
-	<s:DropDownList id="memoList" x="66" y="65" width="196" height="20" 
-					dataProvider="{memoArray}" labelField="value"
-				    change="memoList_changeHandler(event)"></s:DropDownList>
-	<s:TextArea id="memoArea" x="7" y="119" width="254" editable="false"/>
-	<s:Label x="44" y="72" fontSize="11" text="List"/>
-	<s:Label x="9" y="103" text="Memo"/>
+	<s:DropDownList id="attNameList" x="25" y="82" width="174" height="20" 
+					dataProvider="{attNameArray}"
+				    change="attNameList_changeHandler(event)"></s:DropDownList>
+	<s:DropDownList id="memoTitles" x="25" y="129" width="173" dataProvider="{memoTitleArray}"
+					change="memoTitles_changeHandler(event)"></s:DropDownList>
+	<s:TextArea id="memoArea" left="24" top="174" right="21" bottom="20" editable="false"/>
+	
+	<s:Label x="25" y="114" fontSize="12" text="Titles"/>
+	<s:Label x="23" y="159" text="Text"/>
+	<s:Label x="25" y="68" text="Memo attributes"/>
 </s:Window>
   
