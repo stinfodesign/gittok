@@ -244,9 +244,6 @@
 					return;					
 				}
 				
-				//Update featureType list on screen
-				fTypeArray.setItemAt(featureType, index);
-				
 				//Set parameters
 				featureType.name = featureTypeName.text;
 				featureType.definition = defArea.text;
@@ -258,6 +255,9 @@
 				featureType.links = linksList;
 				featureType.linkedBy = linkedByList;
 				featureType.children = childList;
+				
+				//Update featureType list on screen
+				fTypeArray.setItemAt(featureType, index);
 								
 				//Initialize feature type and screen
 				initializeFeatureTypeAndScreen();
@@ -404,8 +404,7 @@
 			
 			private function inheritProperties(fType:FeatureType):void {
 				
-				// inherit proxy
-				if (fType.proxyName != "") featureType.proxyName = fType.proxyName;
+				// Proxy is overloaded!
 				
 				// If parent class already be concerte, it inherits properties of upper classes.
 				// In this case, the inheritance will be duplicated without the check shown below.

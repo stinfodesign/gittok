@@ -141,7 +141,7 @@
 			private var scaleLabelPos:Number;
 			
 			[Bindable]
-			private var featureTypesArray:ArrayList;
+			private var featureTypeArray:ArrayList;
 
 			
 			public function initializeApp(): void {
@@ -512,10 +512,10 @@
 					labels = stream.readObject();	// label schema
 					stream.close();
 					
-					featureTypesArray = new ArrayList();
+					featureTypeArray = new ArrayList();
 					
 					for each (var fpUnit:FeaturePortrayalUnit in  portrayals.fpUnits) {
-						featureTypesArray.addItem(fpUnit.featureTypeID);
+						featureTypeArray.addItem(fpUnit.featureTypeID);
 					}
 					
 				} catch (error:IOError) {
@@ -560,7 +560,7 @@
 					if (fpUnit != null) {
 						var thematicModifier:ThematicCondition = fpUnit.thematicModifier;
 						
-						if (thematicModifier != null) {
+						if (thematicModifier.elements.length > 0) {
 							// set Legend on the map
 							this.makeLegend(thematicModifier);
 						}
@@ -1416,7 +1416,7 @@
 					
 					var ftIndex:int = featureTypesDropdown.selectedIndex;
 					if (ftIndex == -1) return;
-					var fTypeID:String = featureTypesArray.getItemAt(ftIndex) as String;
+					var fTypeID:String = featureTypeArray.getItemAt(ftIndex) as String;
 					
 					if (symbolSpace.numChildren > 0) {
 						var i:int = 0;						
@@ -1539,6 +1539,10 @@
 			public function setKit(kitFileURL:String):void {
 				var kitStream:FileStream = new FileStream();
 				var kitFile:File = new File();
+				
+				var myPattern:RegExp = /%20/g;  
+				kitFileURL = kitFileURL.replace(myPattern, " ");  
+
 				kitFile.url = kitFileURL;  // THis url shall be an absolute path
 				try {
 					kitStream.open(kitFile, FileMode.READ);
@@ -1559,7 +1563,9 @@
 					kitURL += pathArray[i] + "/";
 				}
 
-				kit.applicationSchema = this.openApplicationSchema(kitURL, kit.applicationSchemaURL);
+				kit.applicationSchema 
+					= this.openApplicationSchema(kitURL, kit.applicationSchemaURL);
+				
 				
 				this.setKitParameters();
 				
@@ -1715,6 +1721,12 @@
 				this.setKit(kitURL + map.kitFileName);
 				
 				portrayals = map.portrayalSchema;
+				featureTypeArray = new ArrayList();
+				fpUnits = portrayals.fpUnits;
+				for each (var fpUnit:FeaturePortrayalUnit in  fpUnits) {
+					featureTypeArray.addItem(fpUnit.featureTypeID);
+				}
+
 				
 				this.setKitParameters();
 				
@@ -1829,6 +1841,8 @@
 						symbolSpace.addChild(aSym);
 					}
 				}
+				
+				
 			}
 			
 			protected function saveMapButton_clickHandler(event:MouseEvent):void
@@ -2136,13 +2150,13 @@
 			  click="titleButton_clickHandler(event)"/>
 	<s:Button id="northArrowButton" y="58" right="37" width="103" height="20" label="north arrow »"
 			  click="northArrowButton_clickHandler(event)"/>
-	<s:Button id="openMapButton" right="236" bottom="9" width="50" height="20" label="open"
+	<s:Button id="openMapButton" right="306" bottom="10" width="50" height="20" label="open"
 			  click="openMapButton_clickHandler(event)"/>
-	<s:Button id="saveMapButton" right="178" bottom="9" width="50" height="20" label="save"
+	<s:Button id="saveMapButton" right="248" bottom="10" width="50" height="20" label="save"
 			  click="saveMapButton_clickHandler(event)"/>
-	<s:Label id="mapFileLabel" right="30" bottom="9" width="110" height="20"
+	<s:Label id="mapFileLabel" right="30" bottom="9" width="169" height="20"
 			 backgroundColor="#DADADA" verticalAlign="middle"/>
-	<s:Label right="148" bottom="12" text="Map"/>
+	<s:Label right="218" bottom="13" text="Map"/>
 	<s:Button id="setBackground" y="83" right="37" width="103" height="20" label="background »"
 			  click="setBackground_clickHandler(event)"/>
 	<s:Label y="16" right="129" fontSize="11" text="Set"/>
@@ -2154,6 +2168,6 @@
 	<s:Label x="334" y="73" fontSize="11" text="Select feature type"/>
 	<s:DropDownList id="featureTypesDropdown" x="333" y="87" width="121"
 					change="featureTypesDropdown_changeHandler(event)" 
-					dataProvider="{featureTypesArray}"></s:DropDownList>
+					dataProvider="{featureTypeArray}"></s:DropDownList>
 	
 </s:Window>

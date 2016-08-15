@@ -78,7 +78,7 @@ package gfm
 							+ 'isAbstract="' + this.isAbstract + '">';
 			
 			if (proxyName != "") {
-				str += '<proxy idref="';
+				str += '<proxy name="';
 				str += proxyName;
 				str += '" />';
 			}
@@ -165,7 +165,7 @@ package gfm
 			
 			// proxy
 			this.proxyName = "";
-			this.proxyName = _xml.proxy.@idref;
+			this.proxyName = _xml.proxy.@name;
 			
 			// operationTypes
 			this.operationTypes = new ArrayList();

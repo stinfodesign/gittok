@@ -164,10 +164,15 @@
 				symbolStylesLabel.text = symbolFile.name;
 				symbolStyles.name = symbolFile.name;
 				var symbolStream:FileStream = new FileStream();
-				symbolStream.open(symbolFile, FileMode.WRITE);
 				
-				symbolStream.writeObject(symbolStyles);
-				symbolStream.close();
+				try {
+					symbolStream.open(symbolFile, FileMode.WRITE);				
+					symbolStream.writeObject(symbolStyles);
+					symbolStream.close();
+				}
+				catch (error:IOError)  {
+					Alert.show(error.message, "Alert", 4, this);
+				}
 			}
 			
 			protected function openSymbolStylesButton_clickHandler(event:MouseEvent):void

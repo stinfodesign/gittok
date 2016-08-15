@@ -38,7 +38,8 @@
 			protected function proxyValueList_changeHandler(event:IndexChangeEvent):void
 			{
 				selectedIndex = proxyValueList.selectedIndex;
-				var dataValue:Attribute = dataList.getItemAt(selectedIndex) as Attribute;
+				//var dataValue:Attribute = dataList.getItemAt(selectedIndex) as Attribute;
+				var dataValue:CharacterString = dataList.getItemAt(selectedIndex) as CharacterString;
 				selectedList.addItem(dataValue);
 			}
 			

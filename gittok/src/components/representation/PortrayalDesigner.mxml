@@ -226,13 +226,17 @@
 			}
 			
 			private function openSym(event:Event):void {
+
+				try {
+					stream.open(file, FileMode.READ);
+					syms = stream.readObject();
 				
-				stream.open(file, FileMode.READ);
-				syms = stream.readObject();
-				
-				var areaSyms:Dictionary = syms.areaSymStyles;
-				var lineSyms:Dictionary = syms.lineSymStyles;
-				var pointSyms:Dictionary = syms.pointSymStyles;
+					var areaSyms:Dictionary = syms.areaSymStyles;
+					var lineSyms:Dictionary = syms.lineSymStyles;
+					var pointSyms:Dictionary = syms.pointSymStyles;
+				} catch (error:IOError) {
+					Alert.show(error.message, "Alert", 4, this);
+				}
 				
 				var symObj:Object;
 				symStyleArray = new ArrayList();
@@ -536,6 +540,9 @@
 					var attType:AttributeType = featureType.attributeTypes.getItemAt(i) as AttributeType;
 					attributeNameArray.addItem(attType);
 				}
+				
+				if (m > 0) attributeNameDropDown.prompt = "Select attribute";
+				
 				if (featureType.parent != null) inheritAttributes(featureType.parent);				
 								
 				if (attributeTypeLabel != null)
@@ -907,7 +914,8 @@
 				portrayalSch = new PortrayalSchema();
 				portrayalSch.applicationSchema 		= applicationSchemaFile.name;
 				portrayalSch.symbolStyleDictionary 	= symbolStyleDicFile.name;
-				portrayalSch.labelStyleDictionary  	= labelStyleDicFile.name;				
+				portrayalSch.labelStyleDictionary  	= labelStyleDicFile.name;
+				
 				portrayalSch.fpUnits		   		= fpUnits;
 				
 				portrayalSch.representationOrder = new ArrayList();
@@ -935,11 +943,16 @@
 			private function openPortrayalSchema(event:Event):void {
 				dictionaryLabel.text = file.name;
 				var url:String = file.url;
+				
+				var myPattern:RegExp = /%20/g;  
+				url = url.replace(myPattern, " ");  				
 				var pathArray:Array = url.split("/");
+
 				var path:String = "/";
 				for (var i:int = 3; i < pathArray.length - 1; i++) {
 					path += pathArray[i] + "/";
 				}
+
 				var stream:FileStream = new FileStream();
 				
 				applicationSchemaFile    = new File();
@@ -1076,9 +1089,11 @@
 					labelArray.addItem(alPair);
 					
 					labelGrid.selectedIndex = -1;
+					
+					refGeomAttList.prompt ="Select geom";
+					
 				}
-				
-				fpUnits[ftPtlUnit.featureTypeID] = ftPtlUnit;				
+
 			}
 			
 
@@ -1120,6 +1135,8 @@
 				}
 				alPair.refGeomAttName = geomAttType.name;
 				ftPtlUnit.generalModifiers[selectedAttType.name] = alPair;
+								
+				fpUnits[ftPtlUnit.featureTypeID] = ftPtlUnit;				
 			}
 			
 			protected function tabBar_clickHandler(event:MouseEvent):void
@@ -1222,7 +1239,7 @@
 	<s:Label x="93" y="66" width="56" height="24" fontSize="10" text="Application Schema"/>
 	<s:Button id="openSymButton" x="176" y="67" width="55" label="open"
 			  click="openSymButton_clickHandler(event)"/>
-	<s:Label x="236" y="67" width="62" height="21" fontSize="10" text="Symbol Style Dictionary"/>
+	<s:Label x="309" y="-148" width="62" height="21" fontSize="10" text="Symbol Style Dictionary"/>
 	<s:Label id="symLabel" x="175" y="94" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
 	<s:Line x="-2" y="31" xFrom="30" xTo="600" yFrom="100" yTo="100">
@@ -1346,7 +1363,7 @@
 			<s:Button id="clearGeneralButton" x="448" y="30" width="60" height="20" label="clear"
 					  click="clearGeneralButton_clickHandler(event)"/>
 						
-			<s:Group id="symbolAssignGroup" visible="{sagVisible}">
+			<s:Group id="symbolAssignGroup" visible="{sagVisible}" width="340" height="99">
 				<s:Label x="66" y="23" width="165" height="20" text="Symbol style "/>
 				<s:DataGrid id="symbolAssignGrid" x="65" y="42" width="240" height="48" fontSize="11"
 							dataProvider="{symbolArray}"
@@ -1361,9 +1378,10 @@
 				</s:DataGrid>				
 			</s:Group>
 			
-			<s:Group id="labelAssignGroup" x="0" y="94" height="100" visible="{lagVisible}">
-				<s:Label x="65" y="10" text="Label style"/>
-				<s:DataGrid id="labelAssignGrid" x="65" y="23" width="240" height="48"
+			<s:Group id="labelAssignGroup" visible="{lagVisible}" x="0" y="98" width="508"
+					 height="96">
+				<s:Label x="67" y="8" text="Label style"/>
+				<s:DataGrid id="labelAssignGrid" x="67" y="24" width="240" height="48"
 							dataProvider="{labelArray}"
 							requestedRowCount="1">
 					<s:columns>
@@ -1374,13 +1392,24 @@
 						</s:ArrayList>
 					</s:columns>					
 				</s:DataGrid>
+
+				<!-- Draw rectangle with square corners. -->
+				<s:Rect x="306" y="24" width="145" height="47">
+					<s:stroke>
+						<s:SolidColorStroke color="0x000000" weight="1"/>
+					</s:stroke>
+					<s:fill>
+						<s:SolidColor color="0xFFFFFF" />
+					</s:fill>
+				</s:Rect>
 				
-				<s:Label x="320" y="31" text="Reference geometry"/>
-				<s:DropDownList id="refGeomAttList" x="320" y="48" width="124"
+				<s:Label x="316" y="31" fontWeight="bold" text="Reference geometry"/>
+				<s:DropDownList id="refGeomAttList" x="316" y="47" width="124"
 								change="refGeomAttList_changeHandler(event)"
 								dataProvider="{geomAttributeArray}" 
 								prompt="{refGeomPrompt}"
-							 	labelField="name"></s:DropDownList>			
+							 	labelField="name">
+				</s:DropDownList>			
 			</s:Group>
 
 		</s:NavigatorContent>
@@ -1389,7 +1418,6 @@
 	<s:Label id="attributeTypeLabel" x="364" y="235" width="120" height="20"
 			 backgroundColor="#DADADA" fontSize="11" verticalAlign="middle"/>
 	<s:DropDownList id="attributeNameDropDown" x="335" y="210" width="149"
-					prompt="Select Attribute"
 					change="attributeNameDropDown_changeHandler(event)"
 					dataProvider="{attributeNameArray}" fontSize="11" labelField="name"></s:DropDownList>
 	<s:Label x="335" y="239" fontSize="11" text="Type"/>
@@ -1425,12 +1453,13 @@
 	<s:List id="selectedFeatureTypesList" x="156" y="153" width="118" height="88"
 				 requireSelection="false"
 				 dataProvider="{selectedFeatureTypeArray}"
-				 labelField="name"></s:List>
+				 labelField="name" />
 	<s:Button id="editPortrayalRuleButton" x="278" y="153" width="50" label="edit"
 			  click="editPortrayalRuleButton_clickHandler(event)"/>
 	<s:Label x="332" y="158" fontSize="11" text="Portrayal rules"/>
 	<s:Label x="553" y="253" fontSize="11" text=" Attribute type"/>
 	<s:Label x="335" y="198" fontSize="11" text="Attribute name"/>
+	<s:Label x="236" y="68" width="61" height="21" fontSize="10" text="Symbol Style Dictionary"/>
 
 
 </s:Window>

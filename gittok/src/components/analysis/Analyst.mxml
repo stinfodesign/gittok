@@ -804,7 +804,7 @@
 						for each(var wf:Feature in featureSet.features) {
 							attList = new ArrayList();
 							var att:* = attValueList.getItemAt(i);
-							att.featureID = wf.id; // ?????????????????????????????????????????????????????????
+							att.featureID.addItem(wf.id);
 							attList.addItem(att);
 							wf.attributes[operationType.returnAttributeName] = attList;
 							kit.featureList[wf.id] = wf;
@@ -829,7 +829,7 @@
 							wf = association.relateFrom.getItemAt(i) as Feature;
 							attList = new ArrayList();
 							att = attValueList.getItemAt(i);
-							att.featureID = wf.id;							
+							att.featureID.addItem(wf.id);							
 							attList.addItem(att);
 							attList.addItem(attValueList.getItemAt(i));
 							wf.attributes[operationType.returnAttributeName] = attList;
@@ -849,7 +849,7 @@
 							wf = association.relateTo.getItemAt(i) as Feature;
 							attList = new ArrayList();
 							att = attValueList.getItemAt(i);
-							att.featureID = wf.id;
+							att.featureID.addItem(wf.id);
 							attList.addItem(att);
 							wf.attributes[operationType.returnAttributeName] = attList;
 							kit.featureList[wf.id] = wf;

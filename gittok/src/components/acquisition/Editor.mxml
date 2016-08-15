@@ -1580,14 +1580,17 @@
 					if (assoType.name == association.typeName) break;
 				}
 				
-				if (fromListWindow != null) fromListWindow.close();
-				if (toListWindow   != null) toListWindow.close(); 
-				
 				var fAttType:AttributeType = assoType.from.getAttributeTypeByName(assoType.from.proxyName);
 				var tAttType:AttributeType = assoType.to.getAttributeTypeByName(assoType.to.proxyName);
 				
-				if (showAssoButton.label == "show") {										
+				if (showAssoButton.label == "show") {
 					if (fAttType.dataType == "CharacterString") {
+						/*
+						if (fromListWindow != null) {
+							fromListWindow.close();
+						}
+						*/
+
 						this.openFromListWindow();
 						fromListWindow.selectedList = new ArrayList();
 						for (i = 0; i < fromFeatures.length; i++) {
@@ -1599,6 +1602,12 @@
 					}
 					
 					if (tAttType.dataType == "CharacterString") {
+						/*
+						if (toListWindow   != null) {
+							toListWindow.close();
+						}
+						*/
+
 						this.openToListWindow();
 						toListWindow.selectedList = new ArrayList();
 						for (i = 0; i < toFeatures.length; i++) {
@@ -1835,7 +1844,7 @@
 			
 			protected function getToSelectedIndex(event:Event):void {
 				if(toListWindow.selectedIndex == -1) return;
-				
+				var f:Feature;
 				var crp:String = associationType.correspondence;
 				if ((crp == "1:1" || crp == "m:1") && toFeatures.length == 1) {
 					Alert.show("Alert", "To-feature shall be one.", 4, this);
@@ -1844,13 +1853,33 @@
 				
 				var fSet:FeatureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
 				var d:CharacterString = toListWindow.dataList.getItemAt(toListWindow.selectedIndex) as CharacterString;
-				var f:Feature = fSet.features[d.featureID];
-				if (toFeatures.getItemIndex(f) != -1) {
-					toListWindow.proxyValueList.selectedIndex = -1;
-					toListWindow.selectedItemList.selectedIndex = -1;
-					return;
+				
+				if (toCandidates == null) toCandidates = new ArrayList();
+				
+				for (var i:int = 0; i < d.featureID.length; i++) {
+					var fid:String = d.featureID.getItemAt(i) as String;
+					f = fSet.features[fid];
+					
+					/*
+					if (toFeatures.getItemIndex(f) != -1) {
+						toListWindow.proxyValueList.selectedIndex = -1;
+						toListWindow.selectedItemList.selectedIndex = -1;
+						return;
+					}
+					toFeatures.addItem(f);
+					*/
+					
+					if (toCandidates.getItemIndex(f) != -1) {
+						toListWindow.proxyValueList.selectedIndex = -1;
+						toListWindow.selectedItemList.selectedIndex = -1;
+						return;
+					}
+					toCandidates.addItem(f);					
 				}
-				toFeatures.addItem(f);
+				if (toCandidates.length> 0) {
+					toCandidatesDropdown.prompt = "Select ID";
+					toCandidatesDropdown.selectedIndex = -1;
+				}
 			}
 			
 			protected function toListWindowClosed(event:Event):void {
@@ -1930,6 +1959,7 @@
 			protected function fromIDList_clickHandler(event:MouseEvent):void
 			{
 				var fromFeature:Feature = fromIDList.selectedItem as Feature;
+				if (fromFeature == null) return;
 				var fromType:FeatureType = applicationSchema.featureTypes[fromFeature.typeName] as FeatureType;
 				var attType:AttributeType = fromType.getAttributeTypeByName(fromType.proxyName);
 				var attArray:ArrayList = fromFeature.attributes[attType.name] as ArrayList;
@@ -1946,6 +1976,7 @@
 			protected function toIDList_clickHandler(event:MouseEvent):void
 			{
 				var toFeature:Feature = toIDList.selectedItem as Feature;
+				if (toFeature == null) return;
 				var toType:FeatureType = applicationSchema.featureTypes[toFeature.typeName] as FeatureType;
 				var attType:AttributeType = toType.getAttributeTypeByName(toType.proxyName);
 				var attArray:ArrayList = toFeature.attributes[attType.name] as ArrayList;
@@ -2090,9 +2121,16 @@
 					kit.memoList[mm.id] = mm;
 				}
 				
+				kitName.text = kitFile.name;
 				
+				/*
 				if (tabBar.selectedIndex == 0) {
 					// feature
+					if (featureTypeList.selectedIndex < 0) {
+						Alert.show("Select feature type", "Alert", 4, this);
+						return;
+					}
+
 					concreteType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
 					featureSet = kit.featureSetArray[concreteType.name] as FeatureSet;
 					
@@ -2129,6 +2167,7 @@
 					Mouse.cursor = "arrow";
 					geometryWindow.close();
 				}
+				*/
 				
 			}
 						
