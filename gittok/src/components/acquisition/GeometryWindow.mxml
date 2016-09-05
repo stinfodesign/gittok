@@ -187,7 +187,12 @@
 				var pattern:RegExp = /\/\w*\.\w*/;	// regular expression to detect the file name
 				
 				if (kit.baseMapImageURL != null) {
-					var bmURL:String = kitURL + kit.baseMapImageURL;
+					var bmURL:String;
+					if (kit.baseMapImageURL.search("http://") > -1) 
+						bmURL = kit.baseMapImageURL;
+					else
+						bmURL = kitURL + kit.baseMapImageURL;
+					
 					baseMapImage.load(bmURL);
 					baseMapImage.addEventListener(Event.RESIZE, onComplete2);
 				}
@@ -558,14 +563,15 @@
 								
 								if (curveStartFlag) {
 									if (wp == null) {
-										// intermediate points
-										var cArray:ArrayList = curve.shape;
-										var cn:int = cArray.length;
+										// intermediate points										
+										var cn:int = curve.shape.length;
 										if (cn > 0) {
-											var cw:Coordinate2 = cArray.getItemAt(cn - 1) as Coordinate2;
+											// To avoid double click at the same position.
+											var cw:Coordinate2 = curve.shape.getItemAt(cn - 1) as Coordinate2;
 											if (math.Distance.p2p(cw, coor) == 0) return;
 										}
-										cArray.addItem(coor);
+										
+										curve.shape.addItem(coor);
 										curve.end = new SG_Point();
 										curve.end.position = coor;
 										workLayer.removeChild(lSym);
@@ -731,16 +737,16 @@
 								var nearest:Number = Number.MAX_VALUE;
 								surface = null;
 								for each(var s:SG_Surface in kit.surfaceList) {
-								var ring:SG_Ring = s.exterior;
-								if (math.Relation.pointInRing(coor, ring)) {
-									var d:Number = math.EastWest.isLSEastOfP(coor, ring.coordinateSequence());
-									if (nearest > d) {
-										nearest = d;
-										surface = s;
-										foundCoord = coor;
+									var ring:SG_Ring = s.exterior;
+									if (math.Relation.pointInRing(coor, ring)) {
+										var d:Number = math.EastWest.isLSEastOfP(coor, ring.coordinateSequence());
+										if (nearest > d) {
+											nearest = d;
+											surface = s;
+											foundCoord = coor;
+										}
 									}
 								}
-							}
 								
 								if (surface == null) break;
 								
@@ -845,6 +851,8 @@
 				var nc:SG_Curve;
 				var s:SG_Surface;
 				
+				// Search an exterior boundary
+				// coor shall be put at inside and near the east side of the exterior boundary
 				for each (var c:SG_Curve in kit.curveList) {
 					var ls:CoordinateArray = c.coordinateSeqence() as CoordinateArray;
 					var d:Number = math.EastWest.isLSEastOfP(coor, ls);
@@ -856,6 +864,7 @@
 					}
 				}
 				
+				// Constract the exterior and the interiors
 				if (nc != null) {
 					s = constructExterior(coor, nc);
 					if (s != null && math.Relation.pointInRing(coor, s.exterior)) {
@@ -1128,6 +1137,8 @@
 				moveGeomButton.alpha = 0.5;
 				deleteGeomButton.alpha = 0.5;
 				
+				if (curveRadio.selected) undoButton.enabled = true;
+				
 			}
 			
 			
@@ -1149,6 +1160,7 @@
 				searchGeomButton.alpha = 1.0;
 				moveGeomButton.alpha = 0.5;
 				deleteGeomButton.alpha = 0.5;
+
 			}
 			
 			protected function moveGeomButton_clickHandler(event:MouseEvent):void
@@ -1595,11 +1607,62 @@
 				navigateToURL(request);
 			}
 						
+			protected function undoButton_clickHandler(event:MouseEvent):void
+			{
+				if (addGeomButton.selected && curveRadio.selected) {
+					if (curve != null && curve.shape.length > 0) {
+						curve.shape.removeItemAt(curve.shape.length - 1);
+						
+						curve.end = new SG_Point();
+						if (curve.shape.length > 0) {
+							curve.end.position = curve.shape.getItemAt(curve.shape.length - 1) as Coordinate2;
+							workLayer.removeChild(lSym);
+							lSym = new LineSymbol();
+							var lObj:Object = new Object();
+							lObj.curve = curve;
+							lObj.style = lineSymbolStyle;
+							lSym.decode(lObj);
+							lSym.name = curve.id.toString();
+							workLayer.addChild(lSym);
+						}
+						else if (curve.shape.length == 0) {
+							curve = null;
+							workLayer.removeChild(lSym);
+							operationGroup.selection = null;
+							geomGroup.selection = null;
+							curveStartFlag = false;
+							undoButton.enabled = false;
+						}
+					}
+				}
+				
+			}
+			
+			protected function curveRadio_clickHandler(event:MouseEvent):void
+			{
+				if (addGeomButton.selected) 
+					undoButton.enabled = true;
+				else
+					undoButton.enabled = false;
+			}
+			
+			protected function pointRadio_clickHandler(event:MouseEvent):void
+			{
+				undoButton.enabled = false;
+			}
+			
+			protected function surfaceRadio_clickHandler(event:MouseEvent):void
+			{
+				undoButton.enabled = false;
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<s:RadioButtonGroup id="geomGroup"/>
 		<s:RadioButtonGroup id="operationGroup"/>
+		<s:RadioButtonGroup id="envelopeGroup"/>
+		
 		
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
@@ -1668,7 +1731,23 @@
 		</s:Group>
 	</s:Panel>	
 	
-	<s:Group x="532" y="167" width="92" height="104" right="15" top="167">
+	<s:Group right="15" top="168" width="92" height="122">
+		<s:Rect x="0" y="0" width="100%" height="100%">
+			<s:stroke>
+				<s:SolidColorStroke color="0xc8c8c8"/>
+			</s:stroke>
+			<s:fill>
+				<s:SolidColor color="0xdadada"/>
+			</s:fill>
+		</s:Rect>
+		<s:Label x="4" y="12" fontWeight="bold" text="Action"/>
+		<s:RadioButton x="4" y="27" label="add" id="addGeomButton" groupName="operationGroup" click="addGeomButton_clickHandler(event)"/>
+		<s:RadioButton x="4" y="50" label="search" id="searchGeomButton" groupName="operationGroup" click="searchGeomButton_clickHandler(event)"/>
+		<s:RadioButton x="4" y="73" label="move" id="moveGeomButton" groupName="operationGroup" click="moveGeomButton_clickHandler(event)" />
+		<s:RadioButton x="4" y="96" label="delete" id="deleteGeomButton" groupName="operationGroup" click="deleteGeomButton_clickHandler(event)"/>
+	</s:Group>
+
+	<s:Group x="532" width="92" height="104" right="15" top="299">
 		<s:Rect x="0.5" y="0.5" width="100%" height="100%">
 			<s:stroke>
 				<s:SolidColorStroke color="0xc8c8c8"/>
@@ -1679,12 +1758,15 @@
 		</s:Rect>
 		
 		<s:Label x="4" y="12" fontWeight="bold" text="Geometry"/>
-		<s:RadioButton x="4" y="28" label="SG_Point" groupName="geomGroup" id="pointRadio"/>
-		<s:RadioButton x="4" y="52" label="SG_Curve" groupName="geomGroup" id="curveRadio"/>
-		<s:RadioButton x="4" y="74" label="SG_Surface" groupName="geomGroup" id="surfaceRadio"/>		
+		<s:RadioButton x="4" y="28" label="SG_Point" groupName="geomGroup" 
+					   id="pointRadio" click="pointRadio_clickHandler(event)"/>
+		<s:RadioButton x="4" y="52" label="SG_Curve" groupName="geomGroup" 
+					   id="curveRadio" click="curveRadio_clickHandler(event)"/>
+		<s:RadioButton x="4" y="74" label="SG_Surface" groupName="geomGroup" 
+					   id="surfaceRadio" click="surfaceRadio_clickHandler(event)"/>		
 	</s:Group>
-	
-	<s:Group x="531" y="281" width="92" height="46" right="15" top="281">
+
+	<s:Group x="532" width="92" height="46" right="15" top="412">
 		<s:Rect x="0" y="0" width="100%" height="100%">
 			<s:stroke>
 				<s:SolidColorStroke color="0xc8c8c8"/>
@@ -1698,22 +1780,6 @@
 		<s:Label id="multiLabel" x="52" y="26" text="multi"/>
 	</s:Group>
 	
-	<s:Group x="530" y="336" width="92" height="101" right="15" top="336">
-		<s:Rect x="0" y="0" width="100%" height="101">
-			<s:stroke>
-				<s:SolidColorStroke color="0xc8c8c8"/>
-			</s:stroke>
-			<s:fill>
-				<s:SolidColor color="0xdadada"/>
-			</s:fill>
-		</s:Rect>
-		
-		<s:RadioButton x="4" y="7" label="add" id="addGeomButton" groupName="operationGroup" click="addGeomButton_clickHandler(event)"/>
-		<s:RadioButton x="4" y="30" label="search" id="searchGeomButton" groupName="operationGroup" click="searchGeomButton_clickHandler(event)"/>
-		<s:RadioButton x="4" y="52" label="move" id="moveGeomButton" groupName="operationGroup" click="moveGeomButton_clickHandler(event)" />
-		<s:RadioButton x="4" y="75" label="delete" id="deleteGeomButton" groupName="operationGroup" click="deleteGeomButton_clickHandler(event)"/>
-	</s:Group>
-	
 	<s:Group left="21" bottom="7" width="280" height="20">
 		<s:Label x="1" y="5" text="X"/>
 		<s:Label x="138" y="5" text="Y"/>
@@ -1725,4 +1791,9 @@
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="588" y="18" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:Button id="undoButton" x="531" y="466" width="49" label="undo" enabled="false"
+			  click="undoButton_clickHandler(event)"/>
+
+	
+
 </s:Window>

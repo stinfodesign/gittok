@@ -277,7 +277,8 @@
 				
 				// select  "encode" or "decode"
 				switch (EDButtonGroup.selectedValue) {
-					case "Encode to XML document":						
+					case "Encode to XML document":	
+						edFileLabel.text = "File for encoding";
 						// Open AMF data file
 						try {	
 							file = new File();
@@ -289,6 +290,7 @@
 						}
 						break;
 					case "Decode to AMF data":
+						edFileLabel.text = "File for decoding";
 						// Open XML file
 						try {	
 							file = new File();
@@ -376,7 +378,9 @@
 					
 				} catch (error:IOError) {
 					Alert.show(error.message);
-				} 
+				}
+				
+				edFileLabel.text = "Encoded XML doc";
 			}
 			
 			private function saveXMLFile(event:Event):void {	
@@ -394,6 +398,9 @@
 				
 				kit = null;
 				savedFileLabel.text = file.name;
+				
+				edFileLabel.text = "";
+
 			}
 			
 			private function saveFileClose(event:Event):void {
@@ -499,7 +506,9 @@
 				} catch (error:IOError) {
 					Alert.show(error.message, "Alert", 4, this);
 					return;
-				} 
+				}
+				
+				edFileLabel.text = "Decoded AMF file";
 				
 			}
 			
@@ -560,6 +569,7 @@
 				fileStream.close();
 				
 				savedFileLabel.text = file.name;
+				edFileLabel.text = "";
 			}
 			
 			protected function fileStreamOpen(ofile:File, ext:String):FileStream {
@@ -623,8 +633,9 @@
 				   groupName="EDButtonGroup"/>
 	<s:RadioButton id="decodeRadio" x="31" y="403" label="Decode to AMF data"
 				   groupName="EDButtonGroup"/>
-	<s:Button id="executeButton" x="236" y="400" width="69" height="20" label="execute"
+	<s:Button id="executeButton" x="236" y="379" width="69" height="20" label="execute"
 			  click="executeButton_clickHandler(event)"/>
+	<s:Label id="edFileLabel" x="236" y="407" width="93" fontSize="10"/> 
 	<s:Label x="171" y="345" fontSize="10" text="XML: EXtensible Markup Language"/>
 	<s:Label x="171" y="357" fontSize="10" text="AMF: Action Message Format"/>
 	<s:Label x="261" y="13" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"

@@ -3,7 +3,7 @@
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
 		  title="Editor"
-		  width="524" height="656"
+		  width="524" height="654"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
@@ -111,11 +111,13 @@
 			[Bindable]
 			public var toFeatures:ArrayList;
 			
+			/*
 			[Bindable]
 			public var fromCandidates:ArrayList;
 			
 			[Bindable]
 			public var toCandidates:ArrayList;
+			*/
 			
 			[Bindable]
 			protected var idList:ArrayList = new ArrayList();
@@ -533,8 +535,24 @@
 			{
 				// if this button is pushed without type selection ...
 				if (concreteType == null) {
-					Alert.show("Alert", "Select feature type before add instance.", 4, this);
+					Alert.show("Select a feature type before add instances.", "Alert", 4, this);
 					return;
+				}
+				
+				// if there is an instance without proxy, it is not allowed to add a new instance.
+				var pname:String = concreteType.proxyName;
+				for each (var ftr:Feature in kit.featureList) {
+					if (ftr.attributes[pname] == null) {
+						Alert.show("An instance without proxy exists:" + ftr.id + "\nADD A PROXY ATTRIBUTE! CHECK OTHER ATTRIBUTES!", "Alert", 4, this);
+						
+						feature = ftr;
+						instanceIDList.selectedItem = ftr.id;
+						
+						//clear attribute value list on "valueGrid"
+						attValueList = null;
+
+						return;
+					}
 				}
 								
 				// feature definition
@@ -806,19 +824,26 @@
 								featureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
 						}
 						
-						selectedFeatureIDList = new ArrayList();
+						/*
+						Geometry primitive may associate with more than one features of which types are different.
+						This is the reason to examine elements of idArray.
+						If a feature with the same type to fType was found, it is the feature for editing. 
+						*/
+						var fType:FeatureType = featureTypeList.selectedItem as FeatureType;
 						for (var i:int = 0; i < idArray.length; i++) {
 							var id:String = idArray.getItemAt(i) as String;
-							// selectedFeatureIDList is a data provider for selectedInstanceIDList
-							selectedFeatureIDList.addItem(id);  
+							var ftr:Feature = kit.featureList[id] as Feature;
+							if (ftr.typeName == fType.name) {
+								instanceIDList.selectedItem = ftr;
+								instanceIDList.prompt = id;
+								feature = ftr;
+							}
 						}
-
-						selectedIDList.prompt = "Selected";	
-						
 					}
 					else {
-						selectedFeatureIDList = new ArrayList();
-						selectedIDList.prompt = "";
+						instanceIDList.selectedIndex = -1;
+						instanceIDList.prompt = "";
+						attValueList = new ArrayList();
 					}
 				}
 			}
@@ -1372,14 +1397,14 @@
 					// the from feature and all to-features are removed from the association instance
 					if (associationType.style == "composition") {
 						toFeatures.removeAll();
-						toCandidatesDropdown.prompt = "Select id";
-						toCandidatesDropdown.selectedIndex = -1;
+						//toCandidatesDropdown.prompt = "Select id";
+						//toCandidatesDropdown.selectedIndex = -1;
 
 					}
 
 					fromFeatures.removeItem(ff);
-					fromCandidatesDropdown.prompt = "Select id";
-					fromCandidatesDropdown.selectedIndex = -1;
+					//fromCandidatesDropdown.prompt = "Select id";
+					//fromCandidatesDropdown.selectedIndex = -1;
 				}
 				
 				if (toRadio.selected) {
@@ -1388,8 +1413,8 @@
 						Alert.show('Select "to" feature on the list before.', 'Alert', 4, this);	
 					}
 					toFeatures.removeItem(tf);
-					toCandidatesDropdown.prompt = "Select id";
-					toCandidatesDropdown.selectedIndex = -1;
+					//toCandidatesDropdown.prompt = "Select id";
+					//toCandidatesDropdown.selectedIndex = -1;
 				}
 				
 				if (geometryWindow != null) geometryWindow.clearAnnotationLayer();
@@ -1764,14 +1789,32 @@
 							Alert.show("Alert", "Add association before.", 4, this);
 							return;
 						}
+						/*
+						関連における，from地物の選択について
+						
+						関連インスタンスの生成を行うときには，from 地物の選択をしなければいけない．
+						これらは複数になる可能性があり，また，幾何プリミティブは異なる型をとる複数の地物オブジェクトから
+						参照される場合がある．そこで，Geometry Page から幾何プリミティブを選択して
+						from地物を選択するときは，以下の手順を踏む必要がある．
+						１．幾何プリミティブの選択
+						２．幾何プリミティブに関連する複数の地物オブジェクトの中から，from地物と同じ型をとるオブジェクトを抽出．
+						３．このオブジェクトが，すでにある from地物の配列に入っていないことを確認
+						４．from地物の配列にオブジェクトを追加
+						*/
 						var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;						
 						var fSet:FeatureSet = kit.featureSetArray[assoType.from.name] as FeatureSet;
-						fromCandidates = new ArrayList();
+						var fType:FeatureType = assoType.from;
 						for (var i:int = 0; i < geom.featureID.length; i++) {
 							var fid:String = geom.featureID.getItemAt(i) as String;
-							fromCandidates.addItem(fSet.features[fid]);
+							var ftr:Feature = fSet.features[fid] as Feature;
+							if (ftr.typeName == fType.name) {
+								for (var j:int = 0; j < fromFeatures.length; j++) {
+									var ftr2:Feature = fromFeatures.getItemAt(j) as Feature;
+									if (ftr == ftr2) return;
+								}
+								fromFeatures.addItem(ftr);
+							}
 						}
-						fromCandidatesDropdown.prompt = "Select id";						
 					}
 					else {						
 						Alert.show("Selected geometry is not an attribute of the from feature.", "Alert", 4, this);
@@ -1854,7 +1897,7 @@
 				var fSet:FeatureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
 				var d:CharacterString = toListWindow.dataList.getItemAt(toListWindow.selectedIndex) as CharacterString;
 				
-				if (toCandidates == null) toCandidates = new ArrayList();
+				//if (toCandidates == null) toCandidates = new ArrayList();
 				
 				for (var i:int = 0; i < d.featureID.length; i++) {
 					var fid:String = d.featureID.getItemAt(i) as String;
@@ -1867,19 +1910,21 @@
 						return;
 					}
 					toFeatures.addItem(f);
-					*/
 					
 					if (toCandidates.getItemIndex(f) != -1) {
 						toListWindow.proxyValueList.selectedIndex = -1;
 						toListWindow.selectedItemList.selectedIndex = -1;
 						return;
 					}
-					toCandidates.addItem(f);					
+					toCandidates.addItem(f);
+					*/
 				}
+				/*
 				if (toCandidates.length> 0) {
 					toCandidatesDropdown.prompt = "Select ID";
 					toCandidatesDropdown.selectedIndex = -1;
 				}
+				*/
 			}
 			
 			protected function toListWindowClosed(event:Event):void {
@@ -1903,13 +1948,41 @@
 							return;
 						}
 						
-						fSet = kit.featureSetArray[assoType.to.name] as FeatureSet;
+						/*
+						関連における，to地物の選択について
+						
+						関連インスタンスの生成を行うときには，to地物の選択をしなければいけない．
+						これらは複数になる可能性があり，また，幾何プリミティブは異なる型をとる
+						複数の地物オブジェクトから参照される場合がある．
+						そこで，Geometry Page から幾何プリミティブを選択してto地物を選択するときは，
+						以下の手順を踏む必要がある．
+						１．幾何プリミティブの選択
+						２．幾何プリミティブに関連する複数の地物オブジェクトの中から，to地物と同じ型をとるオブジェクトを抽出．
+						３．このオブジェクトが，すでにある to地物の配列に入っていないことを確認
+						４．to 地物の配列にオブジェクトを追加
+						*/
+						
+						var fType:FeatureType = assoType.to;						
+						for (var i:int = 0; i < geom.featureID.length; i++) {
+							var fid:String = geom.featureID.getItemAt(i) as String;
+							var ftr:Feature = fSet.features[fid] as Feature;
+							if (ftr.typeName == fType.name) {
+								for (var j:int = 0; j < toFeatures.length; j++) {
+									var ftr2:Feature = toFeatures.getItemAt(j) as Feature;
+									if (ftr == ftr2) return;
+								}
+								toFeatures.addItem(ftr);
+							}
+						}
+						
+						/*
 						toCandidates = new ArrayList();
 						for (var i:int = 0; i < geom.featureID.length; i++) {
 							var fid:String = geom.featureID.getItemAt(i) as String;
 							toCandidates.addItem(fSet.features[fid]);
 						}
-						toCandidatesDropdown.prompt = "Select id";						
+						toCandidatesDropdown.prompt = "Select id";	
+						*/
 
 					}
 					else {
@@ -2170,7 +2243,7 @@
 				*/
 				
 			}
-						
+			/*			
 			protected function fromCandidatesDropdown_changeHandler(event:IndexChangeEvent):void
 			{
 				if ((associationType.correspondence.search("m") == -1) &&
@@ -2209,7 +2282,10 @@
 				
 				selectedIDList.selectedIndex = -1;
 				
+				selectedIDList.prompt = "";
+				
 			}
+			*/
 			
 		]]>
 	</fx:Script>
@@ -2236,7 +2312,7 @@
 	<s:TabBar id="tabBar" dataProvider="{myViewStack}" x="16" y="142" height="20" />
 	
 	<mx:ViewStack id="myViewStack" 
-				  borderStyle="solid" width="490" height="438" x="16" y="161" backgroundColor="#fefee5"> 
+				  borderStyle="solid" width="490" height="420" x="16" y="161" backgroundColor="#fefee5"> 
 		<s:NavigatorContent id="featureTab" label="Feature">
 			<s:Group width="488" height="100%" id="featureDef" x="1" y="0">
 				<s:DropDownList id="featureTypeList" x="15" y="36" width="140" height="20"
@@ -2244,7 +2320,7 @@
 								dataProvider="{concreteTypes}" labelField="name"
 								prompt="Select F_Type"
 								skinClass="spark.skins.spark.DropDownListSkin"></s:DropDownList>
-				<mx:DataGrid id="attributeGrid" x="10" y="196" width="300" height="170"
+				<mx:DataGrid id="attributeGrid" x="10" y="155" width="300" height="195"
 							 click="attributeGrid_clickHandler(event)"
 							 dataProvider="{attributeTypeList}" editable="false"
 							 variableRowHeight="true">
@@ -2257,14 +2333,14 @@
 										   resizable="false"/>
 					</mx:columns>
 				</mx:DataGrid>
-				<s:DropDownList id="instanceIDList" x="273" y="64" width="165" height="20"
+				<s:DropDownList id="instanceIDList" x="272" y="64" width="165" height="20"
 								change="instanceIDList_changeHandler(event)" dataProvider="{idList}"></s:DropDownList>
-				<s:Button id="addInstButton" x="273" y="37" width="55" height="20" label="add"
+				<s:Button id="addInstButton" x="272" y="37" width="55" height="20" label="add"
 						  click="addInstButton_clickHandler(event)"/>
-				<s:Button id="deleteInstanceButton" x="335" y="37" width="55" height="20"
+				<s:Button id="deleteInstanceButton" x="334" y="37" width="55" height="20"
 						  label="delete" click="deleteInstanceButton_clickHandler(event)"/>
 				<s:Label x="15" y="21" text="Feature Type"/>
-				<mx:DataGrid id="valueGrid" x="318" y="196" width="161" height="170"
+				<mx:DataGrid id="valueGrid" x="318" y="155" width="161" height="195"
 							 click="valueGrid_clickHandler(event)" dataProvider="{attValueList}"
 							 verticalAlign="middle">
 					<mx:columns>
@@ -2272,20 +2348,22 @@
 						<mx:DataGridColumn headerText="value" dataField="value" width="60"/>
 					</mx:columns>
 				</mx:DataGrid>
-				<s:Button id="addValueButton" x="317" y="374" width="55" height="20" label="add"
+				<s:Button id="addValueButton" x="317" y="358" width="55" height="20" label="add"
 						  click="addValueButton_clickHandler(event)"/>
-				<s:Button id="deleteValueButton" x="376" y="374" width="55" height="20"
+				<s:Button id="deleteValueButton" x="376" y="358" width="55" height="20"
 						  label="delete" click="deleteValueButton_clickHandler(event)"/>
-				<s:TextInput id="valueInput" x="319" y="148" width="158" height="20"/>
-				<s:Label x="282" y="154" text="Value"/>
-				<s:Label x="396" y="43" text="Feature"/>
-				<s:Label x="15" y="182" text="AttributeType List »"/>
-				<s:Label x="319" y="182" text="Attribute ID Value List »"/>
-				<s:Label x="197" y="70" text="Instance IDs"/>
-				<s:Label x="434" y="377" text="Attribute"/> 
+				<s:TextInput id="valueInput" x="319" y="107" width="158" height="20"/>
+				<s:Label x="282" y="113" text="Value"/>
+				<s:Label x="395" y="43" text="Feature"/>
+				<s:Label x="15" y="141" text="AttributeType List »"/>
+				<s:Label x="319" y="141" text="Attribute ID Value List »"/>
+				<s:Label x="195" y="70" text="Instance IDs"/>
+				<s:Label x="434" y="361" text="Attribute"/> 
+				<!--
 				<s:Label x="195" y="108" fontSize="12" text="Selected IDs"/>
 				<s:DropDownList id="selectedIDList" x="273" y="101" width="165"
 								dataProvider="{selectedFeatureIDList}" change="selectedIDList_changeHandler(event)"></s:DropDownList>
+				-->
 			</s:Group>
 		</s:NavigatorContent>
 		
@@ -2296,7 +2374,7 @@
 								change="associationTypeList_changeHandler(event)"
 								dataProvider="{associationTypes}" labelField="name"
 								prompt="Select Asso_Type"></s:DropDownList>
-				<s:Label x="205" y="70" text="Instance ID" width="64" height="17"/>
+				<s:Label x="196" y="67" text="Instance IDs" width="76" height="17"/>
 				<s:Button id="addAssoIDButton" x="273" y="37" width="55" height="20" label="add"
 						  click="addAssoIDButton_clickHandler(event)"/>
 				<s:Button id="deleteAssoIDButton" x="335" y="37" width="55" height="20"
@@ -2308,7 +2386,7 @@
 				<s:TabBar id="assoTabBar" x="16" y="90" dataProvider="{assoViewStack}" height="20"/>
 				
 				<mx:ViewStack id="assoViewStack" borderStyle="solid" width="455" 
-							  height="310" x="16" y="109" backgroundColor="#ffffff"> 
+							  height="293" x="16" y="109" backgroundColor="#ffffff"> 
 					<s:NavigatorContent id="assoTab" label="Connecter"> 
 						<s:Group width="100%" height="100%" id="asso" x="0" y="0">				
 							<s:RadioButton id="fromRadio" x="93" y="34" label="from"
@@ -2320,33 +2398,35 @@
 							<s:Label x="16" y="61" text="Feature type"/>
 							<s:Label x="93" y="57" width="120" height="18" id="fromFeatureTypeLabel" backgroundColor="#DADADA" verticalAlign="middle"/>
 							<s:Label x="221" y="57" id="toFeatureTypeLabel" backgroundColor="#DADADA" width="120" verticalAlign="middle" height="18"/>
-							<s:Label x="16" y="111" text="Role name"/>
-							<s:Label x="221" y="108" id="roleNameLabel" backgroundColor="#DADADA" width="120" height="18" verticalAlign="middle"/>
+							<s:Label x="16" y="90" text="Role name"/>
+							<s:Label x="221" y="84" id="roleNameLabel" backgroundColor="#DADADA" width="120" height="18" verticalAlign="middle"/>
 							<s:Label x="269" y="39" text="Correspondence"/>
 							<s:Label x="365" y="36" id="correspondenceLabel" backgroundColor="#DADADA" width="30" verticalAlign="middle" height="18"/>
-							<s:Label x="16" y="134" text="Instance ID"/>
+							<s:Label x="16" y="115" text="Instance ID"/>
 							<s:Button id="cancelFromToButton" x="350" y="162" width="60" height="20"
 									  label="cancel" click="cancelFromToButton_clickHandler(event)"/>
 							<s:Button id="showAssoButton" x="350" y="132" width="60" height="20"
 									  label="show" click="showAssoButton_clickHandler(event)"/>
 							<s:Label x="14" y="13" text=" Association style"/>
 							<s:Label x="116" y="8" backgroundColor="#E0E0E0" verticalAlign="middle" height="20" width="97" id="assoStyleLabel"/>
-							<s:Label x="16" y="262" text="Proxy"/>
-							<s:Label x="93" y="258" width="120" id="fromProxyLabel" backgroundColor="#E0E0E0" height="18" verticalAlign="middle"/>
-							<s:Label x="221" y="258" id="toProxyLabel" backgroundColor="#E0E0E0" width="120" height="18" verticalAlign="middle"/>
-							<s:Label x="16" y="285" text="Proxy type"/>
-							<s:Label x="93" y="283" id="fromProxyTypeLabel" verticalAlign="middle" backgroundColor="#E0E0E0" height="18" width="120"/>
-							<s:Label x="221" y="283" id="toProxyTypeLabel" verticalAlign="middle" backgroundColor="#E0E0E0" width="120" height="18"/>
+							<s:Label x="16" y="244" text="Proxy"/>
+							<s:Label x="93" y="238" width="120" id="fromProxyLabel" backgroundColor="#E0E0E0" height="18" verticalAlign="middle"/>
+							<s:Label x="221" y="239" id="toProxyLabel" backgroundColor="#E0E0E0" width="120" height="18" verticalAlign="middle"/>
+							<s:Label x="16" y="267" text="Proxy type"/>
+							<s:Label x="93" y="263" id="fromProxyTypeLabel" verticalAlign="middle" backgroundColor="#E0E0E0" height="18" width="120"/>
+							<s:Label x="221" y="264" id="toProxyTypeLabel" verticalAlign="middle" backgroundColor="#E0E0E0" width="120" height="18"/>
 							
-							<s:List id="fromIDList" x="93" y="132" width="120" height="120"
+							<s:List id="fromIDList" x="93" y="112" width="120" height="120"
 									borderVisible="false" contentBackgroundColor="#DADADA" labelField="id"
 									dataProvider="{fromFeatures}" allowMultipleSelection="true"
 									click="fromIDList_clickHandler(event)"/>
-							<s:List x="221" y="132" width="120" height="120" id="toIDList" labelField="id" 
+							<s:List x="221" y="113" width="120" height="120" id="toIDList" labelField="id" 
 									contentBackgroundColor="#DADADA" dataProvider="{toFeatures}" 
 									borderVisible="false" allowMultipleSelection="true"
 									click="toIDList_clickHandler(event)"/>
 							<s:Label x="375" y="190" text="Association"/>
+							
+							<!--
 							<s:DropDownList id="fromCandidatesDropdown" x="93" y="81" width="120"
 											change="fromCandidatesDropdown_changeHandler(event)"
 										 	dataProvider="{fromCandidates}"
@@ -2356,6 +2436,8 @@
 										 	dataProvider="{toCandidates}"
 										 	labelField="id"></s:DropDownList>
 							<s:Label x="16" y="87" text="Candidates"/>
+							-->
+							
 						</s:Group>
 					</s:NavigatorContent>
 					
