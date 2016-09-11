@@ -686,7 +686,8 @@
 					return;
 				}
 				
-				var fType:FeatureType = featureTypeArray.getItemAt(selectedFeatureTypesList.selectedIndex) as FeatureType;
+				//var fType:FeatureType = featureTypeArray.getItemAt(selectedFeatureTypesList.selectedIndex) as FeatureType;
+				var fType:FeatureType = selectedFeatureTypesList.selectedItem as FeatureType;
 				
 				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
 				

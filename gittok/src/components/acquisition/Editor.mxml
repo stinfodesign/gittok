@@ -59,7 +59,6 @@
 			protected var concreteType:FeatureType;
 			protected var f:Feature;
 			protected var idForDelete:String;
-			protected var featureIDList:ArrayList;
 			
 			protected var associationSet:AssociationSet;
 			protected var associationSetArray:Dictionary = new Dictionary();
@@ -98,9 +97,6 @@
 			
 			[Bindable]
 			protected var feature:Feature;
-			
-			[Bindable]
-			protected var selectedFeatureIDList:ArrayList;
 			
 			[Bindable]
 			public var association:Association;
@@ -456,18 +452,14 @@
 				
 				feature = null; // this is necessary, because when feature set is null but feature is non-null;
 				
+				idList = new ArrayList();	// idList is a dataprovider for instanceIDList
 				if (featureSet != null) {
-					featureIDList = new ArrayList();	// idList is a dataprovider for instanceIDList
 					var features:Dictionary = featureSet.features;
 					var m:int = 0;
 					for each (var feature:Feature in features) {
-						featureIDList.addItem(feature.id);	
+						idList.addItem(feature.id);	
 						m++;
 					}
-					idList = featureIDList;
-				}
-				else {
-					idList = new ArrayList();
 				}
 				
 				instanceIDList.selectedIndex = -1;
@@ -476,9 +468,6 @@
 				
 				//show attribute type list on "attributeGrid"
 				attributeTypeList = concreteType.attributeTypes;
-								
-				//Initialization of the selected feature id list
-				selectedFeatureIDList = new ArrayList();
 			}
 			
 			protected function associationTypeList_changeHandler(event:IndexChangeEvent):void
@@ -541,19 +530,26 @@
 				
 				// if there is an instance without proxy, it is not allowed to add a new instance.
 				var pname:String = concreteType.proxyName;
+				trace("pname:" + pname);
+				
 				for each (var ftr:Feature in kit.featureList) {
-					if (ftr.attributes[pname] == null) {
-						Alert.show("An instance without proxy exists:" + ftr.id + "\nADD A PROXY ATTRIBUTE! CHECK OTHER ATTRIBUTES!", "Alert", 4, this);
+					if (concreteType.name == ftr.typeName) {
+						// This paragraph checks the empty instance creation.
+						if (ftr.attributes[pname] == null) {
 						
-						feature = ftr;
-						instanceIDList.selectedItem = ftr.id;
+							feature = ftr;
+							instanceIDList.selectedItem = ftr.id;
 						
-						//clear attribute value list on "valueGrid"
-						attValueList = null;
+							//clear attribute value list on "valueGrid"
+							attValueList = null;
+							
+							Alert.show("An instance without proxy exists:" + ftr.id, "Alert", 4, this);
 
-						return;
+							return;
+						}
 					}
 				}
+				
 								
 				// feature definition
 				feature = new Feature();
@@ -570,8 +566,7 @@
 				
 				featureSet.features[feature.id] = feature;
 				
-				featureIDList.addItem(feature.id);
-				
+				idList.addItem(feature.id);
 				instanceIDList.selectedItem = feature.id;
 				
 				attValueList = new ArrayList();
@@ -596,13 +591,18 @@
 			protected function deleteInstanceButton_clickHandler(event:MouseEvent):void
 			{
 				if (instanceIDList.selectedIndex == -1) {
-					Alert.show("Alert", "Select instance ID before delete.", 4, this);
+					Alert.show("Select instance ID before delete.", "Alert", 4, this);
 					return;
 				}
 				
 				idForDelete = instanceIDList.selectedItem as String;
 				
 				f = featureSet.features[idForDelete] as Feature;
+				
+				if (f == null) {
+					Alert.show("No instance in the kit.", "Alert", 4, this);
+					return;
+				}
 				
 				var fType:FeatureType = applicationSchema.featureTypes[f.typeName] as FeatureType;
 				for (var i:int = 0; i < fType.links.length; i++) {
@@ -623,11 +623,12 @@
 					return;
 				}
 				
-				featureIDList.removeItem(idForDelete);
-				
 				delete featureSet.features[idForDelete];
 				delete kit.featureList[idForDelete];
+				
+				idList.removeItemAt(instanceIDList.selectedIndex);
 				instanceIDList.prompt = "";
+				instanceIDList.selectedIndex = -1;
 				
 				if (geometryWindow != null)
 					geometryWindow.clearAnnotationLayer();
@@ -637,7 +638,6 @@
 				if (event.detail == Alert.YES) {
 					this.deleteFeature(f);
 					
-					featureIDList.removeItem(idForDelete);
 					instanceIDList.prompt = "";
 					
 					attValueList = new ArrayList();
@@ -818,10 +818,19 @@
 					var idArray:ArrayList = geometryWindow.searchedGM.featureID;
 					if (idArray.length > 0) {
 						if (fromRadio != null) {
-							if (fromRadio.selected)
-								featureSet = kit.featureSetArray[associationType.from.name] as FeatureSet;	
-							else 
+							if (fromRadio.selected) {
+								featureSet = kit.featureSetArray[associationType.from.name] as FeatureSet;
+								var fType:FeatureType = associationType.from;
+							}
+						}	
+						if (toRadio != null) {
+							if (toRadio.selected) {
 								featureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
+								fType = associationType.to;
+							}
+						}
+						if (fromRadio == null && toRadio == null) {
+							fType = featureTypeList.selectedItem as FeatureType;							
 						}
 						
 						/*
@@ -829,14 +838,17 @@
 						This is the reason to examine elements of idArray.
 						If a feature with the same type to fType was found, it is the feature for editing. 
 						*/
-						var fType:FeatureType = featureTypeList.selectedItem as FeatureType;
+						
 						for (var i:int = 0; i < idArray.length; i++) {
 							var id:String = idArray.getItemAt(i) as String;
 							var ftr:Feature = kit.featureList[id] as Feature;
-							if (ftr.typeName == fType.name) {
-								instanceIDList.selectedItem = ftr;
-								instanceIDList.prompt = id;
-								feature = ftr;
+							if (ftr != null) {
+								if (ftr.typeName == fType.name) {
+									instanceIDList.selectedItem = ftr;
+									instanceIDList.prompt = id;
+									feature = ftr;
+									attValueList = new ArrayList();
+								}
 							}
 						}
 					}
@@ -1903,7 +1915,7 @@
 					var fid:String = d.featureID.getItemAt(i) as String;
 					f = fSet.features[fid];
 					
-					/*
+					
 					if (toFeatures.getItemIndex(f) != -1) {
 						toListWindow.proxyValueList.selectedIndex = -1;
 						toListWindow.selectedItemList.selectedIndex = -1;
@@ -1911,6 +1923,7 @@
 					}
 					toFeatures.addItem(f);
 					
+					/*
 					if (toCandidates.getItemIndex(f) != -1) {
 						toListWindow.proxyValueList.selectedIndex = -1;
 						toListWindow.selectedItemList.selectedIndex = -1;
@@ -2287,6 +2300,106 @@
 			}
 			*/
 			
+			protected function assoValueGrid_clickHandler(event:MouseEvent):void
+			{
+				var i:int = assoValueGrid.selectedIndex;
+				
+				var attType:AttributeType = assoAttributeGrid.selectedItem as AttributeType;
+				var tp:String = attType.dataType;
+				
+				if (tp.search("SG_") > -1) {
+					if (geometryWindow == null) {
+						this.openGeometryWindow();
+						if (kitName.text != "" && kit.baseMapImageURL != "null") 
+							geometryWindow.opViewStack.selectedChild = geometryWindow.orientationView;
+					}
+					geometryWindow.clearAnnotationLayer();
+					
+					var primi:SG_Primitive = assoAttValueList.getItemAt(i) as SG_Primitive;
+					
+					geometryWindow.displaySGPrimitive("circle", primi);	
+					
+				}
+				
+				if (tp == "ImageURL") {
+					if (imageWindow == null) {
+						imageWindow = new ImageWindow();
+					}
+					imageWindow.open();
+					imageWindow.title = "Editor >";
+					imageWindow.addEventListener(Event.CLOSE, imageWindowClose);
+					
+					var imageLoc:Object = assoValueGrid.selectedItem as Object;
+					var il:ImageURL = new ImageURL();
+					il.value = kitURL + imageLoc.value;
+					imageWindow.displayAttributeValue(il);
+				}
+				
+				if (tp == "VideoURL") {
+					if (videoWindow == null) {
+						videoWindow = new VideoWindow();
+					}
+					videoWindow.open();
+					videoWindow.title = "Editor >";
+					videoWindow.addEventListener(Event.CLOSE, videoWindowClose);
+					
+					var videoLoc:Object = assoValueGrid.selectedItem as Object;
+					var vl:VideoURL = new VideoURL();
+					vl.value = kitURL + videoLoc.value;
+					videoWindow.displayAttributeValue(vl);
+				}
+				
+				if (tp == "SoundURL") {
+					if (soundWindow == null) {
+						soundWindow = new SoundWindow();
+					}
+					soundWindow.open();
+					soundWindow.title = "Editor >";
+					soundWindow.addEventListener(Event.CLOSE, soundWindowClose);
+					
+					var soundLoc:Object = assoValueGrid.selectedItem as Object;
+					var sl:SoundURL = new SoundURL();
+					sl.value = kitURL + soundLoc.value;					
+					soundWindow.displayAttributeValue(sl);
+				}
+				
+				if (tp == "URL") {
+					if (urlWindow == null) {
+						urlWindow = new UrlWindow();
+					}
+					urlWindow.open();
+					urlWindow.title = "Editor >";
+					urlWindow.addEventListener(Event.CLOSE, urlWindowClose);
+					
+					urlWindow.displayAttributeValue(assoValueGrid.selectedItem as URL);
+				}
+				
+				if (tp == "Address") {
+					if (addressWindow == null) {
+						addressWindow = new AddressWindow();
+					}
+					
+					addressWindow.open();
+					addressWindow.title = "Editor >";
+					addressWindow.address = assoValueGrid.selectedItem as Address;
+					addressWindow.displayAttributeValue(assoValueGrid.selectedItem as Address);							
+					addressWindow.addEventListener(Event.CLOSE, addressWindowClose);
+				}
+				
+				if (tp == "Memo") {
+					if (memoEditor == null) {
+						memoEditor = new MemoEditor();
+					}
+					
+					memoEditor.open();
+					memoEditor.title = "Editor >";
+					var mm:Memo = assoValueGrid.selectedItem as Memo;
+					memoEditor.memoTitleInput.text = mm.title;
+					memoEditor.memoArea.text = mm.value;
+					memoEditor.addEventListener(Event.CLOSE, memoEditorClose);
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -2454,7 +2567,8 @@
 									<mx:DataGridColumn dataField="multiplicity" headerText="multi." width="40" resizable="false"/>
 								</mx:columns>
 							</mx:DataGrid>
-							<mx:DataGrid x="286" y="62" width="161" height="170" id="assoValueGrid" dataProvider="{assoAttValueList}">
+							<mx:DataGrid x="286" y="62" width="161" height="170" id="assoValueGrid" 
+										 dataProvider="{assoAttValueList}" click="assoValueGrid_clickHandler(event)">
 								<mx:columns>
 									<mx:DataGridColumn headerText="ID" dataField="id" width="30"/>
 									<mx:DataGridColumn headerText="value" dataField="value" width="60"/>

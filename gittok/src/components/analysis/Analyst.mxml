@@ -175,6 +175,7 @@
 				Length;
 				SurfaceArea;
 				Ratio;
+				ShortestPath;
 
 			}
 			
@@ -915,14 +916,14 @@
 								
 					if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
 						var geom:SG_Primitive = vobj as SG_Primitive;
-						geom.featureID = new ArrayList();
+						//geom.featureID = new ArrayList();
 						geom.attributeName = new ArrayList();
 					
 						if (fa == "f") {
 							geom.featureID.addItem(ftr.id);
 						}
 						else
-							geom.featureID.addItem(association.id);
+							geom.featureID.addItem(association.id);		
 					
 						geom.attributeName.addItem(operationType.returnAttributeName);
 					
@@ -1087,36 +1088,67 @@
 					return;
 				}
 				
-				if (attributeValueList.selectedIndex == -1) {
-					Alert.show("Select return value before.", "Warning", 4, this);
-					return;					
-				}
-					
 				var si:int = attributeValueList.selectedIndex;
 				var attValue:* = attValueList.getItemAt(si);
 				
-				var operationType:OperationType = operationList.selectedItem as OperationType;	
-				var faTypeName:String = operationType.returnFATypeName;
+				var position:Coordinate2;
 
-				if (tabBar.selectedIndex == 0) { 
-					// feature operation
-					var wFeatureSet:FeatureSet = featureSetArray[faTypeName] as FeatureSet;
-					var wftr:Feature = wFeatureSet.features[selectedInstanceIDList.selectedItem as String] as Feature;
-					if (wftr != null) this.displayFeature(wftr);
+				if (attValue is SG_Point) {
+					point = attValue as SG_Point;
+					position = point.position;
 				}
-				else {		
-					// association operation
-					var wAssociationSet:AssociationSet = associationSetArray[faTypeName] as AssociationSet;
-					if (wAssociationSet != null) {
-						this.displayAssociation(wAssociationSet.associations[attValue.associationID] as Association);
-						return;
-					}
-					wFeatureSet = featureSetArray[faTypeName] as FeatureSet;
-					wftr = wFeatureSet.features[attValue.featureID] as Feature;
-					if (wftr != null) this.displayFeature(wftr);
+				
+				if (attValue is SG_Curve) {
+					curve = attValue as SG_Curve;
+					var attList:ArrayList = new ArrayList();
+					attList.addItem(curve);
+					var attValues:ArrayList = new ArrayList();
+					attValues.addItem(attList);
+					var argObj:Object = new Object();
+					argObj["curve"] = attValues;
+					
+					position = geoOperations.Center.centerLayingOnCurve(argObj).position;
 				}
+				
+				if (attValue is SG_Surface) {
+					surface = attValue as SG_Surface;
+					attList = new ArrayList();
+					attList.addItem(surface);
+					attValues = new ArrayList();
+					attValues.addItem(attList);
+					argObj = new Object();
+					argObj["surface"] = attValues;
+					
+					position = geoOperations.Center.centerOfMIC(argObj).position;
+				}
+				
+				if (position == null) {
+					Alert.show("Impossible to show the position as the value is not a geometry.", "Alert", 4, this);
+					return;
+				}
+				
+				if (attValue is SG_Complex) {
+					complex = attValue as SG_Complex;
+					attList = new ArrayList();
+					attList.addItem(complex);
+					attValues = new ArrayList();
+					attValues.addItem(attList);
+					argObj = new Object();
+					argObj["complex"] = attValues;
+					
+					position = geoOperations.Center.centerOfComplex(argObj).position;
+				}
+				
+				// Draw the Found Circle after removing the old one						
+				var circle:Circle = workLayer.getChildByName("circle") as Circle;
+				if (circle != null) workLayer.removeChild(circle);
+				circle = new Circle(position, 10);
+				circle.name = "circle";
+				workLayer.addChild(circle);	
+				
 			}
 			
+			/*
 			public function displayFeature(ftr:Feature):void {
 				var position:Coordinate2;
 				var fType:FeatureType = applicationSchema.featureTypes[ftr.typeName] as FeatureType;
@@ -1186,6 +1218,7 @@
 				circle.name = "circle";
 				workLayer.addChild(circle);	
 			}
+			*/
 			
 			protected function tabBar_changeHandler(event:IndexChangeEvent):void
 			{

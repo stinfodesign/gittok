@@ -1766,8 +1766,8 @@
 					   id="surfaceRadio" click="surfaceRadio_clickHandler(event)"/>		
 	</s:Group>
 
-	<s:Group x="532" width="92" height="46" right="15" top="412">
-		<s:Rect x="0" y="0" width="100%" height="100%">
+	<s:Group x="532" width="92" height="78" right="15" top="412">
+		<s:Rect x="0" y="0" width="100%" height="45">
 			<s:stroke>
 				<s:SolidColorStroke color="0xc8c8c8"/>
 			</s:stroke>
@@ -1778,6 +1778,9 @@
 		<s:Label x="6" y="8" fontWeight="bold" text="Association"/>
 		<s:Label id="fromToLabel" x="8" y="22" width="35" height="20" text="" verticalAlign="middle"/>
 		<s:Label id="multiLabel" x="52" y="26" text="multi"/>
+		<s:Button id="undoButton" x="8" y="52" width="49" label="undo" enabled="false"
+				  click="undoButton_clickHandler(event)"/>
+
 	</s:Group>
 	
 	<s:Group left="21" bottom="7" width="280" height="20">
@@ -1785,14 +1788,13 @@
 		<s:Label x="138" y="5" text="Y"/>
 		<s:Label x="12" y="0" width="103" id="XLabel" backgroundColor="#DADADA" verticalAlign="middle" height="20"/>
 		<s:Label x="148" y="0" id="YLabel" width="113" backgroundColor="#DADADA" verticalAlign="middle" height="20"/>
+		
 	</s:Group>
 	
 	<s:Label x="547" y="16" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>
 	<s:Label x="588" y="18" text="English" color="#969696"
 			 buttonMode="true" click="text_en_clickHandler(event)"/>
-	<s:Button id="undoButton" x="531" y="466" width="49" label="undo" enabled="false"
-			  click="undoButton_clickHandler(event)"/>
 
 	
 

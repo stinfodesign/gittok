@@ -18,5 +18,6 @@
 				<node label="Real"/>
 				<node label="CharacterString"/>
 				<node label="Memo"/>
+				<node label="Obj"/>
 			</node>
 </dataTypes>
