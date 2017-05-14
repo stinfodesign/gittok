@@ -65,12 +65,13 @@
 				move(400,400);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
-				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
-				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
-				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
-				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
-				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
+				registerClassAlias("dataTypes.theme.GDate", GDate);				
 				
 				// Location
 				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
@@ -106,7 +107,7 @@
 				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
 				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
 				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
-				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
+
 				
 				// Affine
 				registerClassAlias("math.AffineParam", AffineParam);
@@ -269,7 +270,7 @@
 					var primiList:ArrayList = selectedFeature.attributes[attName] as ArrayList;
 					var primi:SG_Primitive = primiList.getItemAt(0) as SG_Primitive;
 					
-					geometryWindow.displaySGPrimitive("circle", primi);	
+					geometryWindow.displaySGObject("circle", primi);	
 
 				}
 			} 

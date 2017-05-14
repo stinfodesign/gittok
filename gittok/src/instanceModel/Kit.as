@@ -135,8 +135,8 @@ package instanceModel
 				}
 			}
 			
-			//shift to local plane coodinate and 
-			//cross-change coordinate elements, because direction of x in plane coordinate is north
+			//shift to local plane coodinate and cross-change coordinate elements, 
+			//because direction of x in plane coordinate is north
 			//pointList
 			var ce:Number;
 			for each(p in pointList) {
@@ -244,9 +244,7 @@ package instanceModel
 				}
 			}
 		}
-		
-
-		
+			
 		public function planeToScreen():void {
 			for each(var p:SG_Point in pointList) {
 				var coor:Coordinate2 = p.position;
@@ -266,8 +264,7 @@ package instanceModel
 				}
 			}
 		}
-		
-		
+			
 		public function geodeticToScreen(crs:CRS):void {
 			var gk:GaussKruger = new GaussKruger();
 			gk.setParameters(crs);
@@ -439,18 +436,6 @@ package instanceModel
 			
 			str += '<addressList>';
 			for each(var addrs:Address in this.addressList) {
-				/*
-				var addrs:Address = new Address();
-				
-				if (addrsObj is Object) {
-					addrs.country = addrsObj["country"];
-					addrs.location = addrsObj["location"];
-					addrs.id = addrsObj["id"];
-					addrs.zipCode = addrsObj["zipCode"];
-				}
-				else addrs = addrsObj as Address;
-				*/
-				
 				str += addrs.getXML().toXMLString();
 			}
 			str += '</addressList>';
@@ -486,8 +471,7 @@ package instanceModel
 			return XML(str);
 			
 		}
-		
-		
+				
 		public function setXML(_xml:XML):void {
 			xml = _xml;
 			//application schema

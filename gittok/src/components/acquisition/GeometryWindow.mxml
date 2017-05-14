@@ -43,7 +43,7 @@
 			
 			public var accuracyWindow:AccuracyWindow;
 			
-			public var searchedGM:SG_Primitive;
+			public var searchedGM:SG_Object;
 			
 			protected var featureTypes:ArrayList = new ArrayList();
 			
@@ -62,6 +62,7 @@
 			protected var pointSymbolStyle:PointSymbolStyle;
 			protected var lineSymbolStyle:LineSymbolStyle;
 			protected var areaSymbolStyle:AreaSymbolStyle;
+			protected var complexSymbolStyle:ComplexSymbolStyle;
 			
 			protected var pSym:PointSymbol;
 			protected var lSym:LineSymbol;
@@ -85,13 +86,14 @@
 			protected var point:SG_Point;
 			protected var curve:SG_Curve;
 			protected var surface:SG_Surface;
+			protected var complex:SG_Complex;
 			
 			protected var pointIndex:int;
 			
 			protected var featureSet:FeatureSet;
-			protected var featureSetArray:Dictionary;
+			//protected var featureSetArray:Dictionary;
 			
-			protected const foundRadi:Number = 3.5;
+			protected const foundRadi:Number = 17.5;
 			
 			[Bindable]
 			protected var attTypes:ArrayList = new ArrayList();
@@ -117,13 +119,13 @@
 				this.move(780, 150);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
-				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
-				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
-				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
-				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
-				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
-				
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
+				registerClassAlias("dataTypes.theme.GDate", GDate);				
 				
 				// Location
 				registerClassAlias("dataTypes.place.Address", Address);
@@ -137,7 +139,6 @@
 				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
 				registerClassAlias("dataTypes.spatialGeometry.GeodeticCoordinate", GeodeticCoordinate);
 				registerClassAlias("dataTypes.spatialGeometry.PlaneRectangularCoordinate", PlaneRectangularCoordinate);
-				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
 				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
 				registerClassAlias("dataTypes.spatialGeometry.SG_CompositeCurve", SG_CompositeCurve);				
 				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);				
@@ -169,7 +170,8 @@
 				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
-				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);				
+				registerClassAlias("portrayal.symbolStyle.ComplexSymbolStyle", ComplexSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				
@@ -177,6 +179,7 @@
 				registerClassAlias("portrayal.symbol.AreaSymbol", AreaSymbol);
 				registerClassAlias("portrayal.symbol.LineSymbol", LineSymbol);
 				registerClassAlias("portrayal.symbol.PointSymbol", PointSymbol);
+				registerClassAlias("portrayal.symbol.ComplexSymbol", ComplexSymbol);
 				registerClassAlias("portrayal.symbol.Circle", Circle);
 				registerClassAlias("portrayal.symbol.Triangle", Triangle);
 				registerClassAlias("portrayal.symbol.Cross", Cross);
@@ -227,10 +230,10 @@
 					symbolStyles = symbolStream.readObject() as SymbolStyleDictionary;
 					symbolStream.close();
 					
-					pointSymbolStyle = symbolStyles.pointSymStyles["defPoint"]	as PointSymbolStyle;
-					lineSymbolStyle  = symbolStyles.lineSymStyles["defLine"] 	as LineSymbolStyle;
-					areaSymbolStyle  = symbolStyles.areaSymStyles["defArea"]	as AreaSymbolStyle;
-					
+					pointSymbolStyle   = symbolStyles.pointSymStyles["defPoint"]	as PointSymbolStyle;
+					lineSymbolStyle    = symbolStyles.lineSymStyles["defLine"] 	as LineSymbolStyle;
+					areaSymbolStyle    = symbolStyles.areaSymStyles["defArea"]	as AreaSymbolStyle;
+					complexSymbolStyle = symbolStyles.complexSymStyles["defComplex"] as ComplexSymbolStyle;					
 				}
 				catch (error:IOError) {
 					Alert.show("Symbol style: " + error.message, "Alert", 4, this);
@@ -360,12 +363,12 @@
 			
 			private function largerButton_clickHandler(event:MouseEvent):void
 			{				
-				scalingAtCenter(1.25, geometryBox.width * 0.5, geometryBox.height * 0.5);				
+				scalingAtCenter(1.25, geometryBox.width * 0.5, geometryBox.height * 0.5);
 			}
 			
 			private function smallerButton_clickHandler(event:MouseEvent):void
 			{				
-				scalingAtCenter(0.8, geometryBox.width * 0.5, geometryBox.height * 0.5);	
+				scalingAtCenter(0.8, geometryBox.width * 0.5, geometryBox.height * 0.5);
 			}
 			
 			private function scalingAtCenter(s:Number, cx:Number, cy:Number):void 
@@ -385,13 +388,25 @@
 				workLayer.y = baseMapImage.y;
 				workLayer.scaleX = workLayer.scaleY = baseMapImage.scaleX;
 				
-				resetDrawing();
-				
 				annotationLayer.width  = baseMapImage.width;
 				annotationLayer.height = baseMapImage.height;
 				annotationLayer.x = baseMapImage.x;
 				annotationLayer.y = baseMapImage.y;
 				annotationLayer.scaleX = annotationLayer.scaleY = baseMapImage.scaleX;
+				
+				
+				// The size of the circle does not change, even if the scale is changed to keep its visibility.
+				var circle:Circle = annotationLayer.getChildByName("circle") as Circle;
+				if (circle != null) {
+					annotationLayer.removeChild(circle);
+					circle.radius = circle.radius / s;
+					circle.style.borderStyle.thickness /= s;
+					circle = new Circle(circle.center, circle.radius, circle.style);
+					annotationLayer.addChild(circle);
+				}
+				
+				resetDrawing();
+				
 				
 			}
 			
@@ -408,7 +423,6 @@
 					dragButton.label = "fix";
 					Mouse.cursor = "hand";
 				}
-				
 			}
 			
 			private function resetButton_clickHandler(event:MouseEvent):void
@@ -651,13 +665,14 @@
 								//search nearest point
 								var dist:Number = Number.MAX_VALUE;
 								for each (wp in kit.pointList) {
-								var wd:Number = math.Distance.p2p(wp.position, coor);
-								if (wd <= dist) {
-									dist = wd;
-									point = wp;
+									var wd:Number = math.Distance.p2p(wp.position, coor);
+									if (wd <= dist) {
+										dist = wd;
+										point = wp;
+									}
 								}
-							}
 								
+								/*
 								if (point.featureID.length > 0) {
 									var f:Feature = kit.featureList[point.featureID.getItemAt(0) as String];
 									var fType:FeatureType = applicationSchema.featureTypes[f.typeName] as FeatureType;
@@ -667,12 +682,14 @@
 										Alert.show("Be carefull to change the position, as it is the derived attribute.", "Warning", 4, this);
 									}
 								}
+								*/
 								
 								// Draw the Found Coordinate
 								foundCoord = point.position;
 								
 								// searched geometry
 								searchedGM = point;
+								
 								Mouse.show();
 								
 								break;
@@ -682,27 +699,26 @@
 								dist = Number.MAX_VALUE;
 								var nearestCoord:Coordinate2;
 								for each (var wc:SG_Curve in kit.curveList) {
-								var coors:CoordinateArray = new CoordinateArray();										
-								coors.addItem(wc.start.position);
-								coors.addAll(wc.shape);
-								coors.addItem(wc.end.position);
-								var nCoord:Coordinate2 = math.Relation.nearestPonLS(coor, coors);
-								wd = math.Distance.p2ls(coor, coors);
-								if (wd < dist) {
-									dist = wd;
-									nearestCoord = nCoord;
-									curve = wc
+									var coors:CoordinateArray = wc.coordinateSeqence();
+									var nCoord:Coordinate2 = math.Relation.nearestPonLS(coor, coors);
+									wd = math.Distance.p2ls(coor, coors);
+									if (wd < dist) {
+										dist = wd;
+										nearestCoord = nCoord;
+										curve = wc
+									}
 								}
-							}
 								
+								/*
 								if (curve.featureID.length > 0) {
-									f = kit.featureList[curve.featureID.getItemAt(0) as String];
-									fType = applicationSchema.featureTypes[f.typeName] as FeatureType;
-									aType = fType.getAttributeTypeByName(curve.attributeName.getItemAt(0) as String);
+									var f:Feature = kit.featureList[curve.featureID.getItemAt(0) as String];
+									var fType:FeatureType = applicationSchema.featureTypes[f.typeName] as FeatureType;
+									var aType:AttributeType = fType.getAttributeTypeByName(curve.attributeName.getItemAt(0) as String);
 									if (aType.derived == "/") {
 										Alert.show("You should not change position, as it is derived attribute.", "Error", 4, this);
 									}
 								}
+								*/
 								
 								// search the nearest vertex in the curve
 								if (curve.shape.length > 0) {
@@ -748,8 +764,7 @@
 									}
 								}
 								
-								if (surface == null) break;
-								
+								/*
 								if (surface.featureID.length > 0) {
 									f = kit.featureList[surface.featureID.getItemAt(0) as String];
 									fType = applicationSchema.featureTypes[f.typeName] as FeatureType;
@@ -758,9 +773,33 @@
 										Alert.show("You should not change position, as it is derived attribute.", "Error", 4, this);
 									}
 								}
+								*/
 								
 								//searched geometry
 								searchedGM = surface;
+								
+								break;
+							
+							case "SG_Complex":
+								// search the nearest curve	in the complex
+								complex = null;
+								dist = Number.MAX_VALUE;
+								for each (var wcx:SG_Complex in kit.complexList) {
+									for (i = 0; i < wcx.curveSet.length; i++) { 
+										wc = wcx.curveSet.getItemAt(i) as SG_Curve;
+										coors = wc.coordinateSeqence();
+										nCoord = math.Relation.nearestPonLS(coor, coors);
+										wd = math.Distance.p2ls(coor, coors);
+										if (wd < dist) {
+											dist = wd;
+											foundCoord = nCoord;
+											curve = wc;
+											complex = wcx;	
+										}
+									}
+								}
+								
+								searchedGM = complex;
 								
 								break;
 						}
@@ -775,7 +814,7 @@
 						var circle:Circle = new Circle(foundCoord, foundRadi);
 						circle.name = "circle";
 						this.clearAnnotationLayer();
-						annotationLayer.addChild(circle);	
+						annotationLayer.addChild(circle);
 						
 						break;
 					
@@ -832,11 +871,10 @@
 								break;
 						}
 						break;
-					
 				}
 			}
 			
-			// search coincident poit
+			// search coincident point
 			protected function searchCoincidentPoint(coor:Coordinate2, radius:Number):SG_Point {
 				for each (var wp:SG_Point in kit.pointList) {
 					if (math.Distance.p2p(coor, wp.position) < radius) return wp;
@@ -1086,6 +1124,12 @@
 					workLayer.removeChildAt(0);
 				}
 				
+				// reset symbols
+				pointSymbolStyle = symbolStyles.pointSymStyles["defPoint"]	as PointSymbolStyle;
+				lineSymbolStyle  = symbolStyles.lineSymStyles["defLine"] 	as LineSymbolStyle;
+				areaSymbolStyle  = symbolStyles.areaSymStyles["defArea"]	as AreaSymbolStyle;
+				complexSymbolStyle = symbolStyles.complexSymStyles["defComplex"] as ComplexSymbolStyle;
+				
 				for each (var s:SG_Surface in kit.surfaceList) {
 					aSym = new AreaSymbol();
 					var aObj:Object = new Object();
@@ -1111,6 +1155,50 @@
 					var pObj:Object = new Object();
 					pObj.point = p;
 					pObj.style = pointSymbolStyle;
+					pSym.decode(pObj);
+					pSym.name = p.id.toString();
+					workLayer.addChild(pSym);
+				}
+				
+				for each (var cmpx:SG_Complex in kit.complexList) {
+					 complexDrawing(cmpx);
+				 }
+				
+			}
+
+			protected function complexDrawing(complex:SG_Complex):void {
+				
+				var complexSymbolStyle:ComplexSymbolStyle = symbolStyles.complexSymStyles["defComplex"] as ComplexSymbolStyle;
+
+				for (var i:int = 0; i < complex.surfaceSet.length; i++) {
+					var s:SG_Surface = complex.surfaceSet.getItemAt(i) as SG_Surface;
+					aSym = new AreaSymbol();
+					var aObj:Object = new Object();
+					aObj.surface = s;
+					aObj.style = complexSymbolStyle.areaSymbolStyle;
+					aSym.decode(aObj);
+					aSym.name = s.id.toString();
+					workLayer.addChild(aSym);
+				}
+				
+				for (i = 0; i < complex.curveSet.length; i++) {
+					var c:SG_Curve = complex.curveSet.getItemAt(i) as SG_Curve;
+					lSym = new LineSymbol();
+					var lObj:Object = new Object();
+					lObj.curve = c;
+					lObj.style = complexSymbolStyle.lineSymbolStyle;
+					lObj.style.color = 0xff0000;
+					lSym.decode(lObj);
+					lSym.name = c.id.toString();
+					workLayer.addChild(lSym);
+				}
+				
+				for (i = 0; i < complex.pointSet.length; i++) {
+					var p:SG_Point = complex.pointSet.getItemAt(i) as SG_Point;
+					pSym = new PointSymbol();
+					var pObj:Object = new Object();
+					pObj.point = p;
+					pObj.style = complexSymbolStyle.pointSymbolStyle;
 					pSym.decode(pObj);
 					pSym.name = p.id.toString();
 					workLayer.addChild(pSym);
@@ -1298,7 +1386,7 @@
 				operationGroup.selectedValue = null;
 			}
 			
-			public function displaySGPrimitive(_name:String, gm:SG_Primitive):Coordinate2 {
+			public function displaySGObject(_name:String, gm:SG_Object):Coordinate2 {
 				
 				var center:Coordinate2;
 				
@@ -1327,6 +1415,21 @@
 					argObj = new Object;
 					argObj["surface"] = attValues;
 					center = geoOperations.Center.centerOfMIC(argObj).position;
+				}
+							
+				
+				if (getQualifiedClassName(gm) == "dataTypes.spatialGeometry::SG_Complex") {					
+					complex = gm as SG_Complex;
+					
+					//displayComplex(complex);
+					
+					attValue = new ArrayList();
+					attValue.addItem(complex);
+					attValues = new ArrayList();
+					attValues.addItem(attValue);
+					argObj = new Object;
+					argObj["complex"] = attValues;
+					center = geoOperations.Center.centerOfComplex(argObj).position;
 				}
 				
 				// Draw the Found Circle	
@@ -1376,24 +1479,62 @@
 				return center;
 			}
 			
-			public function displaySGComplex(complex:SG_Complex):void {
-				var point:SG_Point = new SG_Point();
-				
-				var argObj:Object = new Object();
-				var arg:ArrayList = new ArrayList();
-				arg.addItem(complex);
-				var argList:ArrayList = new ArrayList();
-				argList.addItem(arg);
-				argObj["complex"] = argList;
-				point = geoOperations.Center.centerOfComplex(argObj);
-				
-				// Draw the Found Circle after removing the old one						
-				var circle:Circle = workLayer.getChildByName("circle") as Circle;
-				if (circle != null) workLayer.removeChild(circle);
-				circle = new Circle(point.position, foundRadi);
-				circle.name = "circle";
-				annotationLayer.addChild(circle);	
+			private function displayPoint(pt:SG_Point):void {
+				pSym = new PointSymbol();
+				var pObj:Object = new Object();
+				pObj.point = pt;
+				pObj.style = pointSymbolStyle;
+				pSym.decode(pObj);
+				pSym.name = pt.id.toString();
+				workLayer.addChild(pSym);
 			}
+			
+			private function displayCurve(cv:SG_Curve, clr:int = -1):void {
+				lSym = new LineSymbol();
+				var lObj:Object = new Object();
+				lObj.curve = cv;
+				lObj.style = lineSymbolStyle;
+				var wclr:uint = lineSymbolStyle.color;
+				if (clr > -1) lObj.style.color = uint(clr);
+				lSym.decode(lObj);
+				lSym.name = cv.id.toString();
+				workLayer.addChild(lSym);
+				lineSymbolStyle.color = wclr;
+			}
+			
+			private function displaySurface(sc:SG_Surface):void {
+				aSym = new AreaSymbol();
+				var aObj:Object = new Object();
+				aObj.surface = sc;
+				aObj.style = areaSymbolStyle;
+				aSym.decode(aObj);
+				aSym.name = sc.id.toString();
+				workLayer.addChild(aSym);
+			}
+			
+			private function displayComplex(cx:SG_Complex):void {
+				areaSymbolStyle  = complexSymbolStyle.areaSymbolStyle;
+				lineSymbolStyle  = complexSymbolStyle.lineSymbolStyle;
+				pointSymbolStyle = complexSymbolStyle.pointSymbolStyle;
+				
+				for (var i:int = 0; i < cx.surfaceSet.length; i++) {
+					var sc:SG_Surface = cx.surfaceSet.getItemAt(i) as SG_Surface;
+					displaySurface(sc);
+				}
+				for (i = 0; i < cx.curveSet.length; i++) {
+					var cv:SG_Curve = cx.curveSet.getItemAt(i) as SG_Curve;
+					displayCurve(cv, 0xff0000);  // color changes to red.
+				}
+				for (i = 0; i < cx.pointSet.length; i++) {
+					var p:SG_Point = cx.pointSet.getItemAt(i) as SG_Point;
+					displayPoint(p);
+				}
+				
+				pointSymbolStyle   = symbolStyles.pointSymStyles["defPoint"]	as PointSymbolStyle;
+				lineSymbolStyle    = symbolStyles.lineSymStyles["defLine"] 	as LineSymbolStyle;
+				areaSymbolStyle    = symbolStyles.areaSymStyles["defArea"]	as AreaSymbolStyle;
+			}			
+			
 			
 			public function clearAnnotationLayer():void {
 				var m:int = annotationLayer.numChildren;
@@ -1545,7 +1686,7 @@
 							var fromFeature:Feature = fromFeatures.getItemAt(i) as Feature;
 							var primiList:ArrayList   = fromFeature.attributes[attType.name] as ArrayList;
 							for (var j:int = 0; j < primiList.length; j++) {
-								this.displaySGPrimitive("fromTriangle", primiList.getItemAt(j) as SG_Primitive);
+								this.displaySGObject("fromTriangle", primiList.getItemAt(j) as SG_Primitive);
 							}
 						}
 					}					
@@ -1562,7 +1703,7 @@
 							var toFeature:Feature = toFeatures.getItemAt(i) as Feature;
 							primiList = toFeature.attributes[attType.name] as ArrayList;
 							for (j = 0; j < primiList.length; j++) {
-								this.displaySGPrimitive("toTriangle", primiList.getItemAt(j) as SG_Primitive);
+								this.displaySGObject("toTriangle", primiList.getItemAt(j) as SG_Primitive);
 							}
 						}
 					}
@@ -1574,7 +1715,7 @@
 				for (var i:int = 0; i < fromFeatures.length; i++) {
 				var fromFeature:Feature = fromFeatures.getItemAt(i) as Feature;
 				var primiList:ArrayList   = fromFeature.attributes[attTypeFrom.name] as ArrayList;
-				var start:Coordinate2 = this.displaySGPrimitive("fromTriangle", primiList.getItemAt(0) as SG_Primitive);
+				var start:Coordinate2 = this.displaySGObject("fromTriangle", primiList.getItemAt(0) as SG_Primitive);
 				
 				// to geometries
 				var attTypeTo:AttributeType = assoType.to.proxy;
@@ -1583,7 +1724,7 @@
 				for (var j:int = 0; j < toFeatures.length; j++) {
 				var toFeature:Feature = toFeatures.getItemAt(j) as Feature;
 				primiList = toFeature.attributes[attTypeTo.name] as ArrayList;
-				var end:Coordinate2 = this.displaySGPrimitive("toTriangle", primiList.getItemAt(0) as SG_Primitive);
+				var end:Coordinate2 = this.displaySGObject("toTriangle", primiList.getItemAt(0) as SG_Primitive);
 				var name:String = "line:" + association.id + ":" + fromFeature.id + ":" + toFeature.id;
 				this.displayLine(name, start, end);
 				}
@@ -1654,6 +1795,17 @@
 			protected function surfaceRadio_clickHandler(event:MouseEvent):void
 			{
 				undoButton.enabled = false;
+			}
+			
+			protected function complexRadio_clickHandler(event:MouseEvent):void
+			{
+				// Complex shall be a derived geometry and no-one can add or move.
+				// Complex shall be obtained by the operation.
+				if (addGeomButton.selected || moveGeomButton.selected) {
+					complexRadio.selected = false;
+					Alert.show("A complex geometry cannot be added or moved on this page, " +
+						"bacause it is a derived attribute in gittok.", "Alert", 4, this);
+				}
 			}
 			
 		]]>
@@ -1747,8 +1899,8 @@
 		<s:RadioButton x="4" y="96" label="delete" id="deleteGeomButton" groupName="operationGroup" click="deleteGeomButton_clickHandler(event)"/>
 	</s:Group>
 
-	<s:Group x="532" width="92" height="104" right="15" top="299">
-		<s:Rect x="0.5" y="0.5" width="100%" height="100%">
+	<s:Group right="15" top="299" width="95" height="120">
+		<s:Rect x="0.5" y="0.5" width="100%" height="119">
 			<s:stroke>
 				<s:SolidColorStroke color="0xc8c8c8"/>
 			</s:stroke>
@@ -1760,14 +1912,16 @@
 		<s:Label x="4" y="12" fontWeight="bold" text="Geometry"/>
 		<s:RadioButton x="4" y="28" label="SG_Point" groupName="geomGroup" 
 					   id="pointRadio" click="pointRadio_clickHandler(event)"/>
-		<s:RadioButton x="4" y="52" label="SG_Curve" groupName="geomGroup" 
+		<s:RadioButton x="4" y="50" label="SG_Curve" groupName="geomGroup" 
 					   id="curveRadio" click="curveRadio_clickHandler(event)"/>
-		<s:RadioButton x="4" y="74" label="SG_Surface" groupName="geomGroup" 
-					   id="surfaceRadio" click="surfaceRadio_clickHandler(event)"/>		
+		<s:RadioButton x="4" y="72" label="SG_Surface" groupName="geomGroup" 
+					   id="surfaceRadio" click="surfaceRadio_clickHandler(event)"/>	
+		<s:RadioButton x="4" y="94" label="SG_Complex" groupName="geomGroup" 
+					   id="complexRadio" click="complexRadio_clickHandler(event)"/>			
 	</s:Group>
 
-	<s:Group x="532" width="92" height="78" right="15" top="412">
-		<s:Rect x="0" y="0" width="100%" height="45">
+	<s:Group right="15" top="432" width="95" height="78">
+		<s:Rect x="0" y="1" width="100%" height="45">
 			<s:stroke>
 				<s:SolidColorStroke color="0xc8c8c8"/>
 			</s:stroke>

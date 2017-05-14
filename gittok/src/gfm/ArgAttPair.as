@@ -5,7 +5,7 @@ package gfm
 	public class ArgAttPair
 	{
 		public var fromTo:String;				// "self", "from" or "to"
-		public var targetTypeName:String;
+		public var targetTypeName:String;		// from- or to- feature type name
 		public var attributeType:AttributeType; // corresponding attribute with the argument
 		public var argumentType:AttributeType;	// argument of the operation
 		

@@ -14,7 +14,7 @@ package dataTypes.spatialGeometry
 	public class SG_Ring
 	{
 		public var id:String;
-		public var elements:ArrayList;
+		public var elements:ArrayList;   // A sequence of orientable curves 
 		
 		public function SG_Ring()
 		{

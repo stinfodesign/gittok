@@ -6,7 +6,7 @@ package portrayal.gpm
 	
 	import mx.collections.ArrayList;
 	
-	import portrayal.gpm.FeaturePortrayalUnit;
+	import portrayal.gpm.*;
 
 	public class PortrayalSchema
 	{
@@ -36,7 +36,11 @@ package portrayal.gpm
 			str += rOrder + '">'				
 			
 			str += '<fpUnits>';
-			for each(var fpPair:FeaturePortrayalUnit in fpUnits) {
+			for each(var fpPair:* in fpUnits) {
+				if (fpPair is FeaturePortrayalUnit)
+					fpPair = fpPair as FeaturePortrayalUnit;
+				else
+					fpPair = fpPair as AssociationPortrayalUnit;
 				str += fpPair.getXML().toString();
 			}
 			str += '</fpUnits>';
@@ -57,7 +61,7 @@ package portrayal.gpm
 			for each(var strXML:XML in strXMLList) {
 				var fpPair:FeaturePortrayalUnit = new FeaturePortrayalUnit();
 				fpPair.setXML(strXML);
-				fpUnits[fpPair.featureTypeID] = fpPair;
+				fpUnits[fpPair.typeID] = fpPair;
 			}
 		}
 		

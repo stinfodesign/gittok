@@ -75,6 +75,7 @@
 			
 			public var fromListWindow:ListWindow;
 			public var toListWindow:ListWindow;
+			public var listWindow:ListWindow;
 			
 			public var kitURL:String;
 			
@@ -107,14 +108,6 @@
 			[Bindable]
 			public var toFeatures:ArrayList;
 			
-			/*
-			[Bindable]
-			public var fromCandidates:ArrayList;
-			
-			[Bindable]
-			public var toCandidates:ArrayList;
-			*/
-			
 			[Bindable]
 			protected var idList:ArrayList = new ArrayList();
 			
@@ -131,19 +124,18 @@
 				this.move(250, 100);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
-				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
-				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
-				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
-				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
-				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
 				
 				// Geometry
 				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
 				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
 				registerClassAlias("dataTypes.spatialGeometry.GeodeticCoordinate", GeodeticCoordinate);
 				registerClassAlias("dataTypes.spatialGeometry.PlaneRectangularCoordinate", PlaneRectangularCoordinate);
-				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
 				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
 				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);				
 				registerClassAlias("dataTypes.spatialGeometry.SG_Object", SG_Object);				
@@ -183,6 +175,7 @@
 				registerClassAlias("symbolStyle.PointSymbolStyle", PointSymbolStyle);
 				registerClassAlias("symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("symbolStyle.ComplexSymbolStyle", ComplexSymbolStyle);
 				registerClassAlias("symbolStyle.SymbolStyleSchema", SymbolStyleDictionary);
 				registerClassAlias("symbolStyle.SymbolStyle", SymbolStyle);
 				
@@ -275,7 +268,7 @@
 					applicationSchema = apsStream.readObject();
 					apsStream.close();
 				} catch (e:IOError) {
-					Alert.show("Application schema open error:" + e, "Alert", 4, this);
+					Alert.show("Application schema open error:" + e.message, "Alert", 4, this);
 				}
 				
 				kit.applicationSchemaURL = apsFile.name;
@@ -364,29 +357,34 @@
 					applicationSchema = apsStream.readObject();
 					apsStream.close();
 				} catch (e:IOError) {
-					Alert.show("Application schema open error:" + e, "Alert", 4, this);
+					Alert.show("Application schema open error:" + e.message, "Alert", 4, this);
 				}
 				
 				//Set parameters
 				kitName.text = kitFile.name;
 				kit.applicationSchema = applicationSchema;
 				
+				// Initialize concrete types
 				concreteTypes = applicationSchema.constructConcreteTypes();
-				
-				//Set feature instance
-				//featureSetArray = kit.featureSetArray;
-				
-				//Set association instance
-				associationSetArray = kit.associationSetArray;
-				if (associationSetArray == null) {
-					associationSetArray = new Dictionary();
-				}
 				
 				//Initilize association types
 				associationTypes = new ArrayList();
 				for each(var assType:AssociationType in applicationSchema.associationTypes) {
 					associationTypes.addItem(assType);
-				}				
+				}								
+				
+				//Set feature instance
+				//featureSetArray = kit.featureSetArray;
+				if (kit.featureSetArray == null) {
+					kit.featureSetArray = new Dictionary();
+				}
+				
+				//Set association instance
+				//associationSetArray = kit.associationSetArray;
+				if (kit.associationSetArray == null) {
+					kit.associationSetArray = new Dictionary();
+				}
+				
 			}
 			
 			//Save Kit
@@ -410,7 +408,7 @@
 				}
 				
 				//kit.featureSetArray = featureSetArray;
-				kit.associationSetArray = associationSetArray;
+				//kit.associationSetArray = associationSetArray;
 				
 				// restructure the kit
 				kit.applicationSchema = applicationSchema;
@@ -485,12 +483,12 @@
 				assIdList = new ArrayList();
 				associationIDList.prompt = "Add or select ID";
 				
-				associationSet = associationSetArray[associationType.name] as AssociationSet;
+				associationSet = kit.associationSetArray[associationType.name] as AssociationSet;
 				if (associationSet == null) {
 					associationSet = new AssociationSet();
 					associationSet.associations = new Dictionary();
 					associationSet.typeName = associationType.name;
-					associationSetArray[associationType.name] = associationSet;
+					kit.associationSetArray[associationType.name] = associationSet;
 					
 				}
 				else {
@@ -598,14 +596,33 @@
 				idForDelete = instanceIDList.selectedItem as String;
 				
 				f = featureSet.features[idForDelete] as Feature;
-				
+								
 				if (f == null) {
 					Alert.show("No instance in the kit.", "Alert", 4, this);
 					return;
 				}
 				
+				for each (var assoSet:AssociationSet in kit.associationSetArray) {
+					for each (var wasso:Association in assoSet.associations) {
+						for (var i:int = 0; i < wasso.relateFrom.length; i++) {
+							var ff:Feature =wasso.relateFrom.getItemAt(i) as Feature;
+							if (ff == f) {
+								Alert.show("Delete from feature before.", "Alert", 4, this);
+								return;								
+							}
+						}
+						for (i = 0; i < wasso.relateTo.length; i++) {
+							var tf:Feature = wasso.relateTo.getItemAt(i) as Feature;
+							if (tf == f) {
+								Alert.show("Delete to feature before.", "Alert", 4, this);
+								return;								
+							}
+						}
+					}
+				}
+				
 				var fType:FeatureType = applicationSchema.featureTypes[f.typeName] as FeatureType;
-				for (var i:int = 0; i < fType.links.length; i++) {
+				for (i = 0; i < fType.links.length; i++) {
 					var assoType:AssociationType = fType.links.getItemAt(i) as AssociationType;
 					if (assoType.style == "composition") {
 						Alert.yesLabel = "yes";
@@ -619,7 +636,7 @@
 				'hasAtt' should be false.
 				*/
 				if (f.hasAttributes()) {
-					Alert.show("Instance cannot be deleted, as it has attribute values.", "Alert", 4, this);
+					Alert.show("Instance cannot be deleted, as long as it has attribute values.", "Alert", 4, this);
 					return;
 				}
 				
@@ -647,7 +664,7 @@
 			private function deleteFeature(f:Feature):void {
 				// The feature cannot be removed as long as it is linked by other features, 
 				if (f.connectedBy.length > 0) {
-					Alert.show("This feature cannot be removed, because it is connected by another feature.", "Alert", 4, this);
+					Alert.show("This feature cannot be removed, as long as it is connected by another feature.", "Alert", 4, this);
 					return;										
 				}
 				
@@ -661,8 +678,14 @@
 							var n:int = valueList.length;
 							for (var j:int = 0; j < n; j++) {
 								var geom:SG_Primitive = valueList.getItemAt(j) as SG_Primitive;
-								geom.featureID = new ArrayList();
-								geom.attributeName = new ArrayList();
+								for (var k:int = 0; k < geom.featureID.length; k++) {
+									var wid:String = geom.featureID.getItemAt(k) as String;
+									var wf:Feature = kit.featureList[wid] as Feature;
+									if (wf.id == f.id) {
+										geom.featureID.removeItemAt(k);
+										geom.attributeName.removeItemAt(k);
+									}
+								}
 							}
 						}
 					}
@@ -799,6 +822,72 @@
 						memoEditor.addEventListener(Event.CLOSE, memoEditorClose);
 					}
 				}
+				
+				if (tp == "GDate") {
+					//GDate
+					valueInput.enabled = false;
+					valueInput.editable = false;
+					dateInput.enabled = true;
+					dateInput.editable = true;
+				}
+				
+				if (tp == "CharacterString" || tp == "Integer" || tp == "Real" || tp == "Bool") { 
+					//trace(attValueList.uid);
+					valueInput.enabled = true;
+					valueInput.editable = true;
+					dateInput.enabled = false;
+					dateInput.editable = false;
+					
+					/*
+					if (feature == null) {
+						Alert.show("Select or add the instnace before.", "Alert", 4, this);
+						return;						
+					}
+					
+					var ftType:FeatureType = applicationSchema.featureTypes[feature.typeName]  as FeatureType;
+					if (ftType.proxyName == attType.name) {
+						if (listWindow == null) {
+							this.openListWindow();
+						}
+					}
+					*/
+				}
+				
+			}
+			
+			protected function openListWindow():void {
+				var fSet:FeatureSet = kit.featureSetArray[feature.typeName] as FeatureSet;
+				var fType:FeatureType = kit.applicationSchema.featureTypes[feature.typeName] as FeatureType;
+				var pxType:AttributeType = fType.getAttributeTypeByName(fType.proxyName);
+				if (listWindow == null) listWindow = new ListWindow();
+				listWindow.open();
+				
+				listWindow.addEventListener(MouseEvent.CLICK, getSelectedIndex);
+				listWindow.addEventListener(Event.CLOSE, listWindowClosed);
+				
+				var dataList:ArrayList = new ArrayList();
+				for each (var f:Feature in fSet.features) {
+					var dArray:ArrayList = f.attributes[pxType.name] as ArrayList;
+					var d:CharacterString = dArray.getItemAt(0) as CharacterString;
+					d.featureID.addItem(f.id);
+					dataList.addItem(d);
+				}
+				
+				listWindow.dataList = dataList;
+				listWindow.typeNameLabel.text  = fType.name;
+				listWindow.proxyNameLabel.text = pxType.name;
+				listWindow.fromToLabel.text = "SELF";								
+			}
+			
+			protected function getSelectedIndex(event:Event):void {			
+				if (listWindow.proxyValueList.selectedIndex == -1) return;
+			
+				var d:CharacterString = listWindow.dataList.getItemAt(listWindow.proxyValueList.selectedIndex) as CharacterString;
+				valueInput.text = d.value;
+			}
+			
+			protected function listWindowClosed(event:Event):void {
+				listWindow = null;
 			}
 			
 			protected function openGeometryWindow():void {
@@ -806,58 +895,91 @@
 				geometryWindow.kit = kit;
 				geometryWindow.kitURL = kitURL;
 				geometryWindow.applicationSchema = applicationSchema;
-				geometryWindow.open();
 				geometryWindow.title = "Editor >";
+				geometryWindow.open();
 				geometryWindow.clearAnnotationLayer();
 				geometryWindow.addEventListener(Event.CLOSE, geometryWindowClose);				
 			}
 			
 			protected function geometryWindowCheckFeature(event:MouseEvent):void {
-				if (geometryWindow.searchedGM != null) {
-
-					var idArray:ArrayList = geometryWindow.searchedGM.featureID;
-					if (idArray.length > 0) {
-						if (fromRadio != null) {
-							if (fromRadio.selected) {
-								featureSet = kit.featureSetArray[associationType.from.name] as FeatureSet;
-								var fType:FeatureType = associationType.from;
-							}
-						}	
-						if (toRadio != null) {
-							if (toRadio.selected) {
-								featureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
-								fType = associationType.to;
-							}
-						}
-						if (fromRadio == null && toRadio == null) {
-							fType = featureTypeList.selectedItem as FeatureType;							
-						}
-						
-						/*
-						Geometry primitive may associate with more than one features of which types are different.
-						This is the reason to examine elements of idArray.
-						If a feature with the same type to fType was found, it is the feature for editing. 
-						*/
-						
-						for (var i:int = 0; i < idArray.length; i++) {
-							var id:String = idArray.getItemAt(i) as String;
-							var ftr:Feature = kit.featureList[id] as Feature;
-							if (ftr != null) {
-								if (ftr.typeName == fType.name) {
-									instanceIDList.selectedItem = ftr;
-									instanceIDList.prompt = id;
-									feature = ftr;
-									attValueList = new ArrayList();
-								}
-							}
-						}
-					}
-					else {
-						instanceIDList.selectedIndex = -1;
-						instanceIDList.prompt = "";
-						attValueList = new ArrayList();
+				if (geometryWindow.searchedGM == null) return;
+				
+				var idArray:ArrayList = geometryWindow.searchedGM.featureID;
+				var fType:FeatureType;
+				var assoType:AssociationType;
+				if (fromRadio != null) {
+					if (fromRadio.selected) {
+						featureSet = kit.featureSetArray[associationType.from.name] as FeatureSet;
+						fType = associationType.from;
 					}
 				}
+				
+				if (toRadio != null) {
+					if (toRadio.selected) {
+						featureSet = kit.featureSetArray[associationType.to.name] as FeatureSet;
+						fType = associationType.to;
+					}
+				}
+				
+				if (fromRadio == null && toRadio == null) {
+					if (featureTypeList.selectedIndex == -1) {
+						Alert.show("Feature type on Feature Type List is not selected.", "Alert", 4, this);
+						return;								
+					}
+					fType = featureTypeList.selectedItem as FeatureType;
+				}
+				
+				if (fromRadio != null && toRadio != null) {
+					if (associationTypeList.selectedIndex == -1) {
+						Alert.show("Feature type on Feature Type List is not selected.", "Alert", 4, this);
+						return;								
+					}
+					assoType = associationTypeList.selectedItem as AssociationType;
+				}
+				
+				/*
+				Geometry primitive may associate with more than one features of which types are different.
+				This is the reason to examine elements of idArray.
+				If a feature with the same type to fType was found, it is the feature for editing. 
+				*/
+				
+				fType = featureTypeList.selectedItem as FeatureType;
+
+				if (fType != null) {
+					for (var i:int = 0; i < idArray.length; i++) {
+						var id:String = idArray.getItemAt(i) as String;
+						var ftr:Feature = kit.featureList[id] as Feature;
+						if (ftr != null) {
+							if (ftr.typeName == fType.name) {
+								instanceIDList.selectedItem = id;
+								instanceIDList.selectedIndex = idArray.getItemIndex(id);
+								instanceIDList.prompt = id;
+								feature = ftr;
+								attValueList = new ArrayList();
+							}
+						}
+					}
+				}
+				else if (assoType != null) {
+					for (i = 0; i < idArray.length; i++) {
+						id = idArray.getItemAt(i) as String;
+						var asso:Association = kit.associationList[id] as Association;
+						if (asso != null) {
+							if (asso.typeName == assoType.name) {
+								associationIDList.selectedItem = id;
+								associationIDList.selectedIndex = idArray.getItemIndex(id);
+								associationIDList.prompt = id;
+								association = asso;
+								attValueList = new ArrayList();
+							}
+						}
+					}							
+				}
+
+				// The selectedGM does not associate with a feature instance yet.
+				instanceIDList.selectedIndex = -1;
+				instanceIDList.prompt = "";
+				attValueList = new ArrayList();
 			}
 			
 			protected function geometryWindowClose(event:Event):void {
@@ -923,7 +1045,7 @@
 				if (attValueList == null) attValueList = new ArrayList();
 				
 				if ((attType.multiplicity == false) && (attValueList.length  > 0)) {
-					Alert.show("Alert", "Attribute value must be one", 4, this);
+					Alert.show("Attribute value must be one", "Alert", 4, this);
 					return;
 				}
 				
@@ -1135,6 +1257,15 @@
 					feature.attributes[attType.name] = attValueList;					
 				}
 				
+				if (tp == "GDate") {
+					var gdate:GDate = new GDate();
+					
+					gdate.value = dateInput.selectedDate;
+					attValueList.addItem(gdate);
+					feature.attributes[attType.name] = attValueList;
+					dateInput.text = "";
+				}
+				
 			}
 			
 			// search the attribute value on the value grid
@@ -1153,9 +1284,14 @@
 					}
 					geometryWindow.clearAnnotationLayer();
 					
-					var primi:SG_Primitive = attValueList.getItemAt(i) as SG_Primitive;
+					var gObj:SG_Object = attValueList.getItemAt(i) as SG_Object;
 					
-					geometryWindow.displaySGPrimitive("circle", primi);	
+					if (gObj is SG_Complex) {
+						geometryWindow.displaySGObject("complex", gObj);
+					}
+					else {
+						geometryWindow.displaySGObject("circle", gObj);	
+					}
 
 				}
 				
@@ -1236,6 +1372,26 @@
 					memoEditor.memoArea.text = mm.value;
 					memoEditor.addEventListener(Event.CLOSE, memoEditorClose);
 				}
+				
+				if (tp == "GDate") {
+					dateInput.enabled = true;
+					dateInput.editable = true;
+					valueInput.enabled = false;
+					valueInput.editable = false;
+					var wgdate:GDate = valueGrid.selectedItem as GDate;
+					dateTimeFormatter.dateStyle = "medium";
+					dateTimeFormatter.timeStyle = "none";
+					dateInput.text = dateTimeFormatter.format(wgdate.value);					
+				}
+				
+				if (tp == "Integer" || tp == "Real" || tp == "Bool" || tp == "CharacterString") {
+					dateInput.enabled = false;
+					dateInput.editable = false;
+					valueInput.enabled = true;
+					valueInput.editable = true;
+					var wvalue:* = valueGrid.selectedItem;
+					valueInput.text = "" + wvalue.value;
+				}
 			}
 			
 			// delete
@@ -1292,6 +1448,9 @@
 					attValueList.removeItemAt(valueGrid.selectedIndex);
 					
 				}
+				else if (tp == "GDate") {
+					attValueList.removeItemAt(valueGrid.selectedIndex);
+				}
 			}
 			
 			protected function addAssoIDButton_clickHandler(event:MouseEvent):void
@@ -1328,6 +1487,9 @@
 				assIdList.addItem(association.id);
 				associationIDList.prompt = association.id;
 				associationIDList.selectedItem = association.id;
+				
+				fromRadio.selected = false;
+				toRadio.selected = false;
 			}
 			
 			protected function deleteAssoIDButton_clickHandler(event:MouseEvent):void
@@ -1409,14 +1571,9 @@
 					// the from feature and all to-features are removed from the association instance
 					if (associationType.style == "composition") {
 						toFeatures.removeAll();
-						//toCandidatesDropdown.prompt = "Select id";
-						//toCandidatesDropdown.selectedIndex = -1;
-
 					}
 
 					fromFeatures.removeItem(ff);
-					//fromCandidatesDropdown.prompt = "Select id";
-					//fromCandidatesDropdown.selectedIndex = -1;
 				}
 				
 				if (toRadio.selected) {
@@ -1425,8 +1582,6 @@
 						Alert.show('Select "to" feature on the list before.', 'Alert', 4, this);	
 					}
 					toFeatures.removeItem(tf);
-					//toCandidatesDropdown.prompt = "Select id";
-					//toCandidatesDropdown.selectedIndex = -1;
 				}
 				
 				if (geometryWindow != null) geometryWindow.clearAnnotationLayer();
@@ -1434,13 +1589,103 @@
 			
 			protected function assoAttributeGrid_clickHandler(event:MouseEvent):void
 			{
+				if (assoAttributeGrid.selectedItem == null ) return;
+
 				var attType:AttributeType = assoAttributeList.getItemAt(assoAttributeGrid.selectedIndex) as AttributeType;
+				
 				if (association != null) {
 					assoAttValueList = association.attributes[attType.name] as ArrayList;
 				}
-				else {
-					Alert.show("Alert", "Add association instance before.", 4, this);
-					return;
+				
+				var tp:String = attType.dataType;
+				
+				if (tp.search("SG_") > -1) {
+					if (geometryWindow == null) {
+						this.openGeometryWindow();
+						if (kitName.text != "") {
+							if (kit.baseMapImageURL != null) 
+								geometryWindow.opViewStack.selectedChild = geometryWindow.orientationView;
+							else
+								geometryWindow.opViewStack.selectedChild = geometryWindow.preparationView;								
+						}
+						geometryWindow.addEventListener(MouseEvent.MOUSE_DOWN, geometryWindowCheckFeature);
+					}
+				}
+				
+				if (tp == "ImageURL") {
+					//Image
+					if (imageWindow == null) {
+						imageWindow = new ImageWindow();
+						imageWindow.open();
+						imageWindow.title = "Editor >";
+						imageWindow.addEventListener(Event.CLOSE, imageWindowClose);
+					}
+				}
+				
+				if (tp == "VideoURL") {
+					// Video
+					if (videoWindow == null) {
+						videoWindow = new VideoWindow();
+						videoWindow.open();
+						videoWindow.title = "Editor >";
+						videoWindow.addEventListener(Event.CLOSE, videoWindowClose);
+					}
+				}
+				
+				if (tp == "SoundURL") {
+					//Sound
+					if (soundWindow == null) {
+						soundWindow = new SoundWindow();
+						soundWindow.open();
+						soundWindow.title = "Editor >";
+						soundWindow.addEventListener(Event.CLOSE, soundWindowClose);
+					}
+				}
+				
+				if (tp == "URL") {
+					//URL
+					if (urlWindow == null) {
+						urlWindow = new UrlWindow();
+						urlWindow.open();
+						urlWindow.title = "Editor >";
+						urlWindow.addEventListener(Event.CLOSE, urlWindowClose);
+					}
+				}
+				
+				if (tp == "Address") {
+					//Address
+					if (addressWindow == null) {
+						addressWindow = new AddressWindow();
+						addressWindow.open();
+						addressWindow.title = "Editor >";
+						addressWindow.addEventListener(Event.CLOSE, addressWindowClose);
+					}
+				}
+				
+				if (tp == "Memo") {
+					//Memo
+					if (memoEditor == null) {
+						memoEditor = new MemoEditor();
+						memoEditor.open();
+						memoEditor.title = "Editor >";
+						memoEditor.addEventListener(Event.CLOSE, memoEditorClose);
+					}
+				}
+				
+				if (tp == "GDate") {
+					//GDate
+					valueInput.enabled = false;
+					valueInput.editable = false;
+					dateInput.enabled = true;
+					dateInput.editable = true;
+				}
+				
+				if (tp == "CharacterString" || tp == "Integer" || tp == "Real" || tp == "Bool") { 
+					//trace(attValueList.uid);
+					valueInput.enabled = true;
+					valueInput.editable = true;
+					dateInput.enabled = false;
+					dateInput.editable = false;
 				}
 			}
 			
@@ -1463,7 +1708,7 @@
 				
 				var tp:String = attType.dataType;
 				
-				if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
+				if (tp.search("SG_") > -1) {
 					if (geometryWindow.searchedGM == null) {
 						Alert.show("Alert", "Geometry is not selected!", 4, this);
 						return;
@@ -1770,13 +2015,25 @@
 				
 				var crp:String = associationType.correspondence;
 				if ((crp == "1:1" || crp == "1:n") && fromFeatures.length == 1) {
-					Alert.show("Alert", "From-feature shall be one.", 4, this);
+					Alert.show("From-feature shall be one.", "Alert", 4, this);
 					return;
 				}
 				
 				var fSet:FeatureSet = kit.featureSetArray[associationType.from.name] as FeatureSet;
 				var d:CharacterString = fromListWindow.dataList.getItemAt(fromListWindow.proxyValueList.selectedIndex) as CharacterString;
-				var f:Feature = fSet.features[d.featureID];
+				var selectedID:String = null;
+				for (var i:int = 0; i < d.featureID.length; i++) {
+					var wid:String = d.featureID.getItemAt(i) as String;
+					var wf:Feature = kit.featureList[wid] as Feature;
+					if (wf.typeName == fSet.typeName) selectedID = wid; 
+				}
+				
+				if (selectedID == null) {
+					Alert.show("Feature instance un-matchs with the from type.", "Alert", 4, this);
+					return;
+				}
+				
+				var f:Feature = fSet.features[selectedID];
 				if (fromFeatures.getItemIndex(f) != -1) {
 					fromListWindow.proxyValueList.selectedIndex = -1;
 					fromListWindow.selectedItemList.selectedIndex = -1;
@@ -1793,8 +2050,9 @@
 			
 			protected function geometryWindowCheckFrom(event:MouseEvent):void {
 				if (toRadio.selected) return;
+				if (tabBar.selectedIndex == 0) return;
 				
-				var geom:SG_Primitive = geometryWindow.searchedGM;
+				var geom:SG_Object = geometryWindow.searchedGM;
 				if (geom != null) {
 					if (geom.featureID.length > 0) {
 						if (association == null) {
@@ -1819,12 +2077,14 @@
 						for (var i:int = 0; i < geom.featureID.length; i++) {
 							var fid:String = geom.featureID.getItemAt(i) as String;
 							var ftr:Feature = fSet.features[fid] as Feature;
-							if (ftr.typeName == fType.name) {
-								for (var j:int = 0; j < fromFeatures.length; j++) {
-									var ftr2:Feature = fromFeatures.getItemAt(j) as Feature;
-									if (ftr == ftr2) return;
+							if (ftr != null) {
+								if (ftr.typeName == fType.name) {
+									for (var j:int = 0; j < fromFeatures.length; j++) {
+										var ftr2:Feature = fromFeatures.getItemAt(j) as Feature;
+										if (ftr == ftr2) return;
+									}
+									fromFeatures.addItem(ftr);
 								}
-								fromFeatures.addItem(ftr);
 							}
 						}
 					}
@@ -1948,58 +2208,59 @@
 			
 			protected function geometryWindowCheckTo(event:MouseEvent):void {
 				if (fromRadio.selected) return;
+				if (tabBar.selectedIndex == 0) return;
 				
-				var geom:SG_Primitive = geometryWindow.searchedGM;
+				/*
+				関連における，to地物の選択について
+				
+				関連インスタンスの生成を行うときには，to地物の選択をしなければいけない．
+				to地物は複数になる可能性がある。
+				一方幾何プリミティブは，異なる型をとる複数の地物オブジェクトから参照される場合がある．
+				そこで，Geometry Page から幾何プリミティブを選択してto地物を選択するときは，
+				以下の手順を踏む必要がある．
+				１．幾何プリミティブの選択
+				２．幾何プリミティブに関連する複数の地物オブジェクトの中から，to地物と同じ型をとるオブジェクトを抽出．
+				３．このオブジェクトが，すでにある to地物の配列に入っていないことを確認
+				４．to 地物の配列にオブジェクトを追加
+				*/
+								
+				var geom:SG_Object = geometryWindow.searchedGM;
 				if (geom != null) {
 					if (geom.featureID.length > 0) {
+						if (association == null) {
+							Alert.show("Add association before.", "Alert", 4, this);
+							return;
+						}
+
 						var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;
 						var fSet:FeatureSet = kit.featureSetArray[assoType.to.name] as FeatureSet;
+						
+						/*
 						var tf:Feature = fSet.features[geom.featureID];
 						if (toFeatures.getItemIndex(tf) > -1) {
 							var len:int = toIDList.selectedItems.length;
 							toIDList.selectedIndices[len] = toFeatures.getItemIndex(tf);
 							return;
 						}
-						
-						/*
-						関連における，to地物の選択について
-						
-						関連インスタンスの生成を行うときには，to地物の選択をしなければいけない．
-						これらは複数になる可能性があり，また，幾何プリミティブは異なる型をとる
-						複数の地物オブジェクトから参照される場合がある．
-						そこで，Geometry Page から幾何プリミティブを選択してto地物を選択するときは，
-						以下の手順を踏む必要がある．
-						１．幾何プリミティブの選択
-						２．幾何プリミティブに関連する複数の地物オブジェクトの中から，to地物と同じ型をとるオブジェクトを抽出．
-						３．このオブジェクトが，すでにある to地物の配列に入っていないことを確認
-						４．to 地物の配列にオブジェクトを追加
 						*/
 						
 						var fType:FeatureType = assoType.to;						
 						for (var i:int = 0; i < geom.featureID.length; i++) {
 							var fid:String = geom.featureID.getItemAt(i) as String;
 							var ftr:Feature = fSet.features[fid] as Feature;
-							if (ftr.typeName == fType.name) {
-								for (var j:int = 0; j < toFeatures.length; j++) {
-									var ftr2:Feature = toFeatures.getItemAt(j) as Feature;
-									if (ftr == ftr2) return;
+							if (ftr != null) {
+								if (ftr.typeName == fType.name) {
+									for (var j:int = 0; j < toFeatures.length; j++) {
+										var ftr2:Feature = toFeatures.getItemAt(j) as Feature;
+										if (ftr == ftr2) return;
+									}
+									toFeatures.addItem(ftr);
 								}
-								toFeatures.addItem(ftr);
 							}
 						}
-						
-						/*
-						toCandidates = new ArrayList();
-						for (var i:int = 0; i < geom.featureID.length; i++) {
-							var fid:String = geom.featureID.getItemAt(i) as String;
-							toCandidates.addItem(fSet.features[fid]);
-						}
-						toCandidatesDropdown.prompt = "Select id";	
-						*/
-
 					}
 					else {
-						Alert.show("Alert", "selected geometry is not an attribute of the to feature.", 4, this);
+						Alert.show("selected geometry is not an attribute of the to feature.", "Alert", 4, this);
 						return;
 					}
 				}
@@ -2015,6 +2276,7 @@
 				crsEditor = new CRSEditor();
 				crsEditor.open();
 				crsEditor.addEventListener(Event.CLOSE, crsEditorClose);
+				crsEditor.addEventListener(MouseEvent.CLICK, crsSetter);
 				
 				crsEditor.title = "Editor >";
 				
@@ -2034,7 +2296,13 @@
 					crsEditor.setDisplay();
 					
 				}
-			} 
+			}
+			
+			protected function crsSetter(event:Event):void {
+				if (crsEditor.crsAttached) {
+					crsLabel.text = crsEditor.crsFileLabel.text;
+				}
+			}
 			
 			protected function crsEditorClose(event:Event):void {
 				crsLabel.text = crsEditor.crsFileLabel.text;
@@ -2049,12 +2317,15 @@
 				var fromType:FeatureType = applicationSchema.featureTypes[fromFeature.typeName] as FeatureType;
 				var attType:AttributeType = fromType.getAttributeTypeByName(fromType.proxyName);
 				var attArray:ArrayList = fromFeature.attributes[attType.name] as ArrayList;
-				var att:* = attArray.getItemAt(0);
 				
-				if (attType.dataType == "CharacterString") {
-					var catt:CharacterString = att as CharacterString;
-					if (fromListWindow != null) {
-						fromListWindow.proxyValueList.selectedItem = catt;
+				if (attArray.length > 0) {
+					var att:* = attArray.getItemAt(0);
+				
+					if (attType.dataType == "CharacterString") {
+						var catt:CharacterString = att as CharacterString;
+						if (fromListWindow != null) {
+							fromListWindow.proxyValueList.selectedItem = catt;
+						}
 					}
 				}
 			}
@@ -2066,12 +2337,15 @@
 				var toType:FeatureType = applicationSchema.featureTypes[toFeature.typeName] as FeatureType;
 				var attType:AttributeType = toType.getAttributeTypeByName(toType.proxyName);
 				var attArray:ArrayList = toFeature.attributes[attType.name] as ArrayList;
-				var att:* = attArray.getItemAt(0);
 				
-				if (attType.dataType == "CharacterString") {
-					var catt:CharacterString = att as CharacterString;
-					if (toListWindow != null) {
-						toListWindow.proxyValueList.selectedItem = catt;
+				if (attArray.length > 0) {
+					var att:* = attArray.getItemAt(0);
+				
+					if (attType.dataType == "CharacterString") {
+						var catt:CharacterString = att as CharacterString;
+						if (toListWindow != null) {
+							toListWindow.proxyValueList.selectedItem = catt;
+						}
 					}
 				}
 			}
@@ -2209,96 +2483,8 @@
 				
 				kitName.text = kitFile.name;
 				
-				/*
-				if (tabBar.selectedIndex == 0) {
-					// feature
-					if (featureTypeList.selectedIndex < 0) {
-						Alert.show("Select feature type", "Alert", 4, this);
-						return;
-					}
+			}
 
-					concreteType = concreteTypes.getItemAt(featureTypeList.selectedIndex) as FeatureType;
-					featureSet = kit.featureSetArray[concreteType.name] as FeatureSet;
-					
-					if (featureSet != null) {
-						if (featureIDList == null) featureIDList = new ArrayList();	// idList is a dataprovider for instanceIDList
-						var features:Dictionary = featureSet.features;
-						var m:int = 0;
-						for each (var feature:Feature in features) {
-							featureIDList.addItem(feature.id);	
-							m++;
-						}
-					}
-					idList = featureIDList;
-				}
-				else {
-					// association
-					associationType = associationTypes.getItemAt(associationTypeList.selectedIndex) as AssociationType;
-					associationSet = kit.associationSetArray[associationType.name] as AssociationSet;
-					
-					if (associationSet != null) {
-						if (assIdList == null) assIdList = new ArrayList();
-						var associations:Dictionary = associationSet.associations;
-						m = 0;
-						for each (var association:Association in associations) {
-							assIdList.addItem(association.id);
-							m++;	
-						}
-					}
-				}
-				
-				if (geometryWindow != null) {
-					kit = geometryWindow.kit;
-					
-					Mouse.cursor = "arrow";
-					geometryWindow.close();
-				}
-				*/
-				
-			}
-			/*			
-			protected function fromCandidatesDropdown_changeHandler(event:IndexChangeEvent):void
-			{
-				if ((associationType.correspondence.search("m") == -1) &&
-					(fromFeatures.length == 1)) {
-						// From feature shall be one!
-						return;
-				}
-				
-				var ff:Feature = fromCandidatesDropdown.selectedItem as Feature;
-				ff.connects.addItem(association);				
-
-				fromFeatures.addItem(ff);
-				association.relateFrom = fromFeatures;				
-			}
-			
-			protected function toCandidatesDropdown_changeHandler(event:IndexChangeEvent):void
-			{
-				if ((associationType.correspondence.search("n") == -1) &&
-					(toFeatures.length == 1)) {
-					// To feature shall be one!
-					return;
-				}
-				
-				var tf:Feature = toCandidatesDropdown.selectedItem as Feature;
-				tf.connectedBy.addItem(association);
-				
-				toFeatures.addItem(tf);
-				association.relateTo = toFeatures;
-			}
-					
-			protected function selectedIDList_changeHandler(event:IndexChangeEvent):void
-			{
-				instanceIDList.selectedItem = selectedIDList.selectedItem;
-				
-				feature = featureSet.features[selectedIDList.selectedItem as String];
-				
-				selectedIDList.selectedIndex = -1;
-				
-				selectedIDList.prompt = "";
-				
-			}
-			*/
 			
 			protected function assoValueGrid_clickHandler(event:MouseEvent):void
 			{
@@ -2315,9 +2501,15 @@
 					}
 					geometryWindow.clearAnnotationLayer();
 					
-					var primi:SG_Primitive = assoAttValueList.getItemAt(i) as SG_Primitive;
+					var gObj:SG_Object = assoAttValueList.getItemAt(i) as SG_Object;
 					
-					geometryWindow.displaySGPrimitive("circle", primi);	
+					if (gObj is SG_Complex) {
+						geometryWindow.displaySGObject("circle", gObj);	
+						
+					}
+					else {
+						geometryWindow.displaySGObject("circle", gObj);	
+					}	
 					
 				}
 				
@@ -2400,12 +2592,18 @@
 				}
 			}
 			
+			protected function tabBar_changeHandler(event:IndexChangeEvent):void
+			{
+				if (geometryWindow != null) geometryWindow.close();
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
 		<s:RadioButtonGroup id="fromToGroup"/>
 		<s:RadioButtonGroup id="idListGroup"/>
+		<s:DateTimeFormatter id="dateTimeFormatter" locale="ja-JP"/>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
 	<mx:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="60" height="60"/>
@@ -2422,7 +2620,7 @@
 			  click="saveKitButton_clickHandler(event)"/>
 	<s:TextInput x="201" y="106" width="142" id="kitName" contentBackgroundColor="#DADADA" borderVisible="false" editable="false" height="20"/>
 	
-	<s:TabBar id="tabBar" dataProvider="{myViewStack}" x="16" y="142" height="20" />
+	<s:TabBar id="tabBar" dataProvider="{myViewStack}" x="16" y="142" height="20" change="tabBar_changeHandler(event)" />
 	
 	<mx:ViewStack id="myViewStack" 
 				  borderStyle="solid" width="490" height="420" x="16" y="161" backgroundColor="#fefee5"> 
@@ -2433,7 +2631,7 @@
 								dataProvider="{concreteTypes}" labelField="name"
 								prompt="Select F_Type"
 								skinClass="spark.skins.spark.DropDownListSkin"></s:DropDownList>
-				<mx:DataGrid id="attributeGrid" x="10" y="155" width="300" height="195"
+				<mx:DataGrid id="attributeGrid" x="10" y="181" width="300" height="195"
 							 click="attributeGrid_clickHandler(event)"
 							 dataProvider="{attributeTypeList}" editable="false"
 							 variableRowHeight="true">
@@ -2453,7 +2651,7 @@
 				<s:Button id="deleteInstanceButton" x="334" y="37" width="55" height="20"
 						  label="delete" click="deleteInstanceButton_clickHandler(event)"/>
 				<s:Label x="15" y="21" text="Feature Type"/>
-				<mx:DataGrid id="valueGrid" x="318" y="155" width="161" height="195"
+				<mx:DataGrid id="valueGrid" x="318" y="181" width="161" height="195"
 							 click="valueGrid_clickHandler(event)" dataProvider="{attValueList}"
 							 verticalAlign="middle">
 					<mx:columns>
@@ -2461,17 +2659,19 @@
 						<mx:DataGridColumn headerText="value" dataField="value" width="60"/>
 					</mx:columns>
 				</mx:DataGrid>
-				<s:Button id="addValueButton" x="317" y="358" width="55" height="20" label="add"
+				<s:Button id="addValueButton" x="317" y="384" width="55" height="20" label="add"
 						  click="addValueButton_clickHandler(event)"/>
-				<s:Button id="deleteValueButton" x="376" y="358" width="55" height="20"
+				<s:Button id="deleteValueButton" x="376" y="384" width="55" height="20"
 						  label="delete" click="deleteValueButton_clickHandler(event)"/>
-				<s:TextInput id="valueInput" x="319" y="107" width="158" height="20"/>
-				<s:Label x="282" y="113" text="Value"/>
+				<s:TextInput id="valueInput" x="319" y="100" width="158" height="20"/>
+				<s:Label x="282" y="106" text="Value"/>
 				<s:Label x="395" y="43" text="Feature"/>
-				<s:Label x="15" y="141" text="AttributeType List »"/>
-				<s:Label x="319" y="141" text="Attribute ID Value List »"/>
+				<s:Label x="15" y="167" text="AttributeType List »"/>
+				<s:Label x="319" y="167" text="Attribute ID Value List »"/>
 				<s:Label x="195" y="70" text="Instance IDs"/>
-				<s:Label x="434" y="361" text="Attribute"/> 
+				<s:Label x="434" y="387" text="Attribute"/> 
+				<mx:DateField id="dateInput" x="319" y="130" width="159" showToday="false"/>
+				<s:Label x="281" y="140" text="Date"/>
 				<!--
 				<s:Label x="195" y="108" fontSize="12" text="Selected IDs"/>
 				<s:DropDownList id="selectedIDList" x="273" y="101" width="165"
@@ -2556,7 +2756,7 @@
 					
 					<s:NavigatorContent id="attTab" label="AttributeEditor">
 						<s:Group width="100%" height="288" id="att" x="0" y="0">
-							<mx:DataGrid id="assoAttributeGrid" x="5" y="62" width="275" height="170"
+							<mx:DataGrid id="assoAttributeGrid" x="5" y="86" width="275" height="170"
 										 click="assoAttributeGrid_clickHandler(event)"
 										 contentBackgroundColor="#FFFFFF"
 										 dataProvider="{assoAttributeList}">
@@ -2567,23 +2767,25 @@
 									<mx:DataGridColumn dataField="multiplicity" headerText="multi." width="40" resizable="false"/>
 								</mx:columns>
 							</mx:DataGrid>
-							<mx:DataGrid x="286" y="62" width="161" height="170" id="assoValueGrid" 
+							<mx:DataGrid x="286" y="86" width="161" height="170" id="assoValueGrid" 
 										 dataProvider="{assoAttValueList}" click="assoValueGrid_clickHandler(event)">
 								<mx:columns>
 									<mx:DataGridColumn headerText="ID" dataField="id" width="30"/>
 									<mx:DataGridColumn headerText="value" dataField="value" width="60"/>
 								</mx:columns>
 							</mx:DataGrid>
-							<s:Label x="300" y="17" text="Value"/>
-							<s:TextInput id="assoValueInput" x="337" y="11" width="110" height="20"/>
-							<s:Button id="assoAddValueButton" x="286" y="237" width="55" height="20"
+							<s:Label x="285" y="14" text="Value"/>
+							<s:TextInput id="assoValueInput" x="323" y="8" width="124" height="20"/>
+							<s:Button id="assoAddValueButton" x="286" y="261" width="55" height="20"
 									  label="add" click="assoAddValueButton_clickHandler(event)"/>
-							<s:Button id="assoDeleteValueButton" x="345" y="237" width="55"
+							<s:Button id="assoDeleteValueButton" x="345" y="261" width="55"
 									  height="20" label="delete"
 									  click="assoDeleteValueButton_clickHandler(event)"/>
-							<s:Label x="6" y="46" text="Attribute Type List »"/>
-							<s:Label x="286" y="46" text="Attribute ID / Value List »"/>
-							<s:Label x="404" y="243" text="Attribute"/>
+							<s:Label x="6" y="70" text="Attribute Type List »"/>
+							<s:Label x="286" y="70" text="Attribute ID / Value List »"/>
+							<s:Label x="404" y="267" text="Attribute"/>
+							<s:Label x="285" y="42" text="Date"/>
+							<mx:DateField id="assoDateInput" x="323" y="36" width="125"/>
 							
 						</s:Group>
 					</s:NavigatorContent>

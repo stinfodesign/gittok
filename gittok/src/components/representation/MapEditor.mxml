@@ -60,6 +60,8 @@
 			
 			private var feature:Feature;
 			private var featureSet:FeatureSet;
+			private var association:Association;
+			private var associationSet:AssociationSet;
 			private var featureSetArray:Dictionary;
 			private var associationSetArray:Dictionary;
 			
@@ -67,7 +69,7 @@
 			private var labels:LabelStyleDictionary;
 			private var portrayals:PortrayalSchema;
 			private var fpUnits:Dictionary = new Dictionary();
-			private var fpUnit:FeaturePortrayalUnit = new FeaturePortrayalUnit();
+			private var fpUnit:*;
 			
 			private var curve:SG_Curve;
 			private var surface:SG_Surface;
@@ -142,17 +144,23 @@
 			
 			[Bindable]
 			private var featureTypeArray:ArrayList;
-
+			
+			[Bindable]
+			private var associationTypeArray:ArrayList;
+			
+			[Bindable]
+			private var decimalValue:String;
 			
 			public function initializeApp(): void {
 				this.move(400, 50);
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
-				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
-				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
-				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
-				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
-				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
+				registerClassAlias("dataTypes.theme.GDate", GDate);				
 				
 				// Location
 				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
@@ -181,6 +189,7 @@
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.ComplexSymbolStyle", ComplexSymbolStyle);				
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
 				
@@ -192,7 +201,8 @@
 				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);
 				registerClassAlias("portrayal.portrayalStyle.AttributeSymbolPair", AttributeSymbolPair);
 				registerClassAlias("portrayal.portrayalStyle.AttributeLabelPair", AttributeLabelPair);				
-				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);								
+				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);	
+				registerClassAlias("portrayal.portrayalStyle.AssociationPortrayalUnit", AssociationPortrayalUnit);					
 				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
 				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);
 				registerClassAlias("portrayal.portrayalStyle.ThematicCondition", ThematicCondition);
@@ -204,8 +214,9 @@
 				// Symbol
 				registerClassAlias("portrayal.symbol.AreaSymbol", AreaSymbol);				
 				registerClassAlias("portrayal.symbol.LineSymbol", LineSymbol);
-				registerClassAlias("portrayal.symbol.PointSymbol", PointSymbol);		
+				registerClassAlias("portrayal.symbol.PointSymbol", PointSymbol);
 				registerClassAlias("portrayal.symbol.Circle", Circle);	
+				registerClassAlias("portrayal.symbol.ComplexSymbol", ComplexSymbol);	
 				
 				// Label
 				registerClassAlias("portrayal.label.Label", portrayal.label.Label);				
@@ -229,7 +240,6 @@
 				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
 				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
 				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
-				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
 				
 				// Affine
 				registerClassAlias("math.AffineParam", AffineParam);
@@ -500,7 +510,12 @@
 					portrayals = stream.readObject() as PortrayalSchema;
 					appSchemaFile.nativePath    = path + portrayals.applicationSchema;
 					symbolStyleDicFile.nativePath = path + portrayals.symbolStyleDictionary;
-					labelStyleDicFile.nativePath  = path + portrayals.labelStyleDictionary;				
+					
+					if (portrayals.labelStyleDictionary != null && portrayals.labelStyleDictionary != "null")
+						labelStyleDicFile.nativePath  = path + portrayals.labelStyleDictionary;
+					else
+						labelStyleDicFile = null;
+					
 					fpUnits = portrayals.fpUnits;
 					stream.close();
 					
@@ -508,14 +523,22 @@
 					syms = stream.readObject();		// symbol schema				
 					stream.close();
 					
-					stream.open(labelStyleDicFile, FileMode.READ);
-					labels = stream.readObject();	// label schema
-					stream.close();
+					if (labelStyleDicFile != null) {
+						stream.open(labelStyleDicFile, FileMode.READ);
+						labels = stream.readObject();	// label schema
+						stream.close();
+					}
+					else
+						labels = null;
 					
 					featureTypeArray = new ArrayList();
+					associationTypeArray = new ArrayList();
 					
-					for each (var fpUnit:FeaturePortrayalUnit in  portrayals.fpUnits) {
-						featureTypeArray.addItem(fpUnit.featureTypeID);
+					for each (var fpUnit:* in  portrayals.fpUnits) {
+						if (fpUnit is AssociationPortrayalUnit)
+							associationTypeArray.addItem(fpUnit.typeID);
+						else
+							featureTypeArray.addItem(fpUnit.typeID);
 					}
 					
 				} catch (error:IOError) {
@@ -549,164 +572,313 @@
 				featureSetArray = kit.featureSetArray;
 				
 				//Set association instance
-				//associationSetArray = kit.associationSetArray;
+				associationSetArray = kit.associationSetArray;
 				
 				thematicProvider = new ArrayList();
 				
 				//for each(featureSet in featureSetArray) {
 				for (var k:int = 0; k < portrayals.representationOrder.length; k++) {
-					fpUnit = fpUnits[portrayals.representationOrder.getItemAt(k) as String] as FeaturePortrayalUnit;
-					//fpUnit = fpUnits[featureSet.typeID] as FeaturePortrayalUnit;
-					if (fpUnit != null) {
+					fpUnit = fpUnits[portrayals.representationOrder.getItemAt(k) as String];
+
+					if (fpUnit is FeaturePortrayalUnit) {
 						var thematicModifier:ThematicCondition = fpUnit.thematicModifier;
 						
 						if (thematicModifier.elements.length > 0) {
 							// set Legend on the map
 							this.makeLegend(thematicModifier);
 						}
-
-						var fType:FeatureType = kit.applicationSchema.featureTypes[fpUnit.featureTypeID] as FeatureType;							
 						
-						// attribute type
-						var attributeTypes:ArrayList = fType.attributeTypes;
+						var fType:FeatureType = kit.applicationSchema.featureTypes[fpUnit.typeID] as FeatureType;
 						
-						// draw graphics
-						featureSet = featureSetArray[fType.name] as FeatureSet;
-						var refGeom:SG_Primitive;
-						for each(feature in featureSet.features) {
-							var attributes:Dictionary = feature.attributes;
+						if (fType != null) {
 							
-							for each(var primitiveList:ArrayList in attributes) {
-								var primi:* = primitiveList.getItemAt(0);
-								if (primi is SG_Primitive) {
-									refGeom = primi as SG_Primitive;
-							
-									/* thematic mapping
-									*/							
-									if (thematicModifier != null) {
-										var attArray:ArrayList = attributes[thematicModifier.attName] as ArrayList;
-										var modifierType:String = thematicModifier.attType;
-										if (modifierType == "Bool") {
-											if (attArray == null) {
-												var bm:BooleanModifier = thematicModifier.elements.getItemAt(2) as BooleanModifier;
-												if (!bm.hasValue) {
-													var m:int = primitiveList.length;
-													for (var i:int = 0; i < m; i++) {
-														refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
-														this.drawSymbol(bm.symName, refGeom);
-													}											
-												}
-											}
-											else {
-												var attBool:Bool = attArray.getItemAt(0) as Bool;
-												if (attBool.value) {
-													bm = thematicModifier.elements.getItemAt(0) as BooleanModifier;
-													if (bm != null) {
-														m = primitiveList.length;
-														for (i = 0; i < m; i++) {
-															refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
-															this.drawSymbol(bm.symName, refGeom);
-														}
-													}
-												}
-												else {
-													bm = thematicModifier.elements.getItemAt(1) as BooleanModifier;
-													if (bm != null) {
-														m = primitiveList.length;
-														for (i = 0; i < m; i++) {
-															refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
-															this.drawSymbol(bm.symName, refGeom);
-														}
-													}
-												}
-											}
-										}	
-										else if (modifierType == "CharacterString") {
-											var attString:CharacterString = attArray.getItemAt(0) as CharacterString;
-											var stringModifiers:ArrayList = thematicModifier.elements;
-											m = stringModifiers.length;
-											for (i = 0; i < m; i++) {
-												var sm:QualitativeModifier = stringModifiers.getItemAt(i) as QualitativeModifier;
-												if (sm.stringValue != null) {
-													if (attString.value == sm.stringValue) {
-														m = primitiveList.length;
-														for (j = 0; j < m; j++) {
-															refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
-															this.drawSymbol(sm.symName, refGeom);
-														}											
-													}
-												}
-											}
-										}
+							// attribute type
+							var attributeTypes:ArrayList = fType.attributeTypes;
+						
+							// draw graphics
+							featureSet = featureSetArray[fType.name] as FeatureSet;
+							if (featureSet != null) {
+								var refGeom:SG_Object;
+								for each(feature in featureSet.features) {
+									var attributes:Dictionary = feature.attributes;
 									
-										else if (modifierType == "Integer" || modifierType == "Real") {
-											var attNumber:Number;
-											if (modifierType == "Integer") {
-												var attInteger:Integer = attArray.getItemAt(0) as Integer;
-												attNumber = attInteger.value;
-											}
-											else {
-												var attReal:Real = attArray.getItemAt(0) as Real;
-												attNumber = attReal.value;
-											}
-											var numberModifiers:ArrayList = thematicModifier.elements;
-											m = numberModifiers.length;
-											for (i = 0; i < m; i++) {
-												var nm:QuantitativeModifier = numberModifiers.getItemAt(i) as QuantitativeModifier;
-												if (nm !=  null) {
-													var lower:Number = Number(nm.lowerValue);
-													var upper:Number = Number(nm.upperValue);
-											 		if (lower <= attNumber && attNumber < upper) {
-														for (j = 0; j < primitiveList.length; j++) {
-															refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
-															this.drawSymbol(nm.symName, refGeom);
+									for each(var primitiveList:ArrayList in attributes) {
+										var primi:* = primitiveList.getItemAt(0);
+										if (primi is SG_Object) {
+											/* general purpose mapping
+											*/
+											refGeom = primi as SG_Object;										
+											generalPurposeMapping(refGeom, attributeTypes, attributes);	
+											
+											/* thematic mapping
+											*/							
+											if (thematicModifier != null) {
+												var attArray:ArrayList = attributes[thematicModifier.attName] as ArrayList;
+												var modifierType:String = thematicModifier.attType;
+												if (modifierType == "Bool") {
+													if (attArray == null) {
+														var bm:BooleanModifier = thematicModifier.elements.getItemAt(2) as BooleanModifier;
+														if (!bm.hasValue) {
+															var m:int = primitiveList.length;
+															for (var i:int = 0; i < m; i++) {
+																refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+																this.drawSymbol(bm.symName, refGeom);
+															}											
 														}
 													}
+													else {
+														var attBool:Bool = attArray.getItemAt(0) as Bool;
+														if (attBool.value) {
+															bm = thematicModifier.elements.getItemAt(0) as BooleanModifier;
+															if (bm != null) {
+																m = primitiveList.length;
+																for (i = 0; i < m; i++) {
+																	refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+																	this.drawSymbol(bm.symName, refGeom);
+																}
+															}
+														}
+														else {
+															bm = thematicModifier.elements.getItemAt(1) as BooleanModifier;
+															if (bm != null) {
+																m = primitiveList.length;
+																for (i = 0; i < m; i++) {
+																	refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+																	this.drawSymbol(bm.symName, refGeom);
+																}
+															}
+														}
+													}
+												}	
+												else if (modifierType == "CharacterString") {
+													var attString:CharacterString = attArray.getItemAt(0) as CharacterString;
+													var stringModifiers:ArrayList = thematicModifier.elements;
+													m = stringModifiers.length;
+													for (i = 0; i < m; i++) {
+														var sm:QualitativeModifier = stringModifiers.getItemAt(i) as QualitativeModifier;
+														if (sm.stringValue != null) {
+															if (attString.value == sm.stringValue) {
+																m = primitiveList.length;
+																for (j = 0; j < m; j++) {
+																	refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
+																	this.drawSymbol(sm.symName, refGeom);
+																}											
+															}
+														}
+													}
+												}
+													
+												else if (modifierType == "Integer" || modifierType == "Real") {
+													var attNumber:Number;
+													if (modifierType == "Integer") {
+														var attInteger:Integer = attArray.getItemAt(0) as Integer;
+														attNumber = attInteger.value;
+													}
+													else {
+														var attReal:Real = attArray.getItemAt(0) as Real;
+														attNumber = attReal.value;
+													}
+													var numberModifiers:ArrayList = thematicModifier.elements;
+													m = numberModifiers.length;
+													for (i = 0; i < m; i++) {
+														var nm:QuantitativeModifier = numberModifiers.getItemAt(i) as QuantitativeModifier;
+														if (nm !=  null) {
+															var lower:Number = Number(nm.lowerValue);
+															var upper:Number = Number(nm.upperValue);
+															if (lower <= attNumber && attNumber < upper) {
+																for (j = 0; j < primitiveList.length; j++) {
+																	refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
+																	this.drawSymbol(nm.symName, refGeom);
+																}
+															}
+														}
+													}
+												}
+													
+												else if (modifierType == "GDate") {
+													// comming later.	
 												}
 											}
 										}
 									}
+								}
+						
+								for each(feature in featureSet.features) {
+									// Labeling
+									if (labels != null) {
+										attributes = feature.attributes;
+										if (fpUnit.generalModifiers != null) {
+											for (i = 0; i < attributeTypes.length; i++) {
+												var attType:AttributeType = attributeTypes.getItemAt(i) as AttributeType;
+												var alPair:AttributeLabelPair = fpUnit.generalModifiers[attType.name] as AttributeLabelPair;
+												if (alPair != null) {
+													var attValueList:ArrayList = attributes[attType.name] as ArrayList;
+													var refGeomArray:ArrayList = attributes[alPair.refGeomAttName] as ArrayList;
+													if (refGeomArray != null) {
+														drawLabel(attValueList, alPair, refGeomArray.getItemAt(0) as SG_Primitive);
+													}
+												}
+											}
+										}
+									}												
+								}
+							}
+						}
+					}
+					
+					if (fpUnit is AssociationPortrayalUnit) {
+						var aType:AssociationType = kit.applicationSchema.associationTypes[fpUnit.typeID] as AssociationType;
+						if (aType != null) {
+							// attribute type
+							attributeTypes = aType.attributeTypes;
 							
-									/* general mapping
-									*/
-									if (fpUnit.generalModifiers != null) {
-										for (i = 0; i < attributeTypes.length; i++) {
-											var attType:AttributeType = attributeTypes.getItemAt(i) as AttributeType;
-											if (refGeom.attributeName.getItemIndex(attType.name) > -1) {
-												var attValueList:ArrayList = attributes[attType.name];
-												if (attValueList != null) {
-													var asPair:AttributeSymbolPair = fpUnit.generalModifiers[attType.name] as AttributeSymbolPair;
-													if (asPair != null) {
-														if (asPair.symName != "") {
-															if (asPair.symType == "Point" || asPair.symType == "Line" || asPair.symType == "Area")
-																this.drawSymbol(asPair.symName, refGeom);
+							// draw graphics
+							associationSet = associationSetArray[aType.name] as AssociationSet;
+							for each(association in associationSet.associations) {
+								attributes = association.attributes;
+								
+								for each(primitiveList in attributes) {
+									primi = primitiveList.getItemAt(0);
+									if (primi is SG_Object) {
+										refGeom = primi as SG_Object;
+										
+										/* general purpose mapping of asssciations
+										*/
+										generalPurposeMapping(refGeom, attributeTypes, attributes);										
+
+										
+										/* thematic mapping
+										*/							
+										if (thematicModifier != null) {
+											attArray = attributes[thematicModifier.attName] as ArrayList;
+											modifierType = thematicModifier.attType;
+											if (modifierType == "Bool") {
+												if (attArray == null) {
+													bm = thematicModifier.elements.getItemAt(2) as BooleanModifier;
+													if (!bm.hasValue) {
+														m = primitiveList.length;
+														for (i = 0; i < m; i++) {
+															refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+															this.drawSymbol(bm.symName, refGeom);
+														}											
+													}
+												}
+												else {
+													attBool = attArray.getItemAt(0) as Bool;
+													if (attBool.value) {
+														bm = thematicModifier.elements.getItemAt(0) as BooleanModifier;
+														if (bm != null) {
+															m = primitiveList.length;
+															for (i = 0; i < m; i++) {
+																refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+																this.drawSymbol(bm.symName, refGeom);
+															}
+														}
+													}
+													else {
+														bm = thematicModifier.elements.getItemAt(1) as BooleanModifier;
+														if (bm != null) {
+															m = primitiveList.length;
+															for (i = 0; i < m; i++) {
+																refGeom = primitiveList.getItemAt(i) as SG_Primitive;	
+																this.drawSymbol(bm.symName, refGeom);
+															}
 														}
 													}
 												}
+											}	
+											else if (modifierType == "CharacterString") {
+												attString = attArray.getItemAt(0) as CharacterString;
+												stringModifiers = thematicModifier.elements;
+												m = stringModifiers.length;
+												for (i = 0; i < m; i++) {
+													sm = stringModifiers.getItemAt(i) as QualitativeModifier;
+													if (sm.stringValue != null) {
+														if (attString.value == sm.stringValue) {
+															m = primitiveList.length;
+															for (j = 0; j < m; j++) {
+																refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
+																this.drawSymbol(sm.symName, refGeom);
+															}											
+														}
+													}
+												}
+											}
+												
+											else if (modifierType == "Integer" || modifierType == "Real") {
+												if (modifierType == "Integer") {
+													attInteger = attArray.getItemAt(0) as Integer;
+													attNumber = attInteger.value;
+												}
+												else {
+													attReal = attArray.getItemAt(0) as Real;
+													attNumber = attReal.value;
+												}
+												numberModifiers = thematicModifier.elements;
+												m = numberModifiers.length;
+												for (i = 0; i < m; i++) {
+													nm = numberModifiers.getItemAt(i) as QuantitativeModifier;
+													if (nm !=  null) {
+														lower = Number(nm.lowerValue);
+														upper = Number(nm.upperValue);
+														if (lower <= attNumber && attNumber < upper) {
+															for (j = 0; j < primitiveList.length; j++) {
+																refGeom = primitiveList.getItemAt(j) as SG_Primitive;	
+																this.drawSymbol(nm.symName, refGeom);
+															}
+														}
+													}
+												}
+											}
+												
+											else if (modifierType == "GDate") {
+												
 											}
 										}
 									}
 								}
 							}
-						}
-						
-						for each(feature in featureSet.features) {
-							// Labeling
-							attributes = feature.attributes;
-							if (fpUnit.generalModifiers != null) {
-								for (i = 0; i < attributeTypes.length; i++) {
-									attType = attributeTypes.getItemAt(i) as AttributeType;
-									var alPair:AttributeLabelPair = fpUnit.generalModifiers[attType.name] as AttributeLabelPair;
-									if (alPair != null) {
-										attValueList = attributes[attType.name] as ArrayList;
-										var refGeomArray:ArrayList = attributes[alPair.refGeomAttName] as ArrayList;
-										if (refGeomArray != null)
-										drawLabel(attValueList, alPair.labelName, refGeomArray.getItemAt(0) as SG_Primitive);
+							
+							for each(association in associationSet.associations) {
+								// Labeling
+								if (labels != null) {
+									attributes = association.attributes;
+									if (fpUnit.generalModifiers != null) {
+										for (i = 0; i < attributeTypes.length; i++) {
+											attType = attributeTypes.getItemAt(i) as AttributeType;
+											alPair = fpUnit.generalModifiers[attType.name] as AttributeLabelPair;
+											if (alPair != null) {
+												attValueList = attributes[attType.name] as ArrayList;
+												refGeomArray = attributes[alPair.refGeomAttName] as ArrayList;
+												if (refGeomArray != null) {
+													drawLabel(attValueList, alPair, refGeomArray.getItemAt(0) as SG_Primitive);
+												}
+											}
+										}
 									}
 								}
-							}							
-						}												
+							}																			
+						}
 					}
+				}
+			}
+			
+			protected function generalPurposeMapping(refGeom:SG_Object, attributeTypes:ArrayList, attributes:Dictionary):void {
+				if (fpUnit.generalModifiers != null) {
+					for (var i:int = 0; i < attributeTypes.length; i++) {
+						var attType:AttributeType = attributeTypes.getItemAt(i) as AttributeType;
+						if (refGeom.attributeName.getItemIndex(attType.name) > -1) {
+							var attValueList:ArrayList = attributes[attType.name];
+							if (attValueList != null) {
+								var asPair:AttributeSymbolPair = fpUnit.generalModifiers[attType.name] as AttributeSymbolPair;
+								if (asPair != null) {
+									if (asPair.symName != "") {
+										this.drawSymbol(asPair.symName, refGeom);
+									}
+								}
+							}
+						}
+					}	
 				}
 			}
 			
@@ -761,7 +933,7 @@
 				legendSpace.addChild(legend);
 			}
 			
-			protected function drawLabel(attValueList:ArrayList, labelName:String, refGeom:SG_Primitive):void {
+			protected function drawLabel(attValueList:ArrayList, alPair:AttributeLabelPair, refGeom:SG_Primitive):void {
 				if (attValueList == null) return;
 				
 				if (refGeom == null) {
@@ -800,16 +972,37 @@
 					rPos = geoOperations.Center.centerOfSurface(argObj).position;
 				}
 				
-				var lblStyle:LabelStyle = labels.labelStyles[labelName] as LabelStyle;
+				var lblStyle:LabelStyle = labels.labelStyles[alPair.labelName] as LabelStyle;
 				for (var i:int = 0; i < attValueList.length; i++) {
 					var element:* = attValueList.getItemAt(i);
-					var value:String = element.value.toString();
+					var value:String;
+					
+					if (element.value is Date) {
+						dateTimeFormatter.dateStyle = "medium";
+						dateTimeFormatter.timeStyle = "none";
+						value = dateTimeFormatter.format(element.value);						
+					}
+					else {
+						value = element.value.toString();
+					}
 					
 					// Draw label
 					var lbl:portrayal.label.Label = new portrayal.label.Label();
 					var labelObj:Object = new Object();
 					
-					labelObj.text   = value;
+					labelObj.text = value;
+
+					if (alPair.attType == "Real") {
+						NumberForDisplay.fractionalDigits = alPair.roundDecimal;					
+						decimalValue = value;
+						
+						labelObj.text = NumberForDisplay.format(value);
+					}
+					
+					if (alPair.attType =="Real" || alPair.attType == "Integer") {
+						labelObj.text += " " + alPair.unit;
+					}
+									
 					labelObj.refPos = rPos;
 					labelObj.style  = lblStyle;
 					
@@ -818,38 +1011,69 @@
 				}
 			}
 			
-			protected function drawSymbol(symbolName:String, refGeom:SG_Primitive):void {
+			protected function drawSymbol(symbolName:String, refGeom:SG_Object):void {
 				if (symbolName == "") return;
 				
 				if (refGeom is SG_Point) {
 					var point:SG_Point = refGeom as SG_Point;
-					var pointSymbolStyle:PointSymbolStyle = syms.pointSymStyles[symbolName] as PointSymbolStyle;
-					var pSym:PointSymbol = new PointSymbol();
-					var pObj:Object = new Object();
-					pObj.point = point
-					pObj.style = pointSymbolStyle;
-					pSym.decode(pObj);
-					symbolSpace.addChild(pSym);						
+					displayPoint(symbolName, point);
 				}
+				
 				if (refGeom is SG_Curve) {
 					var curve:SG_Curve = refGeom as SG_Curve;
-					var lineSymbolStyle:LineSymbolStyle = syms.lineSymStyles[symbolName] as LineSymbolStyle;
-					var lSym:LineSymbol = new LineSymbol();
-					var lObj:Object = new Object();
-					lObj.curve = curve;
-					lObj.style = lineSymbolStyle;
-					lSym.decode(lObj);
-					symbolSpace.addChild(lSym);
+					displayCurve(symbolName, curve);
 				}
+				
 				if (refGeom is SG_Surface) {
 					var surface:SG_Surface = refGeom as SG_Surface;
-					var areaSymbolStyle:AreaSymbolStyle = syms.areaSymStyles[symbolName] as AreaSymbolStyle;
-					var aSym:AreaSymbol = new AreaSymbol()
-					var aObj:Object = new Object();
-					aObj.surface = surface;
-					aObj.style   = areaSymbolStyle;
-					aSym.decode(aObj);
-					symbolSpace.addChild(aSym);
+					displaySurface(symbolName, surface);
+				}
+				
+				if (refGeom is SG_Complex) {
+					var cmx:SG_Complex = refGeom as SG_Complex;
+					displayComplex(symbolName, cmx);
+				}
+			}
+			
+			private function displayPoint(symbolName:String, pt:SG_Point):void {
+				var pObj:Object = new Object();
+				pObj.point = pt;
+				pObj.style = syms.pointSymStyles[symbolName] as PointSymbolStyle;
+				var pSym:PointSymbol = new PointSymbol();
+				pSym.decode(pObj);
+				pSym.name = pt.id.toString();
+				symbolSpace.addChild(pSym);
+			}
+			
+			private function displayCurve(symbolName:String, cv:SG_Curve):void {
+				var lObj:Object = new Object();
+				lObj.curve = cv;
+				lObj.style = syms.lineSymStyles[symbolName] as LineSymbolStyle;
+				var lSym:LineSymbol = new LineSymbol();
+				lSym.decode(lObj);
+				lSym.name = cv.id.toString();
+				symbolSpace.addChild(lSym);
+			}
+			
+			private function displaySurface(symbolName:String, sc:SG_Surface):void {
+				var aObj:Object = new Object();
+				aObj.surface = sc;
+				aObj.style = syms.areaSymStyles[symbolName] as AreaSymbolStyle;
+				var aSym:AreaSymbol = new AreaSymbol();
+				aSym.decode(aObj);
+				aSym.name = sc.id.toString();
+				symbolSpace.addChild(aSym);
+			}
+			
+			private function displayComplex(symbolName:String, cmx:SG_Complex):void {
+				for (var i:int = 0; i < cmx.surfaceSet.length ; i++) {
+					displaySurface(symbolName, cmx.surfaceSet.getItemAt(i) as SG_Surface);
+				}
+				for (i = 0; i < cmx.curveSet.length ; i++) {
+					displayCurve(symbolName, cmx.curveSet.getItemAt(i) as SG_Curve);
+				}
+				for (i = 0; i < cmx.pointSet.length ; i++) {
+					displayPoint(symbolName, cmx.pointSet.getItemAt(i) as SG_Point);
 				}
 			}
 			
@@ -977,7 +1201,8 @@
 								if (primi is SG_Object) {
 									refGeom = primi as SG_Primitive;
 									
-									/* thematic mapping
+									/* 
+									thematic mapping
 									*/							
 									if (thematicModifier != null) {
 										var attArray:ArrayList = attributes[thematicModifier.attName] as ArrayList;
@@ -1063,19 +1288,19 @@
 										}
 									}
 									
-									/* general mapping
+									/* 
+									general mapping
 									*/
 									var generalModifiers:Dictionary = fpUnit.generalModifiers;
 									for (i = 0; i < attributeTypes.length; i++) {
 										var attType:AttributeType = attributeTypes.getItemAt(i) as AttributeType;
 										var attValueList:ArrayList = attributes[attType.name];
-										if (attValueList == null) {
-											fType = kit.applicationSchema.featureTypes[feature.typeName] as FeatureType;									}
-										else {
+										if (attValueList != null) {
 											var asPair:AttributeSymbolPair = generalModifiers[attType.name] as AttributeSymbolPair;
 											if (asPair != null) {
 												if (asPair.symName != "") {	
 													for (j = 0; j < attValueList.length; j++) {
+														refGeom = attValueList.getItemAt(j) as SG_Primitive;	
 														this.drawSymbol(asPair.symName, refGeom);
 													}
 												}
@@ -1085,7 +1310,7 @@
 												if (alPair != null) {
 													if (alPair.labelName != "") {	
 														for (j = 0; j < attValueList.length; j++) {
-															this.drawLabel(attValueList, alPair.labelName, refGeom);
+															this.drawLabel(attValueList, alPair, refGeom);
 														}
 													}
 												}
@@ -1217,7 +1442,7 @@
 						var fpUnit:FeaturePortrayalUnit = portrayals.fpUnits[selectedFeature.typeName] as FeaturePortrayalUnit;
 						if (fpUnit == null) return;
 						
-						var fType:FeatureType = kit.applicationSchema.featureTypes[fpUnit.featureTypeID] as FeatureType;
+						var fType:FeatureType = kit.applicationSchema.featureTypes[fpUnit.typeID] as FeatureType;
 					
 						var attTypes:Dictionary = fpUnit.infoPages;
 						for each (var attType:AttributeType in attTypes) {
@@ -1562,7 +1787,7 @@
 				for (var i:int = 0; i < pathArray.length - 1; i++) {
 					kitURL += pathArray[i] + "/";
 				}
-
+				
 				kit.applicationSchema 
 					= this.openApplicationSchema(kitURL, kit.applicationSchemaURL);
 				
@@ -1709,6 +1934,8 @@
 					Alert.show("Open kit and portrayalSchema before operation.", "Warning", 4, this);
 				}
 				
+				kitFileName = map.kitFileName;
+				
 				var pathURL:String = file.url;
 				var pathArray:Array = pathURL.split("/");
 				
@@ -1724,7 +1951,7 @@
 				featureTypeArray = new ArrayList();
 				fpUnits = portrayals.fpUnits;
 				for each (var fpUnit:FeaturePortrayalUnit in  fpUnits) {
-					featureTypeArray.addItem(fpUnit.featureTypeID);
+					featureTypeArray.addItem(fpUnit.typeID);
 				}
 
 				
@@ -2056,6 +2283,15 @@
 	<fx:Declarations>
 		<s:RadioButtonGroup id="moveMarginalInfoGroup"/>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+		<!-- Declare and define parameters for the NumberFormatter.-->
+		<s:NumberFormatter id="NumberForDisplay"
+						   fractionalDigits="0" 
+						   decimalSeparator="."
+						   groupingSeparator=","
+						   useGrouping="true"
+						   negativeNumberFormat="0"
+						   errorText="'{decimalValue}' is an invalid input value"/>
+		<s:DateTimeFormatter id="dateTimeFormatter" locale="ja-JP"/>
 	</fx:Declarations>	
 	<s:Image x="15" y="7" source="@Embed(source='images/pictRepresentation1.png')"/>
 	<s:Label x="82" y="13" fontFamily="Arial" fontSize="16" text="Map Editor"/>

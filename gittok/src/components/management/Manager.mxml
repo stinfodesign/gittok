@@ -107,12 +107,14 @@
 				this.move(300,150);			
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
-				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
-				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
-				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
-				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
-				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
+				registerClassAlias("dataTypes.theme.GDate", GDate);				
+
 				
 				// Location
 				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
@@ -223,8 +225,8 @@
 				}
 				
 				// If crs is not defined, you cannot watch the geographic extent on the map.
-				if (kit.crsURL == null) {
-					Alert.show("Attach CRS file to see the geographic extent.", "Error", 4, this);
+				if (kit.crsURL == null || kit.crsURL == "") {
+					Alert.show("Attach CRS file to see the geographic extent.", "Alert", 4, this);
 					return;
 				}
 				
@@ -234,6 +236,7 @@
 				//Open CRS
 				var crsStream:FileStream = new FileStream();
 				var crsFile:File = new File();
+				
 				crsFile.url = kitURL + kit.crsURL;
 				crsStream.open(crsFile, FileMode.READ);
 				crs = crsStream.readObject() as CRS;

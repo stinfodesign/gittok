@@ -19,6 +19,8 @@
 			import flash.filesystem.*;
 			import flash.utils.Dictionary;
 			
+			import flashx.textLayout.formats.Float;
+			
 			import gfm.*;
 			
 			import math.Distance;
@@ -35,6 +37,7 @@
 			
 			import spark.events.GridSelectionEvent;
 			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
 			
 			private var file:File;
 			private var stream:FileStream = new FileStream();
@@ -45,6 +48,7 @@
 			private var applicationSchema:ApplicationSchema;
 			
 			private var featureType:FeatureType;
+			private var associationType:AssociationType;
 			private var featureTypes:Dictionary 		= new Dictionary();
 			private var associationTypes:Dictionary 	= new Dictionary();
 			
@@ -60,7 +64,7 @@
 			private var labels:LabelStyleDictionary;
 			private var portrayalSch:PortrayalSchema;
 			private var fpUnits:Dictionary = new Dictionary();
-			private var ftPtlUnit:FeaturePortrayalUnit;
+			private var ftPtlUnit:*;	// FeaturePortrayalUnit or AssociationPortrayalUnit
 			
 			private var selectedAttType:AttributeType;
 			
@@ -70,7 +74,10 @@
 			public var featureTypeArray:ArrayList = new ArrayList();
 			
 			[Bindable]
-			private var selectedFeatureTypeArray:ArrayList = new ArrayList();
+			public var associationTypeArray:ArrayList = new ArrayList();			
+			
+			[Bindable]
+			private var selectedTypeArray:ArrayList = new ArrayList();
 			
 			[Bindable]
 			public var attributeTypeArray:ArrayList = new ArrayList();
@@ -79,19 +86,22 @@
 			public var thematicModifierTypeArray:ArrayList = new ArrayList();
 			
 			[Bindable]
-			public var attributeNameArray:ArrayList = new ArrayList();
-			
-			[Bindable]
 			public var geomAttributeArray:ArrayList;
 			
 			[Bindable]
 			public var refGeomPrompt:String = "";
 			
 			[Bindable]
+			public var localePrompt:String = "";
+			
+			[Bindable]
 			public var sagVisible:Boolean;
 			
 			[Bindable]
 			public var lagVisible:Boolean;
+			
+			[Bindable]
+			public var roundVisible:Boolean;
 			
 			[Bindable]
 			public var symStyleArray:ArrayList;
@@ -123,6 +133,9 @@
 			[Bindable]
 			public var balloonAttList:ArrayList;
 			
+			[Bindable]
+			public var localeIDs:ArrayList;
+			
 			protected function initializeApp(): void {
 				this.move(350,70);
 				
@@ -139,6 +152,7 @@
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.ComplexSymbolStyle", ComplexSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				
@@ -152,6 +166,7 @@
 				registerClassAlias("portrayal.portrayalStyle.AttributeLabelPair", AttributeLabelPair);				
 				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);								
 				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);				
+				registerClassAlias("portrayal.portrayalStyle.AssociationPortrayalUnit", AssociationPortrayalUnit);				
 				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
 				registerClassAlias("portrayal.portrayalStyle.ThematicCondition", ThematicCondition);
 				registerClassAlias("portrayal.portrayalStyle.Modifier", Modifier);
@@ -160,12 +175,13 @@
 				registerClassAlias("portrayal.portrayalStyle.QuantitativeModifier", QuantitativeModifier);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
-				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
-				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
-				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
-				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
-				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
+				registerClassAlias("dataTypes.theme.GDate", GDate);
 
 				
 				// Location
@@ -180,8 +196,13 @@
 				registerClassAlias("dataTypes.spatialGeometry.SG_Rectangle", SG_Rectangle);
 				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
 				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);	
-				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
 				
+				var xmlDataList:XMLList = localeIDsXML.children();
+				localeIDs = new ArrayList();
+				for each(var lc:String in xmlDataList) {
+					localeIDs.addItem(lc);
+				}
+
 			}
 			
 			protected function openAPSButton_clickHandler(event:MouseEvent):void
@@ -209,6 +230,10 @@
 					if (!fType.isAbstract) featureTypeArray.addItem(fType);
 				}
 				
+				for each(var aType:AssociationType in associationTypes) {
+					associationTypeArray.addItem(aType);					
+				}
+				
 				applicationSchemaFile = file;
 			}
 			
@@ -234,6 +259,8 @@
 					var areaSyms:Dictionary = syms.areaSymStyles;
 					var lineSyms:Dictionary = syms.lineSymStyles;
 					var pointSyms:Dictionary = syms.pointSymStyles;
+					var complexSyms:Dictionary = syms.complexSymStyles;
+					
 				} catch (error:IOError) {
 					Alert.show(error.message, "Alert", 4, this);
 				}
@@ -256,6 +283,12 @@
 					symObj = new Object();
 					symObj["name"] = pointSymStyle.name;
 					symObj["type"] = "Point";					
+					symStyleArray.addItem(symObj);
+				}
+				for each(var complexSymStyle:ComplexSymbolStyle in complexSyms) {
+					symObj = new Object();
+					symObj["name"] = complexSymStyle.name;
+					symObj["type"] = "Complex";					
 					symStyleArray.addItem(symObj);
 				}
 				
@@ -402,6 +435,118 @@
 					drawPointSymElements(pointSymType.size);
 					　　	
 				}
+				
+				// Complex symbol
+				if (symObj["type"] == "Complex") {
+					var cmx:ComplexSymbol = symbolImage.getChildByName("sampleComplex") as ComplexSymbol;
+					if (cmx != null) symbolImage.removeChild(cmx);
+					
+					var complexSymType:ComplexSymbolStyle = syms.complexSymStyles[symObj["name"]];
+					
+					showComplexSymbol(complexSymType);
+					
+					
+				}
+			}
+			
+			protected function showComplexSymbol(complexSymType:ComplexSymbolStyle):void {
+				
+				// select styles
+				var lStyle:LineSymbolStyle = complexSymType.lineSymbolStyle;
+				if (lStyle == null) {
+					Alert.show("Select line symbol before.", "Alert", 4, this);
+					return;
+				}
+				
+				var aStyle:AreaSymbolStyle;
+				if (complexSymType.areaSymbolStyle != null) {
+					aStyle = complexSymType.areaSymbolStyle;
+				}
+				
+				var pStyle:PointSymbolStyle = complexSymType.pointSymbolStyle;
+				if (pStyle == null) {
+					Alert.show("Select point symbol before.", "Alert", 4, this);
+					return;
+				}
+				
+				// basic elements
+				var point:Vector.<SG_Point> = new Vector.<SG_Point>(3);
+				var curve:Vector.<SG_Curve> = new Vector.<SG_Curve>(3);
+				var orientableCurve:Vector.<SG_OrientableCurve> = new Vector.<SG_OrientableCurve>(3);
+				var surface:SG_Surface = new SG_Surface();
+				
+				// Points
+				for (var i:int = 0; i < 3; i++) point[i] = new SG_Point();
+				point[0].position.x = 20;
+				point[0].position.y = 20;
+				point[1].position.x = 140;
+				point[1].position.y = 20;
+				point[2].position.x = 80;
+				point[2].position.y = 90;
+				
+				// Curves
+				for (i = 0; i < 3; i++) {
+					curve[i] = new SG_Curve();
+					curve[i].start = point[i];
+					curve[i].end   = point[(i + 1) % 3];
+					curve[i].shape = new CoordinateArray();
+					
+					orientableCurve[i] = new SG_OrientableCurve();
+					orientableCurve[i].original = curve[i];
+					orientableCurve[i].orientation = true;
+				}
+				
+				/* Display complex */
+				// Surface
+				if (aStyle != null) {
+					var ring:SG_Ring = new SG_Ring();
+					for (i = 0; i < 3; i++) {
+						ring.elements.addItem(orientableCurve[i]);
+					}				
+					surface.exterior = ring;				
+					displaySurface(surface, aStyle);
+				}
+				
+				// Curves
+				for (i = 0; i < 3; i++) {
+					displayCurve(curve[i], lStyle);
+				}
+				
+				//Points
+				for (i = 0; i < 3; i++) {
+					displayPoint(point[i], pStyle);
+				}
+				
+			}
+			
+			private function displayPoint(pt:SG_Point, pStyle:PointSymbolStyle):void {
+				var pObj:Object = new Object();
+				pObj.point = pt;
+				pObj.style = pStyle;
+				var pSym:PointSymbol = new PointSymbol();
+				pSym.decode(pObj);
+				pSym.name = pt.id.toString();
+				symbolImage.addChild(pSym);
+			}
+			
+			private function displayCurve(cv:SG_Curve, lStyle:LineSymbolStyle):void {
+				var lObj:Object = new Object();
+				lObj.curve = cv;
+				lObj.style = lStyle;
+				var lSym:LineSymbol = new LineSymbol();
+				lSym.decode(lObj);
+				lSym.name = cv.id.toString();
+				symbolImage.addChild(lSym);
+			}
+			
+			private function displaySurface(sc:SG_Surface, aStyle:AreaSymbolStyle):void {
+				var aObj:Object = new Object();
+				aObj.surface = sc;
+				aObj.style = aStyle;
+				var aSym:AreaSymbol = new AreaSymbol();
+				aSym.decode(aObj);
+				aSym.name = sc.id.toString();
+				symbolImage.addChild(aSym);
 			}
 			
 			protected function drawPointSymElements(pSize:Number):void {
@@ -446,6 +591,8 @@
 					var pointOnEdge:Coordinate2 = cString.getItemAt(1) as Coordinate2;
 					var radius:Number = math.Distance.p2p(center, pointOnEdge);
 					radius = radius * pSize / 200.0;
+					center.x = (center.x - 100.0) * pSize / 200.0 + 100.0;
+					center.y = (center.y - 100.0) * pSize / 200.0 + 100.0;
 					var bStyle:LineSymbolStyle = cStyle.borderStyle;
 					symbolImage.graphics.lineStyle(bStyle.thickness, 
 							bStyle.color, bStyle.alpha, false, "normal", 
@@ -454,11 +601,20 @@
 					symbolImage.graphics.drawCircle(center.x, center.y, radius);
 					symbolImage.graphics.endFill();					
 				}
-				else if (getQualifiedClassName(style) == "portrayalSchema.symbolStyle::AreaSymbolStyle") {
+				else if (style is AreaSymbolStyle) {
 					var aStyle:AreaSymbolStyle = styles.getItemAt(i) as AreaSymbolStyle;
 												
 					cString = elements.getItemAt(i) as CoordinateArray;
+					
+					for (i = 0; i < cString.length; i++) {
+						crd = cString.getItemAt(i) as Coordinate2;
+						crd.x = (crd.x - 100.0) * pSize / 200.0 + 100.0;
+						crd.y = (crd.y - 100.0) * pSize / 200.0 + 100.0;
+						cString.setItemAt(crd, i);
+					}
+
 					crd = cString.getItemAt(0) as Coordinate2;
+
 					symbolImage.graphics.beginFill(aStyle.color, aStyle.alpha);
 					symbolImage.graphics.moveTo(crd.x, crd.y);
 					for (i = 0; i < cString.length; i++) {
@@ -468,14 +624,26 @@
 					symbolImage.graphics.endFill();
 						
 					crv.shape = cString;
-							
+					
+					p = new SG_Point();
+					p.position = cString.getItemAt(0) as Coordinate2;
+					crv.start = p;
+					p = new SG_Point();
+					p.position = cString.getItemAt(cString.length - 1) as Coordinate2;
+					crv.end = p;
+					crv.shape = cString;
+					
+					var thicknessRate:Number = 1.0;
+					
+					aStyle.borderStyle.thickness *= thicknessRate;
 					var border:LineSymbol = new LineSymbol();
 					lObj = new Object();
 					lObj.curve = crv;
 					lObj.style = aStyle.borderStyle;
-					border.name = "sampleLine";
 					border.decode(lObj);
-					symbolImage.addChild(border);
+					aStyle.borderStyle.thickness /= thicknessRate;
+					border.name = "sampleLine";
+					symbolImage.addChild(border);		
 				}
 			}
 			
@@ -520,39 +688,68 @@
 			
 			protected function editPortrayalRuleButton_clickHandler(event:MouseEvent):void
 			{
-				if (selectedFeatureTypesList.selectedIndex == -1) {
+				if (selectedFeatureTypeList.selectedIndex == -1) {
 					Alert.show("Select feature type before.", "Alert", 4, this);
 					return;
 				}
 				
-				featureType = selectedFeatureTypesList.selectedItem as FeatureType;
+				featureType = selectedFeatureTypeList.selectedItem as FeatureType;
 				
 				if (featureType == null) {
-					Alert.show("Select feature type before.", "Alert", 4, this);
-					return;					
+					associationType = selectedFeatureTypeList.selectedItem as AssociationType;
+					if (associationType == null) {
+						Alert.show("Select feature or association type before.", "Alert", 4, this);
+						return;	
+					}
+					// association type
+					var m:int = associationType.attributeTypes.length;
+					
+					attributeTypeArray = new ArrayList();
+					
+					for (var i:int = 0; i < m; i++) {
+						var attType:AttributeType = associationType.attributeTypes.getItemAt(i) as AttributeType;
+						attributeTypeArray.addItem(attType);
+					}
+					
+					if (m > 0) attributeNameDropDown.prompt = "Select attribute";
+										
+					if (attributeTypeLabel != null)
+						attributeTypeLabel.text = "";
+					
+					ftPtlUnit = fpUnits[associationType.name] as AssociationPortrayalUnit;
+					balloonAttList = new ArrayList();
+					if (ftPtlUnit != null) {
+						for each(attType in ftPtlUnit.infoPages) {
+							balloonAttList.addItem(attType);	
+						}
+					}					
 				}
+				else {
+					// feature type
+					m = featureType.attributeTypes.length;
 				
-				var m:int = featureType.attributeTypes.length;
+					attributeTypeArray = new ArrayList();
 				
-				attributeNameArray = new ArrayList();
+					for (i = 0; i < m; i++) {
+						attType = featureType.attributeTypes.getItemAt(i) as AttributeType;
+						attributeTypeArray.addItem(attType);
+					}
 				
-				for (var i:int = 0; i < m; i++) {
-					var attType:AttributeType = featureType.attributeTypes.getItemAt(i) as AttributeType;
-					attributeNameArray.addItem(attType);
-				}
+					if (featureType.parent != null) inheritAttributes(featureType.parent);	
+					featureType.attributeTypes = attributeTypeArray;
 				
-				if (m > 0) attributeNameDropDown.prompt = "Select attribute";
+					if (m > 0) attributeNameDropDown.prompt = "Select attribute";
 				
-				if (featureType.parent != null) inheritAttributes(featureType.parent);				
 								
-				if (attributeTypeLabel != null)
-					attributeTypeLabel.text = "";
+					if (attributeTypeLabel != null)
+						attributeTypeLabel.text = "";
 				
-				ftPtlUnit = fpUnits[featureType.name] as FeaturePortrayalUnit;
-				balloonAttList = new ArrayList();
-				if (ftPtlUnit != null) {
-					for each(attType in ftPtlUnit.infoPages) {
-						balloonAttList.addItem(attType);	
+					ftPtlUnit = fpUnits[featureType.name] as FeaturePortrayalUnit;
+					balloonAttList = new ArrayList();
+					if (ftPtlUnit != null) {
+						for each(attType in ftPtlUnit.infoPages) {
+							balloonAttList.addItem(attType);	
+						}
 					}
 				}
 			}
@@ -561,19 +758,31 @@
 			{
 				var fType:FeatureType = featureTypeDropDown.selectedItem as FeatureType;
 				
-				if (selectedFeatureTypeArray == null) selectedFeatureTypeArray = new ArrayList();
+				if (selectedTypeArray == null) selectedTypeArray = new ArrayList();
 				
-				selectedFeatureTypeArray.addItem(fType);
+				selectedTypeArray.addItem(fType);
 				
 				featureTypeDropDown.selectedIndex = -1;
 				featureTypeDropDown.prompt = "Select type";
+			}
+			
+			protected function associationTypeDropDown_changeHandler(event:IndexChangeEvent):void
+			{
+				var aType:AssociationType = associationTypeDropDown.selectedItem as AssociationType;
+				
+				if (selectedTypeArray == null) selectedTypeArray = new ArrayList();
+				
+				selectedTypeArray.addItem(aType);
+				
+				associationTypeDropDown.selectedIndex = -1;
+				associationTypeDropDown.prompt = "Select type";
 			}
 			
 			private function inheritAttributes(fType:FeatureType):void {
 				var m:int = fType.attributeTypes.length;
 				for (var i:int = 0; i < m; i++) {
 					var atType:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
-					attributeNameArray.addItem(atType);
+					attributeTypeArray.addItem(atType);
 				}
 				
 				if (fType.parent != null) {
@@ -587,26 +796,40 @@
 				
 				if (attType.dataType.search("SG_") > -1) {
 					sagVisible = true;
-					lagVisible = false;					
+					lagVisible = false;
+					roundVisible = false;
 				}
 				else {
 					sagVisible = false;
 					lagVisible = true;
+					if (attType.dataType == "Integer" || attType.dataType == "Real")
+						roundVisible = true;
+					else
+						roundVisible = false;
 				}
 				
 				selectedAttType = attType;  // this variable is prepared for the tabBar - general.
 				
-				//var fType:FeatureType    = featureTypeDropDown.selectedItem as FeatureType;
-				
 				attributeTypeLabel.text = attType.dataType;
-				
-				if (fpUnits[featureType.name] == null) {
-					ftPtlUnit = new FeaturePortrayalUnit();
-					ftPtlUnit.featureTypeID = featureType.name;
-					fpUnits[featureType.name] = ftPtlUnit;
+				if (featureType != null) {
+					if (fpUnits[featureType.name] == null) {
+						ftPtlUnit = new FeaturePortrayalUnit();
+						ftPtlUnit.typeID = featureType.name;
+						fpUnits[featureType.name] = ftPtlUnit;
+					}
+					else {
+						ftPtlUnit = fpUnits[featureType.name];
+					}
 				}
 				else {
-					ftPtlUnit = fpUnits[featureType.name];
+					if (fpUnits[associationType.name] == null) {
+						ftPtlUnit = new AssociationPortrayalUnit();
+						ftPtlUnit.typeID = associationType.name;
+						fpUnits[associationType.name] = ftPtlUnit;
+					}
+					else {
+						ftPtlUnit = fpUnits[associationType.name];
+					}					
 				}
 				
 				if (balloonCheckBox.selected) {
@@ -614,10 +837,10 @@
 					return;
 				}
 				
-				var m:int = attributeNameArray.length;
+				var m:int = attributeTypeArray.length;
 				thematicModifierTypeArray = new ArrayList();
 				for (var i:int = 0; i < m; i++) {
-					var aType:AttributeType = attributeNameArray.getItemAt(i) as AttributeType;
+					var aType:AttributeType = attributeTypeArray.getItemAt(i) as AttributeType;
 					thematicModifierTypeArray.addItem(aType);
 				}
 				thematicModifierDropDownList.prompt = "Select att";
@@ -635,20 +858,43 @@
 					labelArray = new ArrayList();
 					labelArray.addItem(asPair);
 					
-					var n:int = featureType.attributeTypes.length;
 					geomAttributeArray = new ArrayList();
-					for (i = 0; i < n; i++) {
-						var wattType:AttributeType = featureType.attributeTypes.getItemAt(i) as AttributeType;
-						if (wattType.dataType.search("SG_") > -1) {
-							geomAttributeArray.addItem(wattType);
+					if (featureType != null) {
+						var n:int = featureType.attributeTypes.length;
+						for (i = 0; i < n; i++) {
+							var wattType:AttributeType = featureType.attributeTypes.getItemAt(i) as AttributeType;
+							if (wattType.dataType.search("SG_") > -1) {
+								geomAttributeArray.addItem(wattType);
+							}
 						}
+					}
+					else {
+						n = associationType.attributeTypes.length;
+						for (i = 0; i < n; i++) {
+							wattType = associationType.attributeTypes.getItemAt(i) as AttributeType;
+							if (wattType.dataType.search("SG_") > -1) {
+								geomAttributeArray.addItem(wattType);
+							}
+						}						
 					}
 					
 					var alPair:AttributeLabelPair = asPair as AttributeLabelPair;
 					if (alPair == null) return;
 					
-					var refGeomType:AttributeType = featureType.getAttributeTypeByName(alPair.refGeomAttName);
-					refGeomPrompt = refGeomType.name; 
+					if (featureType != null) {
+						var refGeomType:AttributeType = featureType.getAttributeTypeByName(alPair.refGeomAttName);
+						refGeomPrompt = refGeomType.name;
+					}
+					else {
+						refGeomType = associationType.getAttributeTypeByName(alPair.refGeomAttName);
+						refGeomPrompt = refGeomType.name;						
+					}
+					
+					// if label is real
+					if (alPair.attType == "Real") {
+						roundDecimal.text = "" + alPair.roundDecimal;	
+					}
+					
 				}
 			}
 			
@@ -681,13 +927,13 @@
 				
 				var atType:AttributeType = thematicModifierTypeArray.getItemAt(i) as AttributeType;
 				
-				if (selectedFeatureTypesList.selectedIndex == -1) {
+				if (selectedFeatureTypeList.selectedIndex == -1) {
 					Alert.show("Select feature type at 'Selected feature types list before.", "Alert", 4, this);
 					return;
 				}
 				
-				//var fType:FeatureType = featureTypeArray.getItemAt(selectedFeatureTypesList.selectedIndex) as FeatureType;
-				var fType:FeatureType = selectedFeatureTypesList.selectedItem as FeatureType;
+				//var fType:FeatureType = featureTypeArray.getItemAt(selectedFeatureTypeList.selectedIndex) as FeatureType;
+				var fType:* = selectedFeatureTypeList.selectedItem;
 				
 				ftPtlUnit = fpUnits[fType.name] as FeaturePortrayalUnit;
 				
@@ -915,14 +1161,15 @@
 				portrayalSch = new PortrayalSchema();
 				portrayalSch.applicationSchema 		= applicationSchemaFile.name;
 				portrayalSch.symbolStyleDictionary 	= symbolStyleDicFile.name;
-				portrayalSch.labelStyleDictionary  	= labelStyleDicFile.name;
+				if (labelStyleDicFile != null)
+					portrayalSch.labelStyleDictionary  	= labelStyleDicFile.name;
 				
 				portrayalSch.fpUnits		   		= fpUnits;
 				
 				portrayalSch.representationOrder = new ArrayList();
-				for (var i:int = 0; i < selectedFeatureTypeArray.length; i++) {
-					var fType:FeatureType = selectedFeatureTypeArray.getItemAt(i) as FeatureType;
-					portrayalSch.representationOrder.addItem(fType.name);
+				for (var i:int = 0; i < selectedTypeArray.length; i++) {
+					var faType:* = selectedTypeArray.getItemAt(i);
+					portrayalSch.representationOrder.addItem(faType.name);
 				}
 				
 				stream.writeObject(portrayalSch);
@@ -966,7 +1213,10 @@
 					
 					applicationSchemaFile.nativePath = path + portrayalSch.applicationSchema;
 					symbolStyleDicFile.nativePath = path + portrayalSch.symbolStyleDictionary;
-					labelStyleDicFile.nativePath  = path + portrayalSch.labelStyleDictionary;
+					if (portrayalSch.labelStyleDictionary != "null" && portrayalSch.labelStyleDictionary != null)
+						labelStyleDicFile.nativePath  = path + portrayalSch.labelStyleDictionary;
+					else
+						labelStyleDicFile = null;
 					
 					fpUnits = portrayalSch.fpUnits;
 					
@@ -976,7 +1226,6 @@
 				
 				apsNameLabel.text = applicationSchemaFile.name;
 				symLabel.text = symbolStyleDicFile.name;
-				labelLabel.text = labelStyleDicFile.name;
 				
 				file = applicationSchemaFile;
 				this.openAps(null);
@@ -984,20 +1233,21 @@
 				file = symbolStyleDicFile;
 				this.openSym(null);
 				
-				file = labelStyleDicFile;
-				this.openLabelStyle(null);
+				if (labelStyleDicFile != null) {
+					labelLabel.text = labelStyleDicFile.name;
+					file = labelStyleDicFile;
+					this.openLabelStyle(null);
+				}
 				
-				selectedFeatureTypeArray = new ArrayList();
+				selectedTypeArray = new ArrayList();
 				for (i = 0; i < portrayalSch.representationOrder.length; i++) {
 					var typeName:String = portrayalSch.representationOrder.getItemAt(i) as String;
-					var fType:FeatureType = applicationSchema.featureTypes[typeName] as FeatureType;
-					selectedFeatureTypeArray.addItem(fType);
+					var faType:* = applicationSchema.featureTypes[typeName];
+					if (faType == null)
+						faType = applicationSchema.associationTypes[typeName];
+					selectedTypeArray.addItem(faType);
 				}
-				/*
-				for each (fType in applicationSchema.featureTypes) {
-					featureTypeArray.addItem(fType);
-				}
-				*/
+
 			}
 			
 			protected function sortQuantitativeModifierButton_clickHandler(event:MouseEvent):void
@@ -1027,25 +1277,25 @@
 			
 			protected function assignGeneralButton_clickHandler(event:MouseEvent):void
 			{
-				/*
-				if (featureTypeDropDown.selectedIndex == -1) {
-					Alert.show("Select styles before.", "Error", 4, this);
-					return;
+				if (featureType != null) {
+					ftPtlUnit = fpUnits[featureType.name] as FeaturePortrayalUnit;
+					if (ftPtlUnit == null) {
+						ftPtlUnit = new FeaturePortrayalUnit();
+						ftPtlUnit.typeID = featureType.name;
+					}
 				}
-				
-				var fid:int = featureTypeDropDown.selectedIndex
-				var fType:FeatureType = featureTypeArray.getItemAt(fid) as FeatureType;		
-				*/
-				
-				ftPtlUnit = fpUnits[featureType.name] as FeaturePortrayalUnit;
-				if (ftPtlUnit == null) {
-					ftPtlUnit = new FeaturePortrayalUnit();
-					ftPtlUnit.featureTypeID = featureType.name;
-				}
+				else {
+					associationType = selectedFeatureTypeList.selectedItem as AssociationType;
+					ftPtlUnit = fpUnits[associationType.name] as AssociationPortrayalUnit;					
+					if (ftPtlUnit == null) {
+						ftPtlUnit = new AssociationPortrayalUnit();
+						ftPtlUnit.typeID = associationType.name;
+					}
+				}	
 				
 				var aid:int = attributeNameDropDown.selectedIndex;
 				
-				var attType:AttributeType = attributeNameArray.getItemAt(aid) as AttributeType;
+				var attType:AttributeType = attributeTypeArray.getItemAt(aid) as AttributeType;
 				
 				if (attType.dataType.search("SG_") > -1) {
 					symbolAssignGroup.visible = true;
@@ -1066,7 +1316,7 @@
 					asPair.symType = symObj["type"];
 					
 					if (ftPtlUnit.generalModifiers == null) ftPtlUnit.generalModifiers = new Dictionary();
-					ftPtlUnit.generalModifiers[attType.name] = asPair;	
+					ftPtlUnit.generalModifiers[attType.name] = asPair;
 					
 					symbolArray = new ArrayList();	// Becasue data provider shall be an array.
 					symbolArray.addItem(asPair);
@@ -1078,6 +1328,7 @@
 					var alPair:AttributeLabelPair = new AttributeLabelPair();
 					alPair.attName = attType.name;
 					alPair.attType = attType.dataType;
+					alPair.roundDecimal = 0;
 					
 					var labelObj:Object = labelStyleArray.getItemAt(labelGrid.selectedIndex) as Object;
 					alPair.labelName = labelObj["name"];
@@ -1091,7 +1342,8 @@
 					
 					labelGrid.selectedIndex = -1;
 					
-					refGeomAttList.prompt ="Select geom";
+					refGeomPrompt 	= "Select geom";
+					localePrompt 	= "Select locale";
 					
 				}
 
@@ -1109,7 +1361,7 @@
 				}	
 				
 				var aid:int = attributeNameDropDown.selectedIndex;
-				var attType:AttributeType = attributeNameArray.getItemAt(aid) as AttributeType;
+				var attType:AttributeType = attributeTypeArray.getItemAt(aid) as AttributeType;
 				ftPtlUnit.generalModifiers[attType.name] = null;
 			}
 			
@@ -1137,52 +1389,68 @@
 				alPair.refGeomAttName = geomAttType.name;
 				ftPtlUnit.generalModifiers[selectedAttType.name] = alPair;
 								
-				fpUnits[ftPtlUnit.featureTypeID] = ftPtlUnit;				
+				fpUnits[ftPtlUnit.typeID] = ftPtlUnit;				
 			}
 			
 			protected function tabBar_clickHandler(event:MouseEvent):void
 			{
-
-			}
-			/*
-			protected function featureTypeSpinner_changeHandler(event:Event):void {
+				var attType:AttributeType = attributeNameDropDown.selectedItem as AttributeType;
 				
-				var index:int = featureTypeSpinner.maximum - featureTypeSpinner.value;
-				if (index < selectedFeatureTypesList.selectedIndex) {
-					var i:int = selectedFeatureTypesList.selectedIndex;
-					var fType:FeatureType = selectedFeatureTypeArray.getItemAt(i) as FeatureType;
-					trace("index:" + index + "  i:" + i);
-					if (index < i) {
-						var nType:FeatureType = selectedFeatureTypeArray.getItemAt(i - 1) as FeatureType;
-						selectedFeatureTypeArray.setItemAt(fType, i - 1);
-						selectedFeatureTypeArray.setItemAt(nType, i);
-						return;
-					}
-					if (index > i) {
-						nType = selectedFeatureTypeArray.getItemAt(i + 1) as FeatureType;
-						selectedFeatureTypeArray.setItemAt(fType, i + 1);
-						selectedFeatureTypeArray.setItemAt(nType, i);
-						return;						
-					}	
+				if (featureType == null && associationType == null) {
+					Alert.show("Select feature/association type before.", "Alert", 4, this);
+					return;
 				}
-				selectedFeatureTypesList.selectedIndex = -1;
+				
+				if (featureType != null) {				
+					if (fpUnits[featureType.name] == null) {
+						ftPtlUnit = new FeaturePortrayalUnit();
+						ftPtlUnit.typeID = featureType.name;
+					}
+					else {
+						ftPtlUnit = fpUnits[featureType.name];
+					}
+				}
+				else {
+					if (fpUnits[associationType.name] == null) {
+						ftPtlUnit = new AssociationPortrayalUnit();
+						ftPtlUnit.typeID = associationType.name;
+					}
+					else {
+						ftPtlUnit = fpUnits[associationType.name];
+					}					
+				}
+				
+				// if generalModifiers were already defined, then
+				if (ftPtlUnit.generalModifiers == null) return;
+				
+				var asPair:AttributeStylePair = ftPtlUnit.generalModifiers[attType.name] as AttributeStylePair;
+				
+				if (asPair is AttributeLabelPair) {
+					var alPair:AttributeLabelPair = asPair as AttributeLabelPair;
+					if (alPair == null) return;
+					
+					// if label is GDate
+					if (alPair.attType == "GDate") {
+						//localeList.selectedItem = alPair.locale;
+						localePrompt = alPair.locale;
+					}
+				}
 			}
-			*/
 				
 			protected function deleteSelectedFeatureTypeButton_clickHandler(event:MouseEvent):void
 			{
-				if (selectedFeatureTypeArray == null) {
+				if (selectedTypeArray == null) {
 					Alert.show("No feature type is selected.", "Alert", 4, this);
 					return;
 				}
 				
-				if (selectedFeatureTypesList.selectedIndex == -1) {
+				if (selectedFeatureTypeList.selectedIndex == -1) {
 					Alert.show("No feature type is selected.", "Alert", 4, this);
 					return;
 				}
 				
-				var index:int = selectedFeatureTypesList.selectedIndex;
-				selectedFeatureTypeArray.removeItemAt(index);
+				var index:int = selectedFeatureTypeList.selectedIndex;
+				selectedTypeArray.removeItemAt(index);
 				
 				//featureTypeSpinner.maximum = selectedFeatureTypeArray.length - 1;
 				
@@ -1202,35 +1470,59 @@
 			
 			protected function upButtonImage_clickHandler(event:MouseEvent):void
 			{
-				var index:int = selectedFeatureTypesList.selectedIndex;
+				var index:int = selectedFeatureTypeList.selectedIndex;
 				if (index > 0) {
-					var ft:FeatureType = selectedFeatureTypeArray.getItemAt(index) as FeatureType;
-					var ut:FeatureType = selectedFeatureTypeArray.getItemAt(index - 1) as FeatureType;
-					selectedFeatureTypeArray.setItemAt(ut, index);
-					selectedFeatureTypeArray.setItemAt(ft, index - 1);
-					selectedFeatureTypesList.selectedIndex--;
+					var fat0:* = selectedTypeArray.getItemAt(index);
+					var fat1:* = selectedTypeArray.getItemAt(index - 1);
+					selectedTypeArray.setItemAt(fat1, index);
+					selectedTypeArray.setItemAt(fat0, index - 1);
+					selectedFeatureTypeList.selectedIndex--;
 				}	
 			}
 			
 			protected function downButtonImage_clickHandler(event:MouseEvent):void
 			{
-				var index:int = selectedFeatureTypesList.selectedIndex;
-				if (index < (selectedFeatureTypeArray.length - 1)) {
-					var ft:FeatureType = selectedFeatureTypeArray.getItemAt(index) as FeatureType;
-					var dt:FeatureType = selectedFeatureTypeArray.getItemAt(index + 1) as FeatureType;
-					selectedFeatureTypeArray.setItemAt(dt, index);
-					selectedFeatureTypeArray.setItemAt(ft, index + 1);
-					selectedFeatureTypesList.selectedIndex++;					
+				var index:int = selectedFeatureTypeList.selectedIndex;
+				if (index < (selectedTypeArray.length - 1)) {
+					var fat0:* = selectedTypeArray.getItemAt(index);
+					var fat1:* = selectedTypeArray.getItemAt(index + 1);
+					selectedTypeArray.setItemAt(fat1, index);
+					selectedTypeArray.setItemAt(fat0, index + 1);
+					selectedFeatureTypeList.selectedIndex++;					
 				}
 			}
 			
+			protected function roundDecimal_changeHandler(event:TextOperationEvent):void
+			{
+				try {
+					var dplace:int = parseInt(roundDecimal.text);
+				} catch (error:Error) {
+					Alert.show("Round decimal is not a number.", "Alert", 4, this);
+					return;
+				}
+				var alPair:AttributeLabelPair = ftPtlUnit.generalModifiers[selectedAttType.name] as AttributeLabelPair;
+				alPair.roundDecimal = dplace;
+				alPair.unit = selectedAttType.unit;
+			}
+			
+			protected function localeList_changeHandler(event:IndexChangeEvent):void
+			{
+				var alPair:AttributeLabelPair = ftPtlUnit.generalModifiers[selectedAttType.name] as AttributeLabelPair;
+				var lc:String = localeIDs.getItemAt(event.newIndex) as String;	
+				alPair.locale = lc;				
+			}			
+						
 		]]>
 	</fx:Script>
 	
-	<s:Image x="12" y="7" source="@Embed(source='images/pictRepresentation1.png')"/>
-	<s:Image id="upButtonImage" x="279" y="194" source="@Embed(source='images/upButton.png')" 
-			 click="upButtonImage_clickHandler(event)"/>
-	<s:Image id="downButtonImage" x="279" y="218" source="@Embed(source='images/downButton.png')" 
+	<fx:Declarations>
+		<!-- locale id list for date formatter -->
+		<fx:XML id="localeIDsXML" source="texts/localeIDs.xml"/>		
+	</fx:Declarations>
+	
+	<s:Image id="upButtonImage" x="279" y="196" source="@Embed(source='images/upButton.png')" 
+			 click="upButtonImage_clickHandler(event)"/>		
+	<s:Image id="downButtonImage" x="279" y="220" source="@Embed(source='images/downButton.png')" 
 			 click="downButtonImage_clickHandler(event)"/>	
 	<s:Label x="75" y="15" fontFamily="Arial" fontSize="16" text="Portrayal Schema Designer"/>
 	<s:Label id="apsNameLabel" x="31" y="94" width="120" height="20" backgroundColor="#DADADA"
@@ -1275,10 +1567,18 @@
 	<s:Label x="275" y="488" fontSize="11" text="Label Styles"/>
 	<mx:Image id="symbolImage" x="403" y="502" width="165" height="165"/>
 	<s:Label x="406" y="487" fontSize="11" text="Sample"/>
+	
 	<s:DropDownList id="featureTypeDropDown" x="30" y="152" width="121"
 					change="featureTypeDropDown_changeHandler(event)"
 					dataProvider="{featureTypeArray}" fontSize="11" labelField="name"
-					prompt="Select type"></s:DropDownList>
+					prompt="Select type">
+	</s:DropDownList>
+	<s:DropDownList id="associationTypeDropDown" x="30" y="203" width="121"
+					change="associationTypeDropDown_changeHandler(event)"
+					dataProvider="{associationTypeArray}" fontSize="11" labelField="name" 
+					prompt="Select type">
+	</s:DropDownList>
+
 	<s:Label x="30" y="138" fontSize="11" text="Feature types"/>
 	<s:Label x="276" y="256" fontSize="11" text="Feature type"/>
 	
@@ -1364,9 +1664,9 @@
 			<s:Button id="clearGeneralButton" x="448" y="30" width="60" height="20" label="clear"
 					  click="clearGeneralButton_clickHandler(event)"/>
 						
-			<s:Group id="symbolAssignGroup" visible="{sagVisible}" width="340" height="99">
-				<s:Label x="66" y="23" width="165" height="20" text="Symbol style "/>
-				<s:DataGrid id="symbolAssignGrid" x="65" y="42" width="240" height="48" fontSize="11"
+			<s:Group id="symbolAssignGroup" visible="{sagVisible}" width="340" height="96">
+				<s:Label x="36" y="23" width="165" height="20" text="Symbol style "/>
+				<s:DataGrid id="symbolAssignGrid" x="35" y="42" width="240" height="48" fontSize="11"
 							dataProvider="{symbolArray}"
 							requestedRowCount="1">
 					<s:columns>
@@ -1379,10 +1679,14 @@
 				</s:DataGrid>				
 			</s:Group>
 			
-			<s:Group id="labelAssignGroup" visible="{lagVisible}" x="0" y="98" width="508"
-					 height="96">
-				<s:Label x="67" y="8" text="Label style"/>
-				<s:DataGrid id="labelAssignGrid" x="67" y="24" width="240" height="48"
+			<s:Group id="labelAssignGroup" visible="{lagVisible}" x="0" y="67" width="524"
+					 height="129">
+				<s:Label x="360" y="16" text="Locale"/>
+				<s:DropDownList id="localeList" x="404" y="11"
+								change="localeList_changeHandler(event)" dataProvider="{localeIDs}"
+								prompt="{localePrompt}"></s:DropDownList>
+				<s:Label x="36" y="8" text="Label style"/>
+				<s:DataGrid id="labelAssignGrid" x="36" y="60" width="240" height="48"
 							dataProvider="{labelArray}"
 							requestedRowCount="1">
 					<s:columns>
@@ -1395,7 +1699,7 @@
 				</s:DataGrid>
 
 				<!-- Draw rectangle with square corners. -->
-				<s:Rect x="306" y="24" width="145" height="47">
+				<s:Rect x="275" y="60" width="145" height="47">
 					<s:stroke>
 						<s:SolidColorStroke color="0x000000" weight="1"/>
 					</s:stroke>
@@ -1404,15 +1708,21 @@
 					</s:fill>
 				</s:Rect>
 				
-				<s:Label x="316" y="31" fontWeight="bold" text="Reference geometry"/>
-				<s:DropDownList id="refGeomAttList" x="316" y="47" width="124"
+				<s:Label x="285" y="67" fontWeight="bold" text="Reference geometry"/>
+				<s:DropDownList id="refGeomAttList" x="285" y="82" width="124"
 								change="refGeomAttList_changeHandler(event)"
 								dataProvider="{geomAttributeArray}" 
 								prompt="{refGeomPrompt}"
 							 	labelField="name">
-				</s:DropDownList>			
+				</s:DropDownList>
+				<s:Group id="roundRealGroup" visible="{roundVisible}" x="429" width="85">
+					<s:Label x="2" y="50" width="82" height="33" text="Round number off to"/>
+					<s:TextInput id="roundDecimal" x="2" y="83" width="34" height="20" text="0"
+								 change="roundDecimal_changeHandler(event)"/>
+					<s:Label x="2" y="109" text="decimal places"/>					
+				</s:Group>
+				
 			</s:Group>
-
 		</s:NavigatorContent>
 		
 	</mx:ViewStack>
@@ -1420,7 +1730,7 @@
 			 backgroundColor="#DADADA" fontSize="11" verticalAlign="middle"/>
 	<s:DropDownList id="attributeNameDropDown" x="335" y="210" width="149"
 					change="attributeNameDropDown_changeHandler(event)"
-					dataProvider="{attributeNameArray}" fontSize="11" labelField="name"></s:DropDownList>
+					dataProvider="{attributeTypeArray}" fontSize="11" labelField="name"></s:DropDownList>
 	<s:Label x="335" y="239" fontSize="11" text="Type"/>
 	<s:Button id="saveButton" x="446" y="93" width="55" height="20" label="save"
 			  click="saveButton_clickHandler(event)"/>
@@ -1442,7 +1752,7 @@
 	<s:CheckBox id="balloonCheckBox" x="364" y="175" label="attr. for info. pages" fontSize="11"/>
 	<s:Button id="cancelBalloonButton" x="492" y="244" width="60" height="20" label="cancel"
 			  click="cancelBalloonButton_clickHandler(event)"/>
-	<s:Label x="156" y="138" fontSize="11" text="Selected feature types"/>
+	<s:Label x="156" y="138" fontSize="11" text="Selected types"/>
 	
 	<!--
 	<s:Spinner id="featureTypeSpinner" x="134" y="217" width="16"
@@ -1451,9 +1761,9 @@
 	
 	<s:Button id="deleteSelectedFeatureTypeButton" x="211" y="245" width="62" label="delete"
 			  click="deleteSelectedFeatureTypeButton_clickHandler(event)"/>
-	<s:List id="selectedFeatureTypesList" x="156" y="153" width="118" height="88"
+	<s:List id="selectedFeatureTypeList" x="156" y="153" width="118" height="88"
 				 requireSelection="false"
-				 dataProvider="{selectedFeatureTypeArray}"
+				 dataProvider="{selectedTypeArray}"
 				 labelField="name" />
 	<s:Button id="editPortrayalRuleButton" x="278" y="153" width="50" label="edit"
 			  click="editPortrayalRuleButton_clickHandler(event)"/>
@@ -1461,6 +1771,7 @@
 	<s:Label x="553" y="253" fontSize="11" text=" Attribute type"/>
 	<s:Label x="335" y="198" fontSize="11" text="Attribute name"/>
 	<s:Label x="236" y="68" width="61" height="21" fontSize="10" text="Symbol Style Dictionary"/>
+	<s:Label x="30" y="189" fontSize="11" text="Association types"/>
 
 
 </s:Window>

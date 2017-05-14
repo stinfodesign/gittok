@@ -69,7 +69,7 @@ package math
 			var n:int = a[0].length;
 			var p:int = b[0].length;
 			
-			if (n != b.length)  throw new Error("cannot multiple");
+			if (n != b.length)  throw new Error("cannot multiple: size conflict");
 			
 			var c:Array = new Array();
 			
@@ -166,8 +166,9 @@ package math
 			var xt:Array = transpose(x);
 			var xtx:Array = multiple(xt, x);
 			var inv:Array = inverse(xtx);
-			var ixt:Array = Matrix.multiple(inv, xt);
-			return multiple(ixt, X);  
+			var ixt:Array = multiple(inv, xt);
+			return multiple(ixt, X); 
+
 		}
 		
 	}

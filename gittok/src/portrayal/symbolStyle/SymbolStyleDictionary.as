@@ -12,12 +12,14 @@ package portrayal.symbolStyle
 		public var pointSymStyles:Dictionary;
 		public var lineSymStyles:Dictionary;
 		public var areaSymStyles:Dictionary;
+		public var complexSymStyles:Dictionary;
 		
 		public function SymbolStyleDictionary()
 		{
-			pointSymStyles	= new Dictionary();
-			lineSymStyles	= new Dictionary();
-			areaSymStyles	= new Dictionary();
+			pointSymStyles		= new Dictionary();
+			lineSymStyles		= new Dictionary();
+			areaSymStyles		= new Dictionary();
+			complexSymStyles	= new Dictionary();
 		}
 		
 		public function getXML():XML {
@@ -43,15 +45,23 @@ package portrayal.symbolStyle
 			}
 			str += '</areaSymStyles>';
 			
+			str += '<complexSymStyles>';
+			for each(var xStyle:ComplexSymbolStyle in complexSymStyles){
+				str += xStyle.getXML().toXMLString();
+			}
+			str += '</complexSymStyles>';
+			
+			
 			str += '</SymbolStyleDictionary>';
 			
 			return XML(str);
 		}
 		
 		public function setXML(_xml:XML):void {
-			lineSymStyles = new Dictionary();
-			areaSymStyles = new Dictionary();
-			pointSymStyles = new Dictionary();
+			lineSymStyles 	= new Dictionary();
+			areaSymStyles 	= new Dictionary();
+			pointSymStyles 	= new Dictionary();
+			complexSymStyles = new Dictionary();
 			
 			var strXMLList:XMLList = _xml.lineSymStyles.children();
 			for each(var strXML:XML in strXMLList) {
@@ -73,6 +83,14 @@ package portrayal.symbolStyle
 				pSymStyle.setXML(strXML, lineSymStyles);
 				pointSymStyles[pSymStyle.name] = pSymStyle;
 			}
+			
+			strXMLList = _xml.complexSymStyles.children();
+			for each(strXML in strXMLList) {
+				var xSymStyle:ComplexSymbolStyle = new ComplexSymbolStyle();
+				xSymStyle.setXML(strXML, lineSymStyles);
+				complexSymStyles[xSymStyle.name] = xSymStyle;
+			}
+			
 
 		}
 	}

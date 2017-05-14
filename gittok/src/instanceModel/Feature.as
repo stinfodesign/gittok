@@ -63,7 +63,7 @@ package instanceModel
 					if (n > 0) {
 						if (attType.dataType == "Integer" 	    || attType.dataType == "Real"				||
 							attType.dataType == "Bool" 		    || attType.dataType == "CharacterString" 	||
-							attType.dataType == "URL" 		    || attType.dataType == "ImageURL" 		||
+							attType.dataType == "URL" 		    || attType.dataType == "ImageURL" 			||
 							attType.dataType == "VideoURL"      || attType.dataType == "SoundURL") {
 							str += ' ' + attType.name + '="';
 							var element:* = attValueList.getItemAt(0);
@@ -73,6 +73,11 @@ package instanceModel
 								str += ',' + element.value.toString();
 							}
 							str += '"';
+						}
+						else if (attType.dataType == "GDate") {
+							var dte:GDate = attValueList.getItemAt(0) as GDate;	
+							var t:Number = dte.value.getTime();
+							str += ' ' + attType.name + '="' + t + '"';
 						}
 						else if (attType.dataType == "Memo") {
 							var memo:Memo = attValueList.getItemAt(0) as Memo;
@@ -187,6 +192,10 @@ package instanceModel
 									attList.addItem(kit.surfaceList[attID] as SG_Surface);
 								if (attType.dataType == "SG_Complex")
 									attList.addItem(kit.complexList[attID] as SG_Complex);
+								if (attType.dataType == "SG_OrientableCurve")
+									attList.addItem(kit.complexList[attID] as SG_OrientableCurve);	
+								if (attType.dataType == "SG_Ring")
+									attList.addItem(kit.complexList[attID] as SG_Ring);								
 								if (attType.dataType == "Address")
 									attList.addItem(kit.addressList[attID] as Address);
 								if (attType.dataType == "Memo")
@@ -243,6 +252,13 @@ package instanceModel
 								var chr:CharacterString = new CharacterString();
 								chr.value = value;
 								attList.addItem(chr);
+							}
+							else if (attType.dataType == "GDate") {
+								var dte:GDate = new GDate();
+								var ds:String = value as String;
+								dte.value = new Date();
+								dte.value.setTime(Number(ds));
+								attList.addItem(dte);
 							}
 
 						}

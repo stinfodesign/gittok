@@ -36,9 +36,7 @@
 				attName.text = "";
 				selectedTypeLabel.text = "";
 				isMultiple.selected = false;
-
 			}
-
 						
 			protected function dataTypeTree_changeHandler(event:ListEvent):void
 			{
@@ -139,7 +137,6 @@
 				attType.multiplicity = isMultiple.selected;
 			}
 
-
 			protected function updateButton_clickHandler(event:MouseEvent):void
 			{
 				// Check attName
@@ -155,7 +152,11 @@
 				attType.multiplicity = isMultiple.selected;
 				
 				//Update attribute
-				var index:int = attributeList.getItemIndex(attType)
+				var index:int = attributeList.getItemIndex(attType);
+				if (index == -1) {
+					Alert.show("No attribute type for update.", "Alert", 4, this);
+					return;
+				}
 				attributeList.setItemAt(attType, index);
 				
 				//Initialize attribute
@@ -168,7 +169,6 @@
 				selectedTypeLabel.text = "";
 				unitInput.text = "";
 			}
-
 
 			protected function text_jp_clickHandler(event:MouseEvent):void
 			{
@@ -202,8 +202,10 @@
 	
 	<s:Image x="10" y="10" source="@Embed('images/pictModeling1.png')" width="60" height="60"/>
 	<mx:Tree x="234" y="122" id="dataTypeTree" width="225" height="122" labelField="@label"
-			 change="dataTypeTree_changeHandler(event)" showRoot="false" contentBackgroundColor="#E0E0E0" borderColor="#E0E0E0"/>
-	<s:Label x="48" y="164" fontSize="12" backgroundColor="#E0E0E0" width="143" id="selectedTypeLabel" height="20" verticalAlign="middle"/>
+			 change="dataTypeTree_changeHandler(event)" showRoot="false" contentBackgroundColor="#E0E0E0" 
+			 borderColor="#E0E0E0"/>
+	<s:Label x="48" y="164" fontSize="12" backgroundColor="#E0E0E0" width="143" id="selectedTypeLabel" 
+			 height="20" verticalAlign="middle"/>
 	<s:TextInput id="attName" x="48" y="121" width="143" height="20"/>
 	<s:Label x="48" y="107" text="name"/>
 	<s:Label x="48" y="148" text="data type"/>
@@ -219,7 +221,8 @@
 	<s:Button x="389" y="285" label="edit" id="editButton" click="editButton_clickHandler(event)" />
 	<s:Button x="121" y="92" label="clear" id="clearButton" click="clearButton_clickHandler(event)" />
 	<s:Button x="388" y="312" label="update" id="updateButton" click="updateButton_clickHandler(event)" />
-	<mx:DataGrid x="44" y="257" id="inheritedAttGrid" width="176" height="155" editable="false" borderColor="#E0E0E0" color="#010101">
+	<mx:DataGrid x="44" y="257" id="inheritedAttGrid" width="176" height="155" editable="false" 
+				 borderColor="#E0E0E0" color="#010101">
 		<mx:columns>
 			<mx:DataGridColumn headerText="inherited attribute types" dataField="name" resizable="false" backgroundColor="#E0E0E0"/>
 		</mx:columns>

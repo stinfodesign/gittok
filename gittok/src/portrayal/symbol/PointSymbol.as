@@ -20,7 +20,7 @@ package portrayal.symbol
 	public class PointSymbol extends Sprite
 	{
 		public var point:SG_Point = new SG_Point();
-		private var style:PointSymbolStyle = new PointSymbolStyle();
+		public var style:PointSymbolStyle = new PointSymbolStyle();
 		
 		public function PointSymbol() {
 			super();
@@ -46,14 +46,14 @@ package portrayal.symbol
 			var _y:Number = point.position.y;
 			
 			for (var i:int = 0; i < n; i++) {
-				var style:* = styles.getItemAt(i);
+				var elementStyle:* = styles.getItemAt(i);
 
-				if (style is LineSymbolStyle) {
-					var lStyle:LineSymbolStyle = styles.getItemAt(i) as LineSymbolStyle; 
+				if (elementStyle is LineSymbolStyle) {
+					var lStyle:LineSymbolStyle = elementStyle as LineSymbolStyle; 
 					graphics.lineStyle(lStyle.thickness, 
 						lStyle.color, lStyle.alpha, false, "normal", 
 						lStyle.caps, lStyle.joints, 3);
-					graphics.endFill(); 
+					//graphics.endFill(); 
 					
 					var cString:CoordinateArray = elements.getItemAt(i) as CoordinateArray;
 					
@@ -67,10 +67,10 @@ package portrayal.symbol
 					}
 
 				}
-				else if (style is CircleSymbolStyle) {
+				else if (elementStyle is CircleSymbolStyle) {
 					var element:* = elements.getItemAt(i);
 
-					var cStyle:CircleSymbolStyle = styles.getItemAt(i) as CircleSymbolStyle;
+					var cStyle:CircleSymbolStyle = elementStyle as CircleSymbolStyle;
 
 					var crds:CoordinateArray = element as CoordinateArray;
 					var center:Coordinate2 = crds.getItemAt(0) as Coordinate2;
@@ -79,15 +79,15 @@ package portrayal.symbol
 						
 					var bStyle:LineSymbolStyle = cStyle.borderStyle;
 					graphics.lineStyle(bStyle.thickness, 
-					bStyle.color, bStyle.alpha, false, "normal", 
-					bStyle.caps, bStyle.joints, 3);
+						bStyle.color, bStyle.alpha, false, "normal", 
+						bStyle.caps, bStyle.joints, 3);
 					graphics.beginFill(cStyle.color, cStyle.alpha);
 					graphics.drawCircle(center.x, center.y, radius);
 					graphics.endFill();
 					
 				}
-				else if (style is AreaSymbolStyle) {
-					var aStyle:AreaSymbolStyle = styles.getItemAt(i) as AreaSymbolStyle;
+				else if (elementStyle is AreaSymbolStyle) {
+					var aStyle:AreaSymbolStyle = elementStyle as AreaSymbolStyle;
 					lStyle = aStyle.borderStyle;
 					graphics.lineStyle(lStyle.thickness, 
 						lStyle.color, lStyle.alpha, false, "normal", 

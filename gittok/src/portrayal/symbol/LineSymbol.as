@@ -16,7 +16,7 @@ package portrayal.symbol
 	public class LineSymbol extends Sprite
 	{
 		public var curve:SG_Curve = new SG_Curve();
-		private var style:LineSymbolStyle = new LineSymbolStyle();
+		public var style:LineSymbolStyle = new LineSymbolStyle();
 		
 		public function LineSymbol() {
 			super();

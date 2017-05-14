@@ -1,7 +1,9 @@
 package geoOperations
 {
-	import dataTypes.theme.*;
 	import dataTypes.spatialGeometry.SG_Surface;
+	import dataTypes.theme.*;
+	
+	import instanceModel.Feature;
 	
 	import mx.collections.ArrayList;
 
@@ -60,7 +62,8 @@ package geoOperations
 			plotRatio.value = bArea / landArea;	
 			
 			var ratioArray:ArrayList = new ArrayList();
-			ratioArray.addItem(plotRatio);
+			ratioArray.addItem(plotRatio);		// for the multiplicity of attribute values
+			
 			
 			return ratioArray;
 		}

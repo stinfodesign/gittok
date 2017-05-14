@@ -60,12 +60,14 @@
 				this.move(300, 350);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
-				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
-				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
-				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
-				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
-				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
+				registerClassAlias("dataTypes.theme.GDate", GDate);				
+
 				
 				// Location
 				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
@@ -119,6 +121,7 @@
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.ComplexSymbolStyle", ComplexSymbolStyle);				
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
 				
@@ -130,7 +133,8 @@
 				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);
 				registerClassAlias("portrayal.portrayalStyle.AttributeSymbolPair", AttributeSymbolPair);
 				registerClassAlias("portrayal.portrayalStyle.AttributeLabelPair", AttributeLabelPair);								
-				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);								
+				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);	
+				registerClassAlias("portrayal.portrayalStyle.AsssociationPortrayalUnit", AssociationPortrayalUnit);					
 				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
 				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);
 				registerClassAlias("portrayal.portrayalStyle.ThematicCondition", ThematicCondition);

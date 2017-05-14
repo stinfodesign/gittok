@@ -18,7 +18,7 @@ package geoOperations
 
 		
 		public static function lengthOfCurve(argObj:Object):Real {
-			var ap:AffineParam = argObj["affineParam"] as AffineParam;
+			//var ap:AffineParam = argObj["affineParam"] as AffineParam;
 
 			var attValues:ArrayList = argObj["curve"] as ArrayList;
 			var attValue:ArrayList = attValues.getItemAt(0) as ArrayList;
@@ -26,12 +26,14 @@ package geoOperations
 
 			var coords:ArrayList = curve.coordinateSeqence();
 			
+			/*
 			var n:int = coords.length;
 			for (var i:int = 0; i < n; i++) {
 				var coor:Coordinate2 = coords.getItemAt(i) as Coordinate2;
 				coor = math.Affine.conversion(coor, ap.coefficient);
 				coords.setItemAt(coor, i);
 			}
+			*/
 			
 			var rLeng:Real = new Real();
 			rLeng.value = math.LengthLS.lengthLS(coords);

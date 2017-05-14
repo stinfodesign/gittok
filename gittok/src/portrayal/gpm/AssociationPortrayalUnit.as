@@ -4,24 +4,15 @@ package portrayal.gpm
 	
 	import gfm.AttributeType;
 	
-	public class FeaturePortrayalUnit
+	public class AssociationPortrayalUnit extends FeaturePortrayalUnit
 	{
-		public var typeID:String;				// feature type having portrayal parameters
-		
-		public var generalModifiers:Dictionary; 		// for a general purpose map
-		public var thematicModifier:ThematicCondition;	// for a thematic map
-		public var infoPages:Dictionary;				// for information pages on a map
-		
-
-		public function FeaturePortrayalUnit()
+		public function AssociationPortrayalUnit()
 		{
-			generalModifiers = new Dictionary();
-			thematicModifier = new ThematicCondition();
-			infoPages		 = new Dictionary();
+			super();
 		}
 		
-		public function getXML():XML {
-			var str:String = '<FeaturePortrayalUnit typeID="' + this.typeID + '">';
+		public override function getXML():XML {
+			var str:String = '<AssociationPortrayalUnit typeID="' + this.typeID + '">';
 			str += '<generalModifiers>';
 			if (generalModifiers != null) {
 				for each(var aslPair:* in generalModifiers) {
@@ -47,11 +38,11 @@ package portrayal.gpm
 			}
 			str += '</infoPages>';
 			
-			str += '</FeaturePortrayalUnit>';
+			str += '</AssociationPortrayalUnit>';
 			return XML(str);
 		}
 		
-		public function setXML(_xml:XML):void {
+		public override function setXML(_xml:XML):void {
 			this.typeID = _xml.@typeID;
 			
 			generalModifiers = new Dictionary();
@@ -85,7 +76,7 @@ package portrayal.gpm
 					infoPages[infoPageAtt.name] = infoPageAtt;
 				}
 			}
-
+			
 		}
 	}
 }

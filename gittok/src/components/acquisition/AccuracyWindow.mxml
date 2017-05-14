@@ -62,6 +62,9 @@
 				if (illigalClose) {
 					Alert.show("Select accept or reject", "Alert", 4, this);
 				}
+				
+				this.move(780, 150);
+
 			}
 			
 			protected function acceptButton_clickHandler(event:MouseEvent):void

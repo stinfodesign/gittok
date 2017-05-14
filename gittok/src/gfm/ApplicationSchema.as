@@ -42,33 +42,35 @@ package gfm
 				opts 	= new ArrayList();
 				lnks	= new ArrayList();
 				lnkBy	= new ArrayList();
+				
 				concreteType = concreteTypes.getItemAt(i) as FeatureType;
-				if (!concreteType.isAbstract) {
-					// collect attrubute and association types
-					atts.addAll(concreteType.attributeTypes);
-					opts.addAll(concreteType.operationTypes);
-					lnks.addAll(concreteType.links);
-					lnkBy.addAll(concreteType.linkedBy);
-					if (concreteType.parent != null) inheritProperties(concreteType.parent);
-					concreteType = concreteTypes.getItemAt(i) as FeatureType;
-					concreteType.attributeTypes = atts;
-					concreteType.operationTypes = opts;
-					concreteType.links          = lnks;
-					concreteType.linkedBy       = lnkBy;
-				}
+				
+				// collect attrubute and association types
+				atts.addAll(concreteType.attributeTypes);
+				opts.addAll(concreteType.operationTypes);
+				lnks.addAll(concreteType.links);
+				lnkBy.addAll(concreteType.linkedBy);
+				
+				if (concreteType.parent != null) inheritProperties(concreteType.parent);
+				
+				concreteType.attributeTypes = atts;
+				concreteType.operationTypes = opts;
+				concreteType.links          = lnks;
+				concreteType.linkedBy       = lnkBy;
+
 			}
 			
 			return concreteTypes;
 		}
 		
-		// Recursive operation to inherit properties
-		protected function inheritProperties(fType:FeatureType):void {
+		// Recursive operation to inherit properties of pType (parent)
+		protected function inheritProperties(pType:FeatureType):void {
 			// attributes
-			var m:int = fType.attributeTypes.length;
+			var m:int = pType.attributeTypes.length;
 			var n:int = atts.length;
 			var watts:ArrayList = new ArrayList();
 			for (var i:int = 0; i < m; i++) {
-				var wattf:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+				var wattf:AttributeType = pType.attributeTypes.getItemAt(i) as AttributeType;
 				var flag:Boolean = false;
 				for (var j:int = 0; j < n; j++) {
 					var watt:AttributeType = atts.getItemAt(j) as AttributeType;
@@ -80,11 +82,11 @@ package gfm
 			atts.addAll(watts);
 			
 			// operations
-			m = fType.operationTypes.length;
+			m = pType.operationTypes.length;
 			n = opts.length;
 			var wopts:ArrayList = new ArrayList();
 			for (i = 0; i < m; i++) {
-				var woptf:OperationType = fType.operationTypes.getItemAt(i) as OperationType;
+				var woptf:OperationType = pType.operationTypes.getItemAt(i) as OperationType;
 				flag = false;
 				for (j = 0; j < n; j++) {
 					var wopt:OperationType = opts.getItemAt(j) as OperationType;
@@ -96,13 +98,15 @@ package gfm
 			
 			opts.addAll(wopts);
 			
-			/* associations without override
-			lnks.addAll(fType.links);
-			lnkBy.addAll(fType.linkedBy);
-			*/
+			// associations
+			if (pType.links != null) 
+				lnks.addAll(pType.links);
+			if (pType.linkedBy != null) 
+				lnkBy.addAll(pType.linkedBy);
 			
-			if (fType.parent != null) {
-				inheritProperties(fType.parent);
+			
+			if (pType.parent != null) {
+				inheritProperties(pType.parent);
 			}
 		}		
 		

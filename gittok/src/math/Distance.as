@@ -2,9 +2,10 @@ package math
 {
 	import dataTypes.spatialGeometry.Coordinate2;
 	import dataTypes.spatialGeometry.CoordinateArray;
-	import dataTypes.spatialGeometry.SG_Circle;
 	
 	import mx.collections.ArrayList;
+	
+	import portrayal.symbol.Circle;
 
 	public class Distance
 	{
@@ -75,6 +76,12 @@ package math
 			
 			if (d == Number.MAX_VALUE) return -1;
 			return d;
+		}
+		
+		public static function p2clb(p:Coordinate2, crl:Circle):Number {
+			// distance between point and circle boundary
+			var r:Number = p2p(p, crl.center);
+			return Math.abs(r - crl.radius);
 		}
 		
 		public static function l2l(p0:Coordinate2, p1:Coordinate2,
@@ -148,14 +155,6 @@ package math
 				crd0 = crd1;
 			}
 			return pseq;
-		}
-		
-		public static function p2clb(p:Coordinate2, cl:SG_Circle):Number {
-			// distance between a point and a circle border
-			var dx:Number = p.x - cl.center.x;
-			var dy:Number = p.y - cl.center.y;
-			var rd:Number = Math.sqrt(dx * dx + dy * dy);
-			return Math.abs(rd - cl.radius);
 		}
 		
 	}

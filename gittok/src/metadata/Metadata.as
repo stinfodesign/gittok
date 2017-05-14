@@ -13,6 +13,8 @@ package metadata
 	{
 		public var title:String;
 		
+		public var kitURL:String;
+		
 		public var overview:String;
 		
 		public var keywords:ArrayList;
@@ -24,8 +26,6 @@ package metadata
 		public var geographicExtent:SG_Rectangle;
 		
 		//public var temporalExtent:TemporalExtent;
-		
-		public var kitURL:String;
 		
 		public function Metadata()
 		{

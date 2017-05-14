@@ -2,7 +2,6 @@ package portrayal.symbolStyle
 {
 	import dataTypes.spatialGeometry.Coordinate2;
 	import dataTypes.spatialGeometry.CoordinateArray;
-	import dataTypes.spatialGeometry.SG_Circle;
 	
 	import flash.utils.Dictionary;
 	

@@ -2,13 +2,13 @@
 <s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx" 
-		  width="458" height="494"
+		  width="458" height="506"
 		  title="Symbol Style Designer"
 		  creationComplete="initializeApp()">
 	<s:layout>
 		<s:BasicLayout/>
 	</s:layout>
-
+	
 	<fx:Script>
 		<![CDATA[
 			import com.google.maps.Color;
@@ -16,8 +16,8 @@
 			import components.representation.ColorSelector;
 			
 			import dataTypes.place.*;
-			import dataTypes.theme.*;
 			import dataTypes.spatialGeometry.*;
+			import dataTypes.theme.*;
 			
 			import flash.filesystem.*;
 			
@@ -31,6 +31,7 @@
 			import mx.core.mx_internal;
 			import mx.events.CloseEvent;
 			import mx.events.ColorPickerEvent;
+			import mx.events.ListEvent;
 			
 			import portrayal.symbol.*;
 			import portrayal.symbolStyle.*;
@@ -49,6 +50,7 @@
 			private var lStyle:LineSymbolStyle;
 			private var aStyle:AreaSymbolStyle;
 			private var cStyle:CircleSymbolStyle;
+			private var xStyle:ComplexSymbolStyle;
 			
 			public  var symbolStyles:SymbolStyleDictionary = new SymbolStyleDictionary();
 			
@@ -68,11 +70,20 @@
 			protected var center:Coordinate2;
 			
 			[Bindable]
-			protected var pointSymArray:ArrayList = new ArrayList();
+			protected var symArrayForPoint:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var pointSymArray:ArrayList = new ArrayList();			
+			
 			[Bindable]
 			protected var lineSymArray:ArrayList = new ArrayList();
+			
 			[Bindable]
 			protected var areaSymArray:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var complexSymArray:ArrayList = new ArrayList();
+
 						
 			private var color1:uint = 0x13233a;
 			private var color2:uint = 0xd9d9dc;
@@ -92,6 +103,7 @@
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.ComplexSymbolStyle", ComplexSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				
@@ -99,15 +111,18 @@
 				registerClassAlias("portrayal.symbol.AreaSymbol", AreaSymbol);
 				registerClassAlias("portrayal.symbol.LineSymbol", LineSymbol);
 				registerClassAlias("portrayal.symbol.PointSymbol", PointSymbol);
+				registerClassAlias("portrayal.symbol.ComplexSymbol", ComplexSymbol);
+				
 				
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
-				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
-				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
-				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
-				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
-				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
+				registerClassAlias("dataTypes.theme.GDate", GDate);				
 				
 				// Location
 				registerClassAlias("dataTypes.location.ImageLocation", ImageURL);
@@ -118,7 +133,6 @@
 				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
 				registerClassAlias("dataTypes.spatialGeometry.GeodeticCoordinate", GeodeticCoordinate);
 				registerClassAlias("dataTypes.spatialGeometry.PlaneRectangularCoordinate", PlaneRectangularCoordinate);
-				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
 				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
 				registerClassAlias("dataTypes.spatialGeometry.SG_CompositeCurve", SG_CompositeCurve);				
 				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);				
@@ -156,6 +170,10 @@
 			}
 			
 			private function saveSymbolFile(event:Event):void {
+				// I don't understand why the sentence below is necessary.
+				// But It is required to save symbol style dictionary.
+				symbolStyles.setXML(symbolStyles.getXML());
+				
 				var startIndex:int = symbolFile.nativePath.length - 4;
 				var suffix:String = symbolFile.nativePath.slice(startIndex);
 				if (suffix != ".sym") symbolFile.nativePath += ".sym";
@@ -179,7 +197,7 @@
 			{
 				try {
 					symbolFile = new File();
-					var filter:FileFilter = new FileFilter("Symbol File", "*.sym");
+					var filter:FileFilter = new FileFilter("Symbol Style File", "*.sym");
 					symbolFile.addEventListener(Event.SELECT, openSymbolFile);
 					symbolFile.browseForOpen("Open file", [filter]);
 				} catch (error:IOError) {
@@ -208,6 +226,12 @@
 				for each(var pStyle:PointSymbolStyle in symbolStyles.pointSymStyles) {
 					pointSymArray.addItem(pStyle);
 				}
+				
+				complexSymArray = new ArrayList();
+				for each(var xStyle:ComplexSymbolStyle in symbolStyles.complexSymStyles) {
+					complexSymArray.addItem(xStyle);
+				}
+				
 				
 			}
 			
@@ -415,7 +439,7 @@
 			{				
 				//
 				var xarray:Array = [10, 10, 80, 150, 150, 80, 10];
-				var yarray:Array = [10, 50, 65, 50,  10,  5,  10];
+				var yarray:Array = [10, 55, 65, 55,  10,  0,  10];
 				sampleAreaView.graphics.clear();
 				sampleAreaView.graphics.beginFill(selectedAreaColor, selectedAreaAlpha);
 				sampleAreaView.graphics.moveTo(10, 10);
@@ -451,6 +475,115 @@
 				border.name = "sampleLine";
 				border.decode(lObj);
 				sampleAreaView.addChild(border);
+			}
+			
+			// COMPLEX SYMBOL -------------------------------------
+			
+			protected function showComplexSymbolButton_clickHandler(event:MouseEvent):void {
+				var n:int = sampleComplexView.numChildren;
+				for (var i:int = 0; i < n; i++) {
+					sampleComplexView.removeChildAt(0);
+				}
+				
+				// select styles
+				lStyle = lineSymArray.getItemAt(lineElementSymGrid.selectedIndex) as LineSymbolStyle;
+				if (lStyle == null) {
+					Alert.show("Select line symbol before.", "Alert", 4, this);
+					return;
+				}
+				
+				if (areaElementSymGrid.selectedIndex > -1) {
+					aStyle = areaSymArray.getItemAt(areaElementSymGrid.selectedIndex) as AreaSymbolStyle;
+					if (aStyle == null) {
+						Alert.show("Select area symbol before.", "Alert", 4, this);
+						return;
+					}
+				}
+
+				pStyle = pointSymArray.getItemAt(pointElementSymGrid.selectedIndex) as PointSymbolStyle;
+				if (pStyle == null) {
+					Alert.show("Select point symbol before.", "Alert", 4, this);
+					return;
+				}
+				
+				// basic elements
+				var point:Vector.<SG_Point> = new Vector.<SG_Point>(3);
+				var curve:Vector.<SG_Curve> = new Vector.<SG_Curve>(3);
+				var orientableCurve:Vector.<SG_OrientableCurve> = new Vector.<SG_OrientableCurve>(3);
+				var surface:SG_Surface = new SG_Surface();
+				
+				// Points
+				for (i = 0; i < 3; i++) point[i] = new SG_Point();
+				point[0].position.x = 20;
+				point[0].position.y = 20;
+				point[1].position.x = 140;
+				point[1].position.y = 20;
+				point[2].position.x = 80;
+				point[2].position.y = 90;
+				
+				// Curves
+				for (i = 0; i < 3; i++) {
+					curve[i] = new SG_Curve();
+					curve[i].start = point[i];
+					curve[i].end   = point[(i + 1) % 3];
+					curve[i].shape = new CoordinateArray();
+					
+					orientableCurve[i] = new SG_OrientableCurve();
+					orientableCurve[i].original = curve[i];
+					orientableCurve[i].orientation = true;
+				}
+				
+				/* Display complex */
+				// Surface
+				if (areaElementSymGrid.selectedIndex > -1) {
+					var ring:SG_Ring = new SG_Ring();
+					for (i = 0; i < 3; i++) {
+						ring.elements.addItem(orientableCurve[i]);
+					}				
+					surface.exterior = ring;				
+					displaySurface(surface);
+				}
+				
+				// Curves
+				for (i = 0; i < 3; i++) {
+					displayCurve(curve[i]);
+				}
+				
+				//Points
+				for (i = 0; i < 3; i++) {
+					displayPoint(point[i]);
+				}
+				
+			}
+			
+			private function displayPoint(pt:SG_Point):void {
+				var pObj:Object = new Object();
+				pObj.point = pt;
+				pObj.style = pStyle;
+				var pSym:PointSymbol = new PointSymbol();
+				pSym.decode(pObj);
+				pSym.name = pt.id.toString();
+				sampleComplexView.addChild(pSym);
+			}
+			
+			private function displayCurve(cv:SG_Curve):void {
+				var lObj:Object = new Object();
+				lObj.curve = cv;
+				lObj.style = lStyle;
+				var lSym:LineSymbol = new LineSymbol();
+				lSym.decode(lObj);
+				lSym.name = cv.id.toString();
+				sampleComplexView.addChild(lSym);
+			}
+			
+			private function displaySurface(sc:SG_Surface):void {
+				var aObj:Object = new Object();
+				aObj.surface = sc;
+				aObj.style = aStyle;
+				var aSym:AreaSymbol = new AreaSymbol();
+				aSym.decode(aObj);
+				aSym.name = sc.id.toString();
+				sampleComplexView.addChild(aSym);
 			}
 			
 			protected function addAreaSymbolButton_clickHandler(event:MouseEvent):void 
@@ -656,6 +789,12 @@
 						Alert.show("No elements are included in the symbol.", "Alert", 4, this);
 						return;
 					}
+					
+					if (symGridForPoint.selectedIndex == -1) {
+						Alert.show("No style is selected at styles grid.", "Alert", 4, this);
+						return;						
+					}
+					
 					samplePointView.graphics.clear();
 					while (samplePointView.numChildren > 0) {
 						samplePointView.removeChildAt(0);	
@@ -674,6 +813,7 @@
 						elementStyle = "area";
 					else if (lineRadioButton.selected)
 						elementStyle = "line";
+					
 					searchedElementIndex = searchElement(elementStyle, p, elements);
 					
 					// Show selected lineString with thickness 3 times as wide as original
@@ -681,8 +821,7 @@
 					return;
 				}
 				
-				// DIGITIZE
-				
+				// DIGITIZE				
 				if (startFlag) {
 					startFlag = false;
 					cString = new CoordinateArray();
@@ -693,12 +832,11 @@
 					
 					if (lineRadioButton.selected) {
 						//line style
-						lStyle = lineSymGrid4Point.selectedItem as LineSymbolStyle;
+						lStyle = symGridForPoint.selectedItem as LineSymbolStyle;
 						if (lStyle == null) {
 							Alert.show("Select line style!", "Error", 4, this);
 							startFlag = true;
 							lineRadioButton.selected = false;
-							lineSymGrid4Point.visible = false;
 							return;
 						}
 						
@@ -710,12 +848,11 @@
 					}
 					else if (areaRadioButton.selected || circleRadioButton.selected) {
 						//area style
-						aStyle = areaSymGrid4Point.selectedItem as AreaSymbolStyle;
+						aStyle = symGridForPoint.selectedItem as AreaSymbolStyle;
 						if (aStyle == null) {
 							Alert.show("Select area style!", "Error", 4, this);
 							startFlag = true;
 							areaRadioButton.selected = false;
-							areaSymGrid4Point.visible = false;
 							return;
 						}
 						samplePointView.graphics.beginFill(aStyle.color, aStyle.alpha);
@@ -822,12 +959,12 @@
 					var dw:Number = Number.MAX_VALUE;
 					
 					if (style is CircleSymbolStyle && elementStyle == "circle") {
-						var crcl:SG_Circle = new SG_Circle();
-						var crds:CoordinateArray = element as CoordinateArray;
-						
-						crcl.center = crds.getItemAt(0) as Coordinate2;
+						var crds:CoordinateArray = element as CoordinateArray;						
+						var center:Coordinate2 = crds.getItemAt(0) as Coordinate2;
 						var bcrd:Coordinate2 = crds.getItemAt(1) as Coordinate2;
-						crcl.radius = math.Distance.p2p(crcl.center, bcrd);
+						var radius:Number = math.Distance.p2p(center, bcrd);						
+						var crcl:Circle = new Circle(center, radius);
+
 						dw = math.Distance.p2clb(p, crcl);	
 					}
 					else if (style is AreaSymbolStyle && elementStyle == "area") {
@@ -847,6 +984,7 @@
 			
 			protected function breakButton_clickHandler(event:MouseEvent):void
 			{
+				/*
 				// search break
 				if (searchFlag) {
 					searchFlag = false;
@@ -855,55 +993,44 @@
 					areaRadioButton.selected = false;
 					return;
 				}
+				*/
+				
+				if (digiModeButton.selected) {
+					Alert
+				}
 				
 				if (cString.length == 0) {
 					Alert.show("Digitize line before break.", "Error", 4, this);
 					return;
 				}				
 				
-				// digitize break
 				startFlag = true;
-				//elements.addItem(cString);
 				
 				if (lineRadioButton.selected) {
 					elements.addItem(cString);
-					styles.addItem(lineSymGrid4Point.selectedItem as LineSymbolStyle);
+					styles.addItem(symGridForPoint.selectedItem as LineSymbolStyle);
 				}
 				else if (areaRadioButton.selected) {
 					elements.addItem(cString);
-					aStyle = areaSymGrid4Point.selectedItem as AreaSymbolStyle;
+					aStyle = symGridForPoint.selectedItem as AreaSymbolStyle;
 					styles.addItem(aStyle);
 				}
-				/*
-				else if (circleRadioButton.selected) {
-					var wStyle:AreaSymbolStyle = areaSymGrid4Point.selectedItem as AreaSymbolStyle;
-					var cStyle:CircleSymbolStyle = new CircleSymbolStyle();
-					cStyle.alpha = wStyle.alpha;
-					cStyle.borderStyle = wStyle.borderStyle;
-					cStyle.color = wStyle.color;
-					cStyle.id = wStyle.id;
-					cStyle.name = wStyle.name;
-					styles.addItem(cStyle);
-					
-				}
-				*/
 				
 				samplePointView.graphics.clear();
 				drawElements();
-
 			}
 			
+			/*
 			protected function searchButton_clickHandler(event:MouseEvent):void
-			{
-				
+			{				
 				if (cString.length == 0 && elements.length == 0) {
 					Alert.show("Digitize geometry before search.", "Error", 4, this);
 					return;
 				}
 				
 				searchFlag = true;
-				flagLabel.text = "search";
 			}
+			*/
 			
 			protected function deleteButton_clickHandler(event:MouseEvent):void
 			{
@@ -944,26 +1071,17 @@
 
 			protected function lineRadioButton_clickHandler(event:MouseEvent):void
 			{
-				lineSymGrid4Point.visible = true;
-				lineSymGrid4Point.selectedIndex = -1;
-				
-				areaSymGrid4Point.visible = false;
+				symArrayForPoint = lineSymArray;
 			}
 
 			protected function areaRadioButton_clickHandler(event:MouseEvent):void
 			{
-				lineSymGrid4Point.visible = false;
-				
-				areaSymGrid4Point.visible = true;
-				areaSymGrid4Point.selectedIndex = -1;
+				symArrayForPoint = areaSymArray;
 			}
 
 			protected function circleRadioButton_clickHandler(event:MouseEvent):void
 			{
-				lineSymGrid4Point.visible = false;
-				
-				areaSymGrid4Point.visible = true;
-				areaSymGrid4Point.selectedIndex = -1;
+				symArrayForPoint = areaSymArray;
 			}
 			
 			protected function addPointSymButton_clickHandler(event:MouseEvent):void
@@ -1061,7 +1179,8 @@
 				}
 				pStyle = pointSymArray.getItemAt(index) as PointSymbolStyle;
 
-				pointSymArray.removeItem(pStyle);	// delete
+				// Delete point symbol style
+				pointSymArray.removeItem(pStyle);
 				delete symbolStyles.pointSymStyles[pStyle.name];
 				
 				pointSymName.text = "";
@@ -1078,12 +1197,9 @@
 			}
 			
 			protected function initializeRadio():void {
-				lineRadioButton.selected = false;
-				areaRadioButton.selected = false;
-				lineSymGrid4Point.visible = false;
-				areaSymGrid4Point.visible = false;
-				lineSymGrid4Point.selectedIndex = -1;
-				areaSymGrid4Point.selectedIndex = -1;					
+				lineRadioButton.selected	= false;
+				areaRadioButton.selected	= false;
+				circleRadioButton.selected	= false;
 			}
 			
 			protected function drawElements():void {
@@ -1227,6 +1343,233 @@
 					
 			}
 			
+			protected function addComplexSymButton_clickHandler(event:MouseEvent):void
+			{
+				if (complexSymName.text == "") {
+					Alert.show("Set name before.", "Error", 4, this);
+					return;
+				}
+				
+				if (lineElementSymGrid.selectedIndex == -1) {
+					Alert.show("Line shall be selected.", "Warning", 4, this);
+					return;
+				}
+				
+				if (pointElementSymGrid.selectedIndex == -1) {
+					Alert.show("Point shall be selected.", "Warning", 4, this);
+					return;
+				}
+				
+				xStyle = new ComplexSymbolStyle();
+				xStyle.name = complexSymName.text;
+				
+				xStyle.lineSymbolStyle  = lineSymArray.getItemAt(lineElementSymGrid.selectedIndex)   as LineSymbolStyle; 
+				xStyle.pointSymbolStyle = pointSymArray.getItemAt(pointElementSymGrid.selectedIndex) as PointSymbolStyle;
+				
+				if (!noAreaCheckBox.selected) {
+					if (areaElementSymGrid.selectedIndex == -1) {
+						Alert.show("Select area symbol style before press add button.", "Alert", 4, this);
+						return;
+					}
+					xStyle.areaSymbolStyle = areaSymArray.getItemAt(areaElementSymGrid.selectedIndex) as AreaSymbolStyle;					
+				}
+				else {
+					xStyle.areaSymbolStyle = null;
+				}
+				
+				// add complex symbol
+				complexSymArray.addItem(xStyle);
+				symbolStyles.complexSymStyles[xStyle.name] = xStyle;
+				
+				//clear items
+				complexSymName.text = "";
+				lineElementSymGrid.selectedIndex  = -1;
+				pointElementSymGrid.selectedIndex = -1;
+				areaElementSymGrid.selectedIndex  = -1;
+				
+				noAreaCheckBox.selected = false;
+				
+				var n:int = sampleComplexView.numChildren;
+				for (var i:int = 0; i < n; i++) 
+					sampleComplexView.removeChildAt(0);
+								
+			}
+			
+			protected function editComplexSymButton_clickHandler(event:MouseEvent):void
+			{
+				var i:int = complexSymGrid.selectedIndex;
+				if (i == -1) {
+					Alert.show("Select complex symbol style before edit.", "Alert", 4, this);
+					return;
+				}
+				
+				xStyle = complexSymArray.getItemAt(i) as ComplexSymbolStyle;
+				complexSymName.text = xStyle.name;
+				
+				lStyle = xStyle.lineSymbolStyle;
+				i = -1;
+				for (var j:int = 0; j < lineSymArray.length; j++) {
+					var wlStyle:LineSymbolStyle = lineSymArray.getItemAt(j) as LineSymbolStyle;
+					if (wlStyle.id == lStyle.id) {
+						i = j;
+						break;
+					}
+				}
+				lineElementSymGrid.selectedIndex = i;
+				
+				pStyle = xStyle.pointSymbolStyle;
+				i = -1;
+				for (j = 0; j < pointSymArray.length; j++) {
+					var wpStyle:PointSymbolStyle = pointSymArray.getItemAt(j) as PointSymbolStyle;
+					if (wpStyle.id == pStyle.id) {
+						i = j;
+						break;
+					}
+				}
+				pointElementSymGrid.selectedIndex = i;
+				
+				if (xStyle.areaSymbolStyle.name != "") {
+					aStyle = xStyle.areaSymbolStyle;
+					i = -1;
+					for (j = 0; j < areaSymArray.length; j++) {
+						var waStyle:AreaSymbolStyle = areaSymArray.getItemAt(j) as AreaSymbolStyle;
+						if (waStyle.id == aStyle.id) {
+							i = j;
+							break;
+						}
+					}
+					areaElementSymGrid.selectedIndex = i;
+				}
+				else {
+					noAreaCheckBox.selected = true;
+				}	
+			}
+			
+			protected function updateComplexSymButton_clickHandler(event:MouseEvent):void
+			{
+				if (complexSymName.text == "") {
+					Alert.show("Set name before.", "Error", 4, this);
+					return;
+				}
+				
+				if (lineElementSymGrid.selectedIndex == -1) {
+					Alert.show("Line shall be selected.", "Warning", 4, this);
+					return;
+				}
+				
+				if (pointElementSymGrid.selectedIndex == -1) {
+					Alert.show("Point shall be selected.", "Warning", 4, this);
+					return;
+				}
+				
+				xStyle = new ComplexSymbolStyle();
+				xStyle.name = complexSymName.text;
+				
+				xStyle.lineSymbolStyle  = lineSymArray.getItemAt(lineElementSymGrid.selectedIndex)   as LineSymbolStyle; 
+				xStyle.pointSymbolStyle = pointSymArray.getItemAt(pointElementSymGrid.selectedIndex) as PointSymbolStyle;
+				
+				if (!noAreaCheckBox.selected) {
+					if (areaElementSymGrid.selectedIndex == -1) {
+						Alert.show("Select area symbol style before press add button.", "Alert", 4, this);
+						return;
+					}
+					xStyle.areaSymbolStyle = areaSymArray.getItemAt(areaElementSymGrid.selectedIndex) as AreaSymbolStyle;					
+				}
+				else {
+					xStyle.areaSymbolStyle = null;
+				}
+				
+				// update complex symbol
+				i = complexSymGrid.selectedIndex;
+				if (i == -1) {
+					Alert.show("Select complex symbol style before update.", "Alert", 4, this);
+					return;
+				}
+				complexSymArray.setItemAt(xStyle, i);
+				symbolStyles.complexSymStyles[xStyle.name] = xStyle;
+				
+				//clear items
+				complexSymName.text = "";
+				lineElementSymGrid.selectedIndex  = -1;
+				pointElementSymGrid.selectedIndex = -1;
+				areaElementSymGrid.selectedIndex  = -1;
+				
+				noAreaCheckBox.selected = false;
+				
+				var n:int = sampleComplexView.numChildren;
+				for (var i:int = 0; i < n; i++) 
+					sampleComplexView.removeChildAt(0);
+			}
+			
+			protected function deleteComplexSymButton_clickHandler(event:MouseEvent):void
+			{
+				// delete complex symbol
+				i = complexSymGrid.selectedIndex;
+				if (i == -1) {
+					Alert.show("Select complex symbol style before delete.", "Alert", 4, this);
+					return;
+				}
+				xStyle = complexSymArray.getItemAt(i) as ComplexSymbolStyle;
+
+				complexSymArray.removeItemAt(i);
+				delete symbolStyles.complexSymStyles[xStyle.name];
+				
+				//clear items
+				complexSymName.text = "";
+				lineElementSymGrid.selectedIndex  = -1;
+				pointElementSymGrid.selectedIndex = -1;
+				areaElementSymGrid.selectedIndex  = -1;
+				
+				noAreaCheckBox.selected = false;
+				
+				var n:int = sampleComplexView.numChildren;
+				for (var i:int = 0; i < n; i++) 
+					sampleComplexView.removeChildAt(0);				
+			}
+			
+			protected function areaElementSymGrid_changeHandler(event:ListEvent):void
+			{
+				if (noAreaCheckBox.selected) {
+					areaElementSymGrid.selectedIndex = -1;
+				}
+			}
+			
+			protected function noAreaCheckBox_clickHandler(event:MouseEvent):void
+			{
+				if (noAreaCheckBox.selected) {
+					areaElementSymGrid.selectedIndex = -1;
+
+				}
+			}
+			
+			protected function digiModeButton_clickHandler(event:MouseEvent):void
+			{
+				searchFlag = false;
+				
+				lineRadioButton.selected	= false;
+				areaRadioButton.selected	= false;
+				circleRadioButton.selected	= false;
+				
+				symArrayForPoint = new ArrayList();
+			}
+			
+			protected function searchModeButton_clickHandler(event:MouseEvent):void
+			{
+				if (cString.length == 0 && elements.length == 0) {
+					Alert.show("Digitize geometry before search.", "Error", 4, this);
+					return;
+				}
+				
+				searchFlag = true;		
+				
+				lineRadioButton.selected	= false;
+				areaRadioButton.selected	= false;
+				circleRadioButton.selected	= false;
+				
+				symArrayForPoint = new ArrayList();
+				
+			}
+			
 		]]>
 	</fx:Script>
 
@@ -1234,15 +1577,17 @@
 		<s:RadioButtonGroup id="capsGroup"/>
 		<s:RadioButtonGroup id="jointsGroup"/>
 		<s:RadioButtonGroup id="geomRadioGroup"/>
+		<s:RadioButtonGroup id="modeGroup"/>
 		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
 	</fx:Declarations>
+	
 	<mx:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
 	<s:Label x="75" y="15" text="Symbol Style Designer" fontSize="16"/>
 
-	<s:TabBar dataProvider="{myViewStack}" x="29" y="91" height="20" /> 
+	<s:TabBar dataProvider="{myViewStack}" x="31" y="102" height="20" /> 
 	
 	<mx:ViewStack id="myViewStack" 
-				  borderStyle="solid" width="400" height="330" x="29" y="110" backgroundColor="#fefee5"> 
+				  borderStyle="solid" width="400" height="330" x="31" y="121" backgroundColor="#fefee5"> 
 				
 		<s:NavigatorContent id="lineTab" label="line"> 
 			<s:Group id="lStyleDef" x="0" y="0" width="100%" height="100%">
@@ -1325,7 +1670,7 @@
 				<s:Button x="214" y="14" label="show" width="55" id="showAreaSymbolButton" 
 						  click="showAreaSymbolButton_clickHandler(event)" height="20"/>
 				<mx:Image x="213" y="39" width="158" height="80" id="sampleAreaView"/>
-				<s:Label x="272" y="18" text="design"/>
+				<s:Label x="275" y="18" text="design"/>
 				<s:Rect id="colorRect4Area" x="78" y="47" width="107" height="38">
 					<s:fill>
 						<s:SolidColor id="areaColor" color="0x000000"/>
@@ -1346,14 +1691,16 @@
 				<s:Button x="328" y="223" label="edit" width="62" id="editPointSymButton"  click="editPointSymButton_clickHandler(event)"/>
 				<mx:DataGrid x="218" y="195" id="pointSymGrid" width="101" height="123" dataProvider="{pointSymArray}">
 					<mx:columns>
-						<mx:DataGridColumn headerText="point" dataField="name"/>
+						<mx:DataGridColumn headerText="point symbols" dataField="name"/>
 					</mx:columns>
 				</mx:DataGrid>				
-				<s:Button x="219" y="84" label="break" width="68" height="20" id="breakButton" click="breakButton_clickHandler(event)"/>
-				<s:Button x="219" y="110" label="search" width="68" height="20" id="searchButton" click="searchButton_clickHandler(event)"/>
-				<s:Button x="219" y="136" label="delete" width="68" height="20" id="deleteButton" click="deleteButton_clickHandler(event)"/>
-				<s:Button x="219" y="162" label="clear all" width="68" height="20" id="clearButton" click="clearButton_clickHandler(event)"/>
-				<s:Label x="11" y="20" text="name" fontSize="12"/>
+				<s:Button x="219" y="80" label="break" width="52" height="20" id="breakButton" click="breakButton_clickHandler(event)"/>
+				<!--
+				<s:Button x="219" y="113" label="search" width="68" height="20" id="searchButton" click="searchButton_clickHandler(event)"/>
+				-->
+				<s:Button x="219" y="139" label="delete" width="68" height="20" id="deleteButton" click="deleteButton_clickHandler(event)"/>
+				<s:Button x="219" y="165" label="clear all" width="68" height="20" id="clearButton" click="clearButton_clickHandler(event)"/>
+				<s:Label x="11" y="21" text="name" fontSize="12"/>
 				<s:TextInput x="46" y="15" width="100" id="pointSymName" borderVisible="true"/>
 				<s:Panel x="10" y="86" width="200" height="232" id="pointPanel" title="Edit Panel" 
 						 click="pointPanel_clickHandler(event)" dropShadowVisible="false">
@@ -1362,34 +1709,81 @@
 					
 				</s:Panel>
 				<s:RadioButton x="219" y="14" label="line" groupName="geomRadioGroup" id="lineRadioButton" click="lineRadioButton_clickHandler(event)"/>
-				<s:RadioButton x="219" y="32" label="area" groupName="geomRadioGroup" id="areaRadioButton" click="areaRadioButton_clickHandler(event)"/>
-				<s:RadioButton x="219" y="50" label="circle" groupName="geomRadioGroup" id="circleRadioButton"  click="circleRadioButton_clickHandler(event)"/>
-				<mx:DataGrid x="292" y="13" width="96" height="118" id="lineSymGrid4Point" 
-							 dataProvider="{lineSymArray}" visible="false">
+				<s:RadioButton x="219" y="33" label="area" groupName="geomRadioGroup" id="areaRadioButton" click="areaRadioButton_clickHandler(event)"/>
+				<s:RadioButton x="219" y="52" label="circle" groupName="geomRadioGroup" id="circleRadioButton"  click="circleRadioButton_clickHandler(event)"/>
+				<mx:DataGrid x="293" y="13" width="96" height="118" id="symGridForPoint"
+							 dataProvider="{symArrayForPoint}">
 					<mx:columns>
-						<mx:DataGridColumn headerText="line style" dataField="name"/>
-					</mx:columns>
+						<mx:DataGridColumn headerText="styles" dataField="name"/>
+					</mx:columns>					
 				</mx:DataGrid>
-				<mx:DataGrid x="292" y="13" width="96" height="118" id="areaSymGrid4Point" 
-							 dataProvider="{areaSymArray}" visible="false">
-					<mx:columns>
-						<mx:DataGridColumn headerText="area style" dataField="name"/>
-					</mx:columns>
-				</mx:DataGrid>
-				<s:Label x="47" y="51" text="digitize" width="45" height="20" id="flagLabel" verticalAlign="middle" textAlign="center" backgroundColor="#414040" color="#FFFFFF"/>
-				<s:Label x="106" y="54" text="size"/>
-				<s:TextInput x="135" y="49" width="40" id="pointSizeInput" text="100"/>
+				
+				<s:RadioButton x="47" y="43" label="digitize" groupName="modeGroup" id="digiModeButton" click="digiModeButton_clickHandler(event)"/>
+				<s:RadioButton x="47" y="62" label="search" groupName="modeGroup" id="searchModeButton" click="searchModeButton_clickHandler(event)"/>	
+				<!--
+				<s:Label x="47" y="51" text="digitize" width="45" height="20" id="flagLabel" 
+							   verticalAlign="middle" textAlign="center" backgroundColor="#414040" color="#FFFFFF"/>
+				-->
+				<s:Label x="125" y="55" text="size"/>
+				<s:TextInput x="154" y="49" width="40" id="pointSizeInput" text="100"/>
 				<s:Label x="10" y="56" text="mode"/>
 			</s:Group>
-		</s:NavigatorContent> 
+		</s:NavigatorContent>
+		
+		<s:NavigatorContent id="complexTab" label="complex">
+			<s:Label x="41" y="20" text="name"/>
+			<s:TextInput x="79" y="13" width="106" id="complexSymName"/>
+			<s:Button x="214" y="14" label="show" width="55" id="showComplexSymbolButton" 
+					  click="showComplexSymbolButton_clickHandler(event)" height="20"/>
+			<s:Label x="275" y="18" text="design"/>
+			<mx:Image x="215" y="42" width="160" height="120" id="sampleComplexView"/>
+			<s:Label x="6" y="43" text="elements"/>
+			<mx:DataGrid id="lineElementSymGrid" x="5" y="56" width="101" height="130"
+						 click="lineSymGrid4Area_clickHandler(event)" dataProvider="{lineSymArray}"
+						 editable="false">
+				<mx:columns>
+					<mx:DataGridColumn headerText="line" dataField="name"/>
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:DataGrid id="areaElementSymGrid" x="111" y="192" width="101" height="130"
+						 change="areaElementSymGrid_changeHandler(event)"
+						 dataProvider="{areaSymArray}" editable="false" enabled="true">
+				<mx:columns>
+					<mx:DataGridColumn headerText="area" dataField="name"/>
+				</mx:columns>
+			</mx:DataGrid>
+			<mx:DataGrid id="pointElementSymGrid" x="5" y="192" width="101" height="130"
+						 dataProvider="{pointSymArray}" editable="false">
+				<mx:columns>
+					<mx:DataGridColumn headerText="point" dataField="name"/>
+				</mx:columns>
+			</mx:DataGrid>
+			<s:Button id="addComplexSymButton" x="322" y="192" label="add"
+					  click="addComplexSymButton_clickHandler(event)"/>
+			<s:Button id="editComplexSymButton" x="322" y="221" label="edit"
+					  click="editComplexSymButton_clickHandler(event)"/>
+			<s:Button id="updateComplexSymButton" x="322" y="249" label="update"
+					  click="updateComplexSymButton_clickHandler(event)"/>
+			<s:Button id="deleteComplexSymButton" x="322" y="276" label="delete"
+					  click="deleteComplexSymButton_clickHandler(event)"/>
+			<s:CheckBox id="noAreaCheckBox" x="112" y="169" label="no area"
+						click="noAreaCheckBox_clickHandler(event)"/>
+			<mx:DataGrid id="complexSymGrid" x="217" y="192" width="101" height="130"
+						 dataProvider="{complexSymArray}">
+				<mx:columns>
+					<mx:DataGridColumn headerText="complex" dataField="name"/>
+				</mx:columns>
+			</mx:DataGrid>
+		</s:NavigatorContent>
+			
 	</mx:ViewStack> 
 	
-	<s:Label x="349" y="41" text="symbol style &#xd;dictionary"/>
-	<s:Label x="287" y="72" id="symbolStylesLabel" backgroundColor="#DADADA" width="140" height="20" 
+	<s:Label x="349" y="42" text="symbol style &#xd;dictionary"/>
+	<s:Label x="286" y="74" id="symbolStylesLabel" backgroundColor="#DADADA" width="140" height="20" 
 			 verticalAlign="middle"/>
-	<s:Button x="287" y="20" label="open" width="55" id="openSymbolStylesButton" 
+	<s:Button x="287" y="21" label="open" width="55" id="openSymbolStylesButton" 
 			  click="openSymbolStylesButton_clickHandler(event)"/>
-	<s:Button x="287" y="46" label="save" width="55" id="saveSymbolStylesButton" 
+	<s:Button x="287" y="47" label="save" width="55" id="saveSymbolStylesButton" 
 			  click="saveSymbolStylesButton_clickHandler(event)"/>
 	<s:Label x="364" y="10" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
 			 buttonMode="true" click="text_jp_clickHandler(event)"/>

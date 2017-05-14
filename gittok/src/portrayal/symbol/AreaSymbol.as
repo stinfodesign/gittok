@@ -14,10 +14,17 @@ package portrayal.symbol
 	public class AreaSymbol extends Sprite
 	{
 		public var surface:SG_Surface = new SG_Surface();
-		private var style:AreaSymbolStyle = new AreaSymbolStyle();
+		public var style:AreaSymbolStyle = new AreaSymbolStyle();
 		
 		public function AreaSymbol() {
 			super();
+		}
+		
+		public function encode():Object {
+			var areaObj:Object = new Object();
+			areaObj.surface = surface;
+			areaObj.style   = style;
+			return areaObj;
 		}
 		
 		public function decode(areaObj:Object):void
@@ -98,13 +105,6 @@ package portrayal.symbol
 			
 			strXMLList = _xml.style.children();
 			style.setXML(strXMLList[0]);
-		}
-		
-		public function encode():Object {
-			var areaObj:Object = new Object();
-			areaObj.surface = surface;
-			areaObj.style   = style;
-			return areaObj;
 		}
 		
 	} 

@@ -14,7 +14,7 @@ package gfm
 		public var operationTypes:ArrayList;	// of OperationType
 		
 		public var style:String;				// association or composition
-		public var roleName:String;
+		public var roleName:String;				// role name of to-feature type
 		public var correspondence:String;		// "1:1", "1:n", "m:1", or "m:n"
 		public var from:FeatureType;
 		public var to:FeatureType;
@@ -30,6 +30,30 @@ package gfm
 			from = new FeatureType();
 			to = new FeatureType();
 			correspondence = "1:1";
+		}
+		
+		public function getAttributeTypeByName(attName:String):AttributeType {
+			var aType:AttributeType;
+			var n:int = attributeTypes.length;
+			for (var i:int = 0; i < n; i++) {
+				aType = attributeTypes.getItemAt(i) as AttributeType;
+				if (aType.name == attName) {
+					return aType;
+				}
+			}
+			return null;
+		}
+		
+		public function getOperationTypeByName(otName:String):OperationType {
+			var oType:OperationType;
+			var n:int = operationTypes.length;
+			for (var i:int = 0; i < n; i++) {
+				oType = operationTypes.getItemAt(i) as OperationType;
+				if (oType.name == otName) {
+					return oType;
+				}
+			}
+			return null;
 		}
 		
 		public function getXML():XML {

@@ -308,7 +308,7 @@
 						
 		]]>
 	</fx:Script>
-	<s:Image x="61" y="104" width="277" height="381" source="@Embed(source='documents/figures/GIT_Bok_Frame.png')"/>
+	<s:Image x="61" y="104" source="@Embed(source='documents/figures/GIT_Bok_Frame.png')"/>
 	<s:Image left="14" top="14" source="@Embed(source='documents/pictgrams/gittokLogo.png')"/>
 	
 	<s:Image id="action0" source="@Embed(source='documents/pictgrams/pictAction0.png')" x="304" y="242" width="80" height="60" visible="true"/>

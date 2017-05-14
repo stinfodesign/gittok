@@ -27,11 +27,15 @@ package portrayal.symbol
 			
 			// dashed line is not allowed.
 			if (style == null) {
-				graphics.lineStyle(3.0, 0xFF0000, 100, false, "normal", 
+				graphics.lineStyle(5.0, 0xFF0000, 100, false, "normal", 
 					"round", "round", 3);
 				style = new CircleSymbolStyle();
 				style.color = 0xffffff;
 				style.alpha = 0;
+				style.borderStyle = new LineSymbolStyle();
+				style.borderStyle.color = 0xff0000;
+				style.borderStyle.alpha = 100;
+				style.borderStyle.thickness = 5;
 			}
 			else {
 				var lStyle:LineSymbolStyle = style.borderStyle;

@@ -50,6 +50,8 @@
 			protected var pointList:Dictionary;
 			protected var curveList:Dictionary;
 			protected var surfaceList:Dictionary;
+			protected var complexList:Dictionary;
+			
 			protected var point:SG_Point;
 			protected var curve:SG_Curve;
 			protected var surface:SG_Surface;
@@ -58,6 +60,8 @@
 			private   var pointSymbolStyle:PointSymbolStyle;
 			private   var lineSymbolStyle:LineSymbolStyle;
 			private   var areaSymbolStyle:AreaSymbolStyle;
+			private   var complexSymbolStyle:ComplexSymbolStyle;
+			
 			
 			protected var pSym:PointSymbol;
 			protected var lSym:LineSymbol;
@@ -100,12 +104,14 @@
 				this.move(300, 200);
 				
 				// Basic Types
-				registerClassAlias("dataTypes.simpleDataTypes.SimpleDataType", ThematicDataType);
-				registerClassAlias("dataTypes.simpleDataTypes.Bool", Bool);
-				registerClassAlias("dataTypes.simpleDataTypes.CharacterString", CharacterString);
-				registerClassAlias("dataTypes.simpleDataTypes.Integer", Integer);
-				registerClassAlias("dataTypes.simpleDataTypes.Real", Real);
-				registerClassAlias("dataTypes.simpleDataTypes.Memo", Memo);
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
+				registerClassAlias("dataTypes.theme.GDate", GDate);				
+
 				
 				// Place
 				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
@@ -135,7 +141,6 @@
 				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
 				registerClassAlias("dataTypes.spatialGeometry.GeodeticCoordinate", GeodeticCoordinate);
 				registerClassAlias("dataTypes.spatialGeometry.PlaneRectangularCoordinate", PlaneRectangularCoordinate);
-				registerClassAlias("dataTypes.spatialGeometry.SG_Circle", SG_Circle);
 				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
 				registerClassAlias("dataTypes.spatialGeometry.SG_CompositeCurve", SG_CompositeCurve);				
 				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);				
@@ -151,6 +156,7 @@
 				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.ComplexSymbolStyle", ComplexSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
 				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
@@ -159,6 +165,7 @@
 				registerClassAlias("portrayal.symbol.AreaSymbol", AreaSymbol);
 				registerClassAlias("portrayal.symbol.LineSymbol", LineSymbol);
 				registerClassAlias("portrayal.symbol.PointSymbol", PointSymbol);
+				registerClassAlias("portrayal.symbol.ComplexSymbol", ComplexSymbol);				
 				registerClassAlias("portrayal.symbol.Circle", Circle);
 				registerClassAlias("portrayal.symbol.Triangle", Triangle);
 				registerClassAlias("portrayal.symbol.Cross", Cross);
@@ -273,19 +280,21 @@
 				stream = new FileStream();
 				var symbolURL:String = kitURL + "defaultSymbols.sym";
 				file = new File(symbolURL);
-				
+				var symbolStyles:SymbolStyleDictionary;
 				try {
 					stream.open(file, FileMode.READ);
-					var symbolStyles:SymbolStyleDictionary = stream.readObject() as SymbolStyleDictionary;   
+					symbolStyles = stream.readObject() as SymbolStyleDictionary;   
 					stream.close();
 				} catch(e:IOError) {
 					Alert.show("default symbol style open error:" + e, "Alert", 4, this);
 					return;
 				}
 				
-				pointSymbolStyle = symbolStyles.pointSymStyles["defPoint"] 	as PointSymbolStyle;				
-				lineSymbolStyle  = symbolStyles.lineSymStyles["defLine"] 	as LineSymbolStyle;
-				areaSymbolStyle  = symbolStyles.areaSymStyles["defArea"] 	as AreaSymbolStyle;	
+				pointSymbolStyle 	= symbolStyles.pointSymStyles["defPoint"] 	as PointSymbolStyle;				
+				lineSymbolStyle  	= symbolStyles.lineSymStyles["defLine"] 	as LineSymbolStyle;
+				areaSymbolStyle  	= symbolStyles.areaSymStyles["defArea"] 	as AreaSymbolStyle;
+				complexSymbolStyle	= symbolStyles.complexSymStyles["defComplex"] 	as ComplexSymbolStyle;
+				
 			}
 						
 			private function onBaseMapComplete(event:Event):void {
@@ -450,36 +459,67 @@
 				}
 				
 				for each (var s:SG_Surface in surfaceList) {
-					aSym = new AreaSymbol();
-					var aObj:Object = new Object();
-					aObj.surface = s;
-					aObj.style = areaSymbolStyle;
-					aSym.decode(aObj);
-					aSym.name = s.id.toString();
-					workLayer.addChild(aSym);
+					displaySurface(s, areaSymbolStyle);
 				}
 				
 				for each (var c:SG_Curve in curveList) {
-					lSym = new LineSymbol();
-					var lObj:Object = new Object();
-					lObj.curve = c;
-					lObj.style = lineSymbolStyle;
-					lSym.decode(lObj);
-					lSym.name = c.id.toString();
-					workLayer.addChild(lSym);
+					displayCurve(c, lineSymbolStyle);
 				}
 				
 				for each (var p:SG_Point in pointList) {
-					pSym = new PointSymbol();
-					var pObj:Object = new Object();
-					pObj.point = p;
-					pObj.style = pointSymbolStyle;
-					pSym.decode(pObj);
-					pSym.name = p.id.toString();
-					workLayer.addChild(pSym);
+					displayPoint(p, pointSymbolStyle);
+				}
+				
+				for each (var x:SG_Complex in complexList) {
+					displayComplex(x, complexSymbolStyle);
 				}
 			}
 			
+			private function displayPoint(pt:SG_Point, pss:PointSymbolStyle):void {
+				pSym = new PointSymbol();
+				var pObj:Object = new Object();
+				pObj.point = pt;
+				pObj.style = pss;
+				pSym.decode(pObj);
+				pSym.name = pt.id.toString();
+				workLayer.addChild(pSym);
+			}
+			
+			private function displayCurve(cv:SG_Curve, lss:LineSymbolStyle):void {
+				lSym = new LineSymbol();
+				var lObj:Object = new Object();
+				lObj.curve = cv;
+				lObj.style = lss;
+				lSym.decode(lObj);
+				lSym.name = cv.id.toString();
+				workLayer.addChild(lSym);
+			}
+			
+			private function displaySurface(sc:SG_Surface, ass:AreaSymbolStyle):void {
+				aSym = new AreaSymbol();
+				var aObj:Object = new Object();
+				aObj.surface = sc;
+				aObj.style = ass;
+				aSym.decode(aObj);
+				aSym.name = sc.id.toString();
+				workLayer.addChild(aSym);
+			}
+			
+			private function displayComplex(cx:SG_Complex, css:ComplexSymbolStyle):void {
+				for (var i:int = 0; i < cx.surfaceSet.length; i++) {
+					var sc:SG_Surface = cx.surfaceSet.getItemAt(i) as SG_Surface;
+					displaySurface(sc, css.areaSymbolStyle);
+				}
+				for (i = 0; i < cx.curveSet.length; i++) {
+					var cv:SG_Curve = cx.curveSet.getItemAt(i) as SG_Curve;
+					displayCurve(cv, css.lineSymbolStyle);
+				}
+				for (i = 0; i < cx.pointSet.length; i++) {
+					var p:SG_Point = cx.pointSet.getItemAt(i) as SG_Point;
+					displayPoint(p, css.pointSymbolStyle);
+				}
+			}
+						
 			private function geometryPanel_mouseUpHandler(event:MouseEvent):void
 			{
 				if (dragFlag) {
@@ -690,36 +730,32 @@
 						return;
 					}
 					
-					var selfType:FeatureType = featureTypeList.selectedItem as FeatureType;
-					var selfSet:FeatureSet = featureSetArray[selfType.name] as FeatureSet;
-					
-					selfFeature = selfSet.features[selectedInstanceIDList.selectedItem] as Feature;
+					selfFeature = kit.featureList[selectedInstanceIDList.selectedItem] as Feature;
 					
 					for (var i:int = 0; i < operationType.arguments.length; i++) {
 						attValues = new ArrayList();
 						argAttPair = operationType.arguments.getItemAt(i) as ArgAttPair;	// a pair of argument and attribute 
-						var featureSet:FeatureSet = featureSetArray[selfFeature.typeName] as FeatureSet;	
-						var features:Dictionary = featureSet.features;	// a set of features having attribute for the operation
 						var attName:String = argAttPair.attributeType.name;
 						
 						if (argAttPair.fromTo == "self") {
 							attList = selfFeature.attributes[attName];	
 							attValues.addItem(attList);					
-							// Such a configuration (arraylist of arraylists) is required to harminize 
-							// with a style of association to more than one to-feaures. 
 						}
 						else { // toFeature
 							var toFTypeName:String = argAttPair.targetTypeName;
-							var toFSet:FeatureSet = featureSetArray[toFTypeName] as FeatureSet;
-							for each(var toF:Feature in toFSet.features) {	// a feature may associate with more than one other features
-								if (toF.typeName == toFTypeName) {
-									attList = toF.attributes[attName];	// arraylist of attribute values
-									toFeature = toF;
+							
+							for (var j:int = 0; j < selfFeature.connects.length; j++) {
+								var toAsso:Association = selfFeature.connects.getItemAt(j) as Association;
+								var toFs:ArrayList = toAsso.relateTo
+								var toAssoType:AssociationType = applicationSchema.associationTypes[toAsso.typeName] as AssociationType;
+								if (toFTypeName == toAssoType.to.name) {
+									for (var k:int = 0; k < toFs.length; k++) {
+										var toF:Feature = toFs.getItemAt(k) as Feature;
+										attList = toF.attributes[attName];
+										attValues.addItem(attList);
+									}
+									break;
 								}
-								if (attList == null) {
-									return;	
-								}
-								attValues.addItem(attList);				// arraylist for more than one features
 							}
 						}
 						argObj[argAttPair.argumentType.name] = attValues;
@@ -737,44 +773,42 @@
 						attName = argAttPair.attributeType.name;
 						attValues = new ArrayList();
 						
-						if (argAttPair.fromTo == "from") {
-							// in case "from"
-							for (var j:int = 0; j < fromInstanceArray.length; j++) {
-								fromFeature = fromInstanceArray.getItemAt(j) as Feature;
-								attList = fromFeature.attributes[attName] as ArrayList;
-								if (attList == null) {
-									alertStr = "Attribute " + association.typeName + "." + attName+ " is null."
-									Alert.show(alertStr, "Alert", 4, this);
-									return;	
-								}
-								attValues.addItem(attList);
-							}
-							argObj[argAttPair.argumentType.name] = attValues;
-						}
-						
-						else if (argAttPair.fromTo == "self") {
-							// in case "self"
+						if (argAttPair.fromTo == "self") {
+							// in the case of "self"
 							attList = association.attributes[attName] as ArrayList;
+							
+							// check whether attList contains the values.
+							if (attList.length == 0) {
+								alertStr = "Attribute " + association.typeName + "." + attName+ " is null."
+								Alert.show(alertStr, "Alert", 4, this);
+								return;	
+							}							
+							
 							attValues.addItem(attList);
-							argObj[argAttPair.argumentType.name] = attValues;							
 						}
+						else {
+							var targetFeatures:ArrayList = new ArrayList();
 						
-						else if (argAttPair.fromTo == "to") { 
-							// in case "to"
-							var toFs:ArrayList = association.relateTo;
-							for (j = 0; j < toFs.length; j++) {
-								toFeature = toFs.getItemAt(j) as Feature;
-								attList = toFeature.attributes[attName];
+							if (argAttPair.fromTo == "from")	targetFeatures = association.relateFrom;
+							if (argAttPair.fromTo == "to")		targetFeatures = association.relateTo;
+						
+							for (j = 0; j < targetFeatures.length; j++) {
+								var target:Feature = targetFeatures.getItemAt(j) as Feature;
+								attList = target.attributes[attName] as ArrayList;
+							
+								// check whether attList contains the values.
 								if (attList.length == 0) {
-									alertStr = "Attribute " + association.typeName + "." + 
-										attName+ " is null."
+									alertStr = "Attribute " + target.typeName + "." + attName+ " is null."
 									Alert.show(alertStr, "Alert", 4, this);
 									return;	
 								}
+							
 								attValues.addItem(attList);
 							}
-							argObj[argAttPair.argumentType.name] = attValues;
+							
 						}
+						argObj[argAttPair.argumentType.name] = attValues;						
+
 					}
 				}
 				
@@ -782,7 +816,7 @@
 				argObj["affineParam"] = kit.affineParam;
 								
 				/*-------------------------
-				EXECUTE THE OPERATION!!!
+				EXECUTE OPERATION!!!
 				-------------------------*/
 				var valueObject:* = classRef[opName](argObj);
 				
@@ -802,6 +836,7 @@
 					else {
 						// attribute in from or to-features
 						i = 0;
+						var featureSet:FeatureSet = featureSetArray[selfFeature.typeName] as FeatureSet;	
 						for each(var wf:Feature in featureSet.features) {
 							attList = new ArrayList();
 							var att:* = attValueList.getItemAt(i);
@@ -822,49 +857,36 @@
 					
 				else {	// tabBar.index == 1 : association	
 					var assoType:AssociationType = applicationSchema.associationTypes[association.typeName] as AssociationType;
+					
 					if (assoType.from.name == operationType.returnFATypeName) {
 						// return value goes to "from"
 						attValueList = this.setAttValueList("f", valueObject, association.relateFrom);
-						
-						for (i = 0; i < association.relateFrom.length; i++) {
-							wf = association.relateFrom.getItemAt(i) as Feature;
-							attList = new ArrayList();
-							att = attValueList.getItemAt(i);
-							att.featureID.addItem(wf.id);							
-							attList.addItem(att);
-							attList.addItem(attValueList.getItemAt(i));
-							wf.attributes[operationType.returnAttributeName] = attList;
-							kit.featureList[wf.id] = wf;
-						}
-						
 						var fromType:FeatureType = assoType.from;
 						attType = fromType.getAttributeTypeByName(operationType.returnAttributeName);
 						unitLabel.text = attType.unit;
 						
+						for (i = 0; i < association.relateFrom.length; i++) {
+							var fromF:Feature = association.relateFrom.getItemAt(i) as Feature;
+								fromF.attributes[attType.name] = attValueList;
+						}
 					}
 					else if (assoType.to.name == operationType.returnFATypeName) {
 						// return value goes to "to"
 						attValueList = this.setAttValueList("f", valueObject, association.relateTo);
-						
-						for (i = 0; i < association.relateTo.length; i++) {
-							wf = association.relateTo.getItemAt(i) as Feature;
-							attList = new ArrayList();
-							att = attValueList.getItemAt(i);
-							att.featureID.addItem(wf.id);
-							attList.addItem(att);
-							wf.attributes[operationType.returnAttributeName] = attList;
-							kit.featureList[wf.id] = wf;
-						}
-						
 						var toType:FeatureType = assoType.to;
 						attType = toType.getAttributeTypeByName(operationType.returnAttributeName);
 						unitLabel.text = attType.unit;
-
+						
+						for (i = 0; i < association.relateTo.length; i++) {
+							toF = association.relateTo.getItemAt(i) as Feature;
+							toF.attributes[attType.name] = attValueList;
+						}
 					}
 					else if (assoType.name == operationType.returnFATypeName) {
 						// return value goes to association itself
 						attValueList = this.setAttValueList("a", valueObject, null, association);
 						association.attributes[operationType.returnAttributeName] = attValueList;
+						
 						for (i = 0; i < assoType.attributeTypes.length; i++) {
 							attType = assoType.attributeTypes.getItemAt(i) as AttributeType;
 							if (attType.name == operationType.returnAttributeName) {
@@ -889,46 +911,35 @@
 				if (valueObject is ArrayList) {
 					valueObjects = valueObject;	
 				}
-				else {
+				else { //attribute value shall be an array of values as long as multiplicity is permitted. 
 					valueObjects.addItem(valueObject);
 				}
 				
 				var operationType:OperationType = operationList.selectedItem as OperationType;
 				var tp:String = operationType.returnAttributeType;
-				var ftr:Feature;
 				
 				for (var i:int = 0; i < valueObjects.length; i++) {				
 					var vobj:* = valueObjects.getItemAt(i);
-					var vID:String = vobj.featureID;
-					
-					if (fa == "f") {
-						/*	
-						for (var j:int = 0; j < features.length; j++) {
-							var wftr:Feature = features.getItemAt(j) as Feature;
-							if (wftr.id == vID) {
-								ftr = wftr;
-								break;
-							}
-						}
-						*/
-						ftr = features.getItemAt(0) as Feature;
-					}
-								
+										
 					if (tp == "SG_Point" || tp == "SG_Curve" || tp == "SG_Surface") {
 						var geom:SG_Primitive = vobj as SG_Primitive;
-						//geom.featureID = new ArrayList();
-						geom.attributeName = new ArrayList();
-					
+
 						if (fa == "f") {
-							geom.featureID.addItem(ftr.id);
+							var ftr:Feature = features.getItemAt(0) as Feature;
+							if (geom.featureID.getItemIndex(ftr.id) == -1) {
+								geom.featureID.addItem(ftr.id);
+							}
 						}
-						else
-							geom.featureID.addItem(association.id);		
-					
-						geom.attributeName.addItem(operationType.returnAttributeName);
-					
+						else  // fa == "a"
+							if (geom.featureID.getItemIndex(association.id) == -1) {
+								geom.featureID.addItem(association.id);	
+							}
+						if (geom.attributeName.getItemIndex(operationType.returnAttributeName) == -1) {
+							geom.attributeName.addItem(operationType.returnAttributeName);							
+						}
+						
 						attValueList.addItem(geom);
-					
+										
 						if (tp == "SG_Point") {
 							var p:SG_Point = geom as SG_Point;
 							kit.pointList[p.id] = p;
@@ -949,7 +960,7 @@
 							var r:SG_Ring = s.exterior;
 							kit.ringList[r.id] = r;
 							var oc:SG_OrientableCurve;
-							for (var j:int = 0; j < r.elements.length; j++) {
+							for (j = 0; j < r.elements.length; j++) {
 								oc = r.elements.getItemAt(j) as SG_OrientableCurve;
 								kit.orientableCurveList[oc.id] = oc;
 								c = oc.original;
@@ -965,16 +976,27 @@
 					if (tp == "SG_Complex") {
 						var complex:SG_Complex = vobj as SG_Complex;
 					
-						if (fa == "f")
-							complex.featureID.addItem(ftr.id);
-						else
-							complex.featureID.addItem(association.id);
-					
+						if (fa == "f") {
+							ftr = features.getItemAt(0) as Feature;	
+							if (complex.featureID.getItemIndex(ftr.id) == -1) {
+								complex.featureID.addItem(ftr.id);
+							}
+						}
+						else {
+							if (complex.featureID.getItemIndex(association.id) == -1) {
+								complex.featureID.addItem(association.id);
+							}
+						}
+						
+						if (complex.attributeName.getItemIndex(operationType.returnAttributeName) == -1) {
+							complex.attributeName.addItem(operationType.returnAttributeName);							
+						}
+						
 						attValueList.addItem(complex);
 						kit.complexList[complex.id] = complex;
 
 					
-						for (j = 0; j < complex.pointSet.length; i++) {
+						for (var j:int = 0; j < complex.pointSet.length; j++) {
 							p = complex.pointSet.getItemAt(j) as SG_Point;
 							kit.pointList[p.id] = p;
 						}
@@ -1003,8 +1025,11 @@
 					if (tp == "CharacterString") {
 						var cs:CharacterString = new CharacterString();
 						cs.value = vobj as String;
-						if (fa == "f") 
-							cs.featureID.addItem(ftr.id);
+						if (fa == "f") {
+							ftr = features.getItemAt(0) as Feature;	
+							if (cs.featureID.getItemIndex(ftr.id) == -1) 
+								cs.featureID.addItem(ftr.id);
+						}
 						else
 							cs.featureID.addItem(association.id);
 						attValueList.addItem(cs);
@@ -1013,10 +1038,14 @@
 					if (tp == "Real") {
 						var rl:Real = new Real();
 						rl = vobj as Real;
-						if (fa == "f")
-							rl.featureID.addItem(ftr.id);
+						if (fa == "f") {
+							ftr = features.getItemAt(0) as Feature;	
+							if (rl.featureID.getItemIndex(ftr.id) == -1) 
+								rl.featureID.addItem(ftr.id);
+						}
 						else
-							rl.featureID.addItem(association.id);
+							if (rl.featureID.getItemIndex(association.id) == -1) 
+								rl.featureID.addItem(association.id);
 					
 						attValueList.addItem(rl);
 					}
@@ -1024,10 +1053,14 @@
 					if (tp == "Integer") {
 						var inte:Integer = new Integer();
 						inte = vobj as Integer;
-						if (fa == "f") 
-							inte.featureID.addItem(ftr.id);
+						if (fa == "f") {
+							ftr = features.getItemAt(0) as Feature;	
+							if (inte.featureID.getItemIndex(ftr.id) == -1) 
+								inte.featureID.addItem(ftr.id);
+						}
 						else
-							inte.featureID.addItem(association.id);
+							if (inte.featureID.getItemIndex(ftr.id) == -1) 
+								inte.featureID.addItem(association.id);
 					
 						attValueList.addItem(inte);
 					}
@@ -1035,18 +1068,28 @@
 					if (tp == "Bool") {
 						var bl:Bool = new Bool();
 						bl = vobj as Bool;
-						if (fa == "f") 
-							bl.featureID.addItem(ftr.id);
+						if (fa == "f") {
+							ftr = features.getItemAt(0) as Feature;	
+							if (bl.featureID.getItemIndex(ftr.id) == -1) 
+								bl.featureID.addItem(ftr.id);
+						}
 						else
-							bl.featureID.addItem(association.id);
+							if (bl.featureID.getItemIndex(ftr.id) == -1) 
+								bl.featureID.addItem(association.id);
 					
 						attValueList.addItem(bl);
 					}
+					
+					/*
+					Remind that the featureID of a place is a string.
+					*/
 				
 					if (tp == "Image") {
 						var iml:ImageURL = new ImageURL();
-						if (fa == "f") 
+						if (fa == "f") {
+							ftr = features.getItemAt(0) as Feature;						
 							iml.featureID = ftr.id;
+						}
 						else
 							iml.featureID = association.id;
 
@@ -1056,8 +1099,10 @@
 				
 					if (tp == "Video") {
 						var vdl:VideoURL = new VideoURL();
-						if (fa == "f") 
+						if (fa == "f") { 
+							ftr = features.getItemAt(0) as Feature;						
 							vdl.featureID = ftr.id;
+						}
 						else
 							vdl.featureID = association.id;
 
@@ -1068,7 +1113,7 @@
 					if (tp == "Sound") {
 						var snd:SoundURL = new SoundURL();
 						if (fa == "f") 
-							snd.featureID = ftr.id;
+							snd.featureID = feature.id;
 						else
 							snd.featureID = association.id;
 					
@@ -1077,8 +1122,7 @@
 					}
 				}
 
-				return attValueList;
-				
+				return attValueList;				
 			}
 			
 			protected function attributeValueList_clickHandler(event:MouseEvent):void
@@ -1122,11 +1166,27 @@
 					position = geoOperations.Center.centerOfMIC(argObj).position;
 				}
 				
+				if (attValue is SG_Complex) {
+					complex = attValue as SG_Complex;
+					
+					displayComplex(complex, complexSymbolStyle);
+					
+					attList = new ArrayList();
+					attList.addItem(complex);
+					attValues = new ArrayList();
+					attValues.addItem(attList);
+					argObj = new Object();
+					argObj["complex"] = attValues;
+					
+					position = geoOperations.Center.centerOfComplex(argObj).position;
+				}
+				
 				if (position == null) {
 					Alert.show("Impossible to show the position as the value is not a geometry.", "Alert", 4, this);
 					return;
 				}
 				
+				/*
 				if (attValue is SG_Complex) {
 					complex = attValue as SG_Complex;
 					attList = new ArrayList();
@@ -1138,6 +1198,7 @@
 					
 					position = geoOperations.Center.centerOfComplex(argObj).position;
 				}
+				*/
 				
 				// Draw the Found Circle after removing the old one						
 				var circle:Circle = workLayer.getChildByName("circle") as Circle;
@@ -1147,78 +1208,6 @@
 				workLayer.addChild(circle);	
 				
 			}
-			
-			/*
-			public function displayFeature(ftr:Feature):void {
-				var position:Coordinate2;
-				var fType:FeatureType = applicationSchema.featureTypes[ftr.typeName] as FeatureType;
-				var attTypes:ArrayList = fType.attributeTypes;
-				var points:ArrayList = new ArrayList();
-				var operationType:OperationType = operationList.selectedItem as OperationType;	
-				
-				for (var i:int = 0; i < attTypes.length; i++) {
-					var attType:AttributeType = attTypes.getItemAt(i) as AttributeType;
-					if (attType.name == operationType.returnAttributeName) {
-						var dt:String = attType.dataType;
-						if (dt == "SG_Point" || dt == "SG_Curve" || dt == "SG_Surface" || dt == "SG_Complex") {
-							var attArray:ArrayList = ftr.attributes[attType.name] as ArrayList;
-							if (attArray != null) {
-								var att:SG_Object = attArray.getItemAt(0) as SG_Object;
-				
-								if (dt == "SG_Point") {
-									point = att as SG_Point;
-									position = point.position;
-								}
-				
-								if (dt == "SG_Curve") {
-									curve = att as SG_Curve;
-									var attList:ArrayList = new ArrayList();
-									attList.addItem(curve);
-									var attValues:ArrayList = new ArrayList();
-									attValues.addItem(attList);
-									var argObj:Object = new Object();
-									argObj["curve"] = attValues;
-					
-									position = geoOperations.Center.centerLayingOnCurve(argObj).position;
-								}
-				
-								if (dt == "SG_Surface") {
-									surface = att as SG_Surface;
-									attList = new ArrayList();
-									attList.addItem(surface);
-									attValues = new ArrayList();
-									attValues.addItem(attList);
-									argObj = new Object();
-									argObj["surface"] = attValues;
-					
-									position = geoOperations.Center.centerOfMIC(argObj).position;
-								}
-				
-								if (dt == "SG_Complex") {
-									complex = att as SG_Complex;
-									attList = new ArrayList();
-									attList.addItem(complex);
-									attValues = new ArrayList();
-									attValues.addItem(attList);
-									argObj = new Object();
-									argObj["complex"] = attValues;
-					
-									position = geoOperations.Center.centerOfComplex(argObj).position;
-								}
-							}
-						}
-						break;
-					}
-				}
-				
-				// Draw the Found Circle after removing the old one						
-				var circle:Circle = workLayer.getChildByName("circle") as Circle;
-				if (circle != null) workLayer.removeChild(circle);
-				circle = new Circle(position, 10);
-				circle.name = "circle";
-				workLayer.addChild(circle);	
-			}
-			*/
 			
 			protected function tabBar_changeHandler(event:IndexChangeEvent):void
 			{

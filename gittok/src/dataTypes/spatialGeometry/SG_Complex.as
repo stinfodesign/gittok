@@ -31,7 +31,7 @@ package dataTypes.spatialGeometry
 			var str:String = '<SG_Complex>'
 				+ '<inheritance>'
 				+ super.getXML().toXMLString()
-				+ '</inheitance>' 
+				+ '</inheritance>' 
 
 			var m:int = this.pointSet.length;
 			if (m > 0) {
@@ -58,6 +58,7 @@ package dataTypes.spatialGeometry
 				str += '<surfaceSet idref="';
 				for (i = 0; i < m; i++) {
 					var s:SG_Surface = this.surfaceSet.getItemAt(i) as SG_Surface;
+					if (s == null) trace("s is null");
 					str += s.id + ',';
 				}
 				str = str.substr(0, str.length - 1) + '"/>';
@@ -111,27 +112,33 @@ package dataTypes.spatialGeometry
 			}
 			
 			str = _xml.surfaceSet.@idref.toString();
-			var sArray:Array = str.split(',');
-			m = sArray.length;
-			for (i = 0; i < m; i++) {
-				var s:SG_Surface = kit.surfaceList[sArray[i]] as SG_Surface;
-				this.surfaceSet.addItem(s);
+			if (str != "") {
+				var sArray:Array = str.split(',');
+				m = sArray.length;
+				for (i = 0; i < m; i++) {
+					var s:SG_Surface = kit.surfaceList[sArray[i]] as SG_Surface;
+					this.surfaceSet.addItem(s);
+				}
 			}
 			
 			str = _xml.orientableCurveSet.@idref.toString();
-			var ocArray:Array = str.split(',');
-			m = ocArray.length;
-			for (i = 0; i < m; i++) {
-				var oc:SG_OrientableCurve = kit.orientableCurveList[ocArray[i]] as SG_OrientableCurve;
-				this.orientableCurveSet.addItem(oc);
+			if (str != "") {
+				var ocArray:Array = str.split(',');
+				m = ocArray.length;
+				for (i = 0; i < m; i++) {
+					var oc:SG_OrientableCurve = kit.orientableCurveList[ocArray[i]] as SG_OrientableCurve;
+					this.orientableCurveSet.addItem(oc);
+				}
 			}
 			
 			str = _xml.ringSet.@idref.toString();
-			var rArray:Array = str.split(',');
-			m = rArray.length;
-			for (i = 0; i < m; i++) {
-				var r:SG_Ring = kit.ringList[rArray[i]] as SG_Ring;
-				this.ringSet.addItem(r);
+			if (str != "") {
+				var rArray:Array = str.split(',');
+				m = rArray.length;
+				for (i = 0; i < m; i++) {
+					var r:SG_Ring = kit.ringList[rArray[i]] as SG_Ring;
+					this.ringSet.addItem(r);
+				}
 			}
 		}
 		
