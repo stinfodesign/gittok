@@ -73,6 +73,8 @@
 			
 			private var curve:SG_Curve;
 			private var surface:SG_Surface;
+			private var aObj:Object;
+
 			
 			protected var atts:ArrayList;	// attributeTypes, variable using for recursive process	
 			protected var assos:ArrayList;	// associationTypes
@@ -150,6 +152,30 @@
 			
 			[Bindable]
 			private var decimalValue:String;
+			
+			[Embed(source="/patterns/p00.png")]
+			private var aImage00:Class;
+			
+			[Embed(source="/patterns/p01.png")]
+			private var aImage01:Class;
+			
+			[Embed(source="/patterns/p02.png")]
+			private var aImage02:Class;
+			
+			[Embed(source="/patterns/p03.png")]
+			private var aImage03:Class;
+			
+			[Embed(source="/patterns/p04.png")]
+			private var aImage04:Class;
+			
+			[Embed(source="/patterns/p05.png")]
+			private var aImage05:Class;
+			
+			[Embed(source="/patterns/p06.png")]
+			private var aImage06:Class;
+			
+			protected var btmaps:Dictionary;
+			
 			
 			public function initializeApp(): void {
 				this.move(400, 50);
@@ -253,7 +279,19 @@
 				mapBackground = 0xffffff;
 				mapBackgroundAlpha = 1.0;
 				
+				// area pattern settings
+				btmaps = new Dictionary();
+				btmaps["/patterns/p00.png"] = new aImage00();
+				btmaps["/patterns/p01.png"] = new aImage01();
+				btmaps["/patterns/p02.png"] = new aImage02();
+				btmaps["/patterns/p03.png"] = new aImage03();
+				btmaps["/patterns/p04.png"] = new aImage04();
+				btmaps["/patterns/p05.png"] = new aImage05();
+				btmaps["/patterns/p06.png"] = new aImage06();
+				
 				this.addEventListener(Event.CLOSE, mapEditorClose);
+				
+				
 			}
 			
 			protected function mapEditorClose(event:Event): void {
@@ -479,7 +517,7 @@
 				scaleSpace.addChild(barScale);
 			}
 			
-			protected function openportrayalSchemaButton_clickHandler(event:MouseEvent):void
+			protected function openPortrayalSchemaButton_clickHandler(event:MouseEvent):void
 			{
 				if (kit == null) {
 					Alert.show("Open kit before portrayal schema.", "Alert", 4, this);
@@ -496,54 +534,124 @@
 				}
 			}
 			
+			private function openSyms():void {
+				
+				var lineSyms:Dictionary    = syms.lineSymStyles;
+				var areaSyms:Dictionary    = syms.areaSymStyles;
+				var pointSyms:Dictionary   = syms.pointSymStyles;
+				var complexSyms:Dictionary = syms.complexSymStyles;
+				
+				/*
+				if (areaSyms != null) { 
+					for each(var areaSymStyle:AreaSymbolStyle in areaSyms) {
+						if (!areaSymStyle.fillStyle) {
+							areaSymStyle.img = new mx.controls.Image();
+							areaSymStyle.img.load(areaSymStyle.url);
+						}
+					}
+				}
+				
+				if (pointSyms != null) {
+					for each(var pointSymStyle:PointSymbolStyle in pointSyms) {
+						for (var i:int = 0; i < pointSymStyle.styles.length; i++) {
+							var style:* = pointSymStyle.styles.getItemAt(i);
+							if (style is AreaSymbolStyle) {
+								if (!style.fillStyle) {
+									style.img = new mx.controls.Image();
+									style.img.load(style.url);
+									pointSymStyle.styles.setItemAt(style, i);
+								}
+							}
+						}
+					}	
+				}
+				
+				if (complexSyms != null) {
+					for each(var complexSymStyle:ComplexSymbolStyle in complexSyms) {
+						if (complexSymStyle.areaSymbolStyle != null) {
+							if (complexSymStyle.areaSymbolStyle.fillStyle == false) {
+								complexSymStyle.areaSymbolStyle.img = new mx.controls.Image();
+								var url:String = complexSymStyle.areaSymbolStyle.url;
+								complexSymStyle.areaSymbolStyle.img.load(url);
+							}
+						}
+					
+						if (complexSymStyle.pointSymbolStyle != null) {
+							var styles:ArrayList = complexSymStyle.pointSymbolStyle.styles;
+							for (i = 0; i < styles.length; i++) {
+								style = styles.getItemAt(i);
+								if (style is AreaSymbolStyle) {
+									if (!style.fillStyle) {
+										style.img = new mx.controls.Image();
+										style.img.load(style.url);
+										styles.setItemAt(style, i);
+									}
+								}
+							}
+						}
+					}
+				}
+				*/
+			}
+			
 			private function openPortrayalFiles(event:Event):void {
 				
 				var path:String = portrayalSchemaFile.nativePath.replace(portrayalSchemaFile.name, "");
 				portrayalSchemaLabel.text = portrayalSchemaFile.name;
 				stream = new FileStream();
-				var appSchemaFile:File    = new File();
 				var symbolStyleDicFile:File = new File();
 				var labelStyleDicFile:File  = new File();
 				
 				try {
 					stream.open(portrayalSchemaFile,FileMode.READ);
 					portrayals = stream.readObject() as PortrayalSchema;
-					appSchemaFile.nativePath    = path + portrayals.applicationSchema;
 					symbolStyleDicFile.nativePath = path + portrayals.symbolStyleDictionary;
-					
-					if (portrayals.labelStyleDictionary != null && portrayals.labelStyleDictionary != "null")
-						labelStyleDicFile.nativePath  = path + portrayals.labelStyleDictionary;
-					else
-						labelStyleDicFile = null;
-					
-					fpUnits = portrayals.fpUnits;
 					stream.close();
-					
-					stream.open(symbolStyleDicFile, FileMode.READ);
-					syms = stream.readObject();		// symbol schema				
-					stream.close();
-					
-					if (labelStyleDicFile != null) {
-						stream.open(labelStyleDicFile, FileMode.READ);
-						labels = stream.readObject();	// label schema
-						stream.close();
-					}
-					else
-						labels = null;
-					
-					featureTypeArray = new ArrayList();
-					associationTypeArray = new ArrayList();
-					
-					for each (var fpUnit:* in  portrayals.fpUnits) {
-						if (fpUnit is AssociationPortrayalUnit)
-							associationTypeArray.addItem(fpUnit.typeID);
-						else
-							featureTypeArray.addItem(fpUnit.typeID);
-					}
-					
 				} catch (error:IOError) {
 					Alert.show(error.message, "ALert", 4, this);
 					return;
+				}
+					
+				if (portrayals.labelStyleDictionary != null && portrayals.labelStyleDictionary != "null") {
+					labelStyleDicFile.nativePath  = path + portrayals.labelStyleDictionary;
+
+					var labStream:FileStream = new FileStream();					
+					try {
+						labStream.open(labelStyleDicFile, FileMode.READ);
+						labels = labStream.readObject();	// label schema
+						labStream.close();	
+					} catch (error:IOError) {
+						Alert.show(error.message, "ALert", 4, this);
+						return;
+					}
+				}
+				else {
+					labelStyleDicFile = null;
+					labels = null;
+				}
+					
+				fpUnits = portrayals.fpUnits;
+					
+				var symStream:FileStream = new FileStream();
+				try {
+					symStream.open(symbolStyleDicFile, FileMode.READ);
+					syms = symStream.readObject();		// symbol schema
+					stream.close();
+				} catch (error:IOError) {
+					Alert.show(error.message, "ALert", 4, this);
+					return;
+				}
+				
+				//openSyms();
+					
+				featureTypeArray = new ArrayList();
+				associationTypeArray = new ArrayList();
+					
+				for each (var fpUnit:* in  portrayals.fpUnits) {
+					if (fpUnit is AssociationPortrayalUnit)
+						associationTypeArray.addItem(fpUnit.typeID);
+					else
+						featureTypeArray.addItem(fpUnit.typeID);
 				}
 				
 				this.drawMap();
@@ -1000,7 +1108,7 @@
 					}
 					
 					if (alPair.attType =="Real" || alPair.attType == "Integer") {
-						labelObj.text += " " + alPair.unit;
+						if (alPair.unit != null) labelObj.text += " " + alPair.unit;
 					}
 									
 					labelObj.refPos = rPos;
@@ -1040,7 +1148,7 @@
 				pObj.point = pt;
 				pObj.style = syms.pointSymStyles[symbolName] as PointSymbolStyle;
 				var pSym:PointSymbol = new PointSymbol();
-				pSym.decode(pObj);
+				pSym.decode(pObj, btmaps);
 				pSym.name = pt.id.toString();
 				symbolSpace.addChild(pSym);
 			}
@@ -1056,12 +1164,15 @@
 			}
 			
 			private function displaySurface(symbolName:String, sc:SG_Surface):void {
-				var aObj:Object = new Object();
-				aObj.surface = sc;
+				aObj = new Object();
 				aObj.style = syms.areaSymStyles[symbolName] as AreaSymbolStyle;
+				aObj.surface = sc;
+
+				aObj.btmap = btmaps[aObj.style.url];
+				
 				var aSym:AreaSymbol = new AreaSymbol();
 				aSym.decode(aObj);
-				aSym.name = sc.id.toString();
+				aSym.name = aObj.surface.id.toString();
 				symbolSpace.addChild(aSym);
 			}
 			
@@ -2052,7 +2163,7 @@
 					
 					if (symObj.style is PointSymbolStyle) {
 						var pSym:PointSymbol = new PointSymbol();
-						pSym.decode(symObj);
+						pSym.decode(symObj, btmaps);
 						symbolSpace.addChild(pSym);
 					}
 					
@@ -2302,7 +2413,7 @@
 	<s:Label id="kitNameLabel" x="77" y="88" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>
 	<s:Button id="openportrayalSchemaButton" x="205" y="63" width="50" height="20" label="open"
-			  click="openportrayalSchemaButton_clickHandler(event)"/>
+			  click="openPortrayalSchemaButton_clickHandler(event)"/>
 	<s:Label x="257" y="59" width="69" height="30" fontSize="11" text="Portrayal Schema "/>
 	<s:Label id="portrayalSchemaLabel" x="205" y="88" width="120" height="20" backgroundColor="#DADADA"
 			 fontSize="11" verticalAlign="middle"/>

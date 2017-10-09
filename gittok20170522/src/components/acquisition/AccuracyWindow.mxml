@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="368" height="454" creationComplete="initializeApp()"
+		  title="Accuracy"
+		  skinClass="spark.skins.spark.WindowedApplicationSkin">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+		<s:NumberFormatter id="errorFormat" decimalSeparator="." fractionalDigits="3"/>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import coordinateReference.IdentifiedCoordinate;
+			
+			import math.AffineParam;
+			import mx.controls.Alert;
+			
+			private var color1:uint = 0x13233a;
+
+			[Bindable]
+			private var chrColor:uint = color1;
+			
+			[Bindable]
+			private var errorList:ArrayList;	
+			
+			public var ap:AffineParam;
+			public var isAccepted:Boolean;
+			public var isRejected:Boolean;
+			public var illigalClose:Boolean;
+			
+			public function initializeApp():void {
+				var a:Number = ap.variance[0][0];
+				varXXLabel.text = "" + a.toFixed(3);
+				rmseXLabel.text = "" + Math.sqrt(a).toFixed(3);
+				
+				a = ap.variance[0][1];				
+				varXYLabel.text = "" + a.toFixed(3);
+				
+				a = ap.variance[1][0];
+				varYXLabel.text = "" + a.toFixed(3);
+				
+				a = ap.variance[1][1];
+				varYYLabel.text = "" + a.toFixed(3);
+				rmseYLabel.text = "" + Math.sqrt(a).toFixed(3);
+				
+				errorList = new ArrayList();
+				var n:int = ap.ids.length;
+				for (var i:int = 0; i < n; i++) {
+					var iCoord:IdentifiedCoordinate = new IdentifiedCoordinate();
+					iCoord.id = ap.ids[i];
+					iCoord.x = ap.error[i][0];
+					iCoord.y = ap.error[i][1];
+					errorList.addItem(iCoord);
+				}
+				
+				isAccepted = false;
+				isRejected = false;
+				if (illigalClose) {
+					Alert.show("Select accept or reject", "Alert", 4, this);
+				}
+				
+				this.move(780, 150);
+
+			}
+			
+			protected function acceptButton_clickHandler(event:MouseEvent):void
+			{
+				isAccepted = true;
+				this.close();
+			}
+
+
+			protected function rejectButton_clickHandler(event:MouseEvent):void
+			{
+				isRejected = true;
+				this.close();
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/accuracy_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/accuracy_en.html");
+				navigateToURL(request);
+			}
+
+		]]>
+	</fx:Script>
+	<s:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="60" height="60"/>
+	<s:Label x="81" y="15" text="Accuracy Evaluation" fontSize="16" color="{chrColor}"/>
+	<s:Label x="85" y="76" text="Variance, co-variance matrix" width="68" height="48" textAlign="left"/>
+	<s:Label x="214" y="55" text="X"/>
+	<s:Label x="297" y="55" text="Y"/>
+	<s:Label x="180" y="72" width="75" height="20" backgroundColor="#DADADA" id="varXXLabel" verticalAlign="middle"/>
+	<s:Label x="266" y="72" width="75" height="20" backgroundColor="#DADADA" id="varXYLabel" verticalAlign="middle"/>
+	<s:Label x="180" y="101" width="75" height="20" backgroundColor="#DADADA" id="varYXLabel" verticalAlign="middle"/>
+	<s:Label x="266" y="101" width="75" height="20" backgroundColor="#DADADA" id="varYYLabel" verticalAlign="middle"/>
+	<s:Label x="161" y="77" text="X"/>
+	<s:Label x="162" y="106" text="Y"/>
+	<s:Label x="161" y="151" text="X"/>
+	<s:Label x="161" y="179" text="Y"/>
+	<s:Button x="180" y="367" label="accept" id="acceptButton" click="acceptButton_clickHandler(event)"/>
+	<s:Button x="267" y="367" label="reject" id="rejectButton" click="rejectButton_clickHandler(event)"/>
+	<s:Label x="85" y="147" text="Root mean square error" width="41" height="64"/>
+	<s:Label x="180" y="146" width="75" height="20" backgroundColor="#DADADA" verticalAlign="middle" id="rmseXLabel"/>
+	<s:Label x="180" y="174" width="75" height="20" backgroundColor="#DADADA" verticalAlign="middle" id="rmseYLabel"/>
+	<s:DataGrid id="errorGrid" x="131" y="219" width="210" dataProvider="{errorList}" 
+			 fontFamily="Arial" fontWeight="normal" requestedRowCount="4">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn width="60" dataField="id" headerText="id"
+							  resizable="false"></s:GridColumn>
+				<s:GridColumn width="70" dataField="x" formatter="{errorFormat}" headerText="dX"></s:GridColumn>
+				<s:GridColumn width="70" dataField="y" formatter="{errorFormat}" headerText="dY"></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
+	<s:Label x="85" y="226" text="Error"/>
+	<s:Label x="275" y="9" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="316" y="11" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+</s:Window>

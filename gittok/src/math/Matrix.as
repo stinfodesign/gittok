@@ -167,7 +167,8 @@ package math
 			var xtx:Array = multiple(xt, x);
 			var inv:Array = inverse(xtx);
 			var ixt:Array = multiple(inv, xt);
-			return multiple(ixt, X); 
+			var A:Array = multiple(ixt, X);
+			return A; 
 
 		}
 		

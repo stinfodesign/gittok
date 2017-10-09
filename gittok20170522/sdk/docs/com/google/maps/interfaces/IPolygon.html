@@ -1,0 +1,703 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="IPolygon,com.google.maps.interfaces.IPolygon,getInnerPolylineCount,getInnerVertex,getInnerVertexCount,getLatLngBounds,getOptions,getOuterVertex,getOuterVertexCount,getPolylineCount,getVertex,getVertexCount,removePolyline,setOptions,setPolyline,setPolylineFromEncoded" name="keywords">
+<title>com.google.maps.interfaces.IPolygon</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'IPolygon - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/interfaces/IPolygon.html&amp;com/google/maps/interfaces/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Interface&nbsp;IPolygon</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Interface IPolygon"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.interfaces</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Interface</td><td class="classSignature">public interface IPolygon extends <a href="IOverlay.html">IOverlay</a>, <a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a>, <a href="none">flash.events.IEventDispatcher</a>, <a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implementors</td><td><a href="../overlays/Polygon.html">Polygon</a></td>
+</tr>
+</table>
+<p></p>
+ <code>IPolygon</code> is the interface implemented by Polygon and equivalent
+ user-created classes.
+ <code>Polygon</code> is a map overlay that represents polygon objects.
+  <p>Polygons can be simple, made up of multiple disjoint regions,
+ contain holes or be self-intersecting.</p>
+  <p>Originally a distinction was made between the 'outer' and 'inner'
+ boundaries of a polygon: a polygon could be formed from one outer boundary
+ and zero of more inner boundaries. This distinction is now immaterial:
+ polygons simply comprise one or more boundaries.</p>
+  <p>Some method names still reflect the original distinction.
+ If a polygon is made up of n boundaries, methods containing the word
+ 'Outer' return information on boundary 0; methods containing the word
+ 'Inner' return information on boundaries 1...n-1, but using indices offset
+ by 1. Methods lacking both these words return information on boundaries
+ 0...n-1.</p>
+  <p>For example, given a polygon made up of 5 boundaries, the following
+ pairs of expressions provide the same result:
+ <table border="1" cellpadding="4">
+ <tr><td><code>getOuterVertexCount()</code></td>
+     <td><code>getVertexCount(0)</code></td></tr>
+ <tr><td><code>getInnerVertexCount(2)</code></td>
+     <td><code>getVertexCount(3)</code></td></tr>
+ <tr><td><code>getInnerPolylineCount()</code></td>
+     <td><code>getPolylineCount() - 1</code></td></tr>
+ <tr><td><code>getVertex(4, 8)</code></td>
+     <td><code>getInnerVertex(3, 8)</code></td></tr>
+ </table></p>
+ <p>Polygons dispatch a number of events as the user interacts with them:
+ <ul>
+ <li><code>MapMouseEvent.MOUSE_DOWN</code>
+ <li><code>MapMouseEvent.MOUSE_UP</code>
+ <li><code>MapMouseEvent.MOUSE_MOVE</code>
+ <li><code>MapMouseEvent.ROLL_OVER</code>
+ <li><code>MapMouseEvent.ROLL_OUT</code>
+ <li><code>MapMouseEvent.CLICK</code>
+ <li><code>MapMouseEvent.DOUBLE_CLICK</code>
+ </ul>
+ The <code>latLng</code> property on any <code>MapMouseEvent</code>
+ that is dispatched holds the lat-lng of the location immediately underneath
+ the mouse pointer.</p>
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<div class="showHideLinks">
+<div class="hideInheritedProperty" id="hideInheritedProperty">
+<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
+</div>
+<div class="showInheritedProperty" id="showInheritedProperty">
+<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
+</div>
+</div>
+<table id="summaryTableProperty" class="summaryTable hideInheritedProperty" cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOverlay.html#foreground">foreground</a> : DisplayObject<div class="summaryTableDescription">
+   Display object that represents the overlay's content.</div>
+</td><td class="summaryTableOwnerCol"><a href="IOverlay.html">IOverlay</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#interfaceChain">interfaceChain</a> : Array<div class="summaryTableDescription">
+   List of interfaces for wrapping this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOverlay.html#pane">pane</a> : <a href="../interfaces/IPane.html">IPane</a>
+<div class="summaryTableDescription">
+   Pane this overlay resides on (null if the overlay is not added to the map).</div>
+</td><td class="summaryTableOwnerCol"><a href="IOverlay.html">IOverlay</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOverlay.html#shadow">shadow</a> : DisplayObject<div class="summaryTableDescription">
+   Display object that represents the overlay's shadow (null if the overlay
+   never has a shadow).</div>
+</td><td class="summaryTableOwnerCol"><a href="IOverlay.html">IOverlay</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IOverlay.html#visible">visible</a> : Boolean<div class="summaryTableDescription">
+   Visibility of the overlay.</div>
+</td><td class="summaryTableOwnerCol"><a href="IOverlay.html">IOverlay</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#wrapper">wrapper</a> : Object<div class="summaryTableDescription">
+   Instance of the cross-domain wrapper for this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<div class="showHideLinks">
+<div class="hideInheritedMethod" id="hideInheritedMethod">
+<a onclick="javascript:setInheritedVisible(false,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Methods</a>
+</div>
+<div class="showInheritedMethod" id="showInheritedMethod">
+<a onclick="javascript:setInheritedVisible(true,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Methods</a>
+</div>
+</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IWrappableEventDispatcher.html#getBaseEventDispatcher()">getBaseEventDispatcher</a>():Object</div>
+<div class="summaryTableDescription">
+   Retrieves the base event dispatcher object that allows access to event
+   dispatching capability for cross-domain objects.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IOverlay.html#getDefaultPane()">getDefaultPane</a>(map:<a href="../interfaces/IMap.html">IMap</a>):<a href="../interfaces/IPane.html">IPane</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the default pane that this overlay should be placed on
+   if none is explicitly specified (when the overlay is added through the
+   IMap.addOverlay() call).</div>
+</td><td class="summaryTableOwnerCol"><a href="IOverlay.html">IOverlay</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getInnerPolylineCount()">getInnerPolylineCount</a>():int</div>
+<div class="summaryTableDescription">
+   Returns the number of polylines that make up the inner boundaries of
+   this polygon.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getInnerVertex()">getInnerVertex</a>(line:int, index:int):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the LatLng of the vertex with the specified index from the
+   specified inner polyline boundary.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getInnerVertexCount()">getInnerVertexCount</a>(line:int):int</div>
+<div class="summaryTableDescription">
+   Returns the number of vertices in a specified inner line.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getLatLngBounds()">getLatLngBounds</a>():<a href="../../maps/LatLngBounds.html">LatLngBounds</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the LatLngBounds of this polygon, or null if the polygon
+   contains no points.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getOptions()">getOptions</a>():<a href="../overlays/PolygonOptions.html">PolygonOptions</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the polygon's options.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getOuterVertex()">getOuterVertex</a>(index:int):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the vertex from the outer boundary with the specified index.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getOuterVertexCount()">getOuterVertexCount</a>():int</div>
+<div class="summaryTableDescription">
+   Returns the number of vertices in the outer line.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getPolylineCount()">getPolylineCount</a>():int</div>
+<div class="summaryTableDescription">
+   Returns the number of polylines that make up the boundaries of
+   this polygon.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getVertex()">getVertex</a>(line:int, index:int):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the LatLng of the vertex with the specified index from the
+   specified polyline boundary.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getVertexCount()">getVertexCount</a>(line:int):int</div>
+<div class="summaryTableDescription">
+   Returns the number of vertices in a specified line.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IOverlay.html#positionOverlay()">positionOverlay</a>(zoomChanged:Boolean):void</div>
+<div class="summaryTableDescription">
+   Reposition the overlay on the screen.</div>
+</td><td class="summaryTableOwnerCol"><a href="IOverlay.html">IOverlay</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#removePolyline()">removePolyline</a>(line:int):void</div>
+<div class="summaryTableDescription">
+   Removes one of the polylines that makes up the polygon.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setOptions()">setOptions</a>(options:<a href="../overlays/PolygonOptions.html">PolygonOptions</a>):void</div>
+<div class="summaryTableDescription">
+   Updates the polygon's options.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setPolyline()">setPolyline</a>(line:int, vertices:Array):void</div>
+<div class="summaryTableDescription">
+   Adds or replaces one of the polylines that makes up the polygon.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setPolylineFromEncoded()">setPolylineFromEncoded</a>(line:int, encoded:<a href="../overlays/EncodedPolylineData.html">EncodedPolylineData</a>):void</div>
+<div class="summaryTableDescription">
+   Adds or replaces one of the polylines that makes up the polygon using
+   encoded polyline data.</div>
+</td><td class="summaryTableOwnerCol">IPolygon</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="getInnerPolylineCount()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getInnerPolylineCount</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getInnerPolylineCount():int</code><p>
+   Returns the number of polylines that make up the inner boundaries of
+   this polygon.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>int</code> &mdash;  Number of polylines making up the inner polygon boundaries.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getInnerVertex()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getInnerVertex</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getInnerVertex(line:int, index:int):<a href="../../maps/LatLng.html">LatLng</a></code><p>
+   Returns the LatLng of the vertex with the specified index from the
+   specified inner polyline boundary.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">line</span>:int</code> &mdash; Index of the inner polyline.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">index</span>:int</code> &mdash; Index of the target vertex within the specified polyline.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                        Lat-lng of the specified vertex.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getInnerVertexCount()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getInnerVertexCount</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getInnerVertexCount(line:int):int</code><p>
+   Returns the number of vertices in a specified inner line.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">line</span>:int</code> &mdash; Index of the inner line.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>int</code> &mdash; Number of vertices.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getLatLngBounds()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getLatLngBounds</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getLatLngBounds():<a href="../../maps/LatLngBounds.html">LatLngBounds</a></code><p>
+   Returns the LatLngBounds of this polygon, or null if the polygon
+   contains no points.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLngBounds.html">LatLngBounds</a></code></td>
+</tr>
+</table>
+</div>
+<a name="getOptions()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getOptions</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getOptions():<a href="../overlays/PolygonOptions.html">PolygonOptions</a></code><p>
+   Retrieves the polygon's options.
+   Use the setOptions() method to modify options on the polygon.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../overlays/PolygonOptions.html">PolygonOptions</a></code> &mdash; 
+                         Full set of options on the polygon.
+   
+                        
+                     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso"></div>
+</div>
+<a name="getOuterVertex()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getOuterVertex</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getOuterVertex(index:int):<a href="../../maps/LatLng.html">LatLng</a></code><p>
+   Returns the vertex from the outer boundary with the specified index.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">index</span>:int</code> &mdash; Index of the target vertex.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                        Lat-lng of the specified vertex.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getOuterVertexCount()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getOuterVertexCount</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getOuterVertexCount():int</code><p>
+   Returns the number of vertices in the outer line.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>int</code> &mdash;  Number of vertices.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getPolylineCount()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getPolylineCount</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getPolylineCount():int</code><p>
+   Returns the number of polylines that make up the boundaries of
+   this polygon.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>int</code> &mdash;  Number of polylines making up the polygon boundaries.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getVertex()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getVertex</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getVertex(line:int, index:int):<a href="../../maps/LatLng.html">LatLng</a></code><p>
+   Returns the LatLng of the vertex with the specified index from the
+   specified polyline boundary.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">line</span>:int</code> &mdash; Index of the polyline.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">index</span>:int</code> &mdash; Index of the target vertex within the specified polyline.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                        Lat-lng of the specified vertex.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getVertexCount()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getVertexCount</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getVertexCount(line:int):int</code><p>
+   Returns the number of vertices in a specified line.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">line</span>:int</code> &mdash; Index of the line.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>int</code> &mdash; Number of vertices.
+   </td>
+</tr>
+</table>
+</div>
+<a name="removePolyline()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">removePolyline</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function removePolyline(line:int):void</code><p>
+   Removes one of the polylines that makes up the polygon.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">line</span>:int</code> &mdash; Index of polyline to remove. An exception is thrown if
+       a value is used that does not correspond to an existing polyline.
+       Acceptable values lie in the range
+       <code>[0, getPolylineCount()-1]</code>.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Throws</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code></code> &mdash; If an invalid line index is specified.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setOptions()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setOptions</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setOptions(options:<a href="../overlays/PolygonOptions.html">PolygonOptions</a>):void</code><p>
+   Updates the polygon's options.
+   The <code>options</code> parameter may specify a complete or partial set
+   of polygon options. If a partial set of options is specified, it will
+   supplement the existing polygon options, overriding only the values that
+   were set explicitly and leaving the rest unchanged.
+   For example, the following piece of code will modify the polygon's
+   fill alpha, leaving the rest of its options unchanged.
+   <div class='listing'><pre>
+   var options:PolygonOptions =
+       new PolygonOptions( { fillStyle: { alpha: 0.2 }} );
+   myPolygon.setOptions(options); </pre></div>
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">options</span>:<a href="../overlays/PolygonOptions.html">PolygonOptions</a></code> &mdash;  New full or partial set of options for the polygon.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setPolyline()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setPolyline</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setPolyline(line:int, vertices:Array):void</code><p>
+   Adds or replaces one of the polylines that makes up the polygon.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">line</span>:int</code> &mdash; Index of polyline to add. Acceptable values lie in the range
+       <code>[0, getPolylineCount()]</code>. If a value is used that
+       corresponds to an existing polyline, then the existing polyline
+       is replaced. If the value <code>getPolylineCount()</code> is used,
+       then a new polyline is added without replacing any existing polyline.
+       If an unacceptable value is used then an exception is thrown.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">vertices</span>:Array</code> &mdash; Array of LatLng elements.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Throws</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code></code> &mdash; If an invalid line index is specified.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setPolylineFromEncoded()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setPolylineFromEncoded</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setPolylineFromEncoded(line:int, encoded:<a href="../overlays/EncodedPolylineData.html">EncodedPolylineData</a>):void</code><p>
+   Adds or replaces one of the polylines that makes up the polygon using
+   encoded polyline data.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">line</span>:int</code> &mdash; Index of polyline to add. Acceptable values lie in the range
+       <code>[0, getPolylineCount()]</code>. If a value is used that
+       corresponds to an existing polyline, then the existing polyline
+       is replaced. If the value <code>getPolylineCount()</code> is used,
+       then a new polyline is added without replacing any existing polyline.
+       If an unacceptable value is used then an exception is thrown.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">encoded</span>:<a href="../overlays/EncodedPolylineData.html">EncodedPolylineData</a></code> &mdash; Encoded polyline data.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Throws</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code></code> &mdash; If an invalid line index is specified.
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

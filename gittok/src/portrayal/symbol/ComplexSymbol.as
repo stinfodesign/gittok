@@ -6,6 +6,7 @@ package portrayal.symbol
 	import dataTypes.spatialGeometry.SG_Surface;
 	
 	import flash.display.Sprite;
+	import flash.utils.Dictionary;
 	
 	import instanceModel.Kit;
 	
@@ -31,7 +32,7 @@ package portrayal.symbol
 			return complexObj;
 		}
 		
-		public function decode(complexObj:Object):void
+		public function decode(complexObj:Object, btmaps:Dictionary):void
 		{
 			complex = complexObj.complex;
 			style = complexObj.style;
@@ -54,7 +55,7 @@ package portrayal.symbol
 				var pointSymbol:PointSymbol = new PointSymbol();
 				pointSymbol.point = complex.pointSet.getItemAt(i) as SG_Point;
 				pointSymbol.style = style.pointSymbolStyle;
-				pointSymbol.decode(pointSymbol.encode());
+				pointSymbol.decode(pointSymbol.encode(), btmaps);
 			}
 			
 		}

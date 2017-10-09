@@ -1,0 +1,637 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="LatLng,com.google.maps.LatLng,EARTH_RADIUS,angleFrom,clone,distanceFrom,equals,fromRadians,fromUrlValue,lat,latRadians,lng,lngRadians,toString,toUrlValue,wrapLatLng" name="keywords">
+<title>com.google.maps.LatLng</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'LatLng - Google Maps API for Flash Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?com/google/maps/LatLng.html&amp;com/google/maps/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;LatLng</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a>&nbsp;| <a href="#constantSummary">Constants</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class LatLng"); titleBar_setSubNav(true,false,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class LatLng</td>
+</tr>
+</table>
+<p></p>
+ LatLng is a point in geographical coordinates with longitude and latitude.
+  <p>Notice that although usual map projections associate longitude with the
+ x-coordinate of the map, and latitude with the y-coordinate, the latitude
+ coordinate is always written first, followed by the longitude, as is
+ customary in cartography.</p>
+  <p>Notice also that you cannot modify the coordinates of a LatLng. If you
+ want to compute another point, you have to create a new one.</p>
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#LatLng()">LatLng</a>(lat:Number, lng:Number, opt_noCorrect:Boolean = false)</div>
+<div class="summaryTableDescription">
+   Constructs a LatLng.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#angleFrom()">angleFrom</a>(other:<a href="LatLng.html">LatLng</a>):Number</div>
+<div class="summaryTableDescription">
+   Returns the angle (radians) between this point and the given point.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clone()">clone</a>():<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns a new <code>LatLng</code> object that is a copy of this.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#distanceFrom()">distanceFrom</a>(other:<a href="LatLng.html">LatLng</a>, opt_radius:Number):Number</div>
+<div class="summaryTableDescription">
+   Returns the distance, in meters, from this point to the given point.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#equals()">equals</a>(other:<a href="LatLng.html">LatLng</a>):Boolean</div>
+<div class="summaryTableDescription">
+   Tests whether this <code>LatLng</code> is coincident with another specified
+   <code>LatLng</code>, allowing for numerical rounding errors.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#fromRadians()">fromRadians</a>(lat:Number, lng:Number, opt_noCorrect:Boolean = false):<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">[static]
+   Creates a latlng from radian values.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#fromUrlValue()">fromUrlValue</a>(value:String):<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">[static]
+   Parses a string of the form <code>"lat,lng"</code> and returns a point with
+   those values, or <code>null</code> if the string could not be successfully
+   parsed.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#lat()">lat</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the latitude in degrees.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#latRadians()">latRadians</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the latitude in radians.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#lng()">lng</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the longitude in degrees.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#lngRadians()">lngRadians</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the longitude in radians.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#toString()">toString</a>():String</div>
+<div class="summaryTableDescription">
+   Returns a  string representation of this LatLng, for example
+   <code>"48.8584, 2.2944"</code> for Paris.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#toUrlValue()">toUrlValue</a>(opt_precision:Number = 6):String</div>
+<div class="summaryTableDescription">
+   Returns a string of the form <code>"lat,lng"</code> for this
+   <code>LatLng</code>.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#wrapLatLng()">wrapLatLng</a>(latLng:<a href="LatLng.html">LatLng</a>):<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">[static]
+   Returns a LatLng that is a copy of the given LatLng, but with latitude
+   clamped to the range [-90, 90] and longitude wrapped to the range
+   [-180, 180].</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+</table>
+</div>
+<a name="constantSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Constants</div>
+<table id="summaryTableConstant" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Constant</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#EARTH_RADIUS">EARTH_RADIUS</a> : Number = 6378137<div class="summaryTableDescription">[static]
+   The equatorial radius of the earth in meters.</div>
+</td><td class="summaryTableOwnerCol">LatLng</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="LatLng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">LatLng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function LatLng(lat:Number, lng:Number, opt_noCorrect:Boolean = false)</code><p>
+   Constructs a LatLng. If <code>opt_noCorrect</code> is <code>false</code>,
+   we make sure the latitude and longitude are valid, wrapping the longitude
+   appropriately around the dateline and clamping the latitude at the poles.
+      </p><p>Valid values for longitude lie in the range [-180,180]. Valid values for
+   latitude lie in the range [-90,90].</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">lat</span>:Number</code> &mdash;  Latitude.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">lng</span>:Number</code> &mdash;  Longitude.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_noCorrect</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash;  Flag: do not correct to valid range.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>Construct three LatLng instances.
+   <div class='listing'><pre>
+   var sydney:LatLng = new LatLng(-33.8581, 151.2149);
+   var bound:LatLng = new LatLng(10, 190);  // longitude set to -170
+   var unbound:LatLng = new LatLng(10, 190, true);  // longitude set to 190</pre></div>
+   <p></p>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="angleFrom()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">angleFrom</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function angleFrom(other:<a href="LatLng.html">LatLng</a>):Number</code><p>
+   Returns the angle (radians) between this point and the given point.
+   This is also the distance between those points on a unit sphere.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">other</span>:<a href="LatLng.html">LatLng</a></code> &mdash;  Other LatLng
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Distance in radians between this and other.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>Calculate angle in radians between London and Paris.
+   <div class='listing'><pre>
+   var london:LatLng = new LatLng(51.53, -0.08);
+   var paris:LatLng = new LatLng(48.8, 2.33);
+   trace("angle: " + paris.angleFrom(london));</pre></div>
+   <p></p>
+</div>
+<a name="clone()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clone</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function clone():<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Returns a new <code>LatLng</code> object that is a copy of this.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         The new copy.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="distanceFrom()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">distanceFrom</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function distanceFrom(other:<a href="LatLng.html">LatLng</a>, opt_radius:Number):Number</code><p>
+   Returns the distance, in meters, from this point to the given point. Since
+   we approximate the earth as a sphere, the distance could be off by as much
+   as 0.3%.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">other</span>:<a href="LatLng.html">LatLng</a></code> &mdash;  Other LatLng
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_radius</span>:Number</code> &mdash; The radius of the planet (default EARTH_RADIUS).
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Distance in meters between this and other.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>Calculate distance in km between London and Sydney.
+   <div class='listing'><pre>
+   var london:LatLng = new LatLng(51.53, -0.08);
+   var sydney:LatLng = new LatLng(-34.0, 151.0);
+   trace("km: " + sydney.distanceFrom(london) / 1000);</pre></div>
+   <p></p>
+</div>
+<a name="equals()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">equals</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function equals(other:<a href="LatLng.html">LatLng</a>):Boolean</code><p>
+   Tests whether this <code>LatLng</code> is coincident with another specified
+   <code>LatLng</code>, allowing for numerical rounding errors.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">other</span>:<a href="LatLng.html">LatLng</a></code> &mdash;  LatLng against which to compare.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if this LatLng is coincident with the other.
+   </td>
+</tr>
+</table>
+</div>
+<a name="fromRadians()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">fromRadians</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function fromRadians(lat:Number, lng:Number, opt_noCorrect:Boolean = false):<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Creates a latlng from radian values.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">lat</span>:Number</code> &mdash;  Latitude in radians.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">lng</span>:Number</code> &mdash;  Longitude in radians.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_noCorrect</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash;  Flag to prevent correction to valid range.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         Resulting LatLng object.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="fromUrlValue()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">fromUrlValue</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function fromUrlValue(value:String):<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Parses a string of the form <code>"lat,lng"</code> and returns a point with
+   those values, or <code>null</code> if the string could not be successfully
+   parsed.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">value</span>:String</code> &mdash;  "lat,lng" string to parse.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         Resulting LatLng.
+   
+                        
+                     </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>Create a LatLng from a text string.
+   <div class='listing'><pre>
+   var location:LatLng = LatLng.fromUrlValue("-34,151");</pre></div>
+   <p></p>
+</div>
+<a name="lat()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lat</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function lat():Number</code><p>
+   Returns the latitude in degrees.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Latitude in degrees.
+   </td>
+</tr>
+</table>
+</div>
+<a name="latRadians()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">latRadians</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function latRadians():Number</code><p>
+   Returns the latitude in radians.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Latitude in radians.
+   </td>
+</tr>
+</table>
+</div>
+<a name="lng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function lng():Number</code><p>
+   Returns the longitude in degrees.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Longitude in degrees.
+   </td>
+</tr>
+</table>
+</div>
+<a name="lngRadians()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lngRadians</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function lngRadians():Number</code><p>
+   Returns the longitude in radians.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Longitude in radians.
+   </td>
+</tr>
+</table>
+</div>
+<a name="toString()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">toString</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function toString():String</code><p>
+   Returns a  string representation of this LatLng, for example
+   <code>"48.8584, 2.2944"</code> for Paris.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash; String representation of this LatLng.
+   </td>
+</tr>
+</table>
+</div>
+<a name="toUrlValue()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">toUrlValue</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function toUrlValue(opt_precision:Number = 6):String</code><p>
+   Returns a string of the form <code>"lat,lng"</code> for this
+   <code>LatLng</code>.
+   We round the lat/lng values to 6 decimal places by default.
+   <table>
+   <tr><th>precision</th><th>approximate error</tr>
+   <tr><td>-1</td><td>1000 kilometers / 700 miles</tr>
+   <tr><td>0</td><td>100 kilometers / 70 miles</tr>
+   <tr><td>1</td><td>10 kilometers / 7 miles</tr>
+   <tr><td>2</td><td>1 kilometer / 0.7 miles</tr>
+   <tr><td>3</td><td>100 meters / 300 feet</tr>
+   <tr><td>4</td><td>10 meters / 30 feet</tr>
+   <tr><td>5</td><td>1 meter / 3 feet</tr>
+   <tr><td>6</td><td>10 centimeters / 4 inches</tr>
+   <tr><td>7</td><td>1 centimeter (a nickel)</tr>
+   </table>
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_precision</span>:Number</code> (default = <code>6</code>)<code></code> &mdash;  Number of digits following decimal point.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash; String representation suitable for use as a URL parameter,
+       for example '48.858405,2.294362' for Paris.
+   </td>
+</tr>
+</table>
+</div>
+<a name="wrapLatLng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">wrapLatLng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function wrapLatLng(latLng:<a href="LatLng.html">LatLng</a>):<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Returns a LatLng that is a copy of the given LatLng, but with latitude
+   clamped to the range [-90, 90] and longitude wrapped to the range
+   [-180, 180].
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="LatLng.html">LatLng</a></code> &mdash;  Unbound LatLng object.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         Bound LatLng object.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="constantDetail"></a>
+<div class="detailSectionHeader">Constant detail</div>
+<a name="EARTH_RADIUS"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">EARTH_RADIUS</td><td class="detailHeaderType">constant</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static const EARTH_RADIUS:Number = 6378137</code><p>
+   The equatorial radius of the earth in meters. Assumes a perfectly spherical
+   earth, and hence is approximate. The earth's radius in fact varies between
+   6357 km at the pole to 6378 KM at the equator - a difference of 0.3%.
+   </p></div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

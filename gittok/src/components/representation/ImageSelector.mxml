@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="526"
+		  title="Image selector for filling an area"
+		  creationComplete="initializeApp()">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			
+			private var patternFolder:File;
+			private var patternFiles:ArrayList;
+			public var patternURL:String;
+			public var patternImage:mx.controls.Image;
+			
+			[Bindable]
+			private var patternList:ArrayList;
+
+			
+			protected function initializeApp():void {
+				//this.move(550,375);
+				patternFiles = new ArrayList();
+				patternList = new ArrayList();
+			}
+			
+			protected function openButton_clickHandler(event:MouseEvent):void
+			{
+				// Open pattern folder
+				try {
+					patternFolder = new File();
+					patternFolder.browseForDirectory("Select pattern folder");
+					patternFolder.addEventListener(Event.SELECT, openFolder);
+				} catch (e:IOError) {
+					Alert.show(e.message);
+				}
+			}
+			
+			protected function openFolder(event:Event):void {
+				if (patternFolder == null) {
+					Alert.show("No Folder is selected.", "Error", 4, this);
+					return;
+				}
+				
+				folderNameLabel.text = patternFolder.name;
+				var patternFileArray:Array = patternFolder.getDirectoryListing();
+				
+				for (var i:int = 0; i < patternFileArray.length; i++) {
+					var patternFile:File = patternFileArray[i] as File;
+					if (patternFile.url.search(".DS_Store") == -1) {
+						patternFiles.addItem(patternFile);
+					}
+				}
+				
+				if (patternFiles.length == 0) {
+					Alert.show("There is no pattern file in the folder.", "Alert", 4, this);
+				}
+				
+				patternList = new ArrayList();
+				
+				for (i = 0; i < patternFiles.length; i++) {
+					var img:mx.controls.Image = new mx.controls.Image();
+					patternFile = patternFiles.getItemAt(i) as File;
+					img.load(patternFile.url);
+					patternList.addItem(img);
+				}
+			}
+			
+			protected function imageTile_mouseDownHandler(event:MouseEvent):void
+			{
+				if (imageTile.selectedIndex > -1) {
+					var patternFile:File = patternFiles.getItemAt(imageTile.selectedIndex) as File;
+					selectedPatternLabel.text = patternFile.name;
+					patternImage = patternList.getItemAt(imageTile.selectedIndex) as mx.controls.Image;
+					patternURL = "/patterns/" + patternFile.name;
+				}
+			}
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<s:Image x="12" y="6" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="77" y="15" text="Image Selector" fontSize="16"/>
+	<s:Label id="folderNameLabel" x="40" y="93" width="145" height="20" backgroundColor="#DADADA"/>
+	<s:Label x="100" y="72" text="pattern folder"/>
+	<s:Button id="openButton" x="40" y="67" width="54" label="open"
+			  click="openButton_clickHandler(event)"/>
+	
+	<mx:TileList id="imageTile" x="40" y="120" width="330" height="330"
+				 columnWidth="65" rowHeight="65" dataProvider="{patternList}"
+				 mouseDown="imageTile_mouseDownHandler(event)">
+		<mx:itemRenderer>
+			<fx:Component>
+				<mx:VBox horizontalScrollPolicy="off" verticalScrollPolicy="off"
+						 verticalAlign="middle" horizontalAlign="center">
+					<mx:Image source="{data.source}" width="60" height="60" />
+				</mx:VBox>
+			</fx:Component>
+		</mx:itemRenderer>
+	</mx:TileList>
+	<s:Label x="204" y="72" text="selected pattern"/>
+	<s:Label id="selectedPatternLabel" x="204" y="92" width="161" height="20"
+			 backgroundColor="#DADADA"/>
+	
+</s:Window>

@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="OverlayBase,com.google.maps.overlays.OverlayBase,foreground,pane,shadow,visible,getDefaultPane,positionOverlay" name="keywords">
+<title>com.google.maps.overlays.OverlayBase</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'OverlayBase - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/overlays/OverlayBase.html&amp;com/google/maps/overlays/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;OverlayBase</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class OverlayBase"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.overlays</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class OverlayBase</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">OverlayBase <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../../images/inherit-arrow.gif"> flash.display.Sprite</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implements</td><td>flash.events.IEventDispatcher, <a href="../interfaces/IOverlay.html">IOverlay</a></td>
+</tr>
+</table>
+<p></p>
+ Base class for custom overlays. Developers may extend this class to create
+ their own overlay implementations.
+  <p><code>OverlayBase</code> represents a visual object that should be used
+ for rendering the overlay's foreground.</p>
+  <p>The default implementation of <code>OverlayBase</code> defines an overlay
+ that does not have a shadow. If a shadow is needed, a developer will need to
+ create a separate display object and override the <code>get shadow</code>
+ property accessor to enable it.</p>
+  <p>In addition to rendering the overlay's foreground and shadow (if needed),
+ any custom overlay should define the <code>positionOverlay()</code> method
+ that changes the placement of the overlay upon its pane when the map is
+ panned or zoomed by the user.
+ <code>IPane.fromLatLngToPaneCoords()</code> and
+ <code>IPane.fromProjectionPointToPaneCoords()</code> can be used
+ to determine the position of the overlay's on the pane.</p>
+  <p>Ideally, a custom overlay should avoid extensive rendering operations
+ in its implementation of the <code>positionOverlay()</code> method.
+ This method will be called frequently by the
+ map and re-rendering the overlay upon each call may negatively affect
+ performance of the application when a large number of overlays
+ are placed on the map.</p>
+  <p>An implementation of custom overlay may also need to define listeners for
+ <code>MapEvent.OVERLAY_ADDED</code> and <code>MapEvent.OVERLAY_REMOVED</code>
+ events to handle addition and removal of the overlay to/from the map.</p>
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#foreground">foreground</a> : DisplayObject<div class="summaryTableDescription">[read-only]
+   Display object that represents the overlay's foreground content.</div>
+</td><td class="summaryTableOwnerCol">OverlayBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#pane">pane</a> : <a href="../interfaces/IPane.html">IPane</a>
+<div class="summaryTableDescription">
+   The pane this overlay resides on.</div>
+</td><td class="summaryTableOwnerCol">OverlayBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#shadow">shadow</a> : DisplayObject<div class="summaryTableDescription">[read-only]
+   Display object that represents the overlay's shadow.</div>
+</td><td class="summaryTableOwnerCol">OverlayBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#visible">visible</a> : Boolean<div class="summaryTableDescription">
+   Visibility of the overlay.</div>
+</td><td class="summaryTableOwnerCol">OverlayBase</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#OverlayBase()">OverlayBase</a>()</div>
+<div class="summaryTableDescription">
+   Constructor.</div>
+</td><td class="summaryTableOwnerCol">OverlayBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getDefaultPane()">getDefaultPane</a>(map:<a href="../interfaces/IMap.html">IMap</a>):<a href="../interfaces/IPane.html">IPane</a>
+</div>
+<div class="summaryTableDescription">
+   Determines the pane that the overlay is placed on when it is added
+   to the map through the <code>Map.addOverlay()</code> call.</div>
+</td><td class="summaryTableOwnerCol">OverlayBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#positionOverlay()">positionOverlay</a>(zoomChanged:Boolean):void</div>
+<div class="summaryTableDescription">
+   Reposition the overlay on the screen.</div>
+</td><td class="summaryTableOwnerCol">OverlayBase</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="foreground"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">foreground</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>foreground:DisplayObject</code>&nbsp;&nbsp;[read-only]<p>
+   Display object that represents the overlay's foreground content.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get foreground():DisplayObject</code>
+<br>
+</div>
+<a name="pane"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">pane</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>pane:<a href="../interfaces/IPane.html">IPane</a></code>&nbsp;&nbsp;[read-write]<p>
+   The pane this overlay resides on.
+   The pane is set when the overlay is added to the map.
+      </p><p>Developers may override the <code>set pane</code> method to handle
+   addition/removal of the overlay to/from the map.</p>
+      <p>Alternatively, developers may add listeners for
+   <code>MapEvent.OVERLAY_ADDED</code> and
+   <code>MapEvent.OVERLAY_REMOVED</code> events on the overlay to handle
+   addition and removal of the overlay to/from the map.<p>
+   <span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get pane():<a href="../interfaces/IPane.html">IPane</a></code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set pane(value:<a href="../interfaces/IPane.html">IPane</a>):void</code>
+<br>
+</div>
+<a name="shadow"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">shadow</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>shadow:DisplayObject</code>&nbsp;&nbsp;[read-only]<p>
+   Display object that represents the overlay's shadow.
+   By default returns <code>null</code> (no shadow).
+      </p><p>If the overlay needs to have a shadow, this method property should be
+   redefined and the value of <code>shadow</code> set before the overlay is
+   added to the map.</p>
+      <p>The display object returned by this property should remain unchanged
+   while the overlay is added to a map.</p>
+   <span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get shadow():DisplayObject</code>
+<br>
+</div>
+<a name="visible"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">visible</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>visible:Boolean</code>&nbsp;&nbsp;[read-write]<p>
+   Visibility of the overlay.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get visible():Boolean</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set visible(value:Boolean):void</code>
+<br>
+</div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="OverlayBase()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">OverlayBase</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function OverlayBase()</code><p>
+   Constructor.
+   </p></div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="getDefaultPane()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getDefaultPane</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getDefaultPane(map:<a href="../interfaces/IMap.html">IMap</a>):<a href="../interfaces/IPane.html">IPane</a></code><p>
+   Determines the pane that the overlay is placed on when it is added
+   to the map through the <code>Map.addOverlay()</code> call.
+      </p><p>This method must be overloaded for the <code>Map.addOverlay()</code>
+   call to function correctly. It is not required if the overlay is always
+   added directly to its pane using a <code>IPane.addOverlay()</code>
+   call.</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">map</span>:<a href="../interfaces/IMap.html">IMap</a></code> &mdash;  Instance of map that this overlay is added to.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IPane.html">IPane</a></code> &mdash; 
+                         Instance of IPane to which the overlay will be added by default.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="positionOverlay()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">positionOverlay</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function positionOverlay(zoomChanged:Boolean):void</code><p>
+   Reposition the overlay on the screen.
+      </p><p>This method is called in response to changes in the position (center)
+   of the map and/or the map's zoom level.
+   Developers should not call the method themselves.</p>
+      <p>The implementation of this method should either change the position of
+   the overlay on the screen in response to the change of the map's center or
+   redraw the overlay completely if it needs to be reconfigured for a
+   different map center/zoom level.</p>
+      <p>Repositioning of the overlay should be done by changing the placement
+   of the overlay's display object on its pane using the mappings provided by
+   the <code>IPane</code> interface (<code>fromLatLngToPaneCoords()</code> or
+   <code>fromProjectionPointToPaneCoords()</code>).</p>
+      <p>This method is not implemented in the default implementation and must be
+   overloaded in the derived classes to function properly.<p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">zoomChanged</span>:Boolean</code> &mdash;  Whether the zoom level of the map has changed
+       or the call was invoked just as a result of a map pan.
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

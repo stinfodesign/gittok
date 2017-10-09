@@ -2,11 +2,15 @@ package portrayal.symbol
 {
 	import dataTypes.spatialGeometry.*;
 	
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
+	import flash.events.Event;
 	
 	import instanceModel.Kit;
 	
 	import mx.collections.ArrayList;
+	import mx.controls.Image;
 	
 	import portrayal.symbolStyle.AreaSymbolStyle;
 	import portrayal.symbolStyle.LineSymbolStyle;
@@ -27,12 +31,18 @@ package portrayal.symbol
 			return areaObj;
 		}
 		
-		public function decode(areaObj:Object):void
-		{
+		public function decode(areaObj:Object):void {
 			surface = areaObj.surface;
 			style = areaObj.style;
 			
-			graphics.beginFill(style.color, style.alpha);
+			if (style.fillStyle) {
+				graphics.beginFill(style.color, style.alpha);
+			}
+			else {
+				var bitmap:Bitmap;
+				bitmap = areaObj.btmap;
+				graphics.beginBitmapFill(bitmap.bitmapData, null, true);
+			}
 						
 			var coords:CoordinateArray = surface.exterior.coordinateSequence();
 			this.decodeSurface(coords);

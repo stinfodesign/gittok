@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" 
+		  title="Video"
+		  width="500" height="498"
+		  creationComplete="initializeApp()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import dataTypes.place.*;
+			
+			import flash.filesystem.File;
+			
+			import mx.controls.Alert;
+			
+			public var videoFile:File;
+			
+			[Bindable]
+			protected var videoURL:String;
+			
+			protected function initializeApp():void {
+				this.move(800, 200);
+			}
+			
+			protected function openVideoButton_clickHandler(event:MouseEvent):void
+			{
+				// Open video
+				try {
+					videoFile = new File();
+					var filter:FileFilter = new FileFilter("Video File", "*.*");
+					videoFile.addEventListener(Event.SELECT, openVideoFile);
+					videoFile.browseForOpen("Open video file", [filter]);
+					//videoFile.addEventListener(Event.CANCEL, openVideoClose);
+
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				}
+			}
+			
+			private function openVideoClose(event:Event):void {
+			}
+			
+			private function openVideoFile(event:Event):void 
+			{
+				//Set parameters
+				videoFileLabel.text = videoFile.name;
+				videoURL = videoFile.url;
+			}	
+			
+			public function displayAttributeValue(_videoURL:VideoURL): void {
+				var videoURLdata:URL = _videoURL as URL;
+				var vFile:File = new File(videoURLdata.value);
+				videoFileLabel.text = vFile.name;
+				videoURL = videoURLdata.value;
+			}
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/videoSelector_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/videoSelector_en.html");
+				navigateToURL(request);
+			}
+			
+			protected function volumeSlider_changeHandler(event:Event):void
+			{
+				if (videoView != null) videoView.volume = volumeSlider.value;
+			}
+
+			protected function startButton_clickHandler(event:MouseEvent):void
+			{
+				if (videoView != null) {
+					videoView.play();
+					videoView.volume = volumeSlider.value;
+				}
+			}
+			
+			protected function pauseButton_clickHandler(event:MouseEvent):void
+			{
+				if (videoView != null) {
+					if (pauseButton.label == "pause") {
+						pauseButton.label = "restart";
+						videoView.pause();
+					}
+					else {
+						pauseButton.label = "pause";
+						videoView.play();
+						videoView.volume = volumeSlider.value;
+					}
+				}
+			}
+			
+			protected function stopButton_clickHandler(event:MouseEvent):void
+			{
+				videoView.stop();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<s:Image x="10" y="10" source="@Embed('images/pictAcquisition1.png')" width="50" height="50"/>
+	<s:VideoDisplay id="videoView" left="69" right="69" top="115" bottom="110" autoPlay="false"
+					source="{videoURL}"/>
+	<s:HGroup bottom="67" width="186" height="24" horizontalCenter="-9">
+		<s:Button id="startButton" x="158" bottom="70" width="54" label="start"
+			  click="startButton_clickHandler(event)"/>
+		<s:Button id="pauseButton" x="218" bottom="70" width="60" label="pause"
+			  click="pauseButton_clickHandler(event)"/>
+		<s:Button id="stopButton" x="284" bottom="70" width="58" label="stop"
+			  click="stopButton_clickHandler(event)"/>	
+	</s:HGroup>
+	<s:Label id="videoFileLabel" right="77" top="69" width="135" height="24"
+			 backgroundColor="#DADADA" verticalAlign="middle"/>
+	<s:Button id="openVideoButton" right="154" top="43" width="57" label="open"
+			  click="openVideoButton_clickHandler(event)"/>
+	<s:Label right="117" top="49" text="Video"/>
+	<s:Label right="59" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="11" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
+	<s:Label bottom="48" fontSize="10" horizontalCenter="0" text="Volume"/>
+	<s:HSlider id="volumeSlider" bottom="29" width="67" change="volumeSlider_changeHandler(event)"
+			   horizontalCenter="0" maximum="1.0" minimum="0.0" stepSize="0.01" value="0.5"/>
+	<s:Label x="76" y="15" text="Video Selector" fontSize="16"/>
+
+
+</s:Window>

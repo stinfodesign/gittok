@@ -1,0 +1,259 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>CRS Editor</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+window.resizeTo(625,700);
+window.moveTo(750,20);
+</script>
+</head>
+
+<body>
+<p class="FirstHeader">CRS Editor<br/>
+座標参照系の編集</p>
+<p class="mainSentence">CRSは，Coordinate Reference Systemの略称で，日本語では座標参照系といいます．座標を定義するのは座標系だと思われるかもしれませんが，地球の形状を参照するという意味で，例えば緯度経度など，地球上の座標を定義づける基準のことを座標参照系といいます．ここでは，まずCRSについて解説し，次にこのページの操作法について説明します．なお，事前に講義用のスライドと合わせて読まれるとよいでしょう．</p>
+<p class="mainSentence">講義用スライド<br/>
+<a href="../../lectureNotes/jp_pdf/09jpCoordinateReferenceSystem.pdf">09 座標参照系</a></p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">座標参照系</p>
+<p class="mainSentence">CRSは，UMLクラス図で以下の様に定義することができます．まず，このクラス図について説明しましょう．</p>
+<p class="mainSentence"><img src="../figures/CRS.png" width="600" height="441" alt="CRSManager" /></p>
+<p class="mainSentence">図１．座標参照系のUMLクラス図</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence"><span class="secondHeader">CRS</span></p>
+<p class="mainSentence">このクラスは，座標参照系を代表するクラスです．</p>
+<p class="thirdHeader">属性</p>
+<p class="mainSentence"><span class="mainSentence"><strong>id</strong></span><br/>
+CRSは，他の参照系と区別するために，id，つまり識別子をもちます．この識別子は一定のルールのもとで，付けることになりますので，それについては，後で説明します．</p>
+<p class="thirdHeader">関連</p>
+<p class="mainSentence"><span class="mainSentence"><strong>datum</strong></span><br/>
+地球の形状を代表する測地原子 (GeodeticDatum)の役割名です，</p>
+<p class="mainSentence"><span class="mainSentence"><strong>cs</strong></span><br/>
+水平的な座標の軸を定義する，座標系 (CoordinateSystem)の役割名です，</p>
+<p class="mainSentence"><span class="mainSentence"><strong>vDatum</strong></span><br/>
+鉛直方向の座標，つまり高さの座標軸を定義する，鉛直原子 (VerticalDatum)の役割名です．鉛直原子は，水平座標しか扱わない場合は不要です．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">GeodeticDatum</p>
+<p class="mainSentence">このクラスは，地球の形状 (Ellipsoid) を示すとともに，経度０°の線（本初子午線(PrimeMeridian)）がどこにあるかを定義します．なお，緯度０°は必ず赤道です．地球の形状を示すパラメータは測地原子 (GeodeticDtum)と呼ばれます．ここでdatumは測地学の用語として原子と訳していますが，dataの単数形です．言い換えると，dataは複数形なのですが，今日では単数形として使うことも多くなっています．さて，経度０°の線は，北極から南極を結ぶ線ですが，普通はグリニッジ天文台があった場所に基準があり，それを０°として，東向きに＋の方向があると定められています．ただし，ローカルな位置に原点をもってくる例があるので，ローカルな基準を定めるときは，グリニッジからどの角度になっているかを示す必要があります．</p>
+<p class="thirdHeader">属性</p>
+<p class="mainSentence"><span class="mainSentence"><strong>id</strong></span><br/>
+測地原子は識別子をもちます．識別子の詳細については後述します．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>name</strong></span><br/>
+測地原子の名前です．例えば2014年現在日本は『日本測地系2011』を使用しています．</p>
+<p class="thirdHeader">関連</p>
+<p class="mainSentence"><span class="mainSentence"><strong>ellips</strong></span><br/>
+測地原子は地球の形状を示す準拠楕円体 (reference ellipsoid) と関連します．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>pm</strong></span><br/>
+測地原子は，経度の基準をしめす本初子午線 (Prime Meridian) を，旧グリ二ッジ天文台を通る子午線からの東西方向の角度で示します．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Ellipsoid</p>
+<p class="mainSentence">このクラスは，地球の形状を定義するパラメータをもちます．地球の形状は山脈や海洋があるものの，縦に少しつぶれた楕円を，北極と南極を結ぶ軸を中心に回転させてできる回転楕円体で近似することができます．その回転楕円体を地球楕円体と呼ぶことがあります．その形状は，短軸（南北の軸）の半径 (semiMajorAxis)と，逆扁平率 (inverseFlattening)で示すことができます．普通，楕円の形と言えば，短半径と長半径で示しますが，測地学では，計算を行うための常数として逆扁平率を使うことが多いので，これを使用します．そして，逆扁平率は，以下の式で求めることができます．</p>
+<p class="mainSentence">inverse flattening = a / (a - b)　　　　　a: 長半径の長さ，b: 短半径の長さ</p>
+<p class="mainSentence">さて，これらのパラメータは測地学者によって，何回も測り直されてきました，そして，技術の進歩によってその精度 (precision) も高まってきています．例えば，日本では，1841年以来，ベッセル楕円体を日本測地系として長年使ってきました．そのパラメータは以下の通りです．</p>
+<p class="mainSentence">semi maor axis: 6377397.155メートル<br/>
+inverseFlattening: 299.152813</p>
+<p class="mainSentence">しかし，近年GPSの発達と普及により，より正確なパラメータが使用されるにともない，政府は測量法を改正して日本測地系2000（世界測地系ともいう）を制定しました．そのパラメータは以下の通りです．</p>
+<p class="mainSentence">semi maor axis: 6378137メートル<br/>
+inverseFlattening: 298.257222101</p>
+<p class="mainSentence">この楕円体は，GRS80 (Geodetic Reference System 80)と呼ばれ，国際測地学・地球物理連合(IUGG)で1980年に採択されたものです．</p>
+<p class="mainSentence">ところで，2011年3月11日に東日本大震災が発生し，これに伴い，東日本の位置がずれました．そこで，政府は，三角点及び電子基準点の改測を行い，新たな測量成果（測地成果2011）を使用することとしています．そこで，測地系の名前は日本測地系2011になりました．ただし，地球の形状を示すパラメータが変更された分けではありません．変更されたのは，日本経緯度原点の位置と，日本水準原点の原点数値です．これらの値は，三角点や基準点の位置を決定するときには使用されますが，投影変換に使用することはないので，CRSのパラメータにはしていません．</p>
+<p class="thirdHeader">属性</p>
+<p class="mainSentence"><span class="mainSentence"><strong>name</strong></span><br/>
+準拠楕円体の名前です．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>semiMajorAxis</strong></span><br/>
+準拠楕円体の長半径です．長さの単位はメートルです．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>inverseFlattening</strong></span><br/>
+逆扁平率です．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">PrimeMeridian</p>
+<p class="mainSentence">これは本初子午線と訳しますが，経度を測る基準になる子午線のことです，子午線とは，地上を，北極から南極に最短で結ぶ線のことです．十二支は方角を示すためにも使われますが，その最初である子（ねずみ）は北を意味し，午（うま）は南を意味しますので，子午線というわけです．さて，国際的には，本初子午線は，北極からグリニッジ天文台があった場所を通り南極に至る線です．でもローカルに定義する場合は，グリニッジからの角度をここに入れることによって，本初子午線の位置をを示すことができます．日本ではローカルな本初子午線は定めていないので，GreenwichLongitudeは常にゼロです．</p>
+<p class="thirdHeader">属性</p>
+<p class="mainSentence"><span class="mainSentence"><strong>GreenwichLongitude</strong></span><br/>
+グリニッジからの東西方向の角度です．日本の場合は常に０°です．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">CoordinateSystem</p>
+<p class="mainSentence">gittokでは，座標系は，座標軸の定義 (Axis) と，投影法 (ProjectionSystem) の定義から成ります．投影法は，緯度・経度と，それを投影してできる平面座標との関係を示します．また，gittokでは，日本で最も多く使われるGauss-Kruger投影を採り上げ，その実装をしています．将来は，その他の投影法も実装するかもしれません．CoordinateSystemは，その識別子 (id)，名前 (name)，そして次元の数 (dimension)を属性とします．例えば，</p>
+<p class="mainSentence">id: (X, Y)<br/>
+  name: Gauss-Kruger<br/>
+dimension: 2</p>
+<p class="mainSentence">等です．なおidの示し方は，後で説明します．</p>
+<p class="thirdHeader">属性</p>
+<p class="mainSentence"><span class="mainSentence"><strong>id</strong></span><br/>
+投影座標系の識別子です．識別子の詳細は後述します．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>name</strong></span><br/>
+投影法の名前です．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>dimension</strong></span><br/>
+投影座標の次元です．</p>
+<p class="thirdHeader">関連</p>
+<p class="mainSentence"><span class="mainSentence"><strong>axis</strong></span><br/>
+投影座標系の座標軸の定義をするAxisの役割名です．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>ps</strong></span><br/>
+投影法の定義をするProjectionSystemの役割名です．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">Axis</p>
+<p class="mainSentence">座標軸の定義はここに示します．座標軸の名前 (name)，軸の方向 (direction)，そして距離の単位 (unit) で座標軸は定義できます．例えば，</p>
+<p class="mainSentence">name: X<br/>direction: north<br/>unit: m</p>
+<p class="mainSentence">などです．</p>
+<p class="thirdHeader">属性</p>
+<p class="mainSentence"><span class="mainSentence"><strong>name</strong></span><br/>
+座標軸の名前です．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>direction</strong></span><br/>
+座標軸の正の方向を示します．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>unit</strong></span><br/>
+座標の計測単位です．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">ProjectionSystem</p>
+<p class="mainSentence">投影法の定義は，キットに保管されている座標を，XML文書にするときに緯度・経度にしたり，逆に外部からデータを読み込むときに，緯度・経度の座標を，地上平面座標に戻したりするときに使います．例えば日本には平面直角座標系という座標系が政府によって決められており，国内が１９の地域に分けられ，それぞれの地域ごとに，座標系の原点が定義されています．平面座標と緯度・経度の換算には，Gauss-Kruger投影が使われます．また，それぞれの地域の範囲は，平面座標が0.9999以内の誤差（縮尺係数といいます）に収まるように設定されています．また，世界規模の平面座標系としてUTM (Universal Transvers Mercator) 座標系があります．この座標系は，世界を縦に60のゾーン（一つのゾーンの範囲は，経度６°になる）に区切り，平面位置の誤差が0.9996になるようにしています．投影法は，やはりGauss-Kruger投影です．</p>
+<p class="mainSentence">投影法を定義するには，従って，投影法の名前(name)，縮尺係数 (scale factor)，平面座標の原点緯度・経度(origin)が指定されなければいけません．</p>
+<p class="thirdHeader">属性</p>
+<p class="mainSentence"><span class="mainSentence"><strong>name</strong></span><br/>
+投影法の名前です．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>scaleFactor</strong></span><br/>
+縮尺係数です．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>origin</strong></span><br/>
+投影ための原点です．</p>
+<p class="secondHeader">VerticalDatum</p>
+<p class="mainSentence">鉛直位置，つまり高さを求めるには，その基準となる海面の説明が必要になります．それは鉛直原子と呼ばれます．日本には，国家水準原点が測量法施行令で定められていますが，その第2条２において，日本水準原点の地点及び原点数値は，</p>
+<p class="mainSentence">地点　東京都千代田区永田町一丁目一番二地内水準点標石の水晶板の零分画線の中点<br />
+原点数値　東京湾平均海面上二十四・三九〇〇メートル</p>
+<p class="mainSentence">としています．逆に言えば、水準原点の直下，24.3900mのところに，東京湾平均海面があるということです．この東京湾平均海面が，高さの基準になります．この平均海面から鉛直方向の高さを標高といいます．平均海面については，これ以外にも，港湾における土木工事などを円滑に行うために，例えば大阪湾平均海面等，地域や港湾事に定められたものがあります．</p>
+<p class="mainSentence">gittokでは，そのidと名称(日本水準原点など)が示されればよいとしています．idの付け方については後で解説します．</p>
+<p class="mainSentence">高さについては，他にも，準拠楕円体の表面からの高さ（楕円体高）などがありますが，一般に使用されるのは，標高です．</p>
+<p class="thirdHeader">属性</p>
+<p class="mainSentence"><span class="mainSentence"><strong>id</strong></span><br/>
+鉛直原子の識別子です．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>name</strong></span><br/>
+鉛直原子の名前です．</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="FirstHeader">識別子の付与</p>
+<p class="mainSentence">座標参照系で使われる識別子は，日本においては，日本工業規格 「JIS X 7115 メタデータの附属書２」に定められています．その内容は以下の通りです．</p>
+<p class="mainSentence">日本で使われている座標参照系を指定するときは，両側に半角のスペースを置く“ / ”で原子と座標系とを区切り，次の表に示す略称の組合せで記述しなければならない。複数の略称を使用する場合は，“，  ”（コンマ及び半角スペース）によってこれを区切る。</p>
+<table width="500">
+  <tr>
+    <td width="370" class="thirdHeader">測地原子</td>
+    <td width="114" class="thirdHeader">略称</td>
+  </tr>
+  <tr>
+    <td><span class="mainSentence">日本測地系2000</span></td>
+    <td><span class="mainSentence">JGD2000</span></td>
+  </tr>
+      <td><span class="mainSentence">日本測地系2011</span></td>
+    <td><span class="mainSentence">JGD2011</span></td>
+  </tr>
+  <tr>
+    <td><span class="mainSentence">World Geodetic Datum 1984</span></td>
+    <td><span class="mainSentence">WGS84</span></td>
+  </tr>
+  <tr>
+    <td><span class="thirdHeader">鉛直原子</span></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><span class="mainSentence">東京湾平均海面</span></td>
+    <td><span class="mainSentence">TP</span></td>
+  </tr>
+  <tr>
+    <td><span class="thirdHeader">水平座標系</span></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><span class="mainSentence">測地座標系</span></td>
+    <td><span class="mainSentence">(B, L)</span></td>
+  </tr>
+  <tr>
+    <td><span class="mainSentence">平面直角座標系</span></td>
+    <td><span class="mainSentence">Zone No.(X, Y)</span></td>
+  </tr>
+  <tr>
+    <td><span class="mainSentence">ユニバーサル横メルカトル座標系</span></td>
+    <td><span class="mainSentence">Zone No.(E, N)</span></td>
+  </tr>
+  <tr>
+    <td><span class="thirdHeader">鉛直座標系</span></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><span class="mainSentence">東京湾平均海面上の高さ</span></td>
+    <td><span class="mainSentence">H</span></td>
+  </tr>
+  <tr>
+    <td><span class="mainSentence">楕円体高</span></td>
+    <td><span class="mainSentence">h</span></td>
+  </tr>
+</table>
+<p class="mainSentence">平面直角座標系 を利用する場合，例えば測地原子 として日本測地系2000を用い，平面直角座標系第Ⅲ系で座標を記述しているとき，その略称は“JGD2000 / 3 (X, Y)”となる。さらに高さのデータも含み，これが“東京湾平均海面上の高さ”のとき，略称は“JGD2000, TP / 3 (X, Y), H”となる。</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader">CRS Editor</p>
+<p class="mainSentence"><img src="../figures/CRSEditor.png" width="400" height="736" alt="CRS Manager" /></p>
+<p class="mainSentence">図２．CRS Editor</p>
+<p class="thirdHeader">Fields</p>
+<p class="mainSentence"><strong>CRS file</strong><br/>
+読み込んだり書き出したりしたCRSファイルの名前がここに表示されます．</p>
+<p class="thirdHeader">[CRS]</p>
+<p class="mainSentence"><strong>id (編集可能)</strong><br/>
+座標参照系の識別子をここに記入します．</p>
+<p class="thirdHeader">[CRS: Geodetic datum]</p>
+<p class="mainSentence"><strong>id (編集可能)</strong><br/>
+測地原子の識別子をここに記入します．</p>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
+測地原子の名前をここに記入します．</p>
+<p class="thirdHeader">[CRS: Geodetic datum: Ellipsoid]</p>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
+地球楕円体の名前をここに記入します．</p>
+<p class="mainSentence"><strong>semi major axis (編集可能)</strong><br/>
+楕円体の短半径の長さをここに記入します．</p>
+<p class="mainSentence"><strong>inverse flattening (編集可能)</strong><br/>
+逆扁平率をここに記入します．</p>
+<p class="thirdHeader">[CRS:Geodetic datum: Prime meridian]</p>
+<p class="mainSentence"><strong>longitude (編集可能)</strong><br/>
+本初子午線がグリニッジから何度の位置にあるかを記入します．多くの場合値は0になります．</p>
+<p class="thirdHeader">[CRS: Coordinate system]</p>
+<p class="mainSentence"><strong>id (編集可能)</strong><br/>
+投影座標系の識別子をここに記入します．</p>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
+投影座標系の名前をここに記入します．</p>
+<p class="mainSentence"><strong>dimension (編集可能)</strong><br/>
+投影座標系の次元の数をここに記入します．</p>
+<p class="thirdHeader">[CRS: Coordinate system: Axis]</p>
+<p class="mainSentence">座標軸の定義（名前，方向，単位）をここに記入します．既にある定義の値を編集する場合は，該当するセルにカーソルを移動し，クリックして，変更します．軸の定義自体を削除する場合は，その行を指定して，deleteボタンをおします．新たに定義を追加する場合はaddボタンを押して，空の行を作ってから値を記入します．</p>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
+座標軸の名前がここに記入できます．</p>
+<p class="mainSentence"><strong>direction (編集可能)</strong><br/>
+座標軸の方向をここに記入します．記述のルールはありません．</p>
+<p class="mainSentence"><strong>uom (編集可能)</strong><br/>
+距離の計測単位をここに記入します．例えば ISO 31-1:1992 Qualities and units - Part1: Space and time（対応する日本の規格は JIS Z 8202-1:2000）では，長さの単位はメートルで，その定義は，1/299 792 458秒の時間に光が真空中を伝わる行程の長さ，その記号は&quot;m&quot;です．</p>
+<p class="mainSentence"><strong>offset(編集可能)</strong><br/>
+座標系によっては，それが覆う地理的な範囲内で常に座標値をプラスにするために，本来の原点から一定の距離を加えて水平座標を表示することが行われる場合がある．これをfalse easting, とか false northingという．もしそのようなシステムをとっている場合は，その値をメートル単位でここに与える．日本の場合は0である．一般に標高の場合はこのようなことは行わない．</p>
+<p class="thirdHeader">[CRS: Coordinate system: Projection system]</p>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
+投影法の名前をここに記入します．</p>
+<p class="mainSentence"><strong>scale factor (編集可能)</strong><br/>
+縮尺係数をここに記入します．</p>
+<p class="mainSentence"><strong>origin latitude (編集可能)</strong><br/>
+平面座標系の原点の緯度を十進度単位で記入します．</p>
+<p class="mainSentence"><strong>origin longitude (編集可能)</strong><br/>
+平面座標系の原点の経度を十進度単位で記入します．</p>
+<p class="thirdHeader">[CRS: Vertical datium]</p>
+<p class="mainSentence"><strong>id (編集可能)</strong><br/>
+鉛直原子の識別子をここに記入します．</p>
+<p class="mainSentence"><strong>name (編集可能)</strong><br/>
+鉛直原子の名前をここに記入します．</p>
+<p class="thirdHeader">Button</p>
+<p class="mainSentence"><strong>open</strong><br/>
+CRSファイルをオープンします．</p>
+<p class="mainSentence"><strong>save</strong><br/>
+このページで定義されたCRSをセーブします．</p>
+<p class="mainSentence"><strong>add</strong><br/>
+座標軸を追加します．このボタンを押すと，新たな行が追加されるので，空のセルに名前，方向，転移が記入できます．</p>
+<p class="mainSentence"><strong>delete</strong><br/>
+座標軸を削除します．削除する行を選択して，このボタンを押すと，その座標軸が削除されます．</p>
+<p class="mainSentence"><strong>日本語</strong><br />
+今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><strong>English</strong><br />
+  You can read the tutorial written in English.</p>
+<p class="mainSentence"></p>
+<p class="mainSentence">&nbsp;</p>
+</body>
+</html>

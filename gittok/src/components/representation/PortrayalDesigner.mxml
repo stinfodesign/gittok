@@ -27,7 +27,7 @@
 			
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
-			import mx.controls.Image;
+			//import mx.controls.Image;
 			import mx.events.FlexEvent;
 			
 			import portrayal.gpm.*;
@@ -53,6 +53,7 @@
 			private var associationTypes:Dictionary 	= new Dictionary();
 			
 			private var atts:ArrayList;
+			private var areaSymName:String;
 			
 			private var pointSyms:Dictionary;
 			private var lineSyms:Dictionary;
@@ -136,6 +137,29 @@
 			[Bindable]
 			public var localeIDs:ArrayList;
 			
+			[Embed(source="/patterns/p00.png")]
+			private var aImage00:Class;
+			
+			[Embed(source="/patterns/p01.png")]
+			private var aImage01:Class;
+			
+			[Embed(source="/patterns/p02.png")]
+			private var aImage02:Class;
+			
+			[Embed(source="/patterns/p03.png")]
+			private var aImage03:Class;
+			
+			[Embed(source="/patterns/p04.png")]
+			private var aImage04:Class;
+			
+			[Embed(source="/patterns/p05.png")]
+			private var aImage05:Class;
+			
+			[Embed(source="/patterns/p06.png")]
+			private var aImage06:Class;
+			
+			protected var btmaps:Dictionary;
+			
 			protected function initializeApp(): void {
 				this.move(350,70);
 				
@@ -202,6 +226,16 @@
 				for each(var lc:String in xmlDataList) {
 					localeIDs.addItem(lc);
 				}
+				
+				// area pattern settings
+				btmaps = new Dictionary();
+				btmaps["/patterns/p00.png"] = new aImage00();
+				btmaps["/patterns/p01.png"] = new aImage01();
+				btmaps["/patterns/p02.png"] = new aImage02();
+				btmaps["/patterns/p03.png"] = new aImage03();
+				btmaps["/patterns/p04.png"] = new aImage04();
+				btmaps["/patterns/p05.png"] = new aImage05();
+				btmaps["/patterns/p06.png"] = new aImage06();
 
 			}
 			
@@ -256,8 +290,8 @@
 					stream.open(file, FileMode.READ);
 					syms = stream.readObject();
 				
-					var areaSyms:Dictionary = syms.areaSymStyles;
 					var lineSyms:Dictionary = syms.lineSymStyles;
+					var areaSyms:Dictionary = syms.areaSymStyles;
 					var pointSyms:Dictionary = syms.pointSymStyles;
 					var complexSyms:Dictionary = syms.complexSymStyles;
 					
@@ -268,28 +302,46 @@
 				var symObj:Object;
 				symStyleArray = new ArrayList();
 				for each(var areaSymStyle:AreaSymbolStyle in areaSyms) {
+					areaSymName = areaSymStyle.name;
 					symObj = new Object();
 					symObj["name"] = areaSymStyle.name;
 					symObj["type"] = "Area";
+					if (!areaSymStyle.fillStyle) {
+						symObj["btmap"] = btmaps[areaSymStyle.url];
+					}
 					symStyleArray.addItem(symObj);
 				}
+				
 				for each(var lineSymStyle:LineSymbolStyle in lineSyms) {
 					symObj = new Object();
 					symObj["name"] = lineSymStyle.name;
 					symObj["type"] = "Line";					
 					symStyleArray.addItem(symObj);
 				}
+				
 				for each(var pointSymStyle:PointSymbolStyle in pointSyms) {
 					symObj = new Object();
 					symObj["name"] = pointSymStyle.name;
 					symObj["type"] = "Point";					
+					for (var i:int = 0; i < pointSymStyle.styles.length; i++) {
+						var style:* = pointSymStyle.styles.getItemAt(i);
+						if (style is AreaSymbolStyle) {
+							if (!style.fillStyle) {
+								symObj["btmap"] = btmaps[style.url];
+							}
+						}
+						pointSymStyle.styles.setItemAt(style, i);
+					}
 					symStyleArray.addItem(symObj);
 				}
+				
 				for each(var complexSymStyle:ComplexSymbolStyle in complexSyms) {
 					symObj = new Object();
 					symObj["name"] = complexSymStyle.name;
-					symObj["type"] = "Complex";					
+					symObj["type"] = "Complex";
+
 					symStyleArray.addItem(symObj);
+
 				}
 				
 				stream.close();
@@ -298,6 +350,16 @@
 				symbolStyleDicFile = file;
 				
 			}
+			
+			/*
+			protected function setPattern(event:Event):void {
+				var wimg:mx.controls.Image = event.target as mx.controls.Image;
+				//var bitmap:Bitmap = wimg.content as Bitmap;
+				var aStyle:AreaSymbolStyle = areaSyms[areaSymName];
+				aStyle.img = wimg;
+				areaSyms[areaSymName] = aStyle;
+			}
+			*/
 			
 			// Label operations			
 			protected function openLabelButton_clickHandler(event:MouseEvent):void
@@ -385,8 +447,15 @@
 					
 					xarray = [10, 10, 80, 150, 150, 80, 10];
 					yarray = [10, 50, 65, 50,  10,  5,  10];
-										
-					symbolImage.graphics.beginFill(areaSymType.color, areaSymType.alpha);
+					
+					if (areaSymType.fillStyle) {					
+						symbolImage.graphics.beginFill(areaSymType.color, areaSymType.alpha);
+					}
+					else {
+						var bitmap:Bitmap = btmaps[areaSymType.url];
+						symbolImage.graphics.beginBitmapFill(bitmap.bitmapData, null, true);
+					}
+					
 					symbolImage.graphics.moveTo(10, 10);
 					for (i = 1; i < 7; i++) {
 						symbolImage.graphics.lineTo(xarray[i], yarray[i]);
@@ -395,6 +464,7 @@
 					
 					//show the border
 					var borderStyle:LineSymbolStyle = areaSymType.borderStyle;
+					if (borderStyle == null) return;
 					
 					crv = new SG_Curve;
 					for (i = 0; i < 7; i++) {
@@ -524,7 +594,7 @@
 				pObj.point = pt;
 				pObj.style = pStyle;
 				var pSym:PointSymbol = new PointSymbol();
-				pSym.decode(pObj);
+				pSym.decode(pObj, btmaps);
 				pSym.name = pt.id.toString();
 				symbolImage.addChild(pSym);
 			}
@@ -543,6 +613,8 @@
 				var aObj:Object = new Object();
 				aObj.surface = sc;
 				aObj.style = aStyle;
+				if (!aStyle.fillStyle)
+					aObj.btmap = btmaps[aObj.style.url];
 				var aSym:AreaSymbol = new AreaSymbol();
 				aSym.decode(aObj);
 				aSym.name = sc.id.toString();

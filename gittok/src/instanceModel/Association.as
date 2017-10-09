@@ -13,10 +13,8 @@ package instanceModel
 	import mx.utils.UIDUtil;
 	
 
-	public class Association
+	public class Association extends GeodataElement
 	{	
-		public var typeName:String;			// association type name
-		
 		public var id:String;
 		public var attributes:Dictionary;	// key: attribute name, velue: should be attribute id not value! 2017.03.26
 		public var relateFrom:ArrayList;	// arrayList of from features
@@ -32,81 +30,19 @@ package instanceModel
 		
 		public function getXML(assoType:AssociationType):XML {
 			var str:String 	= '<Association id="' + this.id + '" ';
-			str += 'typeName="' + assoType.name + '"';
-					
-			var strGeom:String = '';
-			var strAddr:String = "";
-			var strMemo:String = "";
-			var m:int = assoType.attributeTypes.length;
-			for (var i:int = 0; i < m; i++) {
-				var attType:AttributeType  = assoType.attributeTypes.getItemAt(i) as AttributeType;
-				var attValueList:ArrayList = this.attributes[attType.name] as ArrayList;
-				if (attValueList != null) {
-					var n:int = attValueList.length;
-					if (n > 0) {
-						if (attType.dataType == "Integer" 		|| attType.dataType == "Real"				||
-							attType.dataType == "Bool" 			|| attType.dataType == "CharacterString" 	||
-							attType.dataType == "URL" 			|| attType.dataType == "ImageLocation" 		||
-							attType.dataType == "VideoLocation"	|| attType.dataType == "SoundLocation") {
-							str += ' ' + attType.name + '="';
-							var element:* = attValueList.getItemAt(0);
-							str += element.value.toString();
-							for (var j:int = 1; j < n; j++) {
-								element = attValueList.getItemAt(j);
-								str += ',' + element.value.toString();
-							}
-							str += '"';
-						}
-						else if (attType.dataType == "GDate") {
-							var dte:GDate = attValueList.getItemAt(0) as GDate;	
-							var t:Number = dte.value.getTime();
-							str += ' ' + attType.name + '="' + t + '"';
-						}
-						else if (attType.dataType == "Address") {
-							element = attValueList.getItemAt(0);
-							if (element != null) {
-								strAddr += '<' + attType.name + ' idref="';
-								strAddr += element.id;
-								for (j = 1; j < n; j++) {
-									element = attValueList.getItemAt(j);
-									strAddr += ',' + element.id;
-								}
-								strAddr += '"/>';
-							}							
-						}
-						else if (attType.dataType == "Memo") {
-							element = attValueList.getItemAt(0);
-							if (element != null) {
-								strMemo += '<' + attType.name + ' idref="';
-								strMemo += element.id;
-								for (j = 1; j < n; j++) {
-									element = attValueList.getItemAt(j);
-									strMemo += ',' + element.id;
-								}
-								strMemo += '"/>';
-							}							
-						}
-						else {
-							// geometry
-							element = attValueList.getItemAt(0);
-							if (element != null) {
-								strGeom += '<' + attType.name + ' idref="';
-								strGeom += element.id;
-								for (j = 1; j < n; j++) {
-									element = attValueList.getItemAt(j);
-									strGeom += ',' + element.id;
-								}
-								strGeom += '"/>';
-							}
-						}
-					}
-				}
-			}
+			str += 'typeName="' + assoType.name + '">';
 			
-			str += '>';
-			str += strAddr;
-			str += strMemo;
-			str += strGeom;
+			var attributeTypes:ArrayList = assoType.attributeTypes;
+			var m:int = assoType.attributeTypes.length;
+			
+			str+= '<attributes>';
+			for (var i:int = 0; i < m; i++) {
+				var attType:AttributeType  = attributeTypes.getItemAt(i) as AttributeType;
+				var att:instanceModel.Attribute = new instanceModel.Attribute();
+				att.attValueList = this.attributes[attType.name] as ArrayList;
+				str += att.getXML(attType).toXMLString();
+			}
+			str += '</attributes>';
 			
 			m = relateFrom.length;
 			if (m == 0) {
@@ -131,7 +67,7 @@ package instanceModel
 					var toFt:Feature = relateTo.getItemAt(i) as Feature;
 					str += toFt.id + ',';
 				}
-			
+				
 				str = str.substr(0, str.length - 1) + '"/>';		// cut the last ','.
 			}
 			
@@ -145,14 +81,27 @@ package instanceModel
 				
 			this.id = _xml.@id.toString();
 				
+			var attXMLList:XMLList = _xml.attributes.children();
+			//trace(attXMLList[0].toXMLString());
+
 			this.typeName = _xml.@typeName.toString();
 			var assoType:AssociationType = appSchema.associationTypes[this.typeName] as AssociationType;
 				
 			this.attributes = new Dictionary();
 			var m:int = assoType.attributeTypes.length;
+			
 			for (var i:int = 0; i < m; i++) {
 				var attType:AttributeType = assoType.attributeTypes.getItemAt(i) as AttributeType;
-				
+				var name:String = attType.name;
+				for (var j:int = 0; j < attXMLList.length(); j++) {
+					var nm:String = attXMLList[j].@typeName.toString();
+					if (name == nm) {
+						var att:instanceModel.Attribute = new instanceModel.Attribute();
+						this.attributes[attType.name] = att.setXML(attXMLList[j],attType, kit);						
+					}
+				}
+			}
+				/*
 				if (attType.dataType == "SG_Point" ||
 					attType.dataType == "SG_Curve" ||
 					attType.dataType == "SG_Surface" ||
@@ -186,8 +135,10 @@ package instanceModel
 									attList.addItem(kit.addressList[attID] as Address);
 								if (attType.dataType == "Memo")
 									attList.addItem(kit.memoList[attID] as Memo);
-							}	
-							this.attributes[attType.name] = attList;
+							}
+							var att:Attribute = new Attribute();
+							att.attValueList = attList;
+							this.attributes[attType.name] = att;
 						}
 					}
 				}
@@ -248,12 +199,15 @@ package instanceModel
 							}
 							
 						}
-						this.attributes[attType.name] = attList;
+						att = new Attribute();
+						att.attValueList = attList;
+						this.attributes[attType.name] = att;
 					}
 				}				
 
 			}
-			
+			*/
+				
 			var fromAtt:String = _xml.relateFrom.@idref;
 			var fromIDArray:Array = fromAtt.split(',');
 			m = fromIDArray.length;

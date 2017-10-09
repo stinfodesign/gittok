@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="ProjectionBase,com.google.maps.ProjectionBase,fromLatLngToPixel,fromPixelToLatLng,getWrapWidth,tileCheckRange" name="keywords">
+<title>com.google.maps.ProjectionBase</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'ProjectionBase - Google Maps API for Flash Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?com/google/maps/ProjectionBase.html&amp;com/google/maps/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;ProjectionBase</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class ProjectionBase"); titleBar_setSubNav(false,false,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class ProjectionBase</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">ProjectionBase <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> com.google.maps.wrappers.WrapperBase</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implements</td><td><a href="interfaces/IProjection.html">IProjection</a></td>
+</tr>
+</table>
+<p></p>
+ ProjectionBase is an abstract base class for creating custom projections.
+ Sub-class this and implement each
+ method to create a custom projection for the map.
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#ProjectionBase()">ProjectionBase</a>()</div>
+<div class="summaryTableDescription">
+   Constructs an instance of ProjectionBase.</div>
+</td><td class="summaryTableOwnerCol">ProjectionBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#fromLatLngToPixel()">fromLatLngToPixel</a>(latLng:<a href="LatLng.html">LatLng</a>, zoom:Number):Point</div>
+<div class="summaryTableDescription">
+   Returns the map pixel coordinates corresponding to the specified
+   geographical location and zoom level.</div>
+</td><td class="summaryTableOwnerCol">ProjectionBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#fromPixelToLatLng()">fromPixelToLatLng</a>(pixel:Point, zoom:Number, opt_nowrap:Boolean = false):<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the geographical location corresponding to the specified
+   map pixel coordinates and zoom level.</div>
+</td><td class="summaryTableOwnerCol">ProjectionBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getWrapWidth()">getWrapWidth</a>(zoom:Number):Number</div>
+<div class="summaryTableDescription">
+   Returns the map periodicity in the x-direction: the number of
+   pixels after which the map repeats itself because it wraps around
+   the earth.</div>
+</td><td class="summaryTableOwnerCol">ProjectionBase</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#tileCheckRange()">tileCheckRange</a>(tile:Point, zoom:Number, tileSize:Number):Boolean</div>
+<div class="summaryTableDescription">
+   Tests whether the tile index is within the valid range for the map type
+   (the map displays empty tiles outside of this range).</div>
+</td><td class="summaryTableOwnerCol">ProjectionBase</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="ProjectionBase()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">ProjectionBase</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function ProjectionBase()</code><p>
+   Constructs an instance of ProjectionBase.
+   </p></div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="fromLatLngToPixel()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">fromLatLngToPixel</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function fromLatLngToPixel(latLng:<a href="LatLng.html">LatLng</a>, zoom:Number):Point</code><p>
+   Returns the map pixel coordinates corresponding to the specified
+   geographical location and zoom level.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="LatLng.html">LatLng</a></code> &mdash; Geographical location.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">zoom</span>:Number</code> &mdash; Zoom level.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Point</code> &mdash; Corresponding map coordinate in pixels
+   </td>
+</tr>
+</table>
+</div>
+<a name="fromPixelToLatLng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">fromPixelToLatLng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function fromPixelToLatLng(pixel:Point, zoom:Number, opt_nowrap:Boolean = false):<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Returns the geographical location corresponding to the specified
+   map pixel coordinates and zoom level.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">pixel</span>:Point</code> &mdash; Map coordinates in pixels
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">zoom</span>:Number</code> &mdash; Zoom level
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_nowrap</span>:Boolean</code> (default = <code>false</code>)<code></code> &mdash; Do not wrap longitudes outside of [-180,180)
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                        Corresponding geographical position
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getWrapWidth()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getWrapWidth</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getWrapWidth(zoom:Number):Number</code><p>
+   Returns the map periodicity in the x-direction: the number of
+   pixels after which the map repeats itself because it wraps around
+   the earth. By default, returns Infinity, i.e. the map does not repeat
+   itself. This is used by the map to compute the placement of overlays on
+   map views that contain more than one copy of the earth (this usually
+   happens only at low zoom levels).
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">zoom</span>:Number</code> &mdash; Zoom level.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash; Width of the earth in pixels.
+   </td>
+</tr>
+</table>
+</div>
+<a name="tileCheckRange()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">tileCheckRange</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function tileCheckRange(tile:Point, zoom:Number, tileSize:Number):Boolean</code><p>
+   Tests whether the tile index is within the valid range for the map type
+   (the map displays empty tiles outside of this range). Note that this
+   function may modify the tile index to point to another instance of the same
+   tile should the map contain more than one Earth.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">tile</span>:Point</code> &mdash; Tile coordinate.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">zoom</span>:Number</code> &mdash; Zoom level.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">tileSize</span>:Number</code> &mdash; The size of this tile.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash; true if the tile is within range.
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

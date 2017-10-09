@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="598" height="697"
+		  title="Feature Type Modeler"
+		  creationComplete="initializeApp()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[		
+			import gfm.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.ListEvent;
+			
+			import spark.events.TextOperationEvent;
+			
+			public var attributeWindow:AttributeWindow;
+			public var operationWindow:OperationWindow;
+			
+			public var featureTypes:Dictionary;
+			
+			[Bindable]
+			protected var featureType:FeatureType = new FeatureType();
+						
+			[Bindable]
+			public var attributeList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			public var inheritedAttList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var operationList:ArrayList = featureType.operationTypes;
+			
+			[Bindable]
+			protected var inheritedOpeList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var linksList:ArrayList = featureType.links;
+			
+			[Bindable]
+			protected var linkedByList:ArrayList = featureType.linkedBy;
+			
+			[Bindable]
+			protected var inheritedLinksList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var inheritedLinkedByList:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var childList:ArrayList = featureType.children;			
+			
+			[Bindable]
+			public var roleNames:ArrayList = new ArrayList();
+			
+			[Bindable]
+			public var fTypeArray:ArrayList = new ArrayList();
+			
+			[Bindable]
+			protected var childTypes:ArrayList = new ArrayList();
+			
+			private var color1:uint = 0x13233a;
+			
+			[Bindable]
+			private var chrColor:uint = color1;
+						
+			private var atts:ArrayList;
+			private var opts:ArrayList;
+			
+			private function initializeApp():void {
+				this.move(350, 50);
+				
+				for each(var fType:FeatureType in featureTypes) {
+					fTypeArray.addItem(fType);
+				}
+				
+				this.addEventListener(Event.CLOSE, featureWindowClose);
+			}
+			
+			protected function featureWindowClose(event:Event):void {
+				if (this.attributeWindow != null) this.attributeWindow.close();
+				if (this.operationWindow != null) this.operationWindow.close();				
+			}
+									
+			protected function isAbstract_clickHandler(event:MouseEvent):void
+			{
+				featureType.isAbstract = isAbstract.selected;
+			}
+			
+
+			private function doubleNameCheck():Boolean
+			{
+				var ftype:FeatureType;
+				for (var i:int = 0; i < fTypeArray.length; i++) {
+					ftype = fTypeArray.getItemAt(i) as FeatureType;
+					if (featureTypeName.text == ftype.name) {
+						return true;
+					}					
+				}
+				return false;
+			}
+
+			protected function asParentButton_clickHandler(event:MouseEvent):void
+			{
+				// If already parent was declareed, you cannot replace another parent, by pushing this button.
+				if (featureType.parent != null) {
+					Alert.show('You cannot replace parent with this button.\nUse cancel button before.', 
+						'Error', Alert.OK, this);
+					return;					
+				}
+				
+				// Parent shall be abstract if this feature type is abstract.
+				var featureTypeAsParent:FeatureType = fTypeArray.getItemAt(featureTypeList.selectedIndex)
+												as FeatureType;
+				
+				if (featureType.isAbstract && !featureTypeAsParent.isAbstract) {
+					Alert.show('If a feature is abstract, the parent shall be abstract.', 'Error', Alert.OK, this);
+					return;
+				}
+				
+				// If this feature is already children, you cannot redifine.
+				var index:int = featureTypeAsParent.children.getItemIndex(featureType);
+				if (index > 0) {
+					Alert.show('Already defined', 'Error', Alert.OK, this);
+					return;
+				}
+				
+				parentTypeName.text = featureTypeAsParent.name;
+				
+				featureTypeAsParent.children.addItem(featureType);
+				featureType.parent = featureTypeAsParent;
+				
+				inheritedAttList		= new ArrayList();
+				inheritedOpeList		= new ArrayList();
+				inheritedLinksList		= new ArrayList();
+				inheritedLinkedByList	= new ArrayList();
+				
+				if (featureType.parent != null) inheritProperties(featureType.parent);
+			}
+
+			protected function cancelParentButton_clickHandler(event:MouseEvent):void
+			{
+				var parent:FeatureType = featureType.parent;
+				if (parent != null) {
+					parentTypeName.text = "";
+					parent.children.removeItem(featureType);
+					featureType.parent = null;
+					inheritedAttList = new ArrayList();
+					inheritedOpeList = new ArrayList();
+				}
+				else
+					Alert.show("No parent is defined!", "Warning", Alert.OK, this);
+			}
+
+			protected function addFTypeButton_clickHandler(event:MouseEvent):void
+			{
+				//Check double name
+				if (doubleNameCheck()) {
+					Alert.show('Double name!', 'Error', Alert.OK, this);
+					featureTypeName.text = "";
+					return;
+				}
+				
+				//Check no name
+				if (featureTypeName.text == "") {
+					Alert.show('Feature type has no name!', 'Error', Alert.OK, this);
+					return;					
+				}
+				
+				featureType.attributeTypes = attributeList;
+				
+				//Check proxy definition
+				if (featureType.proxyName == "" && isAbstract.selected == false) {
+					Alert.show("You need the proxy definition", "Warning", 4, this);
+					return;
+				}
+				else {
+					//Set parameters
+					featureType.name = featureTypeName.text;					
+					featureType.definition = defArea.text;
+										
+					//Add feature type
+					fTypeArray.addItem(featureType);
+					
+					//Initialize feature type and screen
+					initializeFeatureTypeAndScreen();										
+				}
+			}
+			
+			protected function editFTButton_clickHandler(event:MouseEvent):void
+			{
+				initializeFeatureTypeAndScreen();
+
+				//Select feature type
+				var index:int = featureTypeList.selectedIndex;
+				if (index > -1) {
+					featureType = fTypeArray.getItemAt(index) as FeatureType;
+				}
+				else {
+					Alert.show('Select feature type', 'Warning', Alert.OK, this);
+					return;
+				}
+				
+				//View parameters on screen
+				featureTypeName.text 	= featureType.name;
+				isAbstract.selected 	= featureType.isAbstract;	
+				
+				attributeList 			= featureType.attributeTypes;
+				operationList 			= featureType.operationTypes;
+				linksList 				= featureType.links;
+				linkedByList 			= featureType.linkedBy;
+				
+				inheritedAttList		= new ArrayList();
+				inheritedOpeList		= new ArrayList();
+				inheritedLinksList		= new ArrayList();
+				inheritedLinkedByList	= new ArrayList();
+
+				if (featureType.parent != null) inheritProperties(featureType.parent);
+					
+				childList 				= featureType.children;
+
+				defArea.text			= featureType.definition;
+				
+				proxyLabel.text = featureType.proxyName;
+				
+				var parent:FeatureType = featureType.parent; 
+				if (parent != null) { 
+					parentTypeName.text = parent.name;
+				}	
+				else {
+					parentTypeName.text = "";
+				}	
+			}			
+			
+			protected function updateButton_clickHandler(event:MouseEvent):void
+			{
+				var index:int = fTypeArray.getItemIndex(featureType);
+				if (index == -1) {
+					Alert.show('Edit feature type before update.', 'Warning', Alert.OK, this);
+					return;					
+				}
+				
+				//Set parameters
+				featureType.name = featureTypeName.text;
+				featureType.definition = defArea.text;
+				featureType.isAbstract = isAbstract.selected;
+				featureType.proxyName = proxyLabel.text;
+				
+				featureType.attributeTypes = attributeList;
+				featureType.operationTypes = operationList;
+				featureType.links = linksList;
+				featureType.linkedBy = linkedByList;
+				featureType.children = childList;
+				
+				//Update featureType list on screen
+				fTypeArray.setItemAt(featureType, index);
+								
+				//Initialize feature type and screen
+				initializeFeatureTypeAndScreen();
+				
+			}
+		
+			protected function deleteFTypeButton_clickHandler(event:MouseEvent):void
+			{
+				var index:int = featureTypeList.selectedIndex;
+				if (index > -1)
+					featureType = fTypeArray.getItemAt(index) as FeatureType;
+				else {
+					Alert.show('Select feature type!', 'Warning', Alert.OK, this);
+					return;
+				}
+				
+				//Check association and inheritance
+				if (featureType.links.length > 0 || featureType.linkedBy.length > 0) {
+					Alert.show('Associations exist!', 'Warning', Alert.OK, this);
+					return;
+				}
+				
+				if (featureType.children.length > 0) {
+					Alert.show('This is a parent type!', 'Warning', Alert.OK, this);
+					return;
+				}
+				
+				if (featureType.parent != null) {
+					if (featureType.parent.children.getItemIndex(featureType) > -1) {
+						featureType.parent.children.removeItem(featureType);
+					}
+				}
+				
+				//Delete feature type
+				fTypeArray.removeItem(featureType);
+				
+				//Initialize feature type and screen
+				initializeFeatureTypeAndScreen();
+			}
+
+			protected function clearButton_clickHandler(event:MouseEvent):void
+			{			
+				initializeFeatureTypeAndScreen();
+			}
+			
+			protected function initializeFeatureTypeAndScreen():void 
+			{
+				//Initialize Feature Type
+				featureType	= new FeatureType();
+				
+				// Initialize screen
+				parentTypeName.text = "";
+				defArea.text = "";
+				proxyLabel.text = "";
+				attributeList	= new ArrayList();
+				operationList 	= new ArrayList();
+				linksList 		= new ArrayList();
+				linkedByList 	= new ArrayList();
+				childList 		= new ArrayList();
+
+				isAbstract.selected  = false;
+				featureTypeName.text = "";
+				inheritedAttList = new ArrayList();
+				inheritedOpeList = new ArrayList();
+				
+				inheritedLinksList    = new ArrayList();
+				inheritedLinkedByList = new ArrayList();
+			}
+			
+			protected function editAttributeButton_clickHandler(event:MouseEvent):void
+			{
+				if (attributeWindow != null) return;
+				
+				attributeWindow = new AttributeWindow();
+				attributeWindow.open();
+				attributeWindow.title = "Feature Type >";
+				attributeWindow.addEventListener(Event.CLOSING, attributeWindowClosing);
+				
+				attributeWindow.attributeList = featureType.attributeTypes
+				
+				attributeWindow.dataTypeTree.dataProvider = dataTypeMenu;
+				attributeWindow.featureTypeList = fTypeArray;
+				
+				//Collect attrubute types
+				if (featureType.parent != null) inheritProperties(featureType.parent);
+				
+				if (inheritedAttList.length > 0)
+					attributeWindow.inheritedAttGrid.dataProvider = inheritedAttList;
+			}
+			
+			protected function attributeWindowClosing(event:Event):void
+			{
+				attributeList = attributeWindow.attributeList;
+				
+				attributeWindow = null;
+			}
+			
+			protected function editOperationButton_clickHandler(event:MouseEvent):void
+			{
+				if (operationWindow != null) return;
+				
+				if (featureType == null) {
+					Alert.show('Select feature type before editing.', 'Warning', Alert.OK, this);
+					return;
+				}
+				
+				operationWindow = new OperationWindow();
+				
+				if (featureTypeName.text == "") {
+					Alert.show("You shall enter feature type name before defining operation.", "Warning", 4, this);
+					return;
+				}
+				
+				operationWindow.open();
+				
+				featureType.name = featureTypeName.text;
+
+				operationWindow.featureType = featureType;
+				operationWindow.title = "Feature Type >";
+				operationWindow.faSelection = true;
+				operationWindow.addEventListener(Event.CLOSING, operationWindowClosing);
+								
+				//If the feature type relates to a parent, inherit attributes and operations. 
+				atts = new ArrayList();
+				opts = new ArrayList();
+				
+				//Collect attrubute and operation types
+				for each (var aType:AttributeType in featureType.attributeTypes) {
+					atts.addItem(aType);
+				}
+				
+				opts.addAll(featureType.operationTypes);
+   				if (featureType.parent != null) inheritProperties(featureType.parent);
+				
+				if (inheritedAttList.length > 0) atts.addAll(inheritedAttList);
+				if (inheritedOpeList.length > 0) opts.addAll(inheritedOpeList);
+				
+				operationWindow.attributeGrid.dataProvider 	= atts;
+				operationWindow.selectedOperations 			= opts;
+				
+				operationWindow.faSelection = true;
+				
+			}
+			
+			private function inheritProperties(fType:FeatureType):void {
+				
+				// Proxy is overloaded!
+				
+				// If parent class already be concerte, it inherits properties of upper classes.
+				// In this case, the inheritance will be duplicated without the check shown below.
+				var m:int = fType.attributeTypes.length;
+				var n:int = inheritedAttList.length;
+				var watts:ArrayList = new ArrayList();
+				for (var i:int = 0; i < m; i++) {
+					var wattf:AttributeType = fType.attributeTypes.getItemAt(i) as AttributeType;
+					var flag:Boolean = false;
+					for (var j:int = 0; j < n; j++) {
+						var watt:AttributeType = inheritedAttList.getItemAt(j) as AttributeType;
+						if (watt.name == wattf.name) flag = true;
+					}
+					if (!flag) watts.addItem(wattf);
+				}
+				
+				inheritedAttList.addAll(watts);
+				
+				m = fType.operationTypes.length;
+				n = inheritedOpeList.length;
+				var wopts:ArrayList = new ArrayList();
+				for (i = 0; i < m; i++) {
+					var woptf:OperationType = fType.operationTypes.getItemAt(i) as OperationType;
+					flag = false;
+					for (j = 0; j < n; j++) {
+						var wopt:OperationType = inheritedOpeList.getItemAt(j) as OperationType;
+						if (wopt.name == woptf.name) flag = true;
+					}
+					if (!flag) wopts.addItem(woptf);
+				}
+				
+				inheritedOpeList.addAll(wopts);
+				
+				m = fType.links.length;
+				n = inheritedLinksList.length;
+				var wlinks:ArrayList = new ArrayList();
+				for (i = 0; i < m; i++) {
+					var wlinksf:AssociationType = fType.links.getItemAt(i) as AssociationType;
+					flag = false;
+					for (j = 0; j < n; j++) {
+						var wlt:AssociationType = inheritedLinksList.getItemAt(j) as AssociationType;
+						if (wlt.name == wlinksf.name) flag = true;
+					}
+					if (!flag) wlinks.addItem(wlinksf);
+				}
+				
+				inheritedLinksList.addAll(wlinks);
+				
+				m = fType.linkedBy.length;
+				n = inheritedLinkedByList.length;
+				var wlinked:ArrayList = new ArrayList();
+				for (i = 0; i < m; i++) {
+					var wlinkedf:AssociationType = fType.linkedBy.getItemAt(i) as AssociationType;
+					flag = false;
+					for (j = 0; j < n; j++) {
+						var wledt:AssociationType = inheritedLinkedByList.getItemAt(j) as AssociationType;
+						if (wledt.name == wlinkedf.name) flag = true;
+					}
+					if (!flag) wlinked.addItem(wlinkedf);
+				}
+				
+				inheritedLinkedByList.addAll(wlinked);
+
+				if (fType.parent != null) {
+					inheritProperties(fType.parent);
+				}
+			}
+			
+			protected function operationWindowClosing(event:Event):void 
+			{
+				featureType.operationTypes = operationWindow.selectedOperations;
+				
+				operationList = featureType.operationTypes;
+				
+				operationWindow = null;
+
+			}
+
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("/documents/jp/featureTypeDesigner_jp.html");
+				navigateToURL(request);
+			}
+
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("/documents/en/featureTypeDesigner_en.html");
+				navigateToURL(request);
+			}
+
+			protected function selectProxyButton_clickHandler(event:MouseEvent):void
+			{
+				if (isAbstract.selected) {
+					Alert.show("No proxy, as long as the feature type is abstract.", "Warning", 4, this);
+					return;
+				}
+				
+				var attType:AttributeType = defineAtt.selectedItem as AttributeType;
+				if (attType == null) {
+					attType = inheritedAtt.selectedItem as AttributeType;
+					if (attType == null) {
+						Alert.show('Select attribute before assign proxy.', 'Error', Alert.OK, this);
+						return;
+					}
+				}
+				
+				featureType.proxyName = attType.name;
+				proxyLabel.text = featureType.proxyName;
+				
+			}
+
+
+			protected function cancelProxyButton_clickHandler(event:MouseEvent):void
+			{
+				featureType.proxyName = "";
+				proxyLabel.text = "";
+			}
+			
+			protected function defineAtt_clickHandler(event:MouseEvent):void
+			{
+				inheritedAtt.selectedIndex = -1;
+			}
+			
+			protected function inheritedAtt_clickHandler(event:MouseEvent):void
+			{
+				defineAtt.selectedIndex = -1;
+			}
+			
+			protected function selectedOpe_clickHandler(event:MouseEvent):void
+			{
+				inheritedOpe.selectedIndex = -1;
+			}
+			
+			protected function inheritedOpe_clickHandler(event:MouseEvent):void
+			{
+				selectedOpe.selectedIndex = -1;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- data type list for attribute types -->
+		<fx:XML id="dataTypeMenu" source="texts/dataTypes.xml"/>
+	</fx:Declarations>
+	
+	<s:Label x="506" y="8" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="547" y="10" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	
+	<s:Image x="10" y="10" source="@Embed('images/pictModeling1.png')" width="60" height="60"/>
+	<s:Image x="12" y="84" source="@Embed('images/featureTypeFrame.png')"/>
+	
+	<!-- MATERIALS -->
+	
+	<!-- FEATURE TYPES -->
+	
+	<s:List id="featureTypeList" x="381" y="496" width="127" height="142" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{fTypeArray}" labelField="name"></s:List>
+	
+	<!-- SELECTIONS -->
+	<s:List x="207" y="250" width="140" height="72" id="defineAtt" dataProvider="{attributeList}" 
+			labelField="name" contentBackgroundColor="#DADADA" borderColor="#020202" borderVisible="false"
+		    click="defineAtt_clickHandler(event)"/>
+	<s:List x="207" y="468" width="140" height="72" id="selectedOpe" dataProvider="{operationList}" labelField="name"  
+			contentBackgroundColor="#DADADA" borderColor="#E0E0E0"
+		    click="selectedOpe_clickHandler(event)"/>
+	
+	<s:List id="links" x="409" y="109" width="127" height="66" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{linksList}" labelField="name"></s:List>
+	<s:List id="linkedBy" x="18" y="274" width="127" height="66" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{linkedByList}" labelField="name"></s:List>
+	
+	<s:List id="children" x="14" y="509" width="136" height="81" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{childList}" labelField="name"></s:List>
+
+	<!-- Add and delete -->
+	<s:Label x="203" y="138" fontSize="14" text="Feature Type"/>
+	<s:CheckBox x="204" y="181" label="isAbstract" id="isAbstract" click="isAbstract_clickHandler(event)"/>
+	<s:TextInput x="204" y="155" id="featureTypeName" width="143" height="23"/>
+	<s:Label x="196" y="71" width="160" height="20" id="parentTypeName" backgroundColor="#dadada" verticalAlign="middle"/>
+	
+	<s:Button id="asParentButton" x="457" y="468" width="80" height="20" label="as parent"
+			  click="asParentButton_clickHandler(event)"/>
+	<s:Button x="517" y="513" label="add" id="addFTypeButton" click="addFTypeButton_clickHandler(event)" width="60" 
+			  />
+	<s:Button x="517" y="599" label="delete" id="deleteFTypeButton" click="deleteFTypeButton_clickHandler(event)" width="60" 
+			  />
+	<s:Button id="cancelParentButton" x="293" y="45" width="60" label="cancel"
+			  click="cancelParentButton_clickHandler(event)"/>
+	<s:Button x="517" y="542" label="edit" id="editFTButton" click="editFTButton_clickHandler(event)" width="60" 
+			  />
+	<s:Button x="517" y="571" label="update" id="updateButton" click="updateButton_clickHandler(event)" 
+			  width="60"/>	
+	<s:Button id="clearButton" x="295" y="106" width="60" label=" clear"
+			  click="clearButton_clickHandler(event)"/>
+	<s:Button x="208" y="222" label="edit »" id="editAttributeButton" click="editAttributeButton_clickHandler(event)" 
+			  width="55" />
+	<s:Button id="editOperationButton" x="209" y="440" width="55" label="edit »"
+			  click="editOperationButton_clickHandler(event)"/>
+	<s:Button id="selectProxyButton" x="382" y="299" width="55" height="20" label="select"
+			  click="selectProxyButton_clickHandler(event)"/>
+	<s:Label x="381" y="326" width="127" height="20" verticalAlign="middle" backgroundColor="#DADADA" id="proxyLabel"/>
+	<s:Button id="cancelProxyButton" x="517" y="325" width="60" height="20" label="cancel"
+			  click="cancelProxyButton_clickHandler(event)"/>
+	<s:Label x="197" y="52" text="parent"/>
+	<s:Label x="16" y="117" text="definition"/>
+	<s:TextArea id="defArea" x="15" y="131" width="137" height="80"/>
+	<s:Label x="270" y="227" color="#000000" text="attributes"/>
+	<s:Label x="273" y="446" color="#000000" text="operations"/>
+	<s:Label x="443" y="304" text="proxy"/>
+	<s:Label x="208" y="331" color="#000000" text="inherited attributes"/>
+	<s:List id="inheritedAtt" x="207" y="342" width="140" height="72" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{inheritedAttList}" labelField="name"
+		    click="inheritedAtt_clickHandler(event)"></s:List>
+	<s:Label x="208" y="548" color="#000000" text="inherited operations"/>
+	<s:List id="inheritedOpe" x="207" y="559" width="140" height="72" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{inheritedOpeList}" labelField="name"
+		    click="inheritedOpe_clickHandler(event)"></s:List>
+	<s:Label x="409" y="95" color="#000000" text="links"/>
+	<s:Label x="18" y="260" color="#000000" text="linkedBy"/>
+	<s:Label x="17" y="495" text="children"/>
+	<s:Label x="75" y="16" text="Feature Type Designer" fontSize="16"/>
+	<s:Label x="381" y="474" text="feature types"/>
+	<s:Label x="18" y="349" color="#000000" text="inherited linkedBy"/>
+	<s:Label x="409" y="182" color="#000000" text="inherited links"/>
+	<s:List id="inheritedLinkedBy" x="16" y="362" width="129" height="66" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{inheritedLinkedByList}" labelField="name"></s:List>
+	<s:List id="inheritedLinks" x="408" y="196" width="129" height="66" borderVisible="false"
+			contentBackgroundColor="#DADADA" dataProvider="{inheritedLinksList}" labelField="name"></s:List>
+	
+</s:Window>

@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Map editor</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+window.resizeTo(650,650);
+window.moveTo(750,20);
+</script>
+</head>
+
+<body>
+<p class="FirstHeader">Map Editor<br/>
+  地図編集<span class="secondHeader"></span></p>
+<p class="secondHeader">はじめに</p>
+<p class="mainSentence">このページでは，描画スキーマに従う地図を表示することができます．地図のタイトル，バースケール，方位等，地図が備えているべき要素を加えてレイアウトすることができます．地物を指定して，情報を取り出すことが可能な地図は，対話型の地図 (interactive map)と呼ばれますが，Map editorでは，地物を指定して，それが持っている属性を，それぞれのメディアに合わせて情報ページとして表示したり，地図データとして永続化することができます．</p>
+<p class="mainSentence">以下，このページの操作法を説明します．</p>
+<p class="secondHeader">&nbsp;</p>
+<p class="secondHeader">Map Editor</p>
+<p class="mainSentence"><img src="../figures/MapEditor_basic.png" width="608" height="706" alt="MapEditor" /></p>
+<p class="mainSentence">図１．Map Editorの操作画面</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="thirdHeader">FIELDS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Kit</strong></span><br/>
+地図表示を行うキットをオープンすると，ここにファイス名が表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Portrayal Schema</strong></span><br/>
+地図表示のための規則である，描画スキーマをオープンすると，ここにファイル名が表示されます．</p>
+<p class="mainSentence"><strong>Gazetteer</strong><br />
+地名索引をオープンすると，ここにファイル名が表示されます．</p>
+<p class="mainSentence"><strong>title/subtitle</strong><br />
+このボタンを押すと，地図の表題と副題を設定することができます．</p>
+<p class="mainSentence"><strong>north arrow</strong><br />
+このボタンを押すと，方位記号を設定することができます．</p>
+<p class="mainSentence"><strong>background<br />
+</strong>このボタンを押すと，地図の背景色を指定することができます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>Mapping Panel</strong></span><strong>（編集可能）</strong><br/>
+このパネルに描画辞書の規則に従った地図が表示されます．</p>
+<p class="mainSentence"><strong>Move（編集可能）</strong><br />
+表題や注記などを平行移動させたいときは，事前に何を移動させるかを，ここに指定します．すると，現在行える操作の名前が表示されます．指定した後，カーソルを地図上でドラッグすると，指定された要素が移動します．注記の場合は，事前にカーソルを，移動の対象となる注記に合わせてからドラッグします．</p>
+<p class="mainSentence"><strong>Map</strong><br />
+地図データのオープン，セーブをすると，ここにファイル名が表示されます．</p>
+<p class="mainSentence"><strong>Select Feature Type</strong><br />
+ここで地物の型を指定し，Show attributes チェックボックスをチェックすると，インスタンスがもつ属性の情報ページを表示することができます．詳細についてはShow attributesを参照してください．</p>
+<p class="thirdHeader">BUTTONS</p>
+<p class="mainSentence"><span class="mainSentence"><strong>open (Kit)</strong></span><br/>
+キットをオープンします．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>open (Portrayal Schema)</strong></span><br/>
+描画スキーマをオープンします．</p>
+<p class="mainSentence"><strong>open (Gazetteer)</strong><br />
+地名索引をオープンします．</p>
+<p class="mainSentence"><strong>open (Map)</strong><br />
+地図データをオープンします．</p>
+<p class="mainSentence"><strong>save (Map)</strong><br />
+地図データをセーブします．</p>
+<p class="mainSentence"><strong>Show attributes</strong><br />
+Select feature typeドロップダウンリストで地物型を指定し，次にこのチェックボックスをチェックして，カーソルを地図上に表示された地物に近づけると，地物が保持している属性の種類を示すピクトグラムボックスが表示されます．その中から適当なメディアのピクトグラムを指定すると，そのメディアに応じた情報ページが表示されます．</p>
+<p class="mainSentence"><img src="../figures/PictogramBox.png" width="244" height="204" alt="pictgram box" /></p>
+<p class="mainSentence">図１．地図上に表示されたピクトグラムボックス</p>
+<p class="mainSentence"><span class="mainSentence"><strong>&gt;</strong></span><br/>
+このボタンを押すと表示縮尺が小さくなります．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>&lt;</strong></span><br/>
+  このボタンを押すと，表示縮尺が大きくなります．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>-</strong></span><br/>
+  このボタンを押すと，表示される画面縮尺が，初期化されます．</p>
+<p class="mainSentence"><strong>fix / pan</strong><br/>
+このボタンを押すと，地図のドラッグが可能になり　(pan)，もう一度押すと不可能になります (fix)．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>スライダー</strong></span><br/>
+ベースマップの透明度を調整することができます．ベースマップの表示を目立たせないようにするときに，使用します．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>日本語</strong></span><br />
+  今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><span class="mainSentence"><strong>English</strong></span><br />
+  You can read the tutorial written in English.</p>
+<p class="mainSentence"></p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+</body>
+</html>

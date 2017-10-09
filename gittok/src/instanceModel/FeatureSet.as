@@ -4,13 +4,13 @@ package instanceModel
 	
 	
 
-	public class FeatureSet
+	public class FeatureSet extends GeodataElement
 	{
-		public var typeName:String;
 		public var features:Dictionary;
 		
 		public function FeatureSet()
 		{
+			super();
 			features = new Dictionary();
 		}
 		

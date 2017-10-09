@@ -1,0 +1,839 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="ICamera,com.google.maps.interfaces.ICamera,attitude,center,focalLength,is3D,maxPitch,maxRoll,maxYaw,minPitch,minRoll,minYaw,shadowMatrix,viewport,zoom,zoomScale,getLatLngClosestToCenter,getTransformationGeometry,getWorldViewPolygon,isAhead,isOnMap,latLngToViewport,latLngToWorld,viewportToLatLng,viewportToWorld,worldDistance,worldToLatLng,worldToViewport" name="keywords">
+<title>com.google.maps.interfaces.ICamera</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'ICamera - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/interfaces/ICamera.html&amp;com/google/maps/interfaces/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Interface&nbsp;ICamera</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Interface ICamera"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.interfaces</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Interface</td><td class="classSignature">public interface ICamera extends <a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a>, <a href="none">flash.events.IEventDispatcher</a>, <a href="IWrappable.html">IWrappable</a></td>
+</tr>
+</table>
+<p></p>
+   Interface ICamera provides access to viewing geometry and transformation
+   methods needed when using a map with perspective. Use Map3D.camera
+   to return the map's camera as an ICamera instance.
+   <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<div class="showHideLinks">
+<div class="hideInheritedProperty" id="hideInheritedProperty">
+<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
+</div>
+<div class="showInheritedProperty" id="showInheritedProperty">
+<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
+</div>
+</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#attitude">attitude</a> : <a href="../geom/Attitude.html">Attitude</a>
+<div class="summaryTableDescription">[read-only]
+     Map attitude.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#center">center</a> : <a href="../../maps/LatLng.html">LatLng</a>
+<div class="summaryTableDescription">[read-only]
+     Map center.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#focalLength">focalLength</a> : Number<div class="summaryTableDescription">[read-only]
+     Camera focal length.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#interfaceChain">interfaceChain</a> : Array<div class="summaryTableDescription">
+   List of interfaces for wrapping this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#is3D">is3D</a> : Boolean<div class="summaryTableDescription">[read-only]
+     Whether we are in 3-D view.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#maxPitch">maxPitch</a> : Number<div class="summaryTableDescription">[read-only]
+     Maximum pitch in degrees.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#maxRoll">maxRoll</a> : Number<div class="summaryTableDescription">[read-only]
+     Maximum roll in degrees.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#maxYaw">maxYaw</a> : Number<div class="summaryTableDescription">[read-only]
+     Maximum yaw in degrees.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#minPitch">minPitch</a> : Number<div class="summaryTableDescription">[read-only]
+     Minimum pitch in degrees.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#minRoll">minRoll</a> : Number<div class="summaryTableDescription">[read-only]
+     Minimum roll in degrees.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#minYaw">minYaw</a> : Number<div class="summaryTableDescription">[read-only]
+     Minimum yaw in degrees.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#shadowMatrix">shadowMatrix</a> : Matrix<div class="summaryTableDescription">[read-only]
+     Transformation matrix to apply to an image drawn on the viewport
+     to generate its shadow (drawn on the viewport, but appears to stretch
+     along the map).</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#viewport">viewport</a> : Point<div class="summaryTableDescription">[read-only]
+     Viewport size.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#wrapper">wrapper</a> : Object<div class="summaryTableDescription">
+   Instance of the cross-domain wrapper for this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#zoom">zoom</a> : Number<div class="summaryTableDescription">[read-only]
+     Map zoom.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#zoomScale">zoomScale</a> : Number<div class="summaryTableDescription">[read-only]
+     Map zoom scale.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<div class="showHideLinks">
+<div class="hideInheritedMethod" id="hideInheritedMethod">
+<a onclick="javascript:setInheritedVisible(false,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Methods</a>
+</div>
+<div class="showInheritedMethod" id="showInheritedMethod">
+<a onclick="javascript:setInheritedVisible(true,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Methods</a>
+</div>
+</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IWrappableEventDispatcher.html#getBaseEventDispatcher()">getBaseEventDispatcher</a>():Object</div>
+<div class="summaryTableDescription">
+   Retrieves the base event dispatcher object that allows access to event
+   dispatching capability for cross-domain objects.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getLatLngClosestToCenter()">getLatLngClosestToCenter</a>(latLng:<a href="../LatLng.html">LatLng</a>):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+     This method takes a <code>LatLng</code> and returns a
+     <code>LatLng</code> that either is the same, or is adjusted by a
+     multiple of 360 degrees longitudinally, so as to be as close as
+     possible to the map center.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getTransformationGeometry()">getTransformationGeometry</a>():<a href="../geom/TransformationGeometry.html">TransformationGeometry</a>
+</div>
+<div class="summaryTableDescription">
+     Returns camera transformation geometry information that can be used to
+     construct a 4 x 4 matrix for transforming (x,y,z,w) positions.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getWorldViewPolygon()">getWorldViewPolygon</a>():Array</div>
+<div class="summaryTableDescription">
+     Returns the polygon that encloses the region of the map visible within
+     the viewport.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#isAhead()">isAhead</a>(latLng:<a href="../LatLng.html">LatLng</a>):Boolean</div>
+<div class="summaryTableDescription">
+     Determines whether a point is in front of the camera.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#isOnMap()">isOnMap</a>(viewportPoint:Point):Boolean</div>
+<div class="summaryTableDescription">
+     Determines whether a viewport point is on the displayed map, which in
+     3-D means whether it is below the horizon.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#latLngToViewport()">latLngToViewport</a>(latlng:<a href="../LatLng.html">LatLng</a>):Point</div>
+<div class="summaryTableDescription">
+     Transforms a lat/lng location to a point on the viewport.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#latLngToWorld()">latLngToWorld</a>(latlng:<a href="../LatLng.html">LatLng</a>):Point</div>
+<div class="summaryTableDescription">
+     Transforms a lat/lng location to world coordinates.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#viewportToLatLng()">viewportToLatLng</a>(viewportPoint:Point):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+     Transforms a viewport location to lat/lng.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#viewportToWorld()">viewportToWorld</a>(viewportPoint:Point):Point</div>
+<div class="summaryTableDescription">
+     Transforms viewport coordinate to world coordinates.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#worldDistance()">worldDistance</a>(worldPoint:Point):Number</div>
+<div class="summaryTableDescription">
+     Returns the distance from the camera to a point given in world
+     coordinates.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#worldToLatLng()">worldToLatLng</a>(worldPoint:Point):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+     Transforms world coordinates to an unwrapped lat/lng location.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#worldToViewport()">worldToViewport</a>(point:Point):Point</div>
+<div class="summaryTableDescription">
+     Transforms world coordinates to viewport coordinates.</div>
+</td><td class="summaryTableOwnerCol">ICamera</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="attitude"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">attitude</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>attitude:<a href="../geom/Attitude.html">Attitude</a></code>&nbsp;&nbsp;[read-only]<p>
+     Map attitude.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get attitude():<a href="../geom/Attitude.html">Attitude</a></code>
+<br>
+</div>
+<a name="center"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">center</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>center:<a href="../../maps/LatLng.html">LatLng</a></code>&nbsp;&nbsp;[read-only]<p>
+     Map center.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get center():<a href="../../maps/LatLng.html">LatLng</a></code>
+<br>
+</div>
+<a name="focalLength"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">focalLength</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>focalLength:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Camera focal length.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get focalLength():Number</code>
+<br>
+</div>
+<a name="is3D"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">is3D</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>is3D:Boolean</code>&nbsp;&nbsp;[read-only]<p>
+     Whether we are in 3-D view.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get is3D():Boolean</code>
+<br>
+</div>
+<a name="maxPitch"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">maxPitch</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>maxPitch:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Maximum pitch in degrees.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get maxPitch():Number</code>
+<br>
+</div>
+<a name="maxRoll"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">maxRoll</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>maxRoll:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Maximum roll in degrees.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get maxRoll():Number</code>
+<br>
+</div>
+<a name="maxYaw"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">maxYaw</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>maxYaw:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Maximum yaw in degrees.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get maxYaw():Number</code>
+<br>
+</div>
+<a name="minPitch"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">minPitch</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>minPitch:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Minimum pitch in degrees.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get minPitch():Number</code>
+<br>
+</div>
+<a name="minRoll"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">minRoll</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>minRoll:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Minimum roll in degrees.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get minRoll():Number</code>
+<br>
+</div>
+<a name="minYaw"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">minYaw</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>minYaw:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Minimum yaw in degrees.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get minYaw():Number</code>
+<br>
+</div>
+<a name="shadowMatrix"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">shadowMatrix</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>shadowMatrix:Matrix</code>&nbsp;&nbsp;[read-only]<p>
+     Transformation matrix to apply to an image drawn on the viewport
+     to generate its shadow (drawn on the viewport, but appears to stretch
+     along the map).
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get shadowMatrix():Matrix</code>
+<br>
+</div>
+<a name="viewport"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">viewport</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>viewport:Point</code>&nbsp;&nbsp;[read-only]<p>
+     Viewport size.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get viewport():Point</code>
+<br>
+</div>
+<a name="zoom"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">zoom</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>zoom:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Map zoom.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get zoom():Number</code>
+<br>
+</div>
+<a name="zoomScale"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">zoomScale</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>zoomScale:Number</code>&nbsp;&nbsp;[read-only]<p>
+     Map zoom scale.
+     </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get zoomScale():Number</code>
+<br>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="getLatLngClosestToCenter()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getLatLngClosestToCenter</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getLatLngClosestToCenter(latLng:<a href="../LatLng.html">LatLng</a>):<a href="../../maps/LatLng.html">LatLng</a></code><p>
+     This method takes a <code>LatLng</code> and returns a
+     <code>LatLng</code> that either is the same, or is adjusted by a
+     multiple of 360 degrees longitudinally, so as to be as close as
+     possible to the map center. In a 3-D viewing mode the returned
+     <code>LatLng</code> will correspond to the visible region of the map.
+     Mathematically, the given <code>LatLng</code>'s longitude will be
+     wrapped into the range [center_longitude-180, center_longitude+180].
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash; LatLng to be wrapped.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                        LatLng with longitude wrapped into range
+         [center_longitude-180, center_longitude+180]
+     
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getTransformationGeometry()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getTransformationGeometry</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getTransformationGeometry():<a href="../geom/TransformationGeometry.html">TransformationGeometry</a></code><p>
+     Returns camera transformation geometry information that can be used to
+     construct a 4 x 4 matrix for transforming (x,y,z,w) positions. You
+     can use this function as the basis for performing transformations
+     more advanced than converting between 2-D world position and 2-D
+     viewport position.
+          The Google Maps API for Flash demo gallery contains examples of using
+     these coefficients to perform full 3-D transformations.
+          </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../geom/TransformationGeometry.html">TransformationGeometry</a></code> &mdash; 
+                        Camera transformation geometry.
+     
+                        
+                     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">com.google.maps.geom.TransformationGeometry()</div>
+</div>
+<a name="getWorldViewPolygon()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getWorldViewPolygon</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getWorldViewPolygon():Array</code><p>
+     Returns the polygon that encloses the region of the map visible within
+     the viewport. The vertices of this polygon are in world coords.
+     This polygon is the boundary of the full map clipped to the viewport.
+     </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Array</code> &mdash; Array of Point vertices that make up the polygon. The polygon
+         is implicitly closed (element 0 is not repeated as element n-1 within
+         the array).
+     </td>
+</tr>
+</table>
+</div>
+<a name="isAhead()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isAhead</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function isAhead(latLng:<a href="../LatLng.html">LatLng</a>):Boolean</code><p>
+     Determines whether a point is in front of the camera. All points
+     in front of the focal plane are considered to be in front of the
+     camera. If this method returns true then it is guaranteed that
+     latLngToViewport(latLng) will return a point below the
+     horizon.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  Location to test.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if the point is in front of the camera (that is its
+         projection is below the horizon).
+     </td>
+</tr>
+</table>
+</div>
+<a name="isOnMap()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isOnMap</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function isOnMap(viewportPoint:Point):Boolean</code><p>
+     Determines whether a viewport point is on the displayed map, which in
+     3-D means whether it is below the horizon.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">viewportPoint</span>:Point</code> &mdash;  Viewport point to test.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if the point is below the horizon.
+     </td>
+</tr>
+</table>
+</div>
+<a name="latLngToViewport()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">latLngToViewport</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function latLngToViewport(latlng:<a href="../LatLng.html">LatLng</a>):Point</code><p>
+     Transforms a lat/lng location to a point on the viewport. This function
+     always returns a point, although if the lat/lng is behind the camera then
+     this point will be above the horizon. Therefore to determine whether a
+     point is visible, users should first call isAhead, then this
+     function. It is also possible for this function to return points that
+     have both coordinates equal to infinity (occurs in the case that the
+     point is on the boundary between the "forwards" and "backwards" parts of
+     the world plane). Once again, querying isAhead first will prevent
+     infinite points from being generated.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latlng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  Location as a LatLng.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Point</code> &mdash;  Location in viewport coordinates (may be outside the
+         viewport if the location is not visible).
+     </td>
+</tr>
+</table>
+</div>
+<a name="latLngToWorld()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">latLngToWorld</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function latLngToWorld(latlng:<a href="../LatLng.html">LatLng</a>):Point</code><p>
+     Transforms a lat/lng location to world coordinates.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latlng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  Location as a LatLng.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Point</code> &mdash;  World coordinates.
+     </td>
+</tr>
+</table>
+</div>
+<a name="viewportToLatLng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">viewportToLatLng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function viewportToLatLng(viewportPoint:Point):<a href="../../maps/LatLng.html">LatLng</a></code><p>
+     Transforms a viewport location to lat/lng. This function
+     always returns a location, although if the point is above the horizon
+     then the lat/lng will be behind the camera. Therefore users
+     should sanitize viewport locations using isOnMap before
+     calling this function.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">viewportPoint</span>:Point</code> &mdash;  Location in viewport coordinates.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         Location as a LatLng.
+     
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="viewportToWorld()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">viewportToWorld</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function viewportToWorld(viewportPoint:Point):Point</code><p>
+     Transforms viewport coordinate to world coordinates.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">viewportPoint</span>:Point</code> &mdash;  Viewport coordinates.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Point</code> &mdash;  World coordinates.
+     </td>
+</tr>
+</table>
+</div>
+<a name="worldDistance()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">worldDistance</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function worldDistance(worldPoint:Point):Number</code><p>
+     Returns the distance from the camera to a point given in world
+     coordinates.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">worldPoint</span>:Point</code> &mdash;  Point in world coordinates.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  Distance in world units.
+     </td>
+</tr>
+</table>
+</div>
+<a name="worldToLatLng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">worldToLatLng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function worldToLatLng(worldPoint:Point):<a href="../../maps/LatLng.html">LatLng</a></code><p>
+     Transforms world coordinates to an unwrapped lat/lng location.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">worldPoint</span>:Point</code> &mdash;  World coordinates.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         Location as a LatLng.
+     
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="worldToViewport()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">worldToViewport</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function worldToViewport(point:Point):Point</code><p>
+     Transforms world coordinates to viewport coordinates.
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">point</span>:Point</code> &mdash;  World coordinates.
+     </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Point</code> &mdash;  Viewport coordinates.
+     </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

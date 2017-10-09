@@ -1,11 +1,12 @@
 package portrayal.symbol
 {
-	import dataTypes.theme.*;
 	import dataTypes.spatialGeometry.*;
+	import dataTypes.theme.*;
 	
 	import flash.display.*;
 	import flash.display.Sprite;
 	import flash.geom.Rectangle;
+	import flash.utils.Dictionary;
 	import flash.utils.getQualifiedClassName;
 	
 	import instanceModel.Kit;
@@ -34,7 +35,7 @@ package portrayal.symbol
 			return pointObj;
 		}
 
-		public function decode(pointObj:Object):void
+		public function decode(pointObj:Object, btmaps:Dictionary):void
 		{
 			point = pointObj.point;
 			style = pointObj.style;
@@ -78,10 +79,18 @@ package portrayal.symbol
 					var radius:Number = math.Distance.p2p(center, bcrd);
 						
 					var bStyle:LineSymbolStyle = cStyle.borderStyle;
-					graphics.lineStyle(bStyle.thickness, 
-						bStyle.color, bStyle.alpha, false, "normal", 
-						bStyle.caps, bStyle.joints, 3);
-					graphics.beginFill(cStyle.color, cStyle.alpha);
+					if (bStyle != null) {
+						graphics.lineStyle(bStyle.thickness, 
+							bStyle.color, bStyle.alpha, false, "normal", 
+							bStyle.caps, bStyle.joints, 3);
+					}
+					if (cStyle.fillStyle) {
+						graphics.beginFill(cStyle.color, cStyle.alpha);
+					}
+					else {
+						var bitmap:Bitmap = btmaps[cStyle.url];
+						graphics.beginBitmapFill(bitmap.bitmapData, null, true);
+					}
 					graphics.drawCircle(center.x, center.y, radius);
 					graphics.endFill();
 					
@@ -89,16 +98,23 @@ package portrayal.symbol
 				else if (elementStyle is AreaSymbolStyle) {
 					var aStyle:AreaSymbolStyle = elementStyle as AreaSymbolStyle;
 					lStyle = aStyle.borderStyle;
-					graphics.lineStyle(lStyle.thickness, 
-						lStyle.color, lStyle.alpha, false, "normal", 
-						lStyle.caps, lStyle.joints, 3);
-										
+					if (lStyle != null) {
+						graphics.lineStyle(lStyle.thickness, 
+							lStyle.color, lStyle.alpha, false, "normal", 
+							lStyle.caps, lStyle.joints, 3);
+					}					
 					element = elements.getItemAt(i);
 					cString = element as CoordinateArray;
 						
 					m = cString.length;
 					coord = cString.getItemAt(0) as Coordinate2;
-					graphics.beginFill(aStyle.color, aStyle.alpha);
+					if (aStyle.fillStyle) {
+						graphics.beginFill(aStyle.color, aStyle.alpha);
+					}
+					else {
+						bitmap = btmaps[aStyle.url];
+						graphics.beginBitmapFill(bitmap.bitmapData, null, true);
+					}
 					graphics.moveTo(coord.x, coord.y);
 					for (j = 1; j < m; j++) {
 						coord = cString.getItemAt(j) as Coordinate2;

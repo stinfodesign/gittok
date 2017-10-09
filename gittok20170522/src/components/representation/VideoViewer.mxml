@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  width="428" height="472"
+		  title="Video Viewer"
+		  creationComplete="initializeApp()">
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayList;
+			
+			import spark.events.IndexChangeEvent;
+			
+			public var kitURL:String = null;
+			
+			[Bindable]
+			protected var videoURL:String;
+			
+			[Bindable]
+			public var videoObjectArray:ArrayList = new ArrayList();
+			
+			private var videoArrayArray:ArrayList;
+			
+			[Bindable]
+			public var videoArray:ArrayList;
+			
+			protected function initializeApp():void {
+				this.move(300, 400);
+				
+				videoArrayArray = new ArrayList();
+				
+				for (var i:int = 0; i < videoObjectArray.length; i++) {
+					var videoObj:Object = videoObjectArray.getItemAt(i) as Object;
+					videoArrayArray.addItem(videoObj.videoArray);
+				}
+				
+				attributesDropdown.prompt = "Select attribute";
+				videoList.prompt = "Select video";
+
+			}
+			
+			protected function volumeSlider_changeHandler(event:Event):void
+			{
+				if (videoView != null) videoView.volume = volumeSlider.value;
+			}
+			
+			protected function startButton_clickHandler(event:MouseEvent):void
+			{
+				if (videoView != null) {
+					videoView.play();
+					videoView.volume = volumeSlider.value;
+				}
+			}
+			
+			protected function pauseButton_clickHandler(event:MouseEvent):void
+			{
+				if (videoView != null) {
+					if (pauseButton.label == "pause") {
+						pauseButton.label = "restart";
+						videoView.pause();
+					}
+					else {
+						pauseButton.label = "pause";
+						videoView.play();
+						videoView.volume = volumeSlider.value;
+					}
+				}
+			}
+			
+			protected function stopButton_clickHandler(event:MouseEvent):void
+			{
+				videoView.stop();
+			}
+			
+			protected function videoList_changeHandler(event:IndexChangeEvent):void
+			{
+				var videoIndex:int = videoList.selectedIndex;
+				if (videoIndex == -1) return;
+				
+				var videoFilePath:Object = videoArray.getItemAt(videoIndex) as Object;
+				videoURL = kitURL + videoFilePath.value;
+			}
+			
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/videoViewer_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/videoViewer_en.html");
+				navigateToURL(request);
+			}
+
+			
+			protected function attributesDropdown_changeHandler(event:IndexChangeEvent):void
+			{
+				var index:int = attributesDropdown.selectedIndex;
+				
+				var videoObj:Object = videoObjectArray.getItemAt(index) as Object;
+				videoArray = videoObj.videoArray as ArrayList;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Image x="10" y="7" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="77" y="15" text="Videos" fontSize="16"/>
+	
+	<s:Label x="82" y="59" text="Attributes"/>
+	<s:DropDownList id="attributesDropdown" x="142" y="55" width="254"
+					change="attributesDropdown_changeHandler(event)"
+					dataProvider="{videoObjectArray}" labelField="attName"></s:DropDownList>
+
+	<s:Label x="112" y="89" text="List"/>
+	<s:DropDownList id="videoList" x="142" y="84" width="254" height="20"
+					dataProvider="{videoArray}" labelField="value"
+					change="videoList_changeHandler(event)"></s:DropDownList>
+	
+	<s:Rect left="36" top="120" right="20" bottom="65">
+		<s:stroke>
+			<s:SolidColorStroke color="0xc8c8c8"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xdadada"/>
+		</s:fill>
+	</s:Rect>
+	
+	<s:VideoDisplay left="36" top="120" right="20" bottom="65" id="videoView" autoPlay="false"  source="{videoURL}"/>
+	<s:Label left="36" top="103" text="Video"/>
+
+	
+	<s:Group left="36" bottom="10">
+			<s:Label x="199" y="30" fontSize="11" text="Volume"/>
+			<s:HSlider id="volumeSlider" x="183" y="40" width="67"
+			   change="volumeSlider_changeHandler(event)" maximum="1.0" minimum="0.0"
+			   stepSize="0.01" value="0.5"/>
+			<s:Button id="startButton" x="125" y="5" width="54" label="start"
+			  click="startButton_clickHandler(event)"/>
+			<s:Button id="pauseButton" x="185" y="5" width="60" label="pause"
+			  click="pauseButton_clickHandler(event)"/>
+			<s:Button id="stopButton" x="251" y="5" width="58" label="stop"
+			  click="stopButton_clickHandler(event)"/>
+	</s:Group>
+		
+	<s:Label right="58" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
+	
+</s:Window>

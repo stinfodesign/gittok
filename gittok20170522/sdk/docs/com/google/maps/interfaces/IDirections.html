@@ -1,0 +1,619 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="IDirections,com.google.maps.interfaces.IDirections,bounds,copyrightsHtml,distance,distanceHtml,duration,durationHtml,encodedPolylineData,numGeocodes,numRoutes,status,summaryHtml,clear,createPolyline,getGeocode,getOptions,getRoute,load,setOptions" name="keywords">
+<title>com.google.maps.interfaces.IDirections</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'IDirections - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/interfaces/IDirections.html&amp;com/google/maps/interfaces/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Interface&nbsp;IDirections</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Interface IDirections"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.interfaces</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Interface</td><td class="classSignature">public interface IDirections extends <a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a>, <a href="none">flash.events.IEventDispatcher</a>, <a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implementors</td><td><a href="../services/Directions.html">Directions</a></td>
+</tr>
+</table>
+<p></p>
+ IDirections is the interface implemented by a Directions object.
+ A Directions object communicates with Google servers to obtain directions
+ between two or more waypoints. Responses to such requests contain an encoded
+ polyline representing the directions, and HTML-formatted steps to take.
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<div class="showHideLinks">
+<div class="hideInheritedProperty" id="hideInheritedProperty">
+<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
+</div>
+<div class="showInheritedProperty" id="showInheritedProperty">
+<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
+</div>
+</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#bounds">bounds</a> : <a href="../../maps/LatLngBounds.html">LatLngBounds</a>
+<div class="summaryTableDescription">[read-only]
+   The bounding box for the result of this directions query.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#copyrightsHtml">copyrightsHtml</a> : String<div class="summaryTableDescription">[read-only] An HTML string containing the copyright information for this result.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#distance">distance</a> : Number<div class="summaryTableDescription">[read-only] The total distance of this entire directions request in meters.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#distanceHtml">distanceHtml</a> : String<div class="summaryTableDescription">[read-only]
+   The total distance of this entire directions request in a localized string
+   representation in the units that are predominant in the starting country
+   of this set of directions.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#duration">duration</a> : Number<div class="summaryTableDescription">[read-only] The total time of this entire directions request in seconds.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#durationHtml">durationHtml</a> : String<div class="summaryTableDescription">[read-only]
+   The total time of this entire directions request in a localized string
+   representation.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#encodedPolylineData">encodedPolylineData</a> : <a href="../overlays/EncodedPolylineData.html">EncodedPolylineData</a>
+<div class="summaryTableDescription">[read-only]
+   The encoded polyline data for the directions request.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#interfaceChain">interfaceChain</a> : Array<div class="summaryTableDescription">
+   List of interfaces for wrapping this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#numGeocodes">numGeocodes</a> : uint<div class="summaryTableDescription">[read-only]
+   The number of geocoded entries available in the result.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#numRoutes">numRoutes</a> : uint<div class="summaryTableDescription">[read-only]
+   The number of routes available in the result.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#status">status</a> : uint<div class="summaryTableDescription">[read-only]
+   The status code of the directions request.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#summaryHtml">summaryHtml</a> : String<div class="summaryTableDescription">[read-only]
+   An HTML snippet containing a summary of the distance and time for this
+   entire directions request.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#wrapper">wrapper</a> : Object<div class="summaryTableDescription">
+   Instance of the cross-domain wrapper for this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<div class="showHideLinks">
+<div class="hideInheritedMethod" id="hideInheritedMethod">
+<a onclick="javascript:setInheritedVisible(false,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Methods</a>
+</div>
+<div class="showInheritedMethod" id="showInheritedMethod">
+<a onclick="javascript:setInheritedVisible(true,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Methods</a>
+</div>
+</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clear()">clear</a>():void</div>
+<div class="summaryTableDescription">
+   Clears any existing directions results and cancels any pending
+   <code>load()</code> requests.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#createPolyline()">createPolyline</a>(options:<a href="../overlays/PolylineOptions.html">PolylineOptions</a> = null):<a href="../interfaces/IPolyline.html">IPolyline</a>
+</div>
+<div class="summaryTableDescription">
+   Create the Polyline object associated with the entire directions
+   response.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IWrappableEventDispatcher.html#getBaseEventDispatcher()">getBaseEventDispatcher</a>():Object</div>
+<div class="summaryTableDescription">
+   Retrieves the base event dispatcher object that allows access to event
+   dispatching capability for cross-domain objects.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getGeocode()">getGeocode</a>(i:uint):<a href="../services/Placemark.html">Placemark</a>
+</div>
+<div class="summaryTableDescription">
+   Return the geocoded result for the ith waypoint.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getOptions()">getOptions</a>():<a href="../services/DirectionsOptions.html">DirectionsOptions</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the directions object's options.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getRoute()">getRoute</a>(i:uint):<a href="../services/Route.html">Route</a>
+</div>
+<div class="summaryTableDescription">
+   Return the Route object for the ith route in the response.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#load()">load</a>(query:String):void</div>
+<div class="summaryTableDescription">
+   Initiates a directions request.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setOptions()">setOptions</a>(options:<a href="../services/DirectionsOptions.html">DirectionsOptions</a>):void</div>
+<div class="summaryTableDescription">
+   Updates the directions options.</div>
+</td><td class="summaryTableOwnerCol">IDirections</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="bounds"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">bounds</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>bounds:<a href="../../maps/LatLngBounds.html">LatLngBounds</a></code>&nbsp;&nbsp;[read-only]<p>
+   The bounding box for the result of this directions query. This is will be
+   null if no successful result is available.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get bounds():<a href="../../maps/LatLngBounds.html">LatLngBounds</a></code>
+<br>
+</div>
+<a name="copyrightsHtml"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">copyrightsHtml</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>copyrightsHtml:String</code>&nbsp;&nbsp;[read-only]<p> An HTML string containing the copyright information for this result. </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get copyrightsHtml():String</code>
+<br>
+</div>
+<a name="distance"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">distance</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>distance:Number</code>&nbsp;&nbsp;[read-only]<p> The total distance of this entire directions request in meters. </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get distance():Number</code>
+<br>
+</div>
+<a name="distanceHtml"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">distanceHtml</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>distanceHtml:String</code>&nbsp;&nbsp;[read-only]<p>
+   The total distance of this entire directions request in a localized string
+   representation in the units that are predominant in the starting country
+   of this set of directions.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get distanceHtml():String</code>
+<br>
+</div>
+<a name="duration"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">duration</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>duration:Number</code>&nbsp;&nbsp;[read-only]<p> The total time of this entire directions request in seconds. </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get duration():Number</code>
+<br>
+</div>
+<a name="durationHtml"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">durationHtml</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>durationHtml:String</code>&nbsp;&nbsp;[read-only]<p>
+   The total time of this entire directions request in a localized string
+   representation.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get durationHtml():String</code>
+<br>
+</div>
+<a name="encodedPolylineData"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">encodedPolylineData</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>encodedPolylineData:<a href="../overlays/EncodedPolylineData.html">EncodedPolylineData</a></code>&nbsp;&nbsp;[read-only]<p>
+   The encoded polyline data for the directions request.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get encodedPolylineData():<a href="../overlays/EncodedPolylineData.html">EncodedPolylineData</a></code>
+<br>
+</div>
+<a name="numGeocodes"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">numGeocodes</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>numGeocodes:uint</code>&nbsp;&nbsp;[read-only]<p>
+   The number of geocoded entries available in the result. For a successful
+   query, this should be equal to the total number of input waypoints. When
+   no results are available (either because no query was issued or because
+   the previous query was unsuccessful), this will be 0.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get numGeocodes():uint</code>
+<br>
+</div>
+<a name="numRoutes"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">numRoutes</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>numRoutes:uint</code>&nbsp;&nbsp;[read-only]<p>
+   The number of routes available in the result. For a successful query, this
+   should be the total number of input waypoints minus 1. When no results are
+   available (either because no query was issued or because the previous
+   query was unsuccessful), this will be 0.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get numRoutes():uint</code>
+<br>
+</div>
+<a name="status"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">status</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>status:uint</code>&nbsp;&nbsp;[read-only]<p>
+   The status code of the directions request. This will be 500 if no result
+   is available.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get status():uint</code>
+<br>
+</div>
+<a name="summaryHtml"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">summaryHtml</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>summaryHtml:String</code>&nbsp;&nbsp;[read-only]<p>
+   An HTML snippet containing a summary of the distance and time for this
+   entire directions request.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get summaryHtml():String</code>
+<br>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="clear()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clear</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function clear():void</code><p>
+   Clears any existing directions results and cancels any pending
+   <code>load()</code> requests.
+   </p></div>
+<a name="createPolyline()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">createPolyline</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function createPolyline(options:<a href="../overlays/PolylineOptions.html">PolylineOptions</a> = null):<a href="../interfaces/IPolyline.html">IPolyline</a></code><p>
+   Create the Polyline object associated with the entire directions
+   response. Note that there is a single polyline that represents all routes
+   in the response. This object can be created only after the directions
+   results have been loaded (i.e. the "load" event has been triggered).
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">options</span>:<a href="../overlays/PolylineOptions.html">PolylineOptions</a></code> (default = <code>null</code>)<code></code> &mdash;  Options for the creation of the polyline.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IPolyline.html">IPolyline</a></code> &mdash; 
+                         The Polyline object that represents the directions requested.
+   
+                        
+                     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">com.google.maps.services.Polyline</div>
+</div>
+<a name="getGeocode()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getGeocode</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getGeocode(i:uint):<a href="../services/Placemark.html">Placemark</a></code><p>
+   Return the geocoded result for the ith waypoint.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">i</span>:uint</code> &mdash;  The index of the geocoded result to return. This should be in the
+       range <code>0</code> to <code>numGeocodes - 1</code>, inclusive.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../services/Placemark.html">Placemark</a></code> &mdash; 
+                         The Placemark object representing the ith geocoded result
+       in the response.
+   
+                        
+                     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../services/Placemark.html" target="">com.google.maps.services.Placemark</a>
+</div>
+</div>
+<a name="getOptions()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getOptions</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getOptions():<a href="../services/DirectionsOptions.html">DirectionsOptions</a></code><p>
+   Retrieves the directions object's options.
+   Use the setOptions() method to modify directions object's options.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../services/DirectionsOptions.html">DirectionsOptions</a></code> &mdash; 
+                         Full set of options for the directions object.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getRoute()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getRoute</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getRoute(i:uint):<a href="../services/Route.html">Route</a></code><p>
+   Return the Route object for the ith route in the response.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">i</span>:uint</code> &mdash;  The index of the route to return. This should be in the range
+       <code>0</code> to <code>numRoutes - 1</code>, inclusive.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../services/Route.html">Route</a></code> &mdash; 
+                         The Route object for the ith route in the response.
+   
+                        
+                     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../services/Route.html" target="">com.google.maps.services.Route</a>
+</div>
+</div>
+<a name="load()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">load</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function load(query:String):void</code><p>
+   Initiates a directions request. Dispatches either
+   <code>DirectionsEvent.DIRECTIONS_SUCCESS</code>,
+   <code>DirectionsEvent.DIRECTIONS_FAILURE</code>, or
+   <code>DirectionsEvent.DIRECTIONS_ABORTED</code>
+   on completion. Each event serves
+   as a notification that the directions response has come back from the
+   server, and in the case of the success event, the response information can
+   be retrieved from this object. When directions results are received, this
+   object clears old results, replacing them with new ones. Directions results
+   consist of multiple routes, one per
+   consecutive pair of waypoints/addresses specified in the query. In turn,
+   routes consist of multiple steps. If a previous
+   <code>load()</code> request has not completed when a new call to
+   <code>load()</code> is invoked, the previous request is cancelled and a
+   <code>DirectionsEvent.DIRECTIONS_ABORTED</code> event will be dispatched
+   for that request. Thus,
+   you can use a single Directions object to issue directions requests
+   serially, but to generate multiple requests in parallel, you must use
+   multiple Directions objects.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">query</span>:String</code> &mdash;  A Maps-style directions query.  This can be of the form
+     "from: src to: dst1 to: dst2 ..." or any free-form directions query
+     ("SFO to SJC").
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Throws</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code></code> &mdash;  A null or empty query will cause an ArgumentError
+       to be thrown.
+   </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="../services/DirectionsEvent.html" target="">com.google.maps.services.DirectionsEvent</a>
+<br>
+<a href="../services/Route.html" target="">com.google.maps.services.Route</a>
+<br>
+<a href="../services/Step.html" target="">com.google.maps.services.Step</a>
+</div>
+</div>
+<a name="setOptions()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setOptions</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setOptions(options:<a href="../services/DirectionsOptions.html">DirectionsOptions</a>):void</code><p>
+   Updates the directions options.
+   The options parameter may specify a complete or partial set
+   of directions options.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">options</span>:<a href="../services/DirectionsOptions.html">DirectionsOptions</a></code> &mdash;  New full or partial set of options for directions.
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

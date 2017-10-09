@@ -4,9 +4,8 @@ package instanceModel
 	
 	import gfm.AssociationType;
 	
-	public class AssociationSet
+	public class AssociationSet extends GeodataElement
 	{
-		public var typeName:String;
 		public var associations:Dictionary;
 		
 		public function AssociationSet()

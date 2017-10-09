@@ -31,19 +31,16 @@ package portrayal.symbolStyle
 			
 			str += '</ComplexSymbolStyle>';
 			
-			return XML(str);
-			
+			return XML(str);			
 		}
 		
 		public override function setXML(_xml:XML, lStyleDic:Dictionary = null):void {
 			var strXMLList:XMLList = _xml.inheritance.children();	
 			super.setXML(strXMLList[0]);
+			
 			lineSymbolStyle.setXML(_xml.LineSymbolStyle[0], lStyleDic);
 			pointSymbolStyle.setXML(_xml.PointSymbolStyle[0], lStyleDic);
-			if (_xml.ComplexSymbolStyle.AreaSymbolStyle[0] != null)
-				areaSymbolStyle.setXML(_xml.AreaSymbolStyle[0], lStyleDic);
-		}
-		
-		
+			areaSymbolStyle.setXML(_xml.AreaSymbolStyle[0], lStyleDic);
+		}		
 	}
 }

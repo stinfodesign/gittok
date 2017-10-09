@@ -1,0 +1,853 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="IMap3D,com.google.maps.interfaces.IMap3D,camera,dragMode,viewMode,cancelFlyTo,flyTo,getAttitude,setAttitude" name="keywords">
+<title>com.google.maps.interfaces.IMap3D</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'IMap3D - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/interfaces/IMap3D.html&amp;com/google/maps/interfaces/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Interface&nbsp;IMap3D</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Interface IMap3D"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.interfaces</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Interface</td><td class="classSignature">public interface IMap3D extends <a href="IMap.html">IMap</a>, <a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a>, <a href="none">flash.events.IEventDispatcher</a>, <a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implementors</td><td><a href="../../maps/Map3D.html">Map3D</a></td>
+</tr>
+</table>
+<p></p>
+ IMap3D is the interface implemented by Map3D.
+ Create an instance of class Map3D to create a map that supports 3-D views.
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<div class="showHideLinks">
+<div class="hideInheritedProperty" id="hideInheritedProperty">
+<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
+</div>
+<div class="showInheritedProperty" id="showInheritedProperty">
+<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
+</div>
+</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#camera">camera</a> : <a href="../interfaces/ICamera.html">ICamera</a>
+<div class="summaryTableDescription">[read-only]
+   The camera that may be used to return information about the viewing
+   geometry and perform transformations between lat-lng, world and
+   viewport coordinates.</div>
+</td><td class="summaryTableOwnerCol">IMap3D</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#dragMode">dragMode</a> : int<div class="summaryTableDescription">
+   The drag mode that is being used on the map.</div>
+</td><td class="summaryTableOwnerCol">IMap3D</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#interfaceChain">interfaceChain</a> : Array<div class="summaryTableDescription">
+   List of interfaces for wrapping this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IMap.html#MERCATOR_PROJECTION">MERCATOR_PROJECTION</a> : <a href="../interfaces/IProjection.html">IProjection</a>
+<div class="summaryTableDescription">
+   Retrieves Mercator projection.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IMap.html#overlayRaising">overlayRaising</a> : Boolean<div class="summaryTableDescription">
+   Set to <code>true</code> to enable raising of overlays upon mouse-over.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#viewMode">viewMode</a> : int<div class="summaryTableDescription">
+   The view mode that is being applied to map.</div>
+</td><td class="summaryTableOwnerCol">IMap3D</td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#wrapper">wrapper</a> : Object<div class="summaryTableDescription">
+   Instance of the cross-domain wrapper for this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<div class="showHideLinks">
+<div class="hideInheritedMethod" id="hideInheritedMethod">
+<a onclick="javascript:setInheritedVisible(false,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Methods</a>
+</div>
+<div class="showInheritedMethod" id="showInheritedMethod">
+<a onclick="javascript:setInheritedVisible(true,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Methods</a>
+</div>
+</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#addControl()">addControl</a>(control:<a href="../interfaces/IControl.html">IControl</a>):void</div>
+<div class="summaryTableDescription">
+   Registers a new control.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#addMapType()">addMapType</a>(newMapType:<a href="../interfaces/IMapType.html">IMapType</a>):void</div>
+<div class="summaryTableDescription">
+   Registers a new map type.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#addOverlay()">addOverlay</a>(overlay:<a href="../interfaces/IOverlay.html">IOverlay</a>):void</div>
+<div class="summaryTableDescription">
+   Adds an overlay to the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#cancelFlyTo()">cancelFlyTo</a>():void</div>
+<div class="summaryTableDescription">
+   Aborts any map motion initiated by a call to <code>flyTo()</code> and
+   causes <code>MapEvent.FLY_TO_CANCELED</code> and
+   <code>MapEvent.FLY_TO_DONE</code> to be dispatched.</div>
+</td><td class="summaryTableOwnerCol">IMap3D</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#clearControls()">clearControls</a>():void</div>
+<div class="summaryTableDescription">
+   Removes all controls from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#clearOverlays()">clearOverlays</a>():void</div>
+<div class="summaryTableDescription">
+   Removes all overlays from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#closeInfoWindow()">closeInfoWindow</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Closes the information window.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#continuousZoomEnabled()">continuousZoomEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether continuous zoom is enabled.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#controlByKeyboardEnabled()">controlByKeyboardEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether control by keyboard is enabled.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#crosshairsEnabled()">crosshairsEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether center crosshairs are enabled.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#disableContinuousZoom()">disableContinuousZoom</a>():void</div>
+<div class="summaryTableDescription">
+   Disables continuous smooth zooming.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#disableControlByKeyboard()">disableControlByKeyboard</a>():void</div>
+<div class="summaryTableDescription">
+   Disables control by keyboard.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#disableCrosshairs()">disableCrosshairs</a>():void</div>
+<div class="summaryTableDescription">
+   Disables the center crosshairs.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#disableDragging()">disableDragging</a>():void</div>
+<div class="summaryTableDescription">
+   Disables dragging of the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#disableScrollWheelZoom()">disableScrollWheelZoom</a>():void</div>
+<div class="summaryTableDescription">
+   Disables zooming using a mouse's scroll wheel.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#draggingEnabled()">draggingEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether dragging of the map is enabled.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#enableContinuousZoom()">enableContinuousZoom</a>():void</div>
+<div class="summaryTableDescription">
+   Enables continuous smooth zooming.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#enableControlByKeyboard()">enableControlByKeyboard</a>():void</div>
+<div class="summaryTableDescription">
+   Enables control by keyboard.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#enableCrosshairs()">enableCrosshairs</a>():void</div>
+<div class="summaryTableDescription">
+   Enables the center crosshairs.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#enableDragging()">enableDragging</a>():void</div>
+<div class="summaryTableDescription">
+   Enables dragging of the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#enableScrollWheelZoom()">enableScrollWheelZoom</a>():void</div>
+<div class="summaryTableDescription">
+   Enables zooming using a mouse's scroll wheel.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#flyTo()">flyTo</a>(center:<a href="../LatLng.html">LatLng</a>, zoom:Number, attitude:<a href="../geom/Attitude.html">Attitude</a> = null, duration:Number = 1):void</div>
+<div class="summaryTableDescription">
+   Changes the center location, zoom and attitude of the map over a given
+   period.</div>
+</td><td class="summaryTableOwnerCol">IMap3D</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#fromLatLngToPoint()">fromLatLngToPoint</a>(latLng:<a href="../../maps/LatLng.html">LatLng</a>, opt_zoom:Number):Point</div>
+<div class="summaryTableDescription">
+   Returns x,y coordinates of specified lat, lng and zoom relative to the
+   origin of the map's projection
+   (the origin is the top left corner of the top left tile of the map for
+   the specified map zoom level).</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#fromLatLngToViewport()">fromLatLngToViewport</a>(latLng:<a href="../../maps/LatLng.html">LatLng</a>, opt_disablewrap:Boolean = false):Point</div>
+<div class="summaryTableDescription">
+   Returns the pixel coordinates for the specified latLng location
+   in the coordinate system of the map's view port ([0,0] being the top
+   left corner of the map object).</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#fromPointToLatLng()">fromPointToLatLng</a>(pos:Point, opt_zoom:Number, opt_nowrap:Boolean = false):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns lat,lng coordinates of specified x, y and zoom.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#fromViewportToLatLng()">fromViewportToLatLng</a>(pos:Point, opt_nowrap:Boolean = false):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the lat-lng of the point at the given coordinates in the map's
+   view port (the top left corner of the map object).</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getAttitude()">getAttitude</a>():<a href="../geom/Attitude.html">Attitude</a>
+</div>
+<div class="summaryTableDescription">
+   Gets the map attitude.</div>
+</td><td class="summaryTableOwnerCol">IMap3D</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IWrappableEventDispatcher.html#getBaseEventDispatcher()">getBaseEventDispatcher</a>():Object</div>
+<div class="summaryTableDescription">
+   Retrieves the base event dispatcher object that allows access to event
+   dispatching capability for cross-domain objects.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getBoundsZoomLevel()">getBoundsZoomLevel</a>(bounds:<a href="../../maps/LatLngBounds.html">LatLngBounds</a>):Number</div>
+<div class="summaryTableDescription">
+   Returns the highest resolution zoom level at which the given rectangular
+   region fits in the map view.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getCenter()">getCenter</a>():<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves coordinates of the center in the map view control.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getCurrentMapType()">getCurrentMapType</a>():<a href="../interfaces/IMapType.html">IMapType</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the current map type.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getDisplayObject()">getDisplayObject</a>():DisplayObject</div>
+<div class="summaryTableDescription">
+   Retrieves the display object that represents the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getDoubleClickMode()">getDoubleClickMode</a>():Number</div>
+<div class="summaryTableDescription">
+   Get the mouse double click mode.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getImplementationVersion()">getImplementationVersion</a>():String</div>
+<div class="summaryTableDescription">
+   Gets the version of the implementation library SWF.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getLatLngBounds()">getLatLngBounds</a>():<a href="../../maps/LatLngBounds.html">LatLngBounds</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the the visible rectangular region of the map view in
+   geographical coordinates.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getMapTypes()">getMapTypes</a>():Array</div>
+<div class="summaryTableDescription">
+   Retrieves the list of the map types available for the location.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getMaxZoomLevel()">getMaxZoomLevel</a>(opt_mapType:<a href="../interfaces/IMapType.html">IMapType</a> = null, opt_point:<a href="../../maps/LatLng.html">LatLng</a> = null):Number</div>
+<div class="summaryTableDescription">
+   Retrieves the maximum zoom level.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getMinZoomLevel()">getMinZoomLevel</a>(opt_mapType:<a href="../interfaces/IMapType.html">IMapType</a> = null, opt_point:<a href="../../maps/LatLng.html">LatLng</a> = null):Number</div>
+<div class="summaryTableDescription">
+   Retrieves the minimum zoom level.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getOptions()">getOptions</a>():<a href="../../maps/MapOptions.html">MapOptions</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the full set of options used by the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getPaneManager()">getPaneManager</a>():<a href="../interfaces/IPaneManager.html">IPaneManager</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the pane manager for the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getPrintableBitmap()">getPrintableBitmap</a>():Bitmap</div>
+<div class="summaryTableDescription">
+   Returns a Bitmap instance containing a snapshot image of the map for
+   printing.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getProjection()">getProjection</a>():<a href="../interfaces/IProjection.html">IProjection</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the projection being applied to the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getSize()">getSize</a>():Point</div>
+<div class="summaryTableDescription">
+   Retrieves the map view size.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#getZoom()">getZoom</a>():Number</div>
+<div class="summaryTableDescription">
+   Retrieves the map zoom level.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#isLoaded()">isLoaded</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether the map has been initialized.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#openInfoWindow()">openInfoWindow</a>(latlng:<a href="../../maps/LatLng.html">LatLng</a>, options:<a href="../../maps/InfoWindowOptions.html">InfoWindowOptions</a> = null):<a href="../interfaces/IInfoWindow.html">IInfoWindow</a>
+</div>
+<div class="summaryTableDescription">
+   Opens a simple information window at the given point.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#panBy()">panBy</a>(distance:Point, animate:Boolean = true):void</div>
+<div class="summaryTableDescription">
+   Starts a pan animation by the given distance in pixels.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#panTo()">panTo</a>(latLng:<a href="../../maps/LatLng.html">LatLng</a>):void</div>
+<div class="summaryTableDescription">
+   Changes the center location of the map to the given location.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#removeControl()">removeControl</a>(control:<a href="../interfaces/IControl.html">IControl</a>):void</div>
+<div class="summaryTableDescription">
+   Removes a control from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#removeMapType()">removeMapType</a>(oldMapType:<a href="../interfaces/IMapType.html">IMapType</a>):void</div>
+<div class="summaryTableDescription">
+   Removes a registered map type.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#removeOverlay()">removeOverlay</a>(overlay:<a href="../interfaces/IOverlay.html">IOverlay</a>):void</div>
+<div class="summaryTableDescription">
+   Removes an overlay from the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#returnToSavedPosition()">returnToSavedPosition</a>():void</div>
+<div class="summaryTableDescription">
+   Returns map to the saved position.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#savePosition()">savePosition</a>():void</div>
+<div class="summaryTableDescription">
+   Stores the current map position and zoom level for later recall
+   by returnToSavedPosition.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#scrollWheelZoomEnabled()">scrollWheelZoomEnabled</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Checks whether scroll wheel zooming is enabled.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setAttitude()">setAttitude</a>(value:<a href="../geom/Attitude.html">Attitude</a>):void</div>
+<div class="summaryTableDescription">
+   Sets the map attitude.</div>
+</td><td class="summaryTableOwnerCol">IMap3D</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#setCenter()">setCenter</a>(latLng:<a href="../../maps/LatLng.html">LatLng</a>, opt_zoom:Number, opt_mapType:<a href="../interfaces/IMapType.html">IMapType</a> = null):void</div>
+<div class="summaryTableDescription">
+   Changes the center location of the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#setDoubleClickMode()">setDoubleClickMode</a>(val:Number):void</div>
+<div class="summaryTableDescription">
+   Set the mouse double click mode.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#setMapType()">setMapType</a>(mapType:<a href="../interfaces/IMapType.html">IMapType</a>):void</div>
+<div class="summaryTableDescription">
+   Changes the map type for the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#setSize()">setSize</a>(newSize:Point):void</div>
+<div class="summaryTableDescription">
+   Sets the size of the map view.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#setZoom()">setZoom</a>(level:Number, opt_doContinuousZoom:Boolean = false):void</div>
+<div class="summaryTableDescription">
+   Changes the zoom level for the map view control.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#unload()">unload</a>():void</div>
+<div class="summaryTableDescription">
+   Removes the map from its parent and attempts to unload it to free up
+   memory associated with the map.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#zoomIn()">zoomIn</a>(opt_latlng:<a href="../../maps/LatLng.html">LatLng</a> = null, opt_doCenter:Boolean = false, opt_doContinuousZoom:Boolean = false):void</div>
+<div class="summaryTableDescription">
+   Zooms in the map by one zoom level if possible.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IMap.html#zoomOut()">zoomOut</a>(opt_latlng:<a href="../../maps/LatLng.html">LatLng</a> = null, opt_doContinuousZoom:Boolean = false):void</div>
+<div class="summaryTableDescription">
+   Zooms out the map by one zoom level if possible.</div>
+</td><td class="summaryTableOwnerCol"><a href="IMap.html">IMap</a></td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="camera"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">camera</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>camera:<a href="../interfaces/ICamera.html">ICamera</a></code>&nbsp;&nbsp;[read-only]<p>
+   The camera that may be used to return information about the viewing
+   geometry and perform transformations between lat-lng, world and
+   viewport coordinates.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get camera():<a href="../interfaces/ICamera.html">ICamera</a></code>
+<br>
+</div>
+<a name="dragMode"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">dragMode</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>dragMode:int</code>&nbsp;&nbsp;[read-write]<p>
+   The drag mode that is being used on the map. Acceptable values for this
+   property are <code>MapAction.DRAGMODE_LATLNG</code>,
+   <code>MapAction.DRAGMODE_PITCH</code> and
+   <code>MapAction.DRAGMODE_YAW</code>.
+      </p><p>By default, the drag mode is updated automatically immediately before
+   dispatching <code>MapMouseEvent.DRAG_START</code> and
+   <code>MapMouseEvent.DRAG_STEP</code> events
+   based on the state of the CTRL and SHIFT keyboard modifier keys.
+   If SHIFT is pressed, the drag mode is set to
+   <code>MapAction.DRAGMODE_MAP_YAW_PITCH</code>, else if CTRL is pressed
+   the drag mode is set to <code>MapAction.DRAGMODE_CAMERA_YAW_PITCH</code>;
+   if neither is pressed the drag mode is set to
+   <code>MapAction.DRAGMODE_LATLNG</code>.</p>
+      <p>It is recommended that you keep this behavior. It is consistent with
+   that in Google Earth. However, if you need to change it, you should attach
+   listeners both to <code>MapMouseEvent.DRAG_START</code> and
+   <code>MapMouseEvent.DRAG_STEP</code>.
+   Within your handler you then can set an appropriate map dragging mode
+   based on parameters including mouse location and keyboard modifier key
+   state.</p>
+      <p>Note that since the drag mode can change immediately before, and while
+   handling, <code>MapMouseEvent.DRAG_STEP</code>, a new drag mode can begin
+   without the user having first released the mouse button.
+   If the drag mode is changed in the middle of a drag operation,
+   you will receive <code>DRAG_STOP</code> and <code>DRAG_START</code> events
+   before the drag operation proceeds with the new drag mode.
+   <span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get dragMode():int</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set dragMode(value:int):void</code>
+<br>
+</div>
+<a name="viewMode"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">viewMode</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>viewMode:int</code>&nbsp;&nbsp;[read-write]<p>
+   The view mode that is being applied to map. Acceptable values for this
+   property are <code>View.VIEWMODE_2D</code>,
+   <code>View.VIEWMODE_PERSPECTIVE</code> and
+   <code>View.VIEWMODE_ORTHOGONAL</code>.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get viewMode():int</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set viewMode(value:int):void</code>
+<br>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="cancelFlyTo()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">cancelFlyTo</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function cancelFlyTo():void</code><p>
+   Aborts any map motion initiated by a call to <code>flyTo()</code> and
+   causes <code>MapEvent.FLY_TO_CANCELED</code> and
+   <code>MapEvent.FLY_TO_DONE</code> to be dispatched.
+      </p><p>Calling this method has no effect if no flight is occurring.</p>
+   </div>
+<a name="flyTo()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">flyTo</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function flyTo(center:<a href="../LatLng.html">LatLng</a>, zoom:Number, attitude:<a href="../geom/Attitude.html">Attitude</a> = null, duration:Number = 1):void</code><p>
+   Changes the center location, zoom and attitude of the map over a given
+   period. You can use a period of 0 if you wish the change to be
+   instantaneous.
+      </p><p>You can make repeated calls to <code>flyTo()</code> before animation
+   has completed for a previous call if you wish to fly a complex route.
+   Each flight segment will be queued and performed in sequence. If more than
+   one flight segment is queued then cubic splines will be used to
+   interpolate the camera location and attitude.</p>
+      <p>By default the user can interact with the map while a flight is
+   occurring and doing so will not terminate the flight (it will
+   continue through the remaining segments from the time the user releases
+   control). However, a method <code>cancelFlyTo()</code> is available
+   if you wish to abort the remaining portion of the flight.</p>
+      <p><code>MapEvent.FLY_TO_DONE</code> is dispatched when the flight
+   terminates (whether or not it was canceled).</p>
+      <span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">center</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  Coordinates for the new map center.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">zoom</span>:Number</code> &mdash;  New map zoom level.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">attitude</span>:<a href="../geom/Attitude.html">Attitude</a></code> (default = <code>null</code>)<code></code> &mdash;  New map attitude.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">duration</span>:Number</code> (default = <code>1</code>)<code></code> &mdash;  Duration in seconds over which the change occurs.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getAttitude()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getAttitude</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getAttitude():<a href="../geom/Attitude.html">Attitude</a></code><p>
+   Gets the map attitude. In 3-D modes this controls the orientation of the
+   map seen by the user.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../geom/Attitude.html">Attitude</a></code> &mdash; 
+                        Map attitude.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="setAttitude()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setAttitude</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setAttitude(value:<a href="../geom/Attitude.html">Attitude</a>):void</code><p>
+   Sets the map attitude. In 3-D modes this controls the orientation of the
+   map seen by the user.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">value</span>:<a href="../geom/Attitude.html">Attitude</a></code> &mdash; New map attitude.
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

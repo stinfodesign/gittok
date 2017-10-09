@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="264"
+		   title="Sound Listener"
+		  creationComplete="initializeApp()">
+	<fx:Declarations>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import dataTypes.place.SoundURL;
+			
+			import flash.filesystem.File;
+			import flash.media.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			
+			import spark.events.IndexChangeEvent;
+			
+			public var soundFile:File;
+			
+			private  var snd:Sound;		
+			
+			public  var sndChannel:SoundChannel;			
+			// This must be public, because Acquisition Manager closes the sound.
+			
+			private var pos:Number;
+			
+			private var volume:Number;
+			
+			public var kitURL:String = null;
+			
+			[Bindable]
+			public var soundObjectArray:ArrayList = new ArrayList();
+			
+			private var soundArrayArray:ArrayList;
+			
+			[Bindable]
+			private var soundArray:ArrayList;
+			
+			private var soundURLstr:String;
+			
+			protected function initializeApp():void {
+				this.move(300, 400);
+				
+				soundArrayArray = new ArrayList();
+				
+				for (var i:int = 0; i < soundObjectArray.length; i++) {
+					var soundObj:Object = soundObjectArray.getItemAt(i) as Object;
+					soundArrayArray.addItem(soundObj.soundArray);
+				}
+				
+				attributesDropdown.prompt = "Select attribute";
+				soundList.prompt = "Select sound";
+			}			
+			
+			protected function soundList_changeHandler(event:IndexChangeEvent):void
+			{
+				var soundIndex:int = soundList.selectedIndex;
+				if (soundIndex == -1) return;
+				
+				var soundFilePath:Object = soundArray.getItemAt(soundIndex) as Object;
+				soundURLstr = kitURL + soundFilePath.value;
+				
+				var req:URLRequest = new URLRequest(soundURLstr); 
+				snd = new Sound(req); 
+			}
+			
+			protected function playSoundButton_clickHandler(event:MouseEvent):void
+			{
+				sndChannel = snd.play();
+			}
+			
+			protected function stopSoundButton_clickHandler(event:MouseEvent):void
+			{
+				sndChannel.stop();
+				volumeSlider.value = 0.5;
+			}
+			
+			protected function pauseSoundButton_clickHandler(event:MouseEvent):void
+			{
+				if (pauseSoundButton.label == "pause") {
+					pos = sndChannel.position;
+					sndChannel.stop();
+					pauseSoundButton.label = "replay";
+				}
+				else {
+					pauseSoundButton.label = "pause";
+					sndChannel = snd.play(pos);
+					volume = volumeSlider.value;
+					sndChannel.soundTransform = new SoundTransform(volume);
+				}				
+			}
+			
+			protected function volumeSlider_changeHandler(event:Event):void
+			{
+				volume = volumeSlider.value;
+				sndChannel.soundTransform = new SoundTransform(volume);
+			}
+			
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/soundListener_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/soundListener_en.html");
+				navigateToURL(request);
+			}
+
+			
+			protected function attributesDropdown_changeHandler(event:IndexChangeEvent):void
+			{
+				var index:int = attributesDropdown.selectedIndex;
+				
+				var soundObj:Object = soundObjectArray.getItemAt(index) as Object;
+				soundArray = soundObj.soundArray as ArrayList;
+				
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Image x="10" y="6" source="@Embed(source='images/pictRepresentation1.png')" />
+	<s:Label x="75" y="15" text="Sounds" fontSize="16"/>
+	<s:Label right="58" top="10" buttonMode="true" click="text_jp_clickHandler(event)"
+			 color="#969696" fontFamily="Osaka" fontSize="11" text="日本語"/>
+	<s:Label right="10" top="12" buttonMode="true" click="text_en_clickHandler(event)"
+			 color="#969696" text="English"/>
+	<s:Button id="playSoundButton" x="119" y="152" width="54" label="play"
+			  click="playSoundButton_clickHandler(event)"/>
+	<s:Button id="stopSoundButton" x="243" y="152" width="54" label="stop"
+			  click="stopSoundButton_clickHandler(event)"/>
+	<s:Button id="pauseSoundButton" x="181" y="152" width="54" label="pause"
+			  click="pauseSoundButton_clickHandler(event)"/>
+	<s:HSlider id="volumeSlider" x="176" y="200" width="67"
+			   change="volumeSlider_changeHandler(event)" maximum="1.0" stepSize="0.01" value="0.5"/>
+	<s:Label x="192" y="185" fontSize="10" text="Volume"/>
+	<s:DropDownList id="soundList" x="81" y="104" width="254" height="20"
+				    change="soundList_changeHandler(event)"	
+					dataProvider="{soundArray}" labelField="value"></s:DropDownList>
+	<s:Label x="54" y="111" text="List"/>
+	<s:DropDownList id="attributesDropdown" x="80" y="70" width="255"
+					change="attributesDropdown_changeHandler(event)" 
+					dataProvider="{soundObjectArray}" labelField="attName"></s:DropDownList>
+	<s:Label x="22" y="74" text="Attributes"/>
+
+	
+</s:Window>

@@ -115,6 +115,29 @@
 			[Bindable]
 			protected var getParamEnable:Boolean = true;
 			
+			[Embed(source="/patterns/p00.png")]
+			private var aImage00:Class;
+			
+			[Embed(source="/patterns/p01.png")]
+			private var aImage01:Class;
+			
+			[Embed(source="/patterns/p02.png")]
+			private var aImage02:Class;
+			
+			[Embed(source="/patterns/p03.png")]
+			private var aImage03:Class;
+			
+			[Embed(source="/patterns/p04.png")]
+			private var aImage04:Class;
+			
+			[Embed(source="/patterns/p05.png")]
+			private var aImage05:Class;
+			
+			[Embed(source="/patterns/p06.png")]
+			private var aImage06:Class;
+			
+			protected var btmaps:Dictionary;
+			
 			public function initializeApp(): void {
 				this.move(780, 150);
 				
@@ -216,7 +239,18 @@
 					geomFlag = "control";
 				}
 				
+				// area pattern settings
+				btmaps = new Dictionary();
+				btmaps["/patterns/p00.png"] = new aImage00();
+				btmaps["/patterns/p01.png"] = new aImage01();
+				btmaps["/patterns/p02.png"] = new aImage02();
+				btmaps["/patterns/p03.png"] = new aImage03();
+				btmaps["/patterns/p04.png"] = new aImage04();
+				btmaps["/patterns/p05.png"] = new aImage05();
+				btmaps["/patterns/p06.png"] = new aImage06();
+				
 				this.openDefaultSymbolFile();
+				
 			}
 			
 			public function openDefaultSymbolFile():void {
@@ -512,7 +546,7 @@
 						var pObj:Object = new Object();
 						pObj.point = point
 						pObj.style = pointSymbolStyle;
-						pSym.decode(pObj);
+						pSym.decode(pObj, btmaps);
 						pSym.name = icrd.id;
 						
 						var wpSym:PointSymbol = workLayer.getChildByName(icrd.id) as PointSymbol;
@@ -541,7 +575,7 @@
 								pObj = new Object();
 								pObj.point = point
 								pObj.style = pointSymbolStyle;
-								pSym.decode(pObj);
+								pSym.decode(pObj, btmaps);
 								workLayer.addChild(pSym);						
 								break;
 							
@@ -1004,49 +1038,46 @@
 							for (i = 0; i < n; i++) {
 								ocv = ring.elements.getItemAt(i) as SG_OrientableCurve;
 								kit.orientableCurveList[ocv.id] = ocv;
-							}
-							
+							}							
 							return surface;
 						}
 					}
-					else {
-						// if outside, try oposite side 
-						ocurve.orientation = false;
-						ring = searchRing(ocurve);
-						if (ring == null) return null;
-						if (ring.rotation()) {
-							// check coor is inside or not
-							inside = math.Relation.pointInRing(coor, ring);
-							// if inside then create surface!
-							if (inside) {
-								surface = new SG_Surface();
+					
+					// if outside, try oposite side 
+					ocurve.orientation = false;
+					ring = searchRing(ocurve);
+					if (ring == null) return null;
+					if (ring.rotation()) {
+						// check coor is inside or not
+						inside = math.Relation.pointInRing(coor, ring);
+						// if inside then create surface!
+						if (inside) {
+							surface = new SG_Surface();
 								
-								// set extend of each curve						
-								n = ring.elements.length;
-								for (i = 0; i < n; i++) {
-									ocv = ring.elements.getItemAt(i) as SG_OrientableCurve;
-									ocv.original.extend.addItem(ocv);
-									if (ocv.orientation) 
-										ocv.original.right = surface;
-									else
-										ocv.original.left = surface;
-								}						
-								surface.exterior = ring;
+							// set extend of each curve						
+							n = ring.elements.length;
+							for (i = 0; i < n; i++) {
+								ocv = ring.elements.getItemAt(i) as SG_OrientableCurve;
+								ocv.original.extend.addItem(ocv);
+								if (ocv.orientation) 
+									ocv.original.right = surface;
+								else
+									ocv.original.left = surface;
+							}						
+							surface.exterior = ring;
 								
-								kit.ringList[ring.id] = ring;
+							kit.ringList[ring.id] = ring;
 								
-								// store orientable curve in the list
-								for (i = 0; i < n; i++) {
-									ocv = ring.elements.getItemAt(i) as SG_OrientableCurve;
-									kit.orientableCurveList[ocv.id] = ocv;
-								}
-								
-								return surface;
+							// store orientable curve in the list
+							for (i = 0; i < n; i++) {
+								ocv = ring.elements.getItemAt(i) as SG_OrientableCurve;
+								kit.orientableCurveList[ocv.id] = ocv;
 							}
-						}
+								
+							return surface;
+						}						
 					}
-				}
-				
+				}				
 				return null;
 			}
 			
@@ -1091,7 +1122,7 @@
 					var n:int = wocs.length;
 					if (n == 0) return null;
 					
-					var maxBearing:Number = Number.MIN_VALUE;
+					var minIA:Number = Number.MAX_VALUE;
 					
 					var cSeq:ArrayList = ocurve.coordinateSequence();
 					var m:int = cSeq.length;
@@ -1103,13 +1134,13 @@
 						woc = wocs.getItemAt(i) as SG_OrientableCurve;
 						var dSeq:ArrayList = woc.coordinateSequence();
 						var c2:Coordinate2 = dSeq.getItemAt(1) as Coordinate2;
-						var bear:Number = math.Angle.bearing(c0, c1, c2);
-						if (bear > maxBearing) {
-							maxBearing = bear;
+						var iAngle:Number = math.Angle.includedAngle(c0, c1, c2);
+						if (iAngle < minIA) {
+							minIA = iAngle;
 							ocurve = woc;		// next o_curve
 						}	
 					}
-				} while (ocStart.startPoint().id != ocurve.endPoint().id);				
+				} while (ocStart.startPoint().id.search(ocurve.endPoint().id) != 0);				
 				ocurves.addItem(ocurve);
 				
 				ring.elements = ocurves;
@@ -1135,6 +1166,7 @@
 					var aObj:Object = new Object();
 					aObj.surface = s;
 					aObj.style = areaSymbolStyle;
+					if (aObj.style.url != null) aObj.btmap = btmaps[aObj.style.url];
 					aSym.decode(aObj);
 					aSym.name = s.id.toString();
 					workLayer.addChild(aSym);
@@ -1155,15 +1187,14 @@
 					var pObj:Object = new Object();
 					pObj.point = p;
 					pObj.style = pointSymbolStyle;
-					pSym.decode(pObj);
+					pSym.decode(pObj, btmaps);
 					pSym.name = p.id.toString();
 					workLayer.addChild(pSym);
 				}
 				
 				for each (var cmpx:SG_Complex in kit.complexList) {
 					 complexDrawing(cmpx);
-				 }
-				
+				 }				
 			}
 
 			protected function complexDrawing(complex:SG_Complex):void {
@@ -1199,7 +1230,7 @@
 					var pObj:Object = new Object();
 					pObj.point = p;
 					pObj.style = complexSymbolStyle.pointSymbolStyle;
-					pSym.decode(pObj);
+					pSym.decode(pObj, btmaps);
 					pSym.name = p.id.toString();
 					workLayer.addChild(pSym);
 				}
@@ -1484,7 +1515,7 @@
 				var pObj:Object = new Object();
 				pObj.point = pt;
 				pObj.style = pointSymbolStyle;
-				pSym.decode(pObj);
+				pSym.decode(pObj, btmaps);
 				pSym.name = pt.id.toString();
 				workLayer.addChild(pSym);
 			}

@@ -1,0 +1,615 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="Polyline,com.google.maps.overlays.Polyline,foreground,pane,shadow,visible,fromEncoded,getDefaultPane,getLatLngBounds,getLength,getOptions,getVertex,getVertexCount,hide,isHidden,positionOverlay,setOptions,show" name="keywords">
+<title>com.google.maps.overlays.Polyline</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'Polyline - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/overlays/Polyline.html&amp;com/google/maps/overlays/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;Polyline</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class Polyline"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.overlays</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class Polyline</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implements</td><td>flash.events.IEventDispatcher, <a href="../interfaces/IPolyline.html">IPolyline</a></td>
+</tr>
+</table>
+<p></p>
+ Class Polyline defines a map overlay that draws a polyline on the map.
+  <p>Polylines dispatch a number of events as the user interacts with them:
+ <ul>
+ <li><code>MapMouseEvent.MOUSE_DOWN</code>
+ <li><code>MapMouseEvent.MOUSE_UP</code>
+ <li><code>MapMouseEvent.MOUSE_MOVE</code>
+ <li><code>MapMouseEvent.ROLL_OVER</code>
+ <li><code>MapMouseEvent.ROLL_OUT</code>
+ <li><code>MapMouseEvent.CLICK</code>
+ <li><code>MapMouseEvent.DOUBLE_CLICK</code>
+ </ul>
+ The <code>latLng</code> property on any <code>MapMouseEvent</code>
+ that is dispatched holds the lat-lng of the location immediately underneath
+ the mouse pointer.</p>
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#foreground">foreground</a> : DisplayObject<div class="summaryTableDescription">[read-only]
+   Display object that represents the overlay's content.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#pane">pane</a> : <a href="../interfaces/IPane.html">IPane</a>
+<div class="summaryTableDescription">
+   Pane this overlay resides on (null if the overlay is not added to the map).</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#shadow">shadow</a> : DisplayObject<div class="summaryTableDescription">[read-only]
+   Display object that represents the overlay's shadow (null if the overlay
+   never has a shadow).</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#visible">visible</a> : Boolean<div class="summaryTableDescription">
+   Visibility of the overlay.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#Polyline()">Polyline</a>(points:Array, options:<a href="PolylineOptions.html">PolylineOptions</a> = null)</div>
+<div class="summaryTableDescription">
+   Constructs a new polyline at the specified lat-lng,
+   using the specified options.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#fromEncoded()">fromEncoded</a>(info:<a href="EncodedPolylineData.html">EncodedPolylineData</a>, options:<a href="PolylineOptions.html">PolylineOptions</a> = null):<a href="../overlays/Polyline.html">Polyline</a>
+</div>
+<div class="summaryTableDescription">[static]
+   Constructs a polyline from the given set of encoded points and
+   levels assuming the given number of levels and zoom factor between
+   the levels.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getDefaultPane()">getDefaultPane</a>(map:<a href="../interfaces/IMap.html">IMap</a>):<a href="../interfaces/IPane.html">IPane</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the default pane that this overlay should be placed on
+   if none is explicitly specified (when the overlay is added through the
+   IMap.addOverlay() call).</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getLatLngBounds()">getLatLngBounds</a>():<a href="../../maps/LatLngBounds.html">LatLngBounds</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the LatLngBounds of this polyline or a subsequence of this
+   polyline.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getLength()">getLength</a>(opt_radius:Number):Number</div>
+<div class="summaryTableDescription">
+   Returns the length (in meters) of the polyline along the surface of a
+   spherical Earth.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getOptions()">getOptions</a>():<a href="../overlays/PolylineOptions.html">PolylineOptions</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the polyline's options.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getVertex()">getVertex</a>(index:Number):<a href="../../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the vertex with the specified index.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getVertexCount()">getVertexCount</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the number of vertices in this polyline.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#hide()">hide</a>():void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#isHidden()">isHidden</a>():Boolean</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#positionOverlay()">positionOverlay</a>(zoomChanged:Boolean):void</div>
+<div class="summaryTableDescription">
+   Reposition the overlay on the screen.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setOptions()">setOptions</a>(options:<a href="PolylineOptions.html">PolylineOptions</a>):void</div>
+<div class="summaryTableDescription">
+   Updates the polyline options.</div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#show()">show</a>():void</div>
+<div class="summaryTableDescription"></div>
+</td><td class="summaryTableOwnerCol">Polyline</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="foreground"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">foreground</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>foreground:DisplayObject</code>&nbsp;&nbsp;[read-only]<p>
+   Display object that represents the overlay's content.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get foreground():DisplayObject</code>
+<br>
+</div>
+<a name="pane"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">pane</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>pane:<a href="../interfaces/IPane.html">IPane</a></code>&nbsp;&nbsp;[read-write]<p>
+   Pane this overlay resides on (null if the overlay is not added to the map).
+   This property value is set by the map when the overlay is added to or
+   removed from the map and should not be modified by the developers.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get pane():<a href="../interfaces/IPane.html">IPane</a></code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set pane(value:<a href="../interfaces/IPane.html">IPane</a>):void</code>
+<br>
+</div>
+<a name="shadow"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">shadow</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>shadow:DisplayObject</code>&nbsp;&nbsp;[read-only]<p>
+   Display object that represents the overlay's shadow (null if the overlay
+   never has a shadow).
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get shadow():DisplayObject</code>
+<br>
+</div>
+<a name="visible"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">visible</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>visible:Boolean</code>&nbsp;&nbsp;[read-write]<p>
+   Visibility of the overlay.
+   </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get visible():Boolean</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set visible(value:Boolean):void</code>
+<br>
+</div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="Polyline()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">Polyline</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function Polyline(points:Array, options:<a href="PolylineOptions.html">PolylineOptions</a> = null)</code><p>
+   Constructs a new polyline at the specified lat-lng,
+   using the specified options.
+   To create a polyline from a set of encoded points,
+   use the <code>fromEncoded()</code> method.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">points</span>:Array</code> &mdash;  Array of LatLng vertex locations.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">options</span>:<a href="PolylineOptions.html">PolylineOptions</a></code> (default = <code>null</code>)<code></code> &mdash;  Full or partial set of polyline options. When a partial
+       set of options is specified, the polyline's complete set of options
+       will be a combination of this partial set and the defaults.
+   </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso">
+<a href="Polyline.html#fromEncoded()" target="">Polyline.fromEncoded()</a>
+<br>
+<a href="PolylineOptions.html#getDefaultOptions()" target="">PolylineOptions.getDefaultOptions()</a>
+</div>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="fromEncoded()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">fromEncoded</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public static function fromEncoded(info:<a href="EncodedPolylineData.html">EncodedPolylineData</a>, options:<a href="PolylineOptions.html">PolylineOptions</a> = null):<a href="../overlays/Polyline.html">Polyline</a></code><p>
+   Constructs a polyline from the given set of encoded points and
+   levels assuming the given number of levels and zoom factor between
+   the levels.  The encoded format represents the polyline points as a
+   flattened array of latitude/longitude coordinates in E6
+   representation.
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">info</span>:<a href="EncodedPolylineData.html">EncodedPolylineData</a></code> &mdash;  EncodedPolylineData object containing polyline data.
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">options</span>:<a href="PolylineOptions.html">PolylineOptions</a></code> (default = <code>null</code>)<code></code> &mdash;  Full or partial set of polyline options. When a partial
+       set of options is specified, the polyline's complete set of options
+       will be a combination of partial options and the existing defaults
+       set using PolylineOptions.setDefaultOptions() call.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../overlays/Polyline.html">Polyline</a></code> &mdash; 
+                         Newly constructed polyline.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getDefaultPane()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getDefaultPane</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getDefaultPane(map:<a href="../interfaces/IMap.html">IMap</a>):<a href="../interfaces/IPane.html">IPane</a></code><p>
+   Retrieves the default pane that this overlay should be placed on
+   if none is explicitly specified (when the overlay is added through the
+   IMap.addOverlay() call).
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">map</span>:<a href="../interfaces/IMap.html">IMap</a></code> &mdash;  Instance of map that this overlay is added to.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../interfaces/IPane.html">IPane</a></code> &mdash; 
+                         Instance of IPane to which the overlay will be added by default.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getLatLngBounds()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getLatLngBounds</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getLatLngBounds():<a href="../../maps/LatLngBounds.html">LatLngBounds</a></code><p>
+   Returns the LatLngBounds of this polyline or a subsequence of this
+   polyline. Returns null if this polyline contains no points.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLngBounds.html">LatLngBounds</a></code></td>
+</tr>
+</table>
+</div>
+<a name="getLength()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getLength</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getLength(opt_radius:Number):Number</code><p>
+   Returns the length (in meters) of the polyline along the surface of a
+   spherical Earth.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_radius</span>:Number</code> &mdash; Radius of the spherical celestial object.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash; Polyline length in meters.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getOptions()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getOptions</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getOptions():<a href="../overlays/PolylineOptions.html">PolylineOptions</a></code><p>
+   Retrieves the polyline's options.
+   Use the setOptions() method to modify polyline's options.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../overlays/PolylineOptions.html">PolylineOptions</a></code> &mdash; 
+                         Full set of options on the polyline.
+   
+                        
+                     </td>
+</tr>
+</table>
+<p>
+<span class="label">See also</span>
+</p>
+<div class="seeAlso"></div>
+</div>
+<a name="getVertex()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getVertex</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getVertex(index:Number):<a href="../../maps/LatLng.html">LatLng</a></code><p>
+   Returns the vertex with the specified index.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">index</span>:Number</code> &mdash; Index of the target vertex.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../../maps/LatLng.html">LatLng</a></code> &mdash; 
+                        Lat-lng of the specified vertex.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getVertexCount()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getVertexCount</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getVertexCount():Number</code><p>
+   Returns the number of vertices in this polyline.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  The number of vertices.
+   </td>
+</tr>
+</table>
+</div>
+<a name="hide()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">hide</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function hide():void</code>
+</div>
+<a name="isHidden()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isHidden</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function isHidden():Boolean</code>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code></td>
+</tr>
+</table>
+</div>
+<a name="positionOverlay()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">positionOverlay</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function positionOverlay(zoomChanged:Boolean):void</code><p>
+   Reposition the overlay on the screen.
+   This method is called in response to changes in the position (centre)
+   of the map and/or the map's zoom level.
+   Developers should not call the method themselves.
+   The implementation of this method should either change the position of the
+   overlay on the screen in response to the change of the map's centre or
+   redraw the overlay completely if it needs to be reconfigured for a
+   different map centre/zoom level.
+   Repositioning of the overlay should be done by changing the placement
+   of the overlay's display object on its pane using the mappings provided by
+   the IPane interface (fromLatLngToPaneCoords or
+   fromProjectionPointToPaneCoords).
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">zoomChanged</span>:Boolean</code> &mdash;  Whether the zoom level of the map has changed
+       or the call was invoked just as a result of a map pan.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setOptions()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setOptions</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setOptions(options:<a href="PolylineOptions.html">PolylineOptions</a>):void</code><p>
+   Updates the polyline options.
+   The <code>options</code> parameter may specify a complete or partial set
+   of polyline options. If a partial set of options is specified, it will
+   supplement the existing polyline options, overriding only the values that
+   were set explicitly and leaving the rest unchanged. For example, the
+   following piece of code will modify the polyline's stroke thickness,
+   leaving the rest of its options unchanged.
+   <div class='listing'><pre>
+   var options:PolylineOptions =
+       new PolylineOptions( { strokeStyle: { thickness: 3 }} );
+   myPolyline.setOptions(options); </pre></div>
+   </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">options</span>:<a href="PolylineOptions.html">PolylineOptions</a></code> &mdash;  New full or partial set of options for the polyline.
+   </td>
+</tr>
+</table>
+</div>
+<a name="show()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">show</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function show():void</code>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

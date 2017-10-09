@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>List Schema Designer</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+window.resizeTo(650,650);
+window.moveTo(750,20);
+</script>
+</head>
+
+<body>
+<p id="Top" class="FirstHeader">List Schema Designer<br/>
+リストスキーマ設計</p>
+<p class="mainSentence">伝統的な地図は二次元のシートの上に描かれた，記号の分布図です．GISの目的の一つに，役に立つ情報を示す地図を作ることがあります．Gittok では，地物のproxy が幾何属性の場合は，地図表現が可能です．しかし，実世界の現象の抽象概念としての地物が必ず，位置や形状をもつとは限りません．例えば，あなたがグローバル企業の社員だとします．誰かから「あなたの会社はどこにありますか？」と聞かれたらどのように応えるでしょうか．あなたは多分「本社は東京にあるけれど，世界中至る所にブランチがあります．ちなみに私はニューヨーク支店に勤めています．」などと応えるでしょう．確かに世界中にあるブランチは，敷地やフロアを示す幾何属性をもつかもしれませんが，それでは会社全体はどのような形をしているのでしょうか．多分このような質問は，質問自体がナンセンスなのではないでしょうか．なぜなら，あなたの会社は，関係者の合意や許可で成立している，抽象的な存在だからです．従って，地球上に存在はしているけれど，幾何属性をもたない地物があってもおかしくはないのです．proxyが，会社名のような文字列属性の場合は，その値の一覧表，言い換えれば一次元の地図が，二次元の地図の代わりになります．</p>
+<p class="mainSentence">List schema designer は，文字列属性をproxy とする地物のリストを定義するリストスキーマを設計するためにあります．これがあると，幾何属性をproxy としない地物の情報表現ができます．</p>
+<p class="secondHeader">List Schema Designer</p>
+<p class="mainSentence"><img src="../figures/ListSchemaDesigner.png" alt="ListSchemaDesigner" /></p>
+<p class="mainSentence">図１．リストスキーマデザイナーのpage</p>
+<p class="thirdHeader">Fields</p>
+<p class="mainSentence"><strong>Application schema</strong><br />
+リストスキーマの対象となる応用スキーマの名前が表示されます．</p>
+<p class="mainSentence"><strong>List schema</strong><br />
+  オープンまたはセーブしたリストスキーマの名前が表示されます．</p>
+<p class="mainSentence"><strong>Feature types with which proxies are non-geometry (選択可能)</strong><br />
+選択された，リストスキーマの対象となる地物型の名前が表示されます．</p>
+<p class="mainSentence"><strong>Selected feature types（選択可能）</strong><br />
+リストを通じて表示地物型を選択すると，ここに一覧表示されます．</p>
+<p class="mainSentence"><strong>Attribute types without proxy（選択可能）</strong><br />
+Selected feature types 一覧上で地物型を選択すると，ここにそれが持つ属性の一覧が表示されます．</p>
+<p class="mainSentence"><strong>Selected attributes (編集可能）</strong><br />
+  Attribute types without proxy 一覧上で属性型を選択すると，　ここに，info. pageとして表示する属性の一覧が表示されます．</p>
+<p class="thirdHeader">Buttons</p>
+<p class="mainSentence"><strong>open (Application schema)</strong><br />
+このボタンを押すと，応用スキーマをオープンすることができます．</p>
+<p class="mainSentence"><strong>open (List schema)</strong><br />
+  このボタンを押すと，リストスキーマをオープンすることができます．</p>
+<p class="mainSentence"><strong>save (List schema)</strong><br />
+このボタンを押すと，リストスキーマをセーブすることができます．</p>
+<p class="mainSentence"><strong>add (Selected feature types)</strong><br />
+Feature types with which proxies are non-geometryで地物型を選択し，その上でこのボタンを押すと，一覧に選択された地物型の名前が表示されます．さたに，一覧の中から適当な地物型を選択すると，Attribute types without proxy 一覧に，その地物型がもつ属性型の一覧が表示されます．</p>
+<p class="mainSentence"><strong>delete  (Selected feature types)</strong><strong></strong><br />
+  Selected featyre types 一覧上で地物型を選択して，このボタンを押すと，一覧から，その地物型が削除されます．<br />
+</p>
+<p class="mainSentence"><strong>add (Selected attributes)</strong><br />
+Attribute types without proxy 一覧で，表示の対象となる属性型を選択してから，このボタンを押すと，表示可能な属性として追加されます．</p>
+<p class="mainSentence"><strong>delete</strong><strong> (Selected attributes)</strong><br />
+上のリスト上で削除する地物型を選択してから，このボタンを押すと，その属性は表示不可能になりSelected attributesのリストから消去されます．</p>
+<p class="mainSentence"><strong>日本語</strong><br />
+今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><strong>English</strong><br />
+  You can read the tutorial written in English.</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="secondHeader"></p>
+</body>
+</html>

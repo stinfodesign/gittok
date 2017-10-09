@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>List</title>
+<link href="gittokCSS.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+window.resizeTo(720,700);
+window.moveTo(500,20);
+</script>
+</head>
+
+<body class="FirstHeader">
+<p>List<br />
+地物の代理としての文字列属性の一覧</p>
+<p class="mainSentence">List pageは，地物の代理属性が文字列になっているときに地物の一覧を表示するページである．地物の代表的な属性は幾何属性である．しかし，幾何属性をもたない地物もありうる．例えば，大学は位置や形をもつであろうか．大学のキャンパスや校舎は幾何属性をもつであろう．しかし，大学という地物は，人々の合意や公的機関の認可でその存在が認められるのであって，それ自体に位置や形はないと考えることができる．本部の住所などが公開されているが，それはあくまでも本部の建物がある位置であって，大学全体をさす位置ではない．企業や官庁なども，大学と同じように位置や形はもたないと考えることができる．<br />
+そこで，幾何属性を代理としない地物と他の地物の関連性を定義するときは，その地物の代理属性のリストを表示させ，それによって関連を示すとよい．List pageは，地物の代理属性が文字列になっているときに地物の一覧を表示するページである．List page は，特に地物同士の関連をデータとして記録し編集するときに使用される （Editor pageのテキスト参照）．ここではまず，実例を使用してList page を使った関連インスタンスの編集について説明し，次にList page の表示欄やボタンの説明を行う．</p>
+<p class="secondHeader">大学とキャンパス</p>
+<p class="mainSentence">ほとんどの大学 (University) には一箇所以上のキャンパスがある．そしてキャンパスを構成する敷地 (Premises) にはグラウンドになる土地 (Land) と，その上に建てられた建物 (Building) の集まりがある．土地や建物は幾何的な形状をもつが，大学やキャンパスに独自の幾何形状はない．多くのGISの教科書では，「地理情報は幾何と属性の対」と定義づけているが，gittokでは幾何属性を持たないオブジェクトでも，実世界で起きている現象である限り，地物と解釈している．このような状況を応用スキーマとして表現すると例えば図１のようになる．</p>
+<p class="mainSentence"><img src="../figures/UniversitySchema.png" width="650" height="258" alt="UnivSchema" /></p>
+<p class="mainSentence">Figure 1. 大学とその敷地を表現する応用スキーマ</p>
+<p class="mainSentence">実世界の現象の抽象概念を地物という (ISO 19101:2002 - 参照モデル)．抽象とは，対象となるものの性質を取捨選択，つまり単純化して表現することをさす．例えば上記の大学は，その属性として名称と総長（学長）の名前が選択され，UnivTpPremという関連を通じて，ひとつ以上のキャンパスをもつ．敷地は名称を属性とし大学のキャンパスという役割をもち，PremToLandとPremToBuildingsを通じて土地と建物をもつ．土地は形状を属性とし，建物は名称と形状を属性とする．</p>
+<p class="mainSentence">この応用スキーマの通りに空間データを作成する手順を以下に示す．</p>
+<p class="mainSentence">1. Editor pageで，大学のインスタンスを作成する．<br />
+  2. Editor page で，敷地のインスタンスを作成する．<br />
+  3. 二つの List page を使って，大学と敷地を結ぶ関連インスタンスを作成する．結果はFigure 2 の通りである．<br />
+  4. Geometry page で土地の形状をデジタイズし，それを属性とする土地のインスタンスを Editor page で作成する．<br />
+  5. List page と Geometry page を使って，敷地と土地を結ぶ関連インスタンスを作成する．結果はFigure 3 の通りである．<br />
+  6. Geometry page で建物の形状をデジタイズし，その幾何と名称を属性とする建物インスタンスを Editor page で作成する．<br />
+  7. List page と Geometry page を使って，敷地と建物を結ぶ関連インスタンスを作成する．結果はFigure 4 の通りである．</p>
+<p class="mainSentence"><img src="../figures/University_UnivToPrem.png" width="700" height="449" alt="UnivToPrem" /></p>
+<p class="mainSentence">Figure 2. Chuo UniversityとKorakuen campusの関連</p>
+<p class="mainSentence">University ListからChuo Universityを選択し，Premises ListからKorakuen campus を選択すると，EditorのFrom 側のInstance ID欄に，Chuo UniversityのIDが表示される．また，to側のInstance ID欄にKorakuen campusのIDが表示される．さらに，Editorのshowボタンを押すと，二つのList page の　Selected items 欄に，両者のproxy である名称が表示される．</p>
+<p class="mainSentence"><img src="../figures/University_PremToLand.png" width="700" height="474" alt="PremToLand" /></p>
+<p class="mainSentence">Figure 3. Korakuen campus とその敷地となる土地の関連</p>
+<p class="mainSentence">Premises List からKorakuen campusをfrom 地物として選択し，Geometry page 上でキャンパスの土地をto 地物として選択すると，EditorのFrom 側のInstance ID欄に，Korakuen campus のIDが表示される．また，to側のInstance ID欄に土地のIDが表示される．さらに，Editorのshowボタンを押すと，List page の Selected items 欄に，proxy であるKorakuen campus が表示され ，Geometry pageに，to 地物のproxy である曲面の代表位置に赤い三角形（toという意味）が表示される．</p>
+<p class="mainSentence"><img src="../figures/University_PremToBuildings.png" width="700" height="473" alt="PremToBuils" /></p>
+<p class="mainSentence">Figure 4. Korakuen campus と，それに含まれる建物の関連</p>
+<p class="mainSentence">Premises List からKorakuen campusをfrom 地物として選択し，Geometry page 上でキャンパスの建物を順に to 地物として選択すると，EditorのFrom 側のInstance ID欄に，Korakuen campus のIDが表示され，to側のInstance ID欄に建物のIDが表示される．さらに，Editorのshowボタンを押すと，List page の Selected items 欄に，proxy であるKorakuen campus が表示され ，Geometry pageに，to 地物のproxy である曲面全ての代表位置に赤い三角形（toという意味）が表示される．</p>
+<p class="mainSentence">List</p>
+<p class="mainSentence"><img src="../figures/ListWindows.png" width="700" height="471" alt="ListWIndows" /></p>
+<p class="mainSentence">Figure 5. from 地物の一覧と to 地物の一覧</p>
+<p class="thirdHeader">Flelds</p>
+<p class="mainSentence"><strong>Feature type</strong><br />
+from または to として選択した地物の型名が表示される．</p>
+<p class="mainSentence"><strong>Proxy type</strong><br />
+from または to として選択した地物の proxy になる属性の型名が表示される．</p>
+<p class="mainSentence"><strong>FROM または TO （選択可能）</strong><br />
+この List page が from 用の一覧の場合は，FROMというラベルを表示し，from 地物のproxy 属性の一覧が表示される．to 地物の場合は，TOというラベルを表示し，to 地物のproxy 属性の一覧が表示される．この一覧から地物を選択すると，Edtor page の from 側または to 側ののInstance ID欄に，選択した地物のIDが表示される．</p>
+<p class="mainSentence"><strong>Selected items</strong><br />
+Editor page の show ボタンをクリックすると，ここに，from またはto として選択された地物のproxy属性が表示される．</p>
+<p class="mainSentence"><strong>日本語</strong><br />
+今あなたが読んでいるドキュメントが表示されます．</p>
+<p class="mainSentence"><strong>English</strong><br />
+  You can read the tutorial written in English.</p>
+<p class="mainSentence"></p>
+<p class="mainSentence"><br />
+</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+<p class="mainSentence">&nbsp;</p>
+</body>
+</html>

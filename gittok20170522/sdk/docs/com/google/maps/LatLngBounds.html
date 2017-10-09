@@ -1,0 +1,818 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="LatLngBounds,com.google.maps.LatLngBounds,clone,containsBounds,containsLatLng,equals,extend,getCenter,getEast,getNorth,getNorthEast,getNorthWest,getSouth,getSouthEast,getSouthWest,getWest,intersects,isEmpty,isFullLat,isFullLng,isLargerThan,toSpan,toString,union" name="keywords">
+<title>com.google.maps.LatLngBounds</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'LatLngBounds - Google Maps API for Flash Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?com/google/maps/LatLngBounds.html&amp;com/google/maps/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;LatLngBounds</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class LatLngBounds"); titleBar_setSubNav(false,false,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class LatLngBounds</td>
+</tr>
+</table>
+<p></p>
+ A rectangular bounds on the Earth. The 2D interval is directed,
+ i.e. it extends from the SW corner to the NE corner, even if the
+ longitude interval from NE to SW (the other way round the earth)
+ would be smaller. The bounds can be extended to contain new points
+ with the extend() method.
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#LatLngBounds()">LatLngBounds</a>(opt_sw:<a href="LatLng.html">LatLng</a> = null, opt_ne:<a href="LatLng.html">LatLng</a> = null)</div>
+<div class="summaryTableDescription">
+   Constructs a LatLngBounds from two LatLng instances, holding the
+   SW extent and NE extent, respectively.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clone()">clone</a>():<a href="../maps/LatLngBounds.html">LatLngBounds</a>
+</div>
+<div class="summaryTableDescription">
+   Creates a clone of this instance.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#containsBounds()">containsBounds</a>(other:<a href="LatLngBounds.html">LatLngBounds</a>):Boolean</div>
+<div class="summaryTableDescription">
+   Returns true if this bounds completely contains the given bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#containsLatLng()">containsLatLng</a>(point:<a href="LatLng.html">LatLng</a>):Boolean</div>
+<div class="summaryTableDescription">
+   Returns true if the given lat/lng is in this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#equals()">equals</a>(other:<a href="LatLngBounds.html">LatLngBounds</a>):Boolean</div>
+<div class="summaryTableDescription">
+   Returns true if this bounds equals the given bound,
+   allowing for numerical rounding errors.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#extend()">extend</a>(point:<a href="LatLng.html">LatLng</a>):void</div>
+<div class="summaryTableDescription">
+   Extends this bounds to contain the given point.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getCenter()">getCenter</a>():<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Computes the center of this LatLngBounds
+      </div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getEast()">getEast</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the east longitude of this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getNorth()">getNorth</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the north latitude of this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getNorthEast()">getNorthEast</a>():<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the north-east corner of this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getNorthWest()">getNorthWest</a>():<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the north-west corner of this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getSouth()">getSouth</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the south latitude of this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getSouthEast()">getSouthEast</a>():<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the south-east corner of this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getSouthWest()">getSouthWest</a>():<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Returns the south-west corner of this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getWest()">getWest</a>():Number</div>
+<div class="summaryTableDescription">
+   Returns the west longitude of this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#intersects()">intersects</a>(other:<a href="LatLngBounds.html">LatLngBounds</a>):Boolean</div>
+<div class="summaryTableDescription">
+   Returns true if this bounds shares any points with this bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#isEmpty()">isEmpty</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Returns true if the bounds are empty.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#isFullLat()">isFullLat</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Returns true if the bounds cover all latitudes.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#isFullLng()">isFullLng</a>():Boolean</div>
+<div class="summaryTableDescription">
+   Returns true if the bounds cover all longitudes.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#isLargerThan()">isLargerThan</a>(other:<a href="LatLngBounds.html">LatLngBounds</a>):Boolean</div>
+<div class="summaryTableDescription">
+   Returns true if this bounds is larger than (could contain) the other.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#toSpan()">toSpan</a>():<a href="../maps/LatLng.html">LatLng</a>
+</div>
+<div class="summaryTableDescription">
+   Converts the given map bounds to a lat/lng span.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#toString()">toString</a>():String</div>
+<div class="summaryTableDescription">
+   Converts this LatLngBounds to a string.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#union()">union</a>(other:<a href="LatLngBounds.html">LatLngBounds</a>):void</div>
+<div class="summaryTableDescription">
+   Extends this bounds to contain the union of this and the given bounds.</div>
+</td><td class="summaryTableOwnerCol">LatLngBounds</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="LatLngBounds()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">LatLngBounds</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function LatLngBounds(opt_sw:<a href="LatLng.html">LatLng</a> = null, opt_ne:<a href="LatLng.html">LatLng</a> = null)</code><p>
+   Constructs a LatLngBounds from two LatLng instances, holding the
+   SW extent and NE extent, respectively.
+   A LatLngBounds instance represents a rectangle in geographical
+   coordinates, including one that crosses the 180 degrees meridian.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_sw</span>:<a href="LatLng.html">LatLng</a></code> (default = <code>null</code>)<code></code> &mdash;  South-west corner (optional).
+   </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">opt_ne</span>:<a href="LatLng.html">LatLng</a></code> (default = <code>null</code>)<code></code> &mdash;  North-east corner (optional).
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   var bounds:LatLngBounds = new LatLngBounds(
+       new LatLng(10, 50),   // spans 1 degree latitude
+       new LatLng(11, 52));  // and 2 degrees longitude</pre></div>
+   <p></p>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="clone()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clone</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function clone():<a href="../maps/LatLngBounds.html">LatLngBounds</a></code><p>
+   Creates a clone of this instance.
+   </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLngBounds.html">LatLngBounds</a></code> &mdash; 
+                        Clone of this instance.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="containsBounds()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">containsBounds</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function containsBounds(other:<a href="LatLngBounds.html">LatLngBounds</a>):Boolean</code><p>
+   Returns true if this bounds completely contains the given bounds.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">other</span>:<a href="LatLngBounds.html">LatLngBounds</a></code> &mdash;  Contained LatLngBounds.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if this contains other.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   var bounds:LatLngBounds = new LatLngBounds(
+       new LatLng(10, 50), new LatLng(20, 70));
+   trace(bounds.containsBounds(
+       new LatLngBounds(
+           new LatLng(11, 12), new LatLng(52, 68)));  // outputs true
+</pre></div>
+   <p></p>
+</div>
+<a name="containsLatLng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">containsLatLng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function containsLatLng(point:<a href="LatLng.html">LatLng</a>):Boolean</code><p>
+   Returns true if the given lat/lng is in this bounds.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">point</span>:<a href="LatLng.html">LatLng</a></code> &mdash;  Test point.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if this contains point.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   var bounds:LatLngBounds = new LatLngBounds(
+       new LatLng(10, 50),
+       new LatLng(20, 70));
+   trace(bounds.containsLatLng(new LatLng(15, 51)));  // outputs true
+   trace(bounds.containsLatLng(new LatLng(29, 51)));  // outputs false
+</pre></div>
+   <p></p>
+</div>
+<a name="equals()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">equals</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function equals(other:<a href="LatLngBounds.html">LatLngBounds</a>):Boolean</code><p>
+   Returns true if this bounds equals the given bound,
+   allowing for numerical rounding errors.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">other</span>:<a href="LatLngBounds.html">LatLngBounds</a></code> &mdash;  LatLngBounds against which to compare.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if this is equal to other.
+   </td>
+</tr>
+</table>
+</div>
+<a name="extend()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">extend</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function extend(point:<a href="LatLng.html">LatLng</a>):void</code><p>
+   Extends this bounds to contain the given point.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">point</span>:<a href="LatLng.html">LatLng</a></code> &mdash;  Point to add.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   var bounds:LatLngBounds = new LatLngBounds(
+       new LatLng(1, 5), new LatLng(2, 7));
+   bounds.extend(new LatLng(0, 9));
+   trace(bounds.toString());  // outputs "((0, 5), (2, 9))"</pre></div>
+   <p></p>
+</div>
+<a name="getCenter()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getCenter</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getCenter():<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Computes the center of this LatLngBounds
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         Center of bounds.
+   
+                        
+                     </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   var bounds:LatLngBounds = new LatLngBounds(
+       new LatLng(10, 50),
+       new LatLng(20, 70));
+   trace(bounds.getCenter());  // outputs "(15, 60)"</pre></div>
+   <p></p>
+</div>
+<a name="getEast()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getEast</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getEast():Number</code><p>
+   Returns the east longitude of this bounds.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  East longitude.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getNorth()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getNorth</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getNorth():Number</code><p>
+   Returns the north latitude of this bounds.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  North latitude.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getNorthEast()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getNorthEast</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getNorthEast():<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Returns the north-east corner of this bounds.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         North-east corner.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getNorthWest()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getNorthWest</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getNorthWest():<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Returns the north-west corner of this bounds.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         North-west corner.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getSouth()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getSouth</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getSouth():Number</code><p>
+   Returns the south latitude of this bounds.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  South latitude.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getSouthEast()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getSouthEast</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getSouthEast():<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Returns the south-east corner of this bounds.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         South-east corner.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getSouthWest()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getSouthWest</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getSouthWest():<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Returns the south-west corner of this bounds.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         South-west corner.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="getWest()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getWest</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getWest():Number</code><p>
+   Returns the west longitude of this bounds.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Number</code> &mdash;  West longitude.
+   </td>
+</tr>
+</table>
+</div>
+<a name="intersects()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">intersects</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function intersects(other:<a href="LatLngBounds.html">LatLngBounds</a>):Boolean</code><p>
+   Returns true if this bounds shares any points with this bounds.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">other</span>:<a href="LatLngBounds.html">LatLngBounds</a></code> &mdash;  Test LatLngBounds.
+   </td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if this intersects other.
+   </td>
+</tr>
+</table>
+</div>
+<a name="isEmpty()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isEmpty</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function isEmpty():Boolean</code><p>
+   Returns true if the bounds are empty.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if this bounds is empty.
+   </td>
+</tr>
+</table>
+</div>
+<a name="isFullLat()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isFullLat</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function isFullLat():Boolean</code><p>
+   Returns true if the bounds cover all latitudes.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if this bounds covers all latitudes.
+   </td>
+</tr>
+</table>
+</div>
+<a name="isFullLng()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isFullLng</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function isFullLng():Boolean</code><p>
+   Returns true if the bounds cover all longitudes.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if this bounds covers all longitudes.
+   </td>
+</tr>
+</table>
+</div>
+<a name="isLargerThan()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isLargerThan</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function isLargerThan(other:<a href="LatLngBounds.html">LatLngBounds</a>):Boolean</code><p>
+   Returns true if this bounds is larger than (could contain) the other.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">other</span>:<a href="LatLngBounds.html">LatLngBounds</a></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Boolean</code> &mdash;  true if this is larger than other.
+   </td>
+</tr>
+</table>
+</div>
+<a name="toSpan()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">toSpan</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function toSpan():<a href="../maps/LatLng.html">LatLng</a></code><p>
+   Converts the given map bounds to a lat/lng span.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../maps/LatLng.html">LatLng</a></code> &mdash; 
+                         Span of this bound.
+   
+                        
+                     </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   var bounds:LatLngBounds = new LatLngBounds(
+       new LatLng(10, 50), new LatLng(20, 70));
+   trace(bounds.toSpan());  // outputs "(10, 20)"</pre></div>
+   <p></p>
+</div>
+<a name="toString()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">toString</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function toString():String</code><p>
+   Converts this LatLngBounds to a string.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code> &mdash; This LatLngBounds as a string.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   var bounds:LatLngBounds = new LatLngBounds(
+       new LatLng(1, 5),
+       new LatLng(2, 7));
+   trace(bounds.toString());  // outputs "((1, 5), (2, 7))"</pre></div>
+   <p></p>
+</div>
+<a name="union()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">union</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function union(other:<a href="LatLngBounds.html">LatLngBounds</a>):void</code><p>
+   Extends this bounds to contain the union of this and the given bounds.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">other</span>:<a href="LatLngBounds.html">LatLngBounds</a></code> &mdash;  LatLngBounds to union with.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+   var bounds:LatLngBounds = new LatLngBounds(
+       new LatLng(0, 0), new LatLng(1, 1));
+   bounds.union(
+       new LatLngBounds(
+           new LatLng(10, 20), new LatLng(15, 22)));
+   trace(bounds.toString());  // outputs "((0, 0), (15, 22))"</pre></div>
+   <p></p>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

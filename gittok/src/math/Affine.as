@@ -56,6 +56,7 @@ package math
 			x[0][0] = crd.x;
 			x[0][1] = crd.y;
 			x[0][2] = 1;
+						
 			var X:Array = Matrix.multiple(x, coef);
 			var plane:Coordinate2 = new Coordinate2();
 			plane.x = X[0][0];
@@ -76,12 +77,13 @@ package math
 			c4i[2][2] = 1;
 			
 			var inv:Array = Matrix.inverse(c4i);
+			//var check:Array = Matrix.multiple(coef, inv);
 			var x:Array = Matrix.multiple(X, inv);
-			var screen:Coordinate2 = new Coordinate2();
-			screen.x = x[0][0];
-			screen.y = x[0][1];
+			var map:Coordinate2 = new Coordinate2();
+			map.x = x[0][0];
+			map.y = x[0][1];
 			
-			return screen;
+			return map;
 		}
 	}
 }

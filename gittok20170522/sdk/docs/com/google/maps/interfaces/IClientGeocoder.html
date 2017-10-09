@@ -1,0 +1,274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../../print.css" type="text/css" media="print">
+<meta content="IClientGeocoder,com.google.maps.interfaces.IClientGeocoder,geocode,getOptions,resetCache,reverseGeocode,setOptions" name="keywords">
+<title>com.google.maps.interfaces.IClientGeocoder</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'IClientGeocoder - Google Maps API for Flash Documentation';
+				var baseRef = '../../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">Google Maps API for Flash Documentation, Version 1.20</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../all-classes.html')" href="../../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../../index-list.html')" href="../../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../../index.html?com/google/maps/interfaces/IClientGeocoder.html&amp;com/google/maps/interfaces/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Interface&nbsp;IClientGeocoder</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Interface IClientGeocoder"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">com.google.maps.interfaces</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Interface</td><td class="classSignature">public interface IClientGeocoder extends <a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a>, <a href="none">flash.events.IEventDispatcher</a>, <a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Implementors</td><td><a href="../services/ClientGeocoder.html">ClientGeocoder</a></td>
+</tr>
+</table>
+<p></p>
+ IClientGeocoder is the interface implemented by client geocoder object.
+ A client geocoder communicates with Google servers to obtain geocodes for
+ user specified addresses. In addition, a geocoder maintains its own cache of
+ addresses, which allows repeated queries to be answered without a round trip
+ to the server.
+ <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<div class="showHideLinks">
+<div class="hideInheritedProperty" id="hideInheritedProperty">
+<a onclick="javascript:setInheritedVisible(false,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Properties</a>
+</div>
+<div class="showInheritedProperty" id="showInheritedProperty">
+<a onclick="javascript:setInheritedVisible(true,'Property');" href="#propertySummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Properties</a>
+</div>
+</div>
+<table id="summaryTableProperty" class="summaryTable hideInheritedProperty" cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#interfaceChain">interfaceChain</a> : Array<div class="summaryTableDescription">
+   List of interfaces for wrapping this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+<tr class="hideInheritedProperty">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol"><a class="signatureLink" href="IWrappable.html#wrapper">wrapper</a> : Object<div class="summaryTableDescription">
+   Instance of the cross-domain wrapper for this object.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappable.html">IWrappable</a></td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<div class="showHideLinks">
+<div class="hideInheritedMethod" id="hideInheritedMethod">
+<a onclick="javascript:setInheritedVisible(false,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/expanded.gif" class="showHideLinkImage"> Hide Inherited Public Methods</a>
+</div>
+<div class="showInheritedMethod" id="showInheritedMethod">
+<a onclick="javascript:setInheritedVisible(true,'Method');" href="#methodSummary" class="showHideLink"><img src="../../../../images/collapsed.gif" class="showHideLinkImage"> Show Inherited Public Methods</a>
+</div>
+</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#geocode()">geocode</a>(address:String):void</div>
+<div class="summaryTableDescription">
+   Initiates a geocoding request.</div>
+</td><td class="summaryTableOwnerCol">IClientGeocoder</td>
+</tr>
+<tr class="hideInheritedMethod">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol"><img class="inheritedSummaryImage" title="Inherited" alt="Inherited" src="../../../../images/inheritedSummary.gif"></td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="IWrappableEventDispatcher.html#getBaseEventDispatcher()">getBaseEventDispatcher</a>():Object</div>
+<div class="summaryTableDescription">
+   Retrieves the base event dispatcher object that allows access to event
+   dispatching capability for cross-domain objects.</div>
+</td><td class="summaryTableOwnerCol"><a href="IWrappableEventDispatcher.html">IWrappableEventDispatcher</a></td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getOptions()">getOptions</a>():<a href="../services/ClientGeocoderOptions.html">ClientGeocoderOptions</a>
+</div>
+<div class="summaryTableDescription">
+   Retrieves the geocoder object's options.</div>
+</td><td class="summaryTableOwnerCol">IClientGeocoder</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#resetCache()">resetCache</a>():void</div>
+<div class="summaryTableDescription">
+   Resets the geocoding cache, clearing all results retrieved by this
+   and other ClientGeocoder objects.</div>
+</td><td class="summaryTableOwnerCol">IClientGeocoder</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#reverseGeocode()">reverseGeocode</a>(latLng:<a href="../LatLng.html">LatLng</a>):void</div>
+<div class="summaryTableDescription">
+   Initiates a reverse geocoding request.</div>
+</td><td class="summaryTableOwnerCol">IClientGeocoder</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#setOptions()">setOptions</a>(options:<a href="../services/ClientGeocoderOptions.html">ClientGeocoderOptions</a>):void</div>
+<div class="summaryTableDescription">
+   Updates the geocoder options.</div>
+</td><td class="summaryTableOwnerCol">IClientGeocoder</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="geocode()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">geocode</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function geocode(address:String):void</code><p>
+   Initiates a geocoding request.
+   Dispatches GeocodingEvent.GEOCODING_SUCCESS or
+   GeocodingEvent.GEOCODING_FAILURE on completion.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">address</span>:String</code> &mdash;  Address to geocode.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Throws</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code></code> &mdash;  A null or empty address will cause an ArgumentError
+       to be thrown.
+   </td>
+</tr>
+</table>
+</div>
+<a name="getOptions()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getOptions</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getOptions():<a href="../services/ClientGeocoderOptions.html">ClientGeocoderOptions</a></code><p>
+   Retrieves the geocoder object's options.
+   Use the setOptions() method to modify geocoder options.
+      </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code><a href="../services/ClientGeocoderOptions.html">ClientGeocoderOptions</a></code> &mdash; 
+                         Full set of options for the geocoder object.
+   
+                        
+                     </td>
+</tr>
+</table>
+</div>
+<a name="resetCache()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">resetCache</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function resetCache():void</code><p>
+   Resets the geocoding cache, clearing all results retrieved by this
+   and other ClientGeocoder objects.
+   </p></div>
+<a name="reverseGeocode()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">reverseGeocode</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function reverseGeocode(latLng:<a href="../LatLng.html">LatLng</a>):void</code><p>
+   Initiates a reverse geocoding request.
+   Dispatches GeocodingEvent.GEOCODING_SUCCESS or
+   GeocodingEvent.GEOCODING_FAILURE on completion.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">latLng</span>:<a href="../LatLng.html">LatLng</a></code> &mdash;  LatLng to reverse geocode.
+   </td>
+</tr>
+</table>
+<br>
+<span class="label">Throws</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code></code> &mdash;  A null LatLng will cause an ArgumentError
+       to be thrown.
+   </td>
+</tr>
+</table>
+</div>
+<a name="setOptions()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">setOptions</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function setOptions(options:<a href="../services/ClientGeocoderOptions.html">ClientGeocoderOptions</a>):void</code><p>
+   Updates the geocoder options.
+   The options parameter may specify a complete or partial set
+   of geocoder options.
+      </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">options</span>:<a href="../services/ClientGeocoderOptions.html">ClientGeocoderOptions</a></code> &mdash;  New full or partial set of geocoder options.
+   </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

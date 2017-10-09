@@ -100,6 +100,29 @@
 			[Bindable]
 			protected var assoInstanceList:ArrayList;
 			
+			[Embed(source="/patterns/p00.png")]
+			private var aImage00:Class;
+			
+			[Embed(source="/patterns/p01.png")]
+			private var aImage01:Class;
+			
+			[Embed(source="/patterns/p02.png")]
+			private var aImage02:Class;
+			
+			[Embed(source="/patterns/p03.png")]
+			private var aImage03:Class;
+			
+			[Embed(source="/patterns/p04.png")]
+			private var aImage04:Class;
+			
+			[Embed(source="/patterns/p05.png")]
+			private var aImage05:Class;
+			
+			[Embed(source="/patterns/p06.png")]
+			private var aImage06:Class;
+			
+			protected var btmaps:Dictionary;
+			
 			public function initializeApp(): void {
 				this.move(300, 200);
 				
@@ -172,6 +195,16 @@
 				
 				// Affine
 				registerClassAlias("math.AffineParam", AffineParam);
+				
+				// area pattern settings
+				btmaps = new Dictionary();
+				btmaps["/patterns/p00.png"] = new aImage00();
+				btmaps["/patterns/p01.png"] = new aImage01();
+				btmaps["/patterns/p02.png"] = new aImage02();
+				btmaps["/patterns/p03.png"] = new aImage03();
+				btmaps["/patterns/p04.png"] = new aImage04();
+				btmaps["/patterns/p05.png"] = new aImage05();
+				btmaps["/patterns/p06.png"] = new aImage06();
 				
 				// geoOperations
 				// These definitions are required to ensure import of them
@@ -480,7 +513,7 @@
 				var pObj:Object = new Object();
 				pObj.point = pt;
 				pObj.style = pss;
-				pSym.decode(pObj);
+				pSym.decode(pObj, btmaps);
 				pSym.name = pt.id.toString();
 				workLayer.addChild(pSym);
 			}

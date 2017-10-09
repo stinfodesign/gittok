@@ -918,7 +918,7 @@
 					displayProjection="EPSG:900913" visible="false"/>
 			<os:TermsOfService right="10" bottom="10" label="OpenScales" url="http://openscales.org/index.html" />
 			<os:TermsOfService id="gsiTerms" right="90" bottom="10" label="© 国土地理院 (GSI Japan)" 
-					url="http://portal.cyberjapan.jp/help/termsofuse.html" visible="true" />
+					url="https://maps.gsi.go.jp/help/index.html" visible="true" />
 			<os:TermsOfService id="osmTerms" right="90" bottom="10" label="© OpenStreetMap Contributers" 
 					url="http://www.openstreetmap.org/copyright/en" visible="false"/>
 			<os:WheelHandler />

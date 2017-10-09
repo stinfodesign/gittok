@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" width="360" height="532"
+		  title="Exchanger"
+		  creationComplete="initializeApp()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+
+
+	<fx:Script>
+		<![CDATA[
+			import coordinateReference.*;
+			
+			import dataTypes.place.*;
+			import dataTypes.theme.*;
+			import dataTypes.spatialGeometry.*;
+			
+			import flash.filesystem.*;
+			
+			import geoOperations.*;
+			
+			import gfm.*;
+			
+			import instanceModel.*;
+			
+			import locationReference.*;
+			
+			import math.*;
+			
+			import metadata.*;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			
+			import portrayal.gpm.*;
+			import portrayal.labelStyle.*;
+			import portrayal.gpm.list.*;
+			import portrayal.symbolStyle.*;
+			
+			private var suffix:String;
+			
+			private var appSchema:ApplicationSchema;
+			private var symDic:SymbolStyleDictionary;
+			private var labDic:LabelStyleDictionary;
+			private var portrayalSchema:PortrayalSchema;
+			private var kit:Kit;
+			private var mtData:Metadata;
+			private var crs:CRS;
+			private var crsPath:String;
+			private var gazetteer:Gazetteer;
+			private var listSchema:ListSchema;
+			private var file:File;
+			private var path:String;
+			
+			private var _xml:XML;
+			
+			public function initializeApp(): void {
+				this.move(300, 350);
+				
+				// Basic Types
+				registerClassAlias("dataTypes.theme.ThematicDataType", ThematicDataType);
+				registerClassAlias("dataTypes.theme.Bool", Bool);
+				registerClassAlias("dataTypes.theme.CharacterString", CharacterString);
+				registerClassAlias("dataTypes.theme.Integer", Integer);
+				registerClassAlias("dataTypes.theme.Real", Real);
+				registerClassAlias("dataTypes.theme.Memo", Memo);
+				registerClassAlias("dataTypes.theme.GDate", GDate);				
+
+				
+				// Location
+				registerClassAlias("dataTypes.place.ImageURL", ImageURL);
+				registerClassAlias("dataTypes.place.URL", URL);
+				registerClassAlias("dataTypes.place.VideoURL", VideoURL);
+				registerClassAlias("dataTypes.place.SoundURL", SoundURL);
+				registerClassAlias("dataTypes.place.Address", Address);
+				
+
+				// General Feature Model
+				registerClassAlias("gfm.AttributeType", AttributeType);
+				registerClassAlias("gfm.OperationType", OperationType);
+				registerClassAlias("gfm.FeatureType", FeatureType);
+				registerClassAlias("gfm.AssociationType", AssociationType);
+				registerClassAlias("gfm.ApplicationSchema", ApplicationSchema);	
+				registerClassAlias("gfm.ArgAttPair", ArgAttPair);
+				
+				// Geo operations
+				registerClassAlias("geoOperations.CenterOfGravity", Center);
+				registerClassAlias("geoOperations.DistanceBetween", DistanceBetween);
+				registerClassAlias("geoOperations.Length", Length);
+
+				
+				// Instance Model
+				registerClassAlias("instanceModel.Kit", Kit);
+				registerClassAlias("instanceModel.FeatureSet", FeatureSet);
+				registerClassAlias("instanceModel.Feature", Feature);
+				registerClassAlias("instanceModel.Association", Association);
+				registerClassAlias("instanceModel.AssociationSet", AssociationSet);
+				
+				// Geometry
+				registerClassAlias("dataTypes.spatialGeometry.SG_Point", SG_Point);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Curve", SG_Curve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Surface", SG_Surface);
+				registerClassAlias("dataTypes.spatialGeometry.SG_OrientableCurve", SG_OrientableCurve);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Primitive", SG_Primitive);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Rectangle", SG_Rectangle);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Ring", SG_Ring);
+				registerClassAlias("dataTypes.spatialGeometry.SG_Complex", SG_Complex);
+				registerClassAlias("dataTypes.spatialGeometry.Coordinate2", Coordinate2);
+				registerClassAlias("dataTypes.spatialGeometry.CoordinateArray", CoordinateArray);
+				
+				
+				// Metadata
+				registerClassAlias("metadata.Metadata", Metadata);
+				registerClassAlias("metadata.GeographicExtent", GeographicExtent);
+				registerClassAlias("metadata.TemporalExtent", TemporalExtent);
+				
+				// Symbol styles
+				registerClassAlias("portrayal.symbolStyle.PointSymbolStyle", PointSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.LineSymbolStyle", LineSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.AreaSymbolStyle", AreaSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.CircleSymbolStyle", CircleSymbolStyle);
+				registerClassAlias("portrayal.symbolStyle.ComplexSymbolStyle", ComplexSymbolStyle);				
+				registerClassAlias("portrayal.symbolStyle.SymbolStyleDictionary", SymbolStyleDictionary);
+				registerClassAlias("portrayal.symbolStyle.SymbolStyle", SymbolStyle);
+				
+				// Label style
+				registerClassAlias("portrayal.labelStyle.LabelStyle", LabelStyle);
+				registerClassAlias("portrayal.labelStyle.LabelStyleDictionary", LabelStyleDictionary);
+				
+				// Portrayal Dictionary
+				registerClassAlias("portrayal.portrayalStyle.AttributeStylePair", AttributeStylePair);
+				registerClassAlias("portrayal.portrayalStyle.AttributeSymbolPair", AttributeSymbolPair);
+				registerClassAlias("portrayal.portrayalStyle.AttributeLabelPair", AttributeLabelPair);								
+				registerClassAlias("portrayal.portrayalStyle.FeaturePortrayalUnit", FeaturePortrayalUnit);	
+				registerClassAlias("portrayal.portrayalStyle.AsssociationPortrayalUnit", AssociationPortrayalUnit);					
+				registerClassAlias("portrayal.portrayalStyle.PortrayalSchema", PortrayalSchema);
+				registerClassAlias("portrayal.portrayalStyle.ConditionElement", ConditionElement);
+				registerClassAlias("portrayal.portrayalStyle.ThematicCondition", ThematicCondition);
+				registerClassAlias("portrayal.portrayalStyle.Modifier", Modifier);
+				registerClassAlias("portrayal.portrayalStyle.BooleanModifier", BooleanModifier);				
+				registerClassAlias("portrayal.portrayalStyle.QualitativeModifier", QualitativeModifier);				
+				registerClassAlias("portrayal.portrayalStyle.QuantitativeModifier", QuantitativeModifier);
+				
+				//Coordinate ReferenceSystem
+				registerClassAlias("coordinateReference.CRS", CRS);
+				registerClassAlias("coordinateReference.Axis", Axis);
+				registerClassAlias("coordinateReference.CoordinateSystem", CoordinateSystem);
+				registerClassAlias("coordinateReference.Ellipsoid", Ellipsoid);
+				registerClassAlias("coordinateReference.GeodeticDatum", GeodeticDatum);
+				registerClassAlias("coordinateReference.PrimeMeridian", PrimeMeridian);
+				registerClassAlias("coordinateReference.GaussKrugerProjection", GaussKrugerProjection);
+				registerClassAlias("coordinateReference.VerticalDatum", VerticalDatum);
+				
+				// Affine
+				registerClassAlias("math.AffineParam", AffineParam);
+				
+				// Gazetteer
+				registerClassAlias("locationReference.Gazetteer", Gazetteer);
+				registerClassAlias("locationReference.LocationInstance", LocationInstance);
+				
+				// List Schema
+				registerClassAlias("portrayal.gpm.list.ListSchema", ListSchema);
+				registerClassAlias("portrayal.gpm.list.FeatureTypeForListing", FeatureTypeForListing);				
+			
+			}
+			
+			// Kit manager calls this function!
+			public function setKit(kitFileURL:String):void {
+				var kitStream:FileStream = new FileStream();
+				var kitFile:File = new File();
+				kitFile.url = kitFileURL;
+				var wpath:Array = kitFileURL.split("/");
+				var path:String = "file:///";
+				var n:int = wpath.length;
+				for (var i:int = 3; i < n - 1; i++) {
+					path += wpath[i] + "/";
+				}
+				
+				try {
+					kitStream.open(kitFile, FileMode.READ);
+					
+					kit = kitStream.readObject() as Kit;
+					
+					kitStream.close();
+				} catch(e:IOError) {
+					Alert.show("kit open error:" + e, "Alert", 4, this);
+					return;
+				}
+				
+				//kitRadio.selected = true;
+				//encodeRadio.selected = true;
+				
+				var appStream:FileStream = new FileStream;
+				var appFile:File = new File;
+				appFile.url = path + kit.applicationSchemaURL;
+				try {
+					appStream.open(appFile, FileMode.READ);
+					
+					kit.applicationSchema = appStream.readObject();
+					
+					appStream.close();
+				} catch(e:IOError) {
+					Alert.show("app schema open error." + e, "Alert", 4, this);
+				}
+			}
+			
+			protected function executeButton_clickHandler(event:MouseEvent):void
+			{
+				// kit will be encoded, as this process runs after Kit management.
+				if (kit != null) {
+					if (kit.crsURL == "" || kit.crsURL == null) {
+						// screen to plane coordinate
+						kit.screenToPlane();
+					}
+					else {
+						// screen to lat/lon
+						var crsURL:String = kit.kitURL + kit.crsURL;
+						var crsFile:File = new File(crsURL);
+						this.openCRS(crsFile);
+						kit.screenToGeodetic(crs);
+					}
+					_xml = kit.getXML();
+					
+					// Save XML document
+					try {
+						file = new File();
+						var filter:FileFilter = new FileFilter("XML File", "*.xml");
+						file.addEventListener(Event.SELECT, saveXMLFile);
+						file.browseForSave("Save XML file");		
+						//file.addEventListener(Event.CLOSE, saveFileClose);
+						
+						
+					} catch (error:IOError) {
+						Alert.show(error.message);
+					} 
+					
+					kit = null;
+					
+					return;
+				}
+				
+				// select file modifier (suffix)
+				suffix = "";
+				switch (ExchangeButtonGroup.selectedValue) {
+					case "Application Schema (.aps)":
+						suffix = "*.aps";
+						break;
+					case "Symbol Style Dictionary (.sym)":
+						suffix = "*.sym";
+						break;
+					case "Label Style Dictionary (.lab)":
+						suffix = "*.lab";
+						break;
+					case "Portrayal Schema (.psc)":
+						suffix = "*.psc";
+						break;
+					case "Kit (.kit)":
+						suffix = "*.kit";
+						break;
+					case "Metadata (.mtd)":
+						suffix = "*.mtd";
+						break;
+					case "Coordinate Reference System (.crs)":
+						suffix = "*.crs";
+						break;
+					case "Gazetteer (.gaz)":
+						suffix = "*.gaz";
+						break;
+					case "List Schema (.lsc)":
+						suffix = "*.lsc";
+						break;
+
+				}
+				if (suffix == "") {
+					Alert.show("Select file type!", "Warning", 4, this);
+					return;
+				}
+				
+				
+				// select  "encode" or "decode"
+				switch (EDButtonGroup.selectedValue) {
+					case "Encode to XML document":	
+						edFileLabel.text = "File for encoding";
+						// Open AMF data file
+						try {	
+							file = new File();
+							filter = new FileFilter("Open AMF file", suffix);
+							file.addEventListener(Event.SELECT, encodeAMFStream);
+							file.browseForOpen("Open AMF file  [キャンセル: CANCEL, 選択: SELECT]", [filter]);					
+						} catch (error:IOError) {
+							Alert.show(error.message, "Alert", 4, this);
+						}
+						break;
+					case "Decode to AMF data":
+						edFileLabel.text = "File for decoding";
+						// Open XML file
+						try {	
+							file = new File();
+							filter = new FileFilter("Open XML file", "*.xml");
+							file.addEventListener(Event.SELECT, decodeXMLStream);
+							file.browseForOpen("Open XML file  [キャンセル: CANCEL, 選択: SELECT]", [filter]);					
+						} catch (error:IOError) {
+							Alert.show(error.message, "Alert", 4, this);
+						}
+						break;
+				}
+				if (EDButtonGroup.selectedValue == null) {
+					Alert.show("Select encode or decode!", "Warning", 4, this);
+					return;
+				}
+
+						
+			}
+			
+			private function encodeAMFStream(event:Event):void {
+							
+				var fileStream:FileStream = new FileStream();
+				fileStream.open(file, FileMode.READ);
+				
+				switch (ExchangeButtonGroup.selectedValue) {
+					case "Application Schema (.aps)":
+						appSchema = fileStream.readObject();
+						_xml = appSchema.getXML();
+						break;
+					case "Symbol Style Dictionary (.sym)":
+						symDic = fileStream.readObject();
+						_xml = symDic.getXML();
+						break;
+					case "Label Style Dictionary (.lab)":
+						labDic = fileStream.readObject();
+						_xml = labDic.getXML();
+						break;
+					case "Portrayal Schema (.psc)":
+						portrayalSchema = fileStream.readObject();
+						_xml = portrayalSchema.getXML(); 
+						break;
+					case "Kit (.kit)":
+						kit = fileStream.readObject() as Kit;
+						if (kit.crsURL == null || kit.crsURL == "") {
+							// screen to plane coordinate
+							kit.screenToPlane();
+						}
+						else {
+							// screen to lat/lon
+							var crsURL:String = kit.kitURL + kit.crsURL;
+							var crsFile:File = new File(crsURL);
+							this.openCRS(crsFile);
+							kit.screenToGeodetic(crs);
+						}
+						_xml = kit.getXML();
+						break;
+					case "Metadata (.mtd)":
+						mtData = fileStream.readObject();
+						_xml = mtData.getXML();
+						break;
+					case "Coordinate Reference System (.crs)":
+						crs = fileStream.readObject();
+						_xml = crs.getXML();
+						break;
+					case "Gazetteer (.gaz)":
+						gazetteer = fileStream.readObject();
+						_xml = gazetteer.getXML();
+						break;
+					case "List Schema (.lsc)":
+						listSchema = fileStream.readObject();
+						_xml = listSchema.getXML();
+						break;
+
+				}
+				fileStream.close();		
+				
+				// Save XML document
+				try {
+					file = new File();
+					var filter:FileFilter = new FileFilter("XML File", "*.xml");
+					file.addEventListener(Event.SELECT, saveXMLFile);
+					file.browseForSave("Save XML file");		
+					//file.addEventListener(Event.CLOSE, saveFileClose);
+					
+					
+				} catch (error:IOError) {
+					Alert.show(error.message);
+				}
+				
+				edFileLabel.text = "Encoded XML doc";
+			}
+			
+			private function saveXMLFile(event:Event):void {	
+					
+				var fileStream:FileStream = new FileStream();
+				
+				var startIndex:int = file.nativePath.length - 4;
+				var suffix:String = file.nativePath.slice(startIndex);
+				if (suffix != ".xml") file.nativePath += ".xml";
+				fileStream.open(file, FileMode.WRITE);				
+				
+				fileStream.writeMultiByte(_xml, "utf-8");
+				
+				fileStream.close();
+				
+				kit = null;
+				savedFileLabel.text = file.name;
+				
+				edFileLabel.text = "";
+
+			}
+			
+			private function saveFileClose(event:Event):void {
+				kit = null;
+			}
+			
+			private function decodeXMLStream(event:Event):void {
+				var fileStream:FileStream = new FileStream();
+				fileStream.open(file, FileMode.READ);
+				
+				var npath:String = file.url;
+				var pathArray:Array = npath.split("/");
+				path = "file://";
+				for (var i:int = 3; i < pathArray.length - 1; i++) {
+					path += "/" + pathArray[i];
+				}
+				path += "/";
+
+				var str:String = fileStream.readMultiByte(fileStream.bytesAvailable, "utf-8");
+				_xml = XML(str);
+				switch (ExchangeButtonGroup.selectedValue) {
+					case "Application Schema (.aps)":
+						appSchema = new ApplicationSchema();
+						appSchema.setXML(_xml);
+						break;
+					case "Symbol Style Dictionary (.sym)":
+						symDic = new SymbolStyleDictionary();
+						symDic.setXML(_xml);
+						break;
+					case "Label Style Dictionary (.lab)":
+						labDic = new LabelStyleDictionary();
+						labDic.setXML(_xml);
+						break;
+					case "Portrayal Schema (.psc)":
+						portrayalSchema = new PortrayalSchema();
+						portrayalSchema.setXML(_xml);
+						break;					
+					case "Kit (.kit)":
+						kit = new Kit();
+						kit.kitURL = path;
+						
+						var apsName:String = _xml.@applicationSchemaURL;
+						var apsFile:File = new File();
+						apsFile.url = path + apsName;
+						try {
+							var apsStream:FileStream = new FileStream();
+							apsStream.open(apsFile, FileMode.READ);
+							kit.applicationSchema = apsStream.readObject();
+							apsStream.close();
+						} catch (e:IOError) {
+							Alert.show(e.message, "Alert", 4, this);
+							return;
+						}
+						
+						var fTypes:Dictionary = new Dictionary();
+						var concreteTypes:ArrayList = kit.applicationSchema.constructConcreteTypes();
+						var cType:FeatureType;
+						for (i = 0; i < concreteTypes.length; i++) {
+							cType = concreteTypes.getItemAt(i) as FeatureType;
+							fTypes[cType.name] = cType;
+						}
+						kit.applicationSchema.featureTypes = fTypes;
+						
+						kit.setXML(_xml);
+						if (kit.crsURL == "" || kit.crsURL == null) {
+							kit.planeToScreen();
+						}
+						else {
+							var crsURL:String = kit.kitURL + kit.crsURL;
+							file = new File(crsURL);
+							this.openCRS(file);
+							kit.geodeticToScreen(crs);
+						}
+						break;
+					case "Metadata (.mtd)":
+						mtData = new Metadata();
+						mtData.setXML(_xml);
+						break;
+					case "Coordinate Reference System (.crs)":
+						crs = new CRS();
+						crs.setXML(_xml);
+						break;
+					case "List Schema (.lsc)":
+						listSchema = new ListSchema();
+						listSchema.setXML(_xml);
+						break;
+					case "Gazetteer (.gaz)":
+						gazetteer = new Gazetteer();
+						var kitFileURL:String = _xml.@kitURL.toString();
+						this.setKit(path + kitFileURL);
+						gazetteer.setXML(_xml, kit.applicationSchema);
+						break;
+				}
+				
+				// Save AMF file
+				try {
+					file = new File();
+					//var filter:FileFilter = new FileFilter("AMF File", suffix);
+					file.addEventListener(Event.SELECT, saveAMFFile);
+					file.browseForSave("Save AMF file");		
+					file.addEventListener(Event.CLOSE, saveFileClose);
+										
+				} catch (error:IOError) {
+					Alert.show(error.message, "Alert", 4, this);
+					return;
+				}
+				
+				edFileLabel.text = "Decoded AMF file";
+				
+			}
+			
+			private function openCRS(crsFile:File):void {
+				var crsStream:FileStream = new FileStream();
+				try {
+					crsStream.open(crsFile, FileMode.READ);
+					crs = crsStream.readObject();
+					crsStream.close();
+				} catch(e:IOError) {
+					Alert.show("CRS open error:" + e, "Alert", 4, this);
+				}			
+			}
+			
+			private function saveAMFFile(event:Event):void {	
+				var fileStream:FileStream;
+				
+				switch (suffix) {
+					case "*.aps":
+						fileStream = this.fileStreamOpen(file, ".aps");
+						fileStream.writeObject(appSchema);
+						break;
+					case "*.sym":
+						fileStream = this.fileStreamOpen(file, ".sym");
+						fileStream.writeObject(symDic);
+						break;
+					case "*.lab":
+						fileStream = this.fileStreamOpen(file, ".lab");
+						fileStream.writeObject(labDic);
+						break;
+					case "*.psc":
+						fileStream = this.fileStreamOpen(file, ".psc");
+						fileStream.writeObject(portrayalSchema);
+						break;
+					case "*.kit":
+						fileStream = this.fileStreamOpen(file,".kit");
+						fileStream.writeObject(kit);
+						break;
+					case "*.mtd":
+						fileStream = this.fileStreamOpen(file, ".mtd");
+						fileStream.writeObject(mtData);
+						break;
+					case "*.crs":
+						fileStream = this.fileStreamOpen(file, ".crs");
+						fileStream.writeObject(crs);
+						break;
+					case "*.gaz":
+						fileStream = this.fileStreamOpen(file, ".gaz");
+						fileStream.writeObject(gazetteer);
+						break;
+					case "*.lsc":
+						fileStream = this.fileStreamOpen(file, ".lsc");
+						fileStream.writeObject(listSchema);
+						break;
+
+				}
+				
+				fileStream.close();
+				
+				savedFileLabel.text = file.name;
+				edFileLabel.text = "";
+			}
+			
+			protected function fileStreamOpen(ofile:File, ext:String):FileStream {
+				var startIndex:int = ofile.nativePath.length - 4;
+				var suffix:String = ofile.nativePath.slice(startIndex);
+				if (suffix != ext) ofile.nativePath += ext;
+				var fileStream:FileStream = new FileStream();
+				fileStream.open(ofile, FileMode.WRITE);
+				return fileStream;
+			}
+
+			
+			// Text and instruction  Controls
+			protected function text_jp_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/jp/exchanger_jp.html");
+				navigateToURL(request);
+			}
+			
+			protected function text_en_clickHandler(event:MouseEvent):void
+			{
+				var request:URLRequest = new URLRequest("documents/en/exchanger_en.html");
+				navigateToURL(request);
+			}
+			
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<s:RadioButtonGroup id="ExchangeButtonGroup"/>
+		<s:RadioButtonGroup id="EDButtonGroup"/>
+		<!-- 非ビジュアルエレメント (サービス、値オブジェクトなど) をここに配置 -->
+	</fx:Declarations>
+	<s:Image x="10" y="10" source="@Embed('images/pictExchange1.png')"/>
+	<s:Label x="75" y="15" text="Exchanger" fontSize="16"/>
+	
+	<s:RadioButton x="74" y="89" id="apsRadio" label="Application Schema (.aps)" groupName="ExchangeButtonGroup"/>
+	<s:RadioButton x="74" y="194" id="symRadio" label="Symbol Style Dictionary (.sym)" groupName="ExchangeButtonGroup"/>
+	<s:RadioButton x="74" y="220" id="labRadio" label="Label Style Dictionary (.lab)" groupName="ExchangeButtonGroup"/>
+	<s:RadioButton x="74" y="246" id="pscRadio" label="Portrayal Schema (.psc)" groupName="ExchangeButtonGroup"/>	
+	<s:RadioButton x="74" y="116" id="kitRadio" label="Kit (.kit)" groupName="ExchangeButtonGroup"/>
+	<s:RadioButton x="74" y="142" id="mtdRadio" label="Metadata (.mtd)" groupName="ExchangeButtonGroup"/>
+	<s:RadioButton x="74" y="167" id="crsRadio" label="Coordinate Reference System (.crs)" groupName="ExchangeButtonGroup"/>
+	<s:RadioButton x="74" y="271" id="gazRadio" label="Gazetteer (.gaz)" groupName="ExchangeButtonGroup"/>
+	<s:RadioButton x="74" y="295" id="lscRadio" label="List Schema (.lsc)" groupName="ExchangeButtonGroup"/>
+
+	<s:Label x="74" y="60" text="Exchange Files" fontSize="14"/>
+	
+	<s:Rect x="15" y="336" width="323" height="100">
+		<s:stroke>
+			<s:SolidColorStroke color="0xdadada"/>
+		</s:stroke>
+		<s:fill>
+			<s:SolidColor color="0xfefee5"/>
+		</s:fill>
+	</s:Rect>
+
+	<s:Label x="31" y="350" text="Encode / Decode" fontSize="14"/>
+	<s:RadioButton id="encodeRadio" x="31" y="377"
+				   label="Encode to XML document"
+				   groupName="EDButtonGroup"/>
+	<s:RadioButton id="decodeRadio" x="31" y="403" label="Decode to AMF data"
+				   groupName="EDButtonGroup"/>
+	<s:Button id="executeButton" x="236" y="379" width="69" height="20" label="execute"
+			  click="executeButton_clickHandler(event)"/>
+	<s:Label id="edFileLabel" x="236" y="407" width="93" fontSize="10"/> 
+	<s:Label x="171" y="345" fontSize="10" text="XML: EXtensible Markup Language"/>
+	<s:Label x="171" y="357" fontSize="10" text="AMF: Action Message Format"/>
+	<s:Label x="261" y="13" text="日本語" fontFamily="Osaka" color="#969696" fontSize="11"
+			 buttonMode="true" click="text_jp_clickHandler(event)"/>
+	<s:Label x="302" y="15" text="English" color="#969696"
+			 buttonMode="true" click="text_en_clickHandler(event)"/>
+	<s:Label id="savedFileLabel" x="185" y="457" width="153" height="23"/>
+	<s:Label x="124" y="463" text="Saved file:"/>
+</s:Window>
